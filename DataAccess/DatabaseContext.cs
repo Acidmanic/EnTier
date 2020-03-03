@@ -14,7 +14,7 @@ namespace DataAccess
 
         protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder){
 
-            optionsBuilder.UseSqlServer("Data Source=.\\SQLSERVER; Initial Catalog=ArtworkDb;User Id=sa;Password=never54aga!n");
+            optionsBuilder.UseSqlServer("Data Source=.; Initial Catalog=ArtworkDb;User Id=sa;Password=never54aga!n");
         }
 
         public DbSet<User> Users {get;set;}
