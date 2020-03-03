@@ -9,7 +9,9 @@ using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
-using StorageModels;
+using DataTransferModels;
+using AutoMapper;
+using Services;
 
 namespace Controllers
 {
@@ -22,27 +24,28 @@ namespace Controllers
     {
 
 
-        private IProvider<DatabaseUnit> _dbProvider;
+
+        private readonly IUsersService _service;
+        private readonly IMapper _mapper;
 
 
-        public UsersController(IProvider<DatabaseUnit> dbProvider)
+        public UsersController(
+            IUsersService service,
+            IMapper mapper)
         {
-            _dbProvider = dbProvider;
+            _service = service;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("")]
         public User PostUser(User user){
             
+            var domain = _mapper.Map<DomainModels.User>(user);
 
-            User ret = null;
+            domain = _service.AddUser(domain);
 
-            using(var db = _dbProvider.Create()){
-
-                ret = db.Users.Add(user);
-
-                db.Compelete();
-            }
+            var ret = _mapper.Map<User>(domain);
 
             return ret;
         }
@@ -52,12 +55,9 @@ namespace Controllers
         [Route("")]
         public List<User> GetAll(){
 
-            List<User> ret = null;
+            var res = _service.GetAll();
 
-            using(var db = _dbProvider.Create()){
-
-                ret = db.Users.GetAll();
-            }
+            var ret = _mapper.Map<List<User>>(res);
 
             return ret;
 

@@ -13,5 +13,9 @@ public class DomainDtoProfile:Profile{
         CreateMap<LoginResponse,LoginResponseDto>()
             .ReverseMap()
         ;
+
+        CreateMap<DomainModels.User,DataTransferModels.User>()
+            .ReverseMap()
+        ;
     }
 }

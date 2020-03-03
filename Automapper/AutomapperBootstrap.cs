@@ -13,6 +13,8 @@ public class AutomapperBootstrap{
 
             cfg.AddProfile(new DomainDtoProfile());
 
+            cfg.AddProfile(new StorageDomainProfile());
+
         });
 
 
