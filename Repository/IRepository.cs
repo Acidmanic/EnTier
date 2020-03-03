@@ -13,7 +13,7 @@ namespace Repository{
 
         Entity GetById<Tid>(Tid id);
 
-        void Add(Entity value);
+        Entity Add(Entity value);
 
         void Remove(Entity value);
 

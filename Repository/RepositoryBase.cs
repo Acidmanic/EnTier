@@ -8,19 +8,19 @@ namespace Repository
     public abstract class RepositoryBase<Entity> : IRepository<Entity> where Entity:class
     {
 
-        private DbSet<Entity> _dbset;
+        protected DbSet<Entity> DbSet{get; private set;}
 
         public RepositoryBase(DbSet<Entity> dbset)
         {
-            _dbset = dbset;
+            DbSet = dbset;
         }
 
-        public virtual void Add(Entity value)
+        public virtual Entity Add(Entity value)
         {
-            _dbset.Add(value);
+            return DbSet.Add(value).Entity;
         }
 
-        private IQueryable<Entity> ApplyEagerMarking(IQueryable<Entity> queryable, Action<EagerMarker<Entity>> mark)
+        protected IQueryable<Entity> ApplyEagerMarking(IQueryable<Entity> queryable, Action<EagerMarker<Entity>> mark)
         {
             var marker = new IQuariableWrapperEagerMarker<Entity>(queryable);
 
@@ -31,7 +31,7 @@ namespace Repository
 
         protected List<Entity> GetAll(Action<EagerMarker<Entity>> mark = null)
         {
-            var ret = _dbset.Where(e => true);
+            var ret = DbSet.Where(e => true);
 
             ret = ApplyEagerMarking(ret, mark);
 
@@ -40,7 +40,7 @@ namespace Repository
 
         protected List<Entity> GetByCondition(Func<Entity, bool> condition, Action<EagerMarker<Entity>> mark = null)
         {
-            var ret = _dbset.Where(condition).AsQueryable();
+            var ret = DbSet.Where(condition).AsQueryable();
 
             ret = ApplyEagerMarking(ret, mark);
 
@@ -78,7 +78,7 @@ namespace Repository
         {
             var reader = IdReader(id);
 
-            var ret = _dbset.Where(reader).AsQueryable();
+            var ret = DbSet.Where(reader).AsQueryable();
 
             ret = ApplyEagerMarking(ret, mark);
 
@@ -87,7 +87,7 @@ namespace Repository
 
         public virtual void Remove(Entity value)
         {
-            _dbset.Remove(value);
+            DbSet.Remove(value);
         }
 
         public virtual void RemoveById<Tid>(Tid id)
@@ -96,7 +96,7 @@ namespace Repository
 
             if(entity != null)
             {
-                _dbset.Remove(entity);
+                DbSet.Remove(entity);
             }
         }
 
