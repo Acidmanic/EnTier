@@ -4,6 +4,7 @@
 
 
 
+using System.Collections.Generic;
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,22 @@ namespace Controllers
             }
 
             return ret;
+        }
+
+
+        [HttpGet]
+        [Route("")]
+        public List<User> GetAll(){
+
+            List<User> ret = null;
+
+            using(var db = _dbProvider.Create()){
+
+                ret = db.Users.GetAll();
+            }
+
+            return ret;
+
         }
     }
     
