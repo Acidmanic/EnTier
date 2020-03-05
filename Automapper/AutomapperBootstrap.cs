@@ -15,6 +15,8 @@ public class AutomapperBootstrap{
 
             cfg.AddProfile(new StorageDomainProfile());
 
+            cfg.AddProfile(new StorageTransferProfile());
+
         });
 
 

@@ -13,12 +13,14 @@ public static class RegisterServices
     public static void AddApplicationServices(this IServiceCollection services){
 
 
-        services.AddScoped<ILoginService,DefaultLoginService>();
+        services.AddTransient<ILoginService,DefaultLoginService>();
         
-        services.AddSingleton<IMapper>(sp => AutomapperBootstrap.CreateMapper());
+        services.AddSingleton(sp => AutomapperBootstrap.CreateMapper());
 
-        services.AddScoped<IProvider<DatabaseUnit>, DatabaseUnitProvider>();
+        services.AddTransient<IProvider<DatabaseUnit>, DatabaseUnitProvider>();
 
-        services.AddScoped<IUsersService,UsersService>();
+        services.AddTransient<IProvider<GenericDatabaseUnit>,GenericDatabaseUnitProvider>( );
+
+        services.AddTransient<IUsersService,UsersService>();
     }
 }

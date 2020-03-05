@@ -12,6 +12,8 @@ using Repository;
 using DataTransferModels;
 using AutoMapper;
 using Services;
+using System;
+using ApplicationRepositories;
 
 namespace Controllers
 {
@@ -50,7 +52,6 @@ namespace Controllers
             return ret;
         }
 
-
         [HttpGet]
         [Route("")]
         public List<User> GetAll(){
@@ -60,6 +61,32 @@ namespace Controllers
             var ret = _mapper.Map<List<User>>(res);
 
             return ret;
+
+        }
+
+
+        [HttpGet]
+        [Route("test")]
+        public object Test(){
+
+            
+            List<StorageModels.User> users;
+            
+            using (var dbu = new GenericDatabaseUnit(new DataBaseContext())){
+                
+                var repo = dbu.GetRepository<IUsersRepository,StorageModels.User>();
+
+                users = repo.GetAll();
+            }
+
+            return users;
+        }
+
+        [HttpGet]
+        [Route("test2")]
+        public object Test2(){
+
+            return new {Name="Mani"};
 
         }
     }
