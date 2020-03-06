@@ -13,11 +13,13 @@ namespace Repository{
 
         Entity GetById<Tid>(Tid id);
 
+        Entity GetById<Tid>(Entity entity);
+
         Entity Add(Entity value);
 
-        void Remove(Entity value);
+        Entity Remove(Entity value);
 
-        void RemoveById<Tid>(Tid id);
+        Entity RemoveById<Tid>(Tid id);
 
         
     }

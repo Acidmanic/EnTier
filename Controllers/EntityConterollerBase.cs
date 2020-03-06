@@ -1,6 +1,7 @@
 
 
 
+using System;
 using System.Collections.Generic;
 using AutoMapper;
 using DataAccess;
@@ -77,4 +78,72 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
         ;
     }
     
+
+    [HttpPut]
+    [Route("")]
+    public virtual TransferEntity Update(TransferEntity entity){
+
+        StorageEntity storage = null;
+
+        using(var db = _dbProvider.Create()){
+
+            var repo = db.CreateRepository<StorageEntity>();
+
+            new DataReflection().UseId<TransferEntity,Tid>(entity,id => storage = repo.GetById(id));
+
+            if (storage == null){
+                //fuck  it up
+            }
+
+            _mapper.Map(entity,storage);
+
+            db.Compelete();
+        }
+
+        return _mapper.Map<TransferEntity>(storage);
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public TransferEntity DeleteById(Tid id){
+
+        StorageEntity storage = null;
+
+        using(var db = _dbProvider.Create()){
+
+            var repo = db.CreateRepository<StorageEntity>();
+
+            storage = repo.RemoveById(id);
+
+            db.Compelete();
+        }
+        // if storage == null, fuck up
+
+        return _mapper.Map<TransferEntity>(storage);
+    }
+
+
+    [HttpDelete]
+    [Route("")]
+    public TransferEntity Delete(TransferEntity entity){
+
+        StorageEntity storage = null;
+
+        using(var db = _dbProvider.Create()){
+
+            var repo = db.CreateRepository<StorageEntity>();
+
+            new DataReflection().UseId<TransferEntity,Tid>(entity,id => storage = repo.GetById(id));
+
+            if (storage == null){
+                //fuck  it up
+            }
+
+            storage = repo.Remove(storage);
+
+            db.Compelete();
+        }
+
+        return _mapper.Map<TransferEntity>(storage);
+    }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Reflection;
 
 namespace Repository
 {
@@ -47,36 +48,9 @@ namespace Repository
             return ret.ToList();
         }
 
-
-        private Func<Entity,bool> IdReader<Tid>(Tid id)
-        {
-            var idType = id.GetType();
-
-            var entityType = typeof(Entity);
-
-            var idProperty = entityType.GetProperty("Id", idType);
-
-            if (idProperty != null)
-            {
-                return (Entity e) => {
-                    try
-                    {
-                        var eId = (Tid)idProperty.GetValue(e);
-
-                        return eId.Equals(id);
-                    }
-                    catch (Exception){}
-
-                    return false;
-                };
-            }
-
-            return e => false;
-        }
-
         protected Entity GetById<Tid>(Tid id, Action<EagerMarker<Entity>> mark = null)
         {
-            var reader = IdReader(id);
+            var reader = new DataReflection().IdReader<Entity,Tid>(id);
 
             var ret = DbSet.Where(reader).AsQueryable();
 
@@ -85,19 +59,21 @@ namespace Repository
             return ret.FirstOrDefault();
         }
 
-        public virtual void Remove(Entity value)
+        public virtual Entity Remove(Entity value)
         {
-            DbSet.Remove(value);
+            return DbSet.Remove(value).Entity;
         }
 
-        public virtual void RemoveById<Tid>(Tid id)
+        public virtual Entity RemoveById<Tid>(Tid id)
         {
             var entity = GetById(id);
 
             if(entity != null)
             {
-                DbSet.Remove(entity);
+                return DbSet.Remove(entity).Entity;
             }
+
+            return null;
         }
 
         public virtual List<Entity> GetAll()
@@ -113,6 +89,26 @@ namespace Repository
         public virtual Entity GetById<Tid>(Tid id)
         {
             return GetById(id, null);
+        }
+
+        protected Entity GetById<Tid>(Entity entity,Action<EagerMarker<Entity>> marker = null )
+        {
+            var idProperty = new DataReflection().GetIdProperty<Entity,Tid>();
+
+            try
+            {
+                var eId = (Tid)idProperty.GetValue(entity);
+
+                return GetById(eId,marker);
+
+            }
+            catch (System.Exception){            }
+
+            return null;
+        }
+
+        public Entity GetById<Tid>(Entity entity){
+            return GetById(entity,null);
         }
     }
 
