@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using AutoMapper;
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
 
     [HttpGet]
     [Route("")]
-    public virtual List<TransferEntity> GetAll(){
+    public virtual IActionResult GetAll(){
 
         var ret = new List<StorageEntity> ();
 
@@ -38,50 +39,103 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
             ret = repo.GetAll();
         }
 
-        return _mapper.Map<List<TransferEntity>>(ret);
+        return Ok(_mapper.Map<List<TransferEntity>>(ret));
     }
 
+    private class SafeRunResult{
+
+        public StorageEntity Result{get; set;}
+        
+        public IActionResult ErrorReturningResult{get; set;}
+
+        public bool Success {get;set;}
+        
+    }
+
+    private SafeRunResult SafeRun(Func<StorageEntity> runnable,Func<IActionResult> onError){
+
+        var ret = new SafeRunResult(){Success = true};
+        try
+        {
+            ret.Result = runnable();
+        }
+        catch (System.Exception)
+        {
+            ret.Success = false;
+            ret.ErrorReturningResult = onError();
+        }
+
+        return ret;
+    }
+
+    protected IActionResult Error(){
+        return StatusCode((int)HttpStatusCode.InternalServerError);
+    }
+
+    private SafeRunResult SafeRun(Func<StorageEntity> runnable){
+        return SafeRun(runnable, () => Error());
+    }
+
+    private TransferEntity Map(StorageEntity storage){
+        return _mapper.Map<TransferEntity>(storage);
+    }
+
+    private List<TransferEntity> Map(ICollection<StorageEntity> storages){
+        return _mapper.Map<List<TransferEntity>>(storages);
+    }
+
+    private IActionResult Map(SafeRunResult result){
+        if(result.Success){
+
+            var transfer = Map(result.Result);
+
+            return Ok(transfer);
+        }else{
+            return result.ErrorReturningResult;
+        }
+    }
 
     [HttpGet]
     [Route("{id}")]
-    public virtual TransferEntity GetById(Tid id){
+    public virtual IActionResult GetById(Tid id){
 
-        StorageEntity ret = null;;
+        SafeRunResult ret ;
 
         using(var db = _dbProvider.Create()){
 
             var repo = db.CreateRepository<StorageEntity>();
 
-            ret = repo.GetById(id);
+            ret = SafeRun(()=> repo.GetById(id),()=> NotFound());
         }
 
-        return _mapper.Map<TransferEntity>(ret);
+        return Map(ret);
     }
 
 
     [HttpPost]
     [Route("")]
-    public virtual TransferEntity CreateNew(TransferEntity entity){
+    public virtual IActionResult CreateNew(TransferEntity entity){
 
         var storage = _mapper.Map<StorageEntity>(entity);
+
+        SafeRunResult ret ;
 
         using(var db = _dbProvider.Create()){
 
             var repo = db.CreateRepository<StorageEntity>();
 
-            storage = repo.Add(storage);
+            ret = SafeRun(()=>repo.Add(storage));
 
             db.Compelete();
         }
 
-        return _mapper.Map<TransferEntity>(storage)
-        ;
+        return Map(ret);
     }
     
 
     [HttpPut]
     [Route("")]
-    public virtual TransferEntity Update(TransferEntity entity){
+    public virtual IActionResult Update(TransferEntity entity){
 
         StorageEntity storage = null;
 
@@ -92,7 +146,7 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
             new DataReflection().UseId<TransferEntity,Tid>(entity,id => storage = repo.GetById(id));
 
             if (storage == null){
-                //fuck  it up
+                return NotFound();
             }
 
             _mapper.Map(entity,storage);
@@ -100,12 +154,12 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
             db.Compelete();
         }
 
-        return _mapper.Map<TransferEntity>(storage);
+        return Ok(Map(storage));
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public TransferEntity DeleteById(Tid id){
+    public IActionResult DeleteById(Tid id){
 
         StorageEntity storage = null;
 
@@ -117,33 +171,38 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
 
             db.Compelete();
         }
-        // if storage == null, fuck up
+        
+        if( storage == null){
+            return NotFound();
+        }
 
-        return _mapper.Map<TransferEntity>(storage);
+        return Ok(Map(storage));
     }
 
 
     [HttpDelete]
     [Route("")]
-    public TransferEntity Delete(TransferEntity entity){
+    public IActionResult Delete(TransferEntity entity){
 
         StorageEntity storage = null;
 
+        SafeRunResult result;
         using(var db = _dbProvider.Create()){
 
             var repo = db.CreateRepository<StorageEntity>();
 
-            new DataReflection().UseId<TransferEntity,Tid>(entity,id => storage = repo.GetById(id));
-
-            if (storage == null){
-                //fuck  it up
+            result = SafeRun(() => {
+                new DataReflection().UseId<TransferEntity,Tid>(entity,id => storage = repo.GetById(id));
+                return storage;
+            },()=> NotFound());
+            
+            if (result.Success){
+                result = SafeRun(() => storage = repo.Remove(storage));
             }
-
-            storage = repo.Remove(storage);
 
             db.Compelete();
         }
 
-        return _mapper.Map<TransferEntity>(storage);
+        return Map(result);
     }
 }
