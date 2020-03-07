@@ -13,6 +13,14 @@ namespace Controllers{
     <StorageEntity,TransferEntity> : ControllerBase 
     where StorageEntity:class
     {
+
+
+        protected IObjectMapper Mapper{get; private set;}
+
+        public RitchControllerBase(IObjectMapper mapper)
+        {
+            Mapper = mapper;
+        }
         protected class SafeRunResult{
 
             public StorageEntity Result{get; set;}
@@ -54,6 +62,21 @@ namespace Controllers{
         }
         protected SafeRunResult SafeRun(Func<StorageEntity> runnable){
             return SafeRun(runnable, () => Error());
+        }
+
+        protected TransferEntity Map(StorageEntity storage){
+            return Mapper.Map<TransferEntity>(storage);
+        }
+
+        protected IActionResult Map(SafeRunResult result){
+            if(result.Success){
+
+                var transfer = Map(result.Result);
+
+                return Ok(transfer);
+            }else{
+                return result.ErrorReturningResult;
+            }
         }
     }    
 }

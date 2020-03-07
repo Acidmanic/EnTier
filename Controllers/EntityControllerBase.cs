@@ -14,23 +14,20 @@ namespace Controllers{
 
 
     [ApiController]
-    public abstract class EntityConterollerBase
+    public abstract class EntityControllerBase
         <StorageEntity,TransferEntity,Tid> : 
         RitchControllerBase<StorageEntity,TransferEntity> where StorageEntity:class
     {
 
-        private IMapper _mapper;
         private IProvider<GenericDatabaseUnit> _dbProvider;
 
         private ControllerConfigurations _configurations;
 
-
-        public EntityConterollerBase(
-            IMapper mapper,
+        public EntityControllerBase(
+            IObjectMapper mapper,
             IProvider<GenericDatabaseUnit> dbProvider
-            )
+            ):base(mapper)
         {
-            _mapper = mapper;
 
             _dbProvider = dbProvider;
 
@@ -47,8 +44,6 @@ namespace Controllers{
             builder.ImplementAll();
         }
 
-
-
         [HttpGet]
         [Route("")]
         public virtual IActionResult GetAll(){
@@ -64,28 +59,7 @@ namespace Controllers{
                 ret = repo.GetAll();
             }
 
-            return Ok(_mapper.Map<List<TransferEntity>>(ret));
-        }
-
-        
-
-        private TransferEntity Map(StorageEntity storage){
-            return _mapper.Map<TransferEntity>(storage);
-        }
-
-        private List<TransferEntity> Map(ICollection<StorageEntity> storages){
-            return _mapper.Map<List<TransferEntity>>(storages);
-        }
-
-        private IActionResult Map(SafeRunResult result){
-            if(result.Success){
-
-                var transfer = Map(result.Result);
-
-                return Ok(transfer);
-            }else{
-                return result.ErrorReturningResult;
-            }
+            return Ok(Mapper.Map<List<TransferEntity>>(ret));
         }
 
         [HttpGet]
@@ -106,16 +80,13 @@ namespace Controllers{
             return Map(ret);
         }
 
-
-
-
         [HttpPost]
         [Route("")]
         public virtual IActionResult CreateNew(TransferEntity entity){
 
             if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
-            var storage = _mapper.Map<StorageEntity>(entity);
+            var storage = Mapper.Map<StorageEntity>(entity);
 
             SafeRunResult ret ;
 
@@ -150,7 +121,7 @@ namespace Controllers{
                     return NotFound();
                 }
 
-                _mapper.Map(entity,storage);
+                Mapper.Map(entity,storage);
 
                 db.Compelete();
             }
@@ -181,7 +152,6 @@ namespace Controllers{
 
             return Ok(Map(storage));
         }
-
 
         [HttpDelete]
         [Route("")]

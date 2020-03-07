@@ -13,7 +13,7 @@ namespace Controllers
 
 
     [Route("api/v1/{Controller}")]
-    public class TestController : EntityConterollerBase<StorageModels.User, User, long>
+    public class TestController : EntityControllerBase<StorageModels.User, User, long>
     {
 
         

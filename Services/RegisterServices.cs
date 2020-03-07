@@ -3,6 +3,7 @@
 
 using AutoMapper;
 using DataAccess;
+using Mapping;
 using Microsoft.Extensions.DependencyInjection;
 using Services;
 
@@ -22,5 +23,7 @@ public static class RegisterServices
         services.AddTransient<IProvider<GenericDatabaseUnit>,GenericDatabaseUnitProvider>( );
 
         services.AddTransient<IUsersService,UsersService>();
+
+        services.AddTransient<IObjectMapper,Automapper>();
     }
 }
