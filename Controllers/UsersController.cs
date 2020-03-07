@@ -25,8 +25,6 @@ namespace Controllers
     public class UsersController:ControllerBase
     {
 
-
-
         private readonly IUsersService _service;
         private readonly IMapper _mapper;
 

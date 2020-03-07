@@ -17,18 +17,36 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
 
     private IMapper _mapper;
     private IProvider<GenericDatabaseUnit> _dbProvider;
+
+    private ControllerConfigurations _configurations;
+
+
     public EntityConterollerBase(IMapper mapper,IProvider<GenericDatabaseUnit> dbProvider)
     {
         _mapper = mapper;
 
         _dbProvider = dbProvider;
+
+        ControllerConfigurationBuilder builder = new ControllerConfigurationBuilder();
+
+        Configure(builder);
+
+        _configurations = builder.Build();
         
     }
+
+
+    protected virtual void Configure(ControllerConfigurationBuilder builder){
+        builder.ImplementAll();
+    }
+
 
 
     [HttpGet]
     [Route("")]
     public virtual IActionResult GetAll(){
+
+        if(!_configurations.ImplementsGetAll) return NotFound();
 
         var ret = new List<StorageEntity> ();
 
@@ -99,6 +117,8 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [Route("{id}")]
     public virtual IActionResult GetById(Tid id){
 
+        if(!_configurations.ImplementsGetById) return NotFound();
+
         SafeRunResult ret ;
 
         using(var db = _dbProvider.Create()){
@@ -115,6 +135,8 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [HttpPost]
     [Route("")]
     public virtual IActionResult CreateNew(TransferEntity entity){
+
+        if(!_configurations.ImplementsCreateNew) return NotFound();
 
         var storage = _mapper.Map<StorageEntity>(entity);
 
@@ -136,6 +158,8 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [HttpPut]
     [Route("")]
     public virtual IActionResult Update(TransferEntity entity){
+
+        if(!_configurations.ImplementsUpdate) return NotFound();
 
         StorageEntity storage = null;
 
@@ -161,6 +185,8 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [Route("{id}")]
     public IActionResult DeleteById(Tid id){
 
+        if(!_configurations.ImplementsDeleteById) return NotFound();
+
         StorageEntity storage = null;
 
         using(var db = _dbProvider.Create()){
@@ -183,6 +209,8 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [HttpDelete]
     [Route("")]
     public IActionResult Delete(TransferEntity entity){
+
+        if(!_configurations.ImplementsDeleteByEntity) return NotFound();
 
         StorageEntity storage = null;
 
