@@ -46,7 +46,7 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [Route("")]
     public virtual IActionResult GetAll(){
 
-        if(!_configurations.ImplementsGetAll) return NotFound();
+        if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
         var ret = new List<StorageEntity> ();
 
@@ -87,9 +87,18 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     }
 
     protected IActionResult Error(){
-        return StatusCode((int)HttpStatusCode.InternalServerError);
+        return Error(HttpStatusCode.InternalServerError);
     }
 
+
+    protected IActionResult Error(HttpStatusCode error ){
+        return StatusCode((int) error,
+            new {
+                ErrorCode=(int) error,
+                ErrorMessage = error.ToString()
+            }
+        );
+    }
     private SafeRunResult SafeRun(Func<StorageEntity> runnable){
         return SafeRun(runnable, () => Error());
     }
@@ -117,7 +126,7 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [Route("{id}")]
     public virtual IActionResult GetById(Tid id){
 
-        if(!_configurations.ImplementsGetById) return NotFound();
+        if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
         SafeRunResult ret ;
 
@@ -132,11 +141,13 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     }
 
 
+
+
     [HttpPost]
     [Route("")]
     public virtual IActionResult CreateNew(TransferEntity entity){
 
-        if(!_configurations.ImplementsCreateNew) return NotFound();
+        if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
         var storage = _mapper.Map<StorageEntity>(entity);
 
@@ -159,7 +170,7 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [Route("")]
     public virtual IActionResult Update(TransferEntity entity){
 
-        if(!_configurations.ImplementsUpdate) return NotFound();
+        if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
         StorageEntity storage = null;
 
@@ -185,7 +196,7 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [Route("{id}")]
     public IActionResult DeleteById(Tid id){
 
-        if(!_configurations.ImplementsDeleteById) return NotFound();
+        if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
         StorageEntity storage = null;
 
@@ -210,7 +221,7 @@ public abstract class EntityConterollerBase<StorageEntity,TransferEntity,Tid> : 
     [Route("")]
     public IActionResult Delete(TransferEntity entity){
 
-        if(!_configurations.ImplementsDeleteByEntity) return NotFound();
+        if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
         StorageEntity storage = null;
 
