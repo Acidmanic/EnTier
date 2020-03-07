@@ -2,6 +2,9 @@
 
 
 
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
 namespace DomainModels
 {
 
@@ -12,6 +15,8 @@ namespace DomainModels
         public string Surname {get;set;}
 
         public long Id {get;set;}
+
+        public List<Post> Posts {get;set;}
         
     }
     

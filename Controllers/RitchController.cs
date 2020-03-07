@@ -9,6 +9,7 @@ namespace Controllers{
 
 
 
+    [ApiController]
     public abstract class RitchControllerBase
     <StorageEntity,TransferEntity> : ControllerBase 
     where StorageEntity:class

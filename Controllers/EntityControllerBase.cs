@@ -1,6 +1,4 @@
 
-
-
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -12,8 +10,6 @@ using Repository;
 
 namespace Controllers{
 
-
-    [ApiController]
     public abstract class EntityControllerBase
         <StorageEntity,TransferEntity,Tid> : 
         RitchControllerBase<StorageEntity,TransferEntity> where StorageEntity:class
@@ -38,7 +34,6 @@ namespace Controllers{
             _configurations = builder.Build();
             
         }
-
 
         protected virtual void Configure(ControllerConfigurationBuilder builder){
             builder.ImplementAll();

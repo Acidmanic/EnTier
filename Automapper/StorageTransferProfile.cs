@@ -14,7 +14,8 @@ namespace AutoMapper
         {
             CreateMap<StorageModels.User,DataTransferModels.User>()
                 .ReverseMap();
-
+            CreateMap<StorageModels.Post,DataTransferModels.Post>()
+                .ReverseMap();
         }
     }
 }

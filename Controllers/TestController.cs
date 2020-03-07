@@ -15,12 +15,9 @@ namespace Controllers
     [Route("api/v1/{Controller}")]
     public class TestController : EntityControllerBase<StorageModels.User, User, long>
     {
-
-        
-        public TestController(IMapper mapper, IProvider<GenericDatabaseUnit> dbProvider) : base(mapper, dbProvider)
+        public TestController(IObjectMapper mapper, IProvider<GenericDatabaseUnit> dbProvider) : base(mapper, dbProvider)
         {
         }
-
 
         protected override void Configure(ControllerConfigurationBuilder builder){
             builder.ReadonlyImplementation();

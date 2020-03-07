@@ -14,7 +14,7 @@ namespace Controllers{
         : EntityControllerBase<StorageModel, TransferModel, long> 
         where StorageModel:class 
     {
-        public EntityControllerBase(IMapper mapper, IProvider<GenericDatabaseUnit> dbProvider) : base(mapper, dbProvider)
+        public EntityControllerBase(IObjectMapper mapper, IProvider<GenericDatabaseUnit> dbProvider) : base(mapper, dbProvider)
         {
         }
     }
