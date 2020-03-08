@@ -2,6 +2,8 @@
 
 
 
+using System.Collections.Generic;
+
 namespace DataTransferModels
 {
     
@@ -13,6 +15,8 @@ namespace DataTransferModels
         public string Surname {get;set;}
 
         public long Id {get;set;}
+
+        public List<Post> Posts{get;set}
 
     }
 }
