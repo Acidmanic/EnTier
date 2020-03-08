@@ -16,7 +16,7 @@ namespace DataTransferModels
 
         public long Id {get;set;}
 
-        public List<Post> Posts{get;set}
+        public List<Post> Posts{get;set;}
 
     }
 }

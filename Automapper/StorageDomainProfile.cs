@@ -13,8 +13,12 @@ namespace AutoMapper
         public StorageDomainProfile()
         {
             CreateMap<StorageModels.User,DomainModels.User>()
-                .ReverseMap();
+                .ReverseMap()
+                ;
 
+            CreateMap<StorageModels.Post,DomainModels.Post>()
+                .ReverseMap()
+                ;
                 
         }
     }

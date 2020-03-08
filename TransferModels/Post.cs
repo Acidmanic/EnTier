@@ -21,6 +21,7 @@ namespace DataTransferModels{
 
         public long CreatorId {get;set;}
 
+        public User Creator {get;set;}
         public DateTime PostDate {get;set;}
 
     }

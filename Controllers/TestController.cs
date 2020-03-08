@@ -18,9 +18,5 @@ namespace Controllers
         public TestController(IObjectMapper mapper, IProvider<GenericDatabaseUnit> dbProvider) : base(mapper, dbProvider)
         {
         }
-
-        protected override void Configure(ControllerConfigurationBuilder builder){
-            builder.ReadonlyImplementation();
-        }
     }
 }

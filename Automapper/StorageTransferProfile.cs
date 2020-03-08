@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 namespace AutoMapper
 {
     public class StorageTransferProfile:Profile{
@@ -13,9 +7,11 @@ namespace AutoMapper
         public StorageTransferProfile()
         {
             CreateMap<StorageModels.User,DataTransferModels.User>()
-                .ReverseMap();
+                .ReverseMap()
+                ;
             CreateMap<StorageModels.Post,DataTransferModels.Post>()
-                .ReverseMap();
+                .ReverseMap()
+                ;
         }
     }
 }
