@@ -2,6 +2,7 @@
 
 
 
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using StorageModels;
@@ -13,5 +14,7 @@ namespace ApplicationRepositories
         public UsersRepository(DbSet<User> dbset) : base(dbset)
         {
         }
+
+
     }
 }

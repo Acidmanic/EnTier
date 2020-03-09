@@ -36,7 +36,9 @@ namespace Repository
 
             ret = ApplyEagerMarking(ret, mark);
 
-            return ret.ToList();
+            var retList = ret.ToList();
+
+            return retList;
         }
 
         protected List<Entity> GetByCondition(Func<Entity, bool> condition, Action<EagerMarker<Entity>> mark = null)

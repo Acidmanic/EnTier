@@ -16,11 +16,7 @@ namespace StorageModels{
 
         [Key]
         public long Id {get;set;}
-
-        [ForeignKey(nameof(User.Id))]
-        public long CreatorId {get;set;}
-
-        public User Creator {get;set;}
+        public virtual User Creator {get;set;}
 
         public DateTime PostDate {get;set;}
     }

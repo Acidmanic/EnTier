@@ -17,5 +17,8 @@ public class DomainDtoProfile:Profile{
         CreateMap<DomainModels.User,DataTransferModels.User>()
             .ReverseMap()
         ;
+        CreateMap<DomainModels.Post,DataTransferModels.Post>()
+            .ReverseMap()
+        ;
     }
 }

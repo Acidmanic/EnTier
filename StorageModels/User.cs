@@ -21,6 +21,6 @@ namespace StorageModels
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id {get;set;}
 
-        public List<Post> Posts{get;set;}
+        public virtual List<Post> Posts{get;set;}
     }
 }

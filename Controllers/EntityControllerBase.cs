@@ -52,6 +52,8 @@ namespace Controllers{
                 var repo = db.CreateRepository<StorageEntity>();
 
                 ret = repo.GetAll();
+
+                db.Compelete();
             }
 
             return Ok(Mapper.Map<List<TransferEntity>>(ret));
