@@ -53,7 +53,7 @@ public class DataReflection{
 
                 usage(id);
             }
-            catch (System.Exception){ }
+            catch (Exception){ }
         }
 
         public void SetId<SrcEntity,Tid,DstEntity>(SrcEntity src,DstEntity dst){
@@ -68,7 +68,7 @@ public class DataReflection{
 
                 dstProperty.SetValue(dst,id);
             }
-            catch (System.Exception){            }
+            catch (Exception){            }
 
         }
 }

@@ -3,19 +3,20 @@
 
 
 
-using AutoMapper;
 using DataAccess;
 using DataTransferModels;
 using Microsoft.AspNetCore.Mvc;
+using Services;
 
 namespace Controllers
 {
 
 
     [Route("api/v1/{Controller}")]
-    public class TestController : EntityControllerBase<StorageModels.User, User, long>
+    public class TestController : EntityControllerBase
+        <StorageModels.User, DomainModels.User, DataTransferModels.User>
     {
-        public TestController(IObjectMapper mapper, IProvider<GenericDatabaseUnit> dbProvider) : base(mapper, dbProvider)
+        public TestController(IObjectMapper mapper) : base(mapper)
         {
         }
     }

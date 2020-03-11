@@ -1,0 +1,46 @@
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Utility;
+
+public abstract class GenericImplementation
+{
+
+    private class ConstructorSignature{
+
+        public Type[] Types {get;set;}
+
+        public Func<Object>[] ArgumentProviders {get;set;}
+
+        // man ke mapper nadaram!! injector dare!
+    }
+
+
+
+        protected Tcast CreateInstance<Tcast>(Type type, object argumet)
+        {
+            var constructor = type.GetConstructor(new Type[]{argumet.GetType()});
+
+            var ret = constructor.Invoke(new object[]{argumet});
+
+            return (Tcast) ret;
+        }
+
+
+        protected Tcast GetMeSome<Tcast>(){
+            var type = typeof(Tcast);
+
+            var types = ReflectionService.Make().GetTypesWhichImplement(type);
+
+            var constructor = GetNoArgConstructor(types);
+        }
+
+    private ConstructorInfo GetNoArgConstructor(List<Type> types)
+    {
+        
+    }
+}

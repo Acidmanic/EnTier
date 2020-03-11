@@ -7,32 +7,74 @@ using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using Services;
+using Utility;
 
 namespace Controllers{
 
     public abstract class EntityControllerBase
-        <StorageEntity,TransferEntity,Tid> : 
-        RitchControllerBase<StorageEntity,TransferEntity> where StorageEntity:class
+        <StorageEntity,DomainEntity,TransferEntity,Tid> : 
+        RitchControllerBase<DomainEntity,TransferEntity> 
+        where StorageEntity:class
     {
 
-        private IProvider<GenericDatabaseUnit> _dbProvider;
+
+        private IService<DomainEntity,Tid> _service;
+        protected IService<DomainEntity,Tid> EntityService{
+            get{
+
+                var obj = new Object();
+
+                lock(obj){
+                    if (_service == null){
+                        _service = ReflectionService.Make()
+                            .FindConstructor<IService<DomainEntity,Tid>>
+                            (Mapper)();
+                    }
+                    if( _service == null ){
+                        _service = new GenericService
+                            <StorageEntity,DomainEntity,Tid>(Mapper);
+                    }
+                }
+
+                return _service;
+            }
+            set{
+                _service = value;
+            }
+        }
 
         private ControllerConfigurations _configurations;
 
-        public EntityControllerBase(
+        protected EntityControllerBase(
             IObjectMapper mapper,
-            IProvider<GenericDatabaseUnit> dbProvider
+            IService<DomainEntity,Tid> entityService
             ):base(mapper)
         {
 
-            _dbProvider = dbProvider;
+            EntityService = entityService;
 
+            InitiateConfiguration();
+            
+        }
+
+        protected EntityControllerBase(
+            IObjectMapper mapper):base(mapper)
+        {
+
+            EntityService = null;
+
+            InitiateConfiguration();
+            
+        }
+
+        private void InitiateConfiguration()
+        {
             ControllerConfigurationBuilder builder = new ControllerConfigurationBuilder();
 
             Configure(builder);
 
             _configurations = builder.Build();
-            
         }
 
         protected virtual void Configure(ControllerConfigurationBuilder builder){
@@ -45,18 +87,10 @@ namespace Controllers{
 
             if(!_configurations.ImplementsGetAll) return Error(HttpStatusCode.MethodNotAllowed);
 
-            var ret = new List<StorageEntity> ();
+            var result = SafeRun(() => EntityService.GetAll(), ()=> NotFound());
 
-            using(var db = _dbProvider.Create()){
+            return Map<List<DomainEntity>,List<TransferEntity>>(result);
 
-                var repo = db.CreateRepository<StorageEntity>();
-
-                ret = repo.GetAll();
-
-                db.Compelete();
-            }
-
-            return Ok(Mapper.Map<List<TransferEntity>>(ret));
         }
 
         [HttpGet]
@@ -65,16 +99,10 @@ namespace Controllers{
 
             if(!_configurations.ImplementsGetById) return Error(HttpStatusCode.MethodNotAllowed);
 
-            SafeRunResult ret ;
+            var result = SafeRun(()=> EntityService.GetById(id),()=> NotFound());
 
-            using(var db = _dbProvider.Create()){
+            return Map<DomainEntity,TransferEntity>(result);
 
-                var repo = db.CreateRepository<StorageEntity>();
-
-                ret = SafeRun(()=> repo.GetById(id),()=> NotFound());
-            }
-
-            return Map(ret);
         }
 
         [HttpPost]
@@ -83,20 +111,11 @@ namespace Controllers{
 
             if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
-            var storage = Mapper.Map<StorageEntity>(entity);
+            var domain = Mapper.Map<DomainEntity>(entity);
 
-            SafeRunResult ret ;
+            var result = SafeRun(()=>EntityService.CreateNew(domain),()=>Error());
 
-            using(var db = _dbProvider.Create()){
-
-                var repo = db.CreateRepository<StorageEntity>();
-
-                ret = SafeRun(()=>repo.Add(storage));
-
-                db.Compelete();
-            }
-
-            return Map(ret);
+            return Map<DomainEntity,TransferEntity>(result);
         }
         
 
@@ -106,24 +125,12 @@ namespace Controllers{
 
             if(!_configurations.ImplementsUpdate) return Error(HttpStatusCode.MethodNotAllowed);
 
-            StorageEntity storage = null;
+            var domain = Mapper.Map<DomainEntity>(entity);
 
-            using(var db = _dbProvider.Create()){
+            var result = SafeRun(()=> EntityService.Update(domain));
 
-                var repo = db.CreateRepository<StorageEntity>();
+            return Map<DomainEntity,TransferEntity>(result);
 
-                new DataReflection().UseId<TransferEntity,Tid>(entity,id => storage = repo.GetById(id));
-
-                if (storage == null){
-                    return NotFound();
-                }
-
-                Mapper.Map(entity,storage);
-
-                db.Compelete();
-            }
-
-            return Ok(Map(storage));
         }
 
         [HttpDelete]
@@ -132,22 +139,10 @@ namespace Controllers{
 
             if(!_configurations.ImplementsDeleteById) return Error(HttpStatusCode.MethodNotAllowed);
 
-            StorageEntity storage = null;
+            var result = SafeRun(()=> EntityService.DeleteById(id),() => NotFound());
 
-            using(var db = _dbProvider.Create()){
+            return Map<DomainEntity,TransferEntity>(result);
 
-                var repo = db.CreateRepository<StorageEntity>();
-
-                storage = repo.RemoveById(id);
-
-                db.Compelete();
-            }
-            
-            if( storage == null){
-                return NotFound();
-            }
-
-            return Ok(Map(storage));
         }
 
         [HttpDelete]
@@ -156,26 +151,26 @@ namespace Controllers{
 
             if(!_configurations.ImplementsDeleteByEntity) return Error(HttpStatusCode.MethodNotAllowed);
 
-            StorageEntity storage = null;
+            var domain = Mapper.Map<DomainEntity>(entity);
+            
+            var result = SafeRun(()=> EntityService.DeleteByEntity(domain),() => NotFound());
 
-            SafeRunResult result;
-            using(var db = _dbProvider.Create()){
-
-                var repo = db.CreateRepository<StorageEntity>();
-
-                result = SafeRun(() => {
-                    new DataReflection().UseId<TransferEntity,Tid>(entity,id => storage = repo.GetById(id));
-                    return storage;
-                },()=> NotFound());
-                
-                if (result.Success){
-                    result = SafeRun(() => storage = repo.Remove(storage));
-                }
-
-                db.Compelete();
-            }
-
-            return Map(result);
+            return Map<DomainEntity,TransferEntity>(result);
         }
     }
+
+
+    public abstract class EntityControllerBase<StorageEntity, DomainEntity, TransferEntity>
+        : EntityControllerBase<StorageEntity, DomainEntity, TransferEntity, long>
+        where StorageEntity : class
+    {
+        protected EntityControllerBase(IObjectMapper mapper, IService<DomainEntity, long> entityService) : base(mapper, entityService)
+        {
+        }
+
+        protected EntityControllerBase(IObjectMapper mapper) : base(mapper)
+        {
+        }
+    }
+
 }

@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using AutoMapper;
 using DataAccess;
 using DomainModels;
+using Repository;
 
 namespace  Services
 {
-    public class UsersService : ServiceBase, IUsersService
+    public class UsersService : ServiceBase<StorageModels.User,User>, 
+        IUsersService
     {
-        public UsersService(IMapper mapper, IProvider<DatabaseUnit> dbProvider) : base(mapper, dbProvider)
+        public UsersService(IObjectMapper mapper, IProvider<UnitOfDataAccessBase> dbProvider) : base(mapper, dbProvider)
         {
         }
 
@@ -22,7 +24,7 @@ namespace  Services
 
             using(var db = DbProvider.Create()){
 
-                storage = db.Users.Add(storage);
+                storage = db.GetRepository<StorageModels.User>().Add(storage);
                 
                 db.Compelete();
             }
@@ -30,18 +32,9 @@ namespace  Services
             return Mapper.Map<User>(storage);
         }
 
-        public List<User> GetAll()
+        List<User> IUsersService.GetAll()
         {
-            List<StorageModels.User> res = null;
-
-            using (var db = DbProvider.Create()){
-
-                res = db.Users.GetAll();
-            }
-
-            var ret = Mapper.Map<List<User>>(res);
-
-            return ret;
+            return base.GetAll();
         }
     }
 }

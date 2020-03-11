@@ -3,7 +3,9 @@
 
 
 
+using System;
 using Microsoft.EntityFrameworkCore;
+using Utility;
 
 namespace Repository
 {
@@ -13,22 +15,39 @@ namespace Repository
     public abstract class UnitOfDataAccessBase : IUnitOfWork
     {
 
-        private readonly DbContext _context;
+        protected  DbContext Context {get; private set;}
+
+        private readonly CachedReflection _reflection;
+        
+
+        public virtual IRepository<StorageEntity> GetRepository<StorageEntity>()
+        where StorageEntity : class
+        {
+
+            var ret = _reflection.GetCreatorForTypeWhichImplements
+                <IRepository<StorageEntity>>()();
+
+            return ret;
+        }
 
 
         public UnitOfDataAccessBase(DbContext context)
         {
-            _context = context;
+            Context = context;
+
+            _reflection = new CachedReflection();
+
+            _reflection.CachePropertiesOf(this);
         }
 
         public void Compelete()
         {
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public void Dispose()
         {
-            _context.Dispose();
+            Context.Dispose();
         }
     }
 }

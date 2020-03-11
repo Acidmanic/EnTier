@@ -11,8 +11,7 @@ namespace Controllers{
 
     [ApiController]
     public abstract class RitchControllerBase
-    <StorageEntity,TransferEntity> : ControllerBase 
-    where StorageEntity:class
+    <DomainEntity,TransferEntity> : ControllerBase 
     {
 
 
@@ -22,9 +21,9 @@ namespace Controllers{
         {
             Mapper = mapper;
         }
-        protected class SafeRunResult{
+        protected class SafeRunResult<TReturn>{
 
-            public StorageEntity Result{get; set;}
+            public TReturn Result{get; set;}
             
             public IActionResult ErrorReturningResult{get; set;}
 
@@ -32,14 +31,14 @@ namespace Controllers{
             
         }
 
-        protected SafeRunResult SafeRun(Func<StorageEntity> runnable,Func<IActionResult> onError){
+        protected SafeRunResult<TReturn> SafeRun<TReturn>(Func<TReturn> runnable,Func<IActionResult> onError){
 
-            var ret = new SafeRunResult(){Success = true};
+            var ret = new SafeRunResult<TReturn>(){Success = true};
             try
             {
                 ret.Result = runnable();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 ret.Success = false;
                 ret.ErrorReturningResult = onError();
@@ -61,18 +60,15 @@ namespace Controllers{
                 }
             );
         }
-        protected SafeRunResult SafeRun(Func<StorageEntity> runnable){
+        protected SafeRunResult<TReturn> SafeRun<TReturn>(Func<TReturn> runnable){
             return SafeRun(runnable, () => Error());
         }
 
-        protected TransferEntity Map(StorageEntity storage){
-            return Mapper.Map<TransferEntity>(storage);
-        }
 
-        protected IActionResult Map(SafeRunResult result){
+        protected IActionResult Map<TSource,TReturn>(SafeRunResult<TSource> result){
             if(result.Success){
 
-                var transfer = Map(result.Result);
+                var transfer = Mapper.Map<TReturn>(result.Result);
 
                 return Ok(transfer);
             }else{
