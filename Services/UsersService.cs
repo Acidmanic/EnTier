@@ -17,6 +17,11 @@ namespace  Services
         {
         }
 
+        public UsersService(IObjectMapper mapper) : base(mapper, new DatabaseUnitProvider())
+        {
+        }
+
+
         public User AddUser(User user)
         {
 

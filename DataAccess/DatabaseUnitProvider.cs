@@ -2,11 +2,13 @@
 
 
 
+using Repository;
+
 namespace DataAccess
 {
-    public class DatabaseUnitProvider : IProvider<DatabaseUnit>
+    public class DatabaseUnitProvider : IProvider<UnitOfDataAccessBase>
     {
-        public DatabaseUnit Create()
+        public UnitOfDataAccessBase Create()
         {
             return new DatabaseUnit(new DataBaseContext());
         }

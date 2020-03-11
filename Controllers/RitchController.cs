@@ -38,7 +38,7 @@ namespace Controllers{
             {
                 ret.Result = runnable();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 ret.Success = false;
                 ret.ErrorReturningResult = onError();

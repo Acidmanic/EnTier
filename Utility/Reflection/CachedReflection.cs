@@ -48,7 +48,7 @@ namespace Utility{
             foreach(var prop in properties){
                 if(prop.CanRead){
                     _types.Add( new MetaType(
-                        prop.DeclaringType,
+                        prop.PropertyType,
                         () => prop.GetValue(obj)
                     ));
                 }
@@ -62,7 +62,7 @@ namespace Utility{
             var properties = obj.GetType().GetProperties();
 
             foreach(var prop in properties){
-                _types.Add(new MetaType(prop.DeclaringType));
+                _types.Add(new MetaType(prop.PropertyType));
             }
 
             return this;
@@ -82,7 +82,7 @@ namespace Utility{
             var type = typeof(TCast);
 
             return GetCreatorForTypeWhich<TCast>(
-                mt => Extends(mt.Type,type)
+                mt => Implements(mt.Type,type)
             );
         }
 
@@ -91,7 +91,7 @@ namespace Utility{
             var type = typeof(TCast);
 
             return GetCreatorForTypeWhich<TCast>(
-                mt => Implements(mt.Type,type)
+                mt => Extends(mt.Type,type)
             );
         }
 

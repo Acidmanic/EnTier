@@ -56,7 +56,7 @@ namespace Services{
                 foreach(var prop in properties){
                     if (prop.CanRead 
                         && prop.CanWrite 
-                        && ReflectionService.Make().Implements(prop.DeclaringType,entityType)
+                        && ReflectionService.Make().Implements(prop.PropertyType,entityType)
                     ){
                         return true;
                     }
