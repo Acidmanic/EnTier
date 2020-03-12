@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Repository;
 using DataTransferModels;
 using AutoMapper;
-using Services;
+using Service;
 using System;
 using ApplicationRepositories;
 

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Repository;
 using Utility;
 
-public class GenericUnitOfDataAccess : UnitOfDataAccessBase
+internal class GenericUnitOfDataAccess : UnitOfDataAccessBase
 {
 
 

@@ -4,11 +4,12 @@
 
 using AutoMapper;
 
+
 namespace Mapping{
 
 
 
-    public class Automapper : IObjectMapper
+    public class Automapper : Plugging.IObjectMapper
     {
         private readonly IMapper _mapper;
 

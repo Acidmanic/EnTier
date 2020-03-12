@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using DomainModels;
 
-namespace Services
+namespace Service
 {
     
 

@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using AutoMapper;
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
-using Services;
+using Service;
 using Utility;
+using Plugging;
 
 namespace Controllers{
 

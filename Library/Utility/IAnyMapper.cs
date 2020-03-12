@@ -1,13 +1,13 @@
 
 
 
+namespace Plugging{
 
+    public interface IObjectMapper{
 
-public interface IObjectMapper{
+        TDestination Map<TDestination>(object src);
 
+        void Map<TDestination,TSource>(TSource src,TDestination dst);
+    }
 
-
-    TDestination Map<TDestination>(object src);
-
-    void Map<TDestination,TSource>(TSource src,TDestination dst);
 }

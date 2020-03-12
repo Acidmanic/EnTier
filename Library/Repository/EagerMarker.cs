@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
-    public interface EagerMarker<Entity> where Entity : class
+    public interface IEagerMarker<Entity> where Entity : class
     {
 
-        EagerMarker<Entity> Include<TProperty>(System.Linq.Expressions.Expression<Func<Entity, TProperty>> expression);
+        IEagerMarker<Entity> Include<TProperty>(System.Linq.Expressions.Expression<Func<Entity, TProperty>> expression);
     }
     
-    class IQuariableWrapperEagerMarker<Entity> : EagerMarker<Entity> where Entity : class
+    class IQuariableWrapperEagerMarker<Entity> : IEagerMarker<Entity> where Entity : class
     {
 
         public IQueryable<Entity> Result { get; private set; }
@@ -22,7 +22,7 @@ namespace Repository
         {
             Result = queryable;
         }
-        public EagerMarker<Entity> Include<TProperty>(System.Linq.Expressions.Expression<Func<Entity, TProperty>> expression)
+        public IEagerMarker<Entity> Include<TProperty>(System.Linq.Expressions.Expression<Func<Entity, TProperty>> expression)
         {
             Result = Result.Include<Entity, TProperty>(expression);
             
@@ -30,9 +30,9 @@ namespace Repository
         }
     }
 
-    class NoneEagerMarker<Entity> : EagerMarker<Entity> where Entity : class
+    class NoneEagerMarker<Entity> : IEagerMarker<Entity> where Entity : class
     {
-        public EagerMarker<Entity> Include<TProperty>(System.Linq.Expressions.Expression<Func<Entity, TProperty>> expression)
+        public IEagerMarker<Entity> Include<TProperty>(System.Linq.Expressions.Expression<Func<Entity, TProperty>> expression)
         {
             return this;
         }

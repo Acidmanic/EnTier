@@ -1,11 +1,11 @@
 
 
 
-using AutoMapper;
 using DataAccess;
 using Mapping;
 using Microsoft.Extensions.DependencyInjection;
-using Services;
+using Plugging;
+using Service;
 
 public static class RegisterServices
 {

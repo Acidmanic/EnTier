@@ -6,8 +6,10 @@ using System;
 using System.Collections.Generic;
 using DataAccess;
 using Repository;
+using Plugging;
+using Utility;
 
-namespace Services
+namespace Service
 {
     public class ServiceBase<StorageEntity,DomainEntity,Tid>
         :IService<DomainEntity,Tid>

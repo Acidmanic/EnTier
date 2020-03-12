@@ -1,14 +1,13 @@
 
-
-
-
 using System.Collections.Generic;
-using AutoMapper;
 using DataAccess;
 using DomainModels;
 using Repository;
+using Utility;
+using Plugging;
 
-namespace  Services
+
+namespace  Service
 {
     public class UsersService : ServiceBase<StorageModels.User,User>, 
         IUsersService

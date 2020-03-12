@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 
-namespace Services{
+namespace Service{
 
 
     public interface IService<DomainEntity,TId>{

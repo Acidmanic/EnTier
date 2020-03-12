@@ -21,7 +21,7 @@ namespace Repository
             return DbSet.Add(value).Entity;
         }
 
-        protected IQueryable<Entity> ApplyEagerMarking(IQueryable<Entity> queryable, Action<EagerMarker<Entity>> mark)
+        protected IQueryable<Entity> ApplyEagerMarking(IQueryable<Entity> queryable, Action<IEagerMarker<Entity>> mark)
         {
             var marker = new IQuariableWrapperEagerMarker<Entity>(queryable);
 
@@ -30,7 +30,7 @@ namespace Repository
             return marker.Result;
         }
 
-        protected List<Entity> GetAll(Action<EagerMarker<Entity>> mark = null)
+        protected List<Entity> GetAll(Action<IEagerMarker<Entity>> mark = null)
         {
             var ret = DbSet.Where(e => true);
 
@@ -41,7 +41,7 @@ namespace Repository
             return retList;
         }
 
-        protected List<Entity> GetByCondition(Func<Entity, bool> condition, Action<EagerMarker<Entity>> mark = null)
+        protected List<Entity> GetByCondition(Func<Entity, bool> condition, Action<IEagerMarker<Entity>> mark = null)
         {
             var ret = DbSet.Where(condition).AsQueryable();
 
@@ -50,7 +50,7 @@ namespace Repository
             return ret.ToList();
         }
 
-        protected Entity GetById<Tid>(Tid id, Action<EagerMarker<Entity>> mark = null)
+        protected Entity GetById<Tid>(Tid id, Action<IEagerMarker<Entity>> mark = null)
         {
             var reader = new DataReflection().IdReader<Entity,Tid>(id);
 
@@ -93,7 +93,7 @@ namespace Repository
             return GetById(id, null);
         }
 
-        protected Entity GetById<Tid>(Entity entity,Action<EagerMarker<Entity>> marker = null )
+        protected Entity GetById<Tid>(Entity entity,Action<IEagerMarker<Entity>> marker = null )
         {
             var idProperty = new DataReflection().GetIdProperty<Entity,Tid>();
 

@@ -6,11 +6,13 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Utility;
+using Plugging;
 
-namespace Services{
+
+namespace Service{
 
 
-    public class GenericService<StorageEntity,DomainEntity, Tid> :
+    internal class GenericService<StorageEntity,DomainEntity, Tid> :
         ServiceBase<StorageEntity,DomainEntity, Tid>
         where StorageEntity : class
     {

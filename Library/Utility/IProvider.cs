@@ -2,9 +2,11 @@
 
 
 
+namespace Utility{
 
+    public interface IProvider<T> {
 
-public interface IProvider<T> {
+        T Create();
+    }
 
-    T Create();
 }
