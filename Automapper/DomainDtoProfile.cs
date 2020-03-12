@@ -20,5 +20,9 @@ public class DomainDtoProfile:Profile{
         CreateMap<DomainModels.Post,DataTransferModels.Post>()
             .ReverseMap()
         ;
+
+        CreateMap<DomainModels.Project,DataTransferModels.Project>()
+            .ReverseMap()
+        ;
     }
 }

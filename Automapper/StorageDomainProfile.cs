@@ -19,6 +19,9 @@ namespace AutoMapper
             CreateMap<StorageModels.Post,DomainModels.Post>()
                 .ReverseMap()
                 ;
+            CreateMap<StorageModels.Project,DomainModels.Project>()
+                .ReverseMap()
+                ;
                 
         }
     }
