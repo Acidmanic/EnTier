@@ -63,23 +63,7 @@ namespace Controllers
         }
 
 
-        [HttpGet]
-        [Route("test")]
-        public object Test(){
-
-            
-            List<StorageModels.User> users;
-            
-            using (var dbu = new GenericDatabaseUnit(new DataBaseContext())){
-                
-                var repo = dbu.GetRepository<IUsersRepository,StorageModels.User>();
-
-                users = repo.GetAll();
-            }
-
-            return users;
-        }
-
+        
         [HttpGet]
         [Route("test2")]
         public object Test2(){

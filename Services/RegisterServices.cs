@@ -18,8 +18,6 @@ public static class RegisterServices
         
         services.AddSingleton(sp => AutomapperBootstrap.CreateMapper());
 
-        services.AddTransient<IProvider<GenericDatabaseUnit>,GenericDatabaseUnitProvider>( );
-
         services.AddTransient<IUsersService,UsersService>();
 
         services.AddTransient<IObjectMapper,Automapper>();
