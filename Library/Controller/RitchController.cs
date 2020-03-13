@@ -32,6 +32,7 @@ namespace Controllers{
             
         }
 
+        //TODO: Project Error to output object in debug mode
         protected SafeRunResult<TReturn> SafeRun<TReturn>(Func<TReturn> runnable,Func<IActionResult> onError){
 
             var ret = new SafeRunResult<TReturn>(){Success = true};

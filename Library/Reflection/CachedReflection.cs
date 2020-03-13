@@ -15,7 +15,7 @@ namespace Utility{
     public class CachedReflection{
 
 
-        private List<MetaType> _types;
+        private readonly List<MetaType> _types;
 
         public CachedReflection()
         {
@@ -77,7 +77,7 @@ namespace Utility{
                          .ToList();
         }
 
-        public Func<TCast> GetCreatorForTypeWhichImplements<TCast>(){
+        public Constructor<TCast> GetCreatorForTypeWhichImplements<TCast>(){
 
             var type = typeof(TCast);
 
@@ -86,7 +86,7 @@ namespace Utility{
             );
         }
 
-        public Func<TCast> GetCreatorForTypeWhichExtends<TCast>()
+        public Constructor<TCast> GetCreatorForTypeWhichExtends<TCast>()
         {
             var type = typeof(TCast);
 
@@ -95,17 +95,17 @@ namespace Utility{
             );
         }
 
-        private Func<TCast> GetCreatorForTypeWhich<TCast>(Func<MetaType,bool> predicate){
+        private Constructor<TCast> GetCreatorForTypeWhich<TCast>(Func<MetaType,bool> predicate){
             
             var res = _types.Where(predicate)
                             .Select(mt => mt.Instanciator)
                             .FirstOrDefault();
                             
             if (res != null){
-                return () => (TCast)res();
+                return new Constructor<TCast>(() => (TCast)res());
             }
 
-            return () => default;
+            return Constructor<TCast>.Null();
         }
 
         public Type[] GetTypes(params Object[] objects){
@@ -120,7 +120,7 @@ namespace Utility{
 
         }
 
-        public Func<TCast> FindConstructor<TCast>(
+        public Constructor<TCast> FindConstructor<TCast>(
                 Func<Type,bool> predicate,
                 params Object[] argumets
         ){
@@ -134,14 +134,14 @@ namespace Utility{
                     var constructor = type.GetConstructor(argTypes);
 
                     if (constructor!=null){
-                        return () => (TCast) constructor.Invoke(argumets);
+                        return new Constructor<TCast>(constructor);
                     }
                 }
             }
-            return null;
+            return Constructor<TCast>.Null();
         }
 
-        public Func<TCast> FindConstructor<TCast>(params Object[] argumets){
+        public Constructor<TCast> FindConstructor<TCast>(params Object[] argumets){
             var type = typeof(TCast);
 
             return FindConstructor<TCast>(

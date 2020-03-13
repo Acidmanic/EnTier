@@ -25,7 +25,7 @@ namespace Repository
         {
 
             var ret = _reflection.GetCreatorForTypeWhichImplements
-                <IRepository<StorageEntity>>()();
+                <IRepository<StorageEntity>>().Construct();
 
             return ret;
         }

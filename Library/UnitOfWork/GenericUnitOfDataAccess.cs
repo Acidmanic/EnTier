@@ -27,15 +27,11 @@ internal class GenericUnitOfDataAccess : UnitOfDataAccessBase
             if(dbSet != null){
                 var constructor = ReflectionService.Make()
                     .FindConstructor<IRepository<StorageEntity>>(dbSet);
-                
-                if(constructor != null){
-                    return constructor();
+                if(! constructor.IsNull){
+                    return constructor.Construct();
                 }
-
                 return new GenericRepository<StorageEntity>(dbSet);
             }
-
-            
         }
 
         //TODO: NullRepository Please
@@ -51,7 +47,7 @@ internal class GenericUnitOfDataAccess : UnitOfDataAccessBase
 
         var creator =  reflection.GetCreatorForTypeWhichExtends<DbSet<StorageEntity>>();
 
-        return creator();
+        return creator.Construct();
 
     }
 }

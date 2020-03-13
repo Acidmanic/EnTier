@@ -21,6 +21,8 @@ namespace DataAccess
 
         public DbSet<Post> Posts{get;set;}
 
+        public DbSet<Project> Projects{get;set;}
+
     }
 }
 

@@ -29,11 +29,19 @@ namespace Service{
                 var reflection = ReflectionService.Make();
 
                 DbContext context = GetContext();
+                
+                if (context == null){
+                    throw new Exception(
+                        String.Format("Unable To Find DbContext Containing DbSet<{0}>.",
+                        typeof(StorageEntity).FullName)
+                    );
+                }
 
                 var constructor = reflection.FindConstructor<UnitOfDataAccessBase>(context);
 
-                if(constructor != null){
-                    var ret = constructor();
+                if(!constructor.IsNull){
+
+                    var ret = constructor.Construct();
 
                     if( ret != null){
                         return ret;
@@ -46,19 +54,21 @@ namespace Service{
             private DbContext GetContext()
             {
                 return ReflectionService.Make()
-                            .FindConstructor<DbContext>(t => ContainsBdSetOf<StorageEntity>(t))();
+                            .FindConstructor<DbContext>
+                            (t => ContainsPropertyOfType<DbSet<StorageEntity>>(t))
+                            .Construct();
             }
 
-            private bool ContainsBdSetOf<T>(Type t)
+            private bool ContainsPropertyOfType<T>(Type t)
             {
                 var properties = t.GetProperties();
 
-                var entityType = typeof(T);
+                var findingType = typeof(T);
 
                 foreach(var prop in properties){
                     if (prop.CanRead 
                         && prop.CanWrite 
-                        && ReflectionService.Make().Implements(prop.PropertyType,entityType)
+                        && ReflectionService.Make().Extends(prop.PropertyType,findingType)
                     ){
                         return true;
                     }

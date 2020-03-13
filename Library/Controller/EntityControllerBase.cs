@@ -29,7 +29,7 @@ namespace Controllers{
                     if (_service == null){
                         _service = ReflectionService.Make()
                             .FindConstructor<IService<DomainEntity,Tid>>
-                            (Mapper)();
+                            (Mapper).Construct();
                     }
                     if( _service == null ){
                         _service = new GenericService
