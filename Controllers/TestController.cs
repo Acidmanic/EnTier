@@ -28,15 +28,14 @@ namespace Controllers
         }
 
 
-        public override IActionResult GetAll(){
-
+        public override IActionResult GetById(long id){
             IActionResult ret;
 
             using(var scope = new EagerScopeManager()){
                 
                 scope.Mark<StorageModels.User>( q => q.Include(u => u.Posts));
 
-                ret = base.GetAll();
+                ret = base.GetById(id);
 
             }
 

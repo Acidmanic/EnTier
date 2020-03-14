@@ -27,7 +27,7 @@ namespace Repository
             return EagerScopeManager.Apply(queryable);
         }
 
-        protected List<Entity> GetAll(Action<IEagerMarker<Entity>> mark = null)
+        public virtual List<Entity> GetAll()
         {
             var ret = DbSet.Where(e => true);
 
@@ -38,22 +38,26 @@ namespace Repository
             return retList;
         }
 
-        protected List<Entity> GetByCondition(Func<Entity, bool> condition, Action<IEagerMarker<Entity>> mark = null)
+        protected List<Entity> GetByCondition(Func<Entity, bool> condition)
         {
-            var ret = DbSet.Where(condition).AsQueryable();
+            var data = DbSet.AsQueryable();
 
-            ret = ApplyEagerMarking(ret);
+            data = ApplyEagerMarking(data);
 
+            var ret = data.Where(condition);
+            
             return ret.ToList();
         }
 
-        protected Entity GetById<Tid>(Tid id, Action<IEagerMarker<Entity>> mark = null)
+        public virtual Entity GetById<Tid>(Tid id)
         {
             var reader = new DataReflection().IdReader<Entity,Tid>(id);
 
-            var ret = DbSet.Where(reader).AsQueryable();
+            var data = DbSet.AsQueryable();
+            
+            data = ApplyEagerMarking(data);
 
-            ret = ApplyEagerMarking(ret);
+            var ret = data.Where(reader);
 
             return ret.FirstOrDefault();
         }
@@ -75,22 +79,13 @@ namespace Repository
             return null;
         }
 
-        public virtual List<Entity> GetAll()
-        {
-            return GetAll(null);
-        }
-
         public virtual List<Entity> Find(Func<Entity, bool> condition)
         {
-            return GetByCondition(condition, null);
+            return GetByCondition(condition);
         }
 
-        public virtual Entity GetById<Tid>(Tid id)
-        {
-            return GetById(id, null);
-        }
 
-        protected Entity GetById<Tid>(Entity entity,Action<IEagerMarker<Entity>> marker = null )
+        public virtual Entity GetById<Tid>(Entity entity)
         {
             var idProperty = new DataReflection().GetIdProperty<Entity,Tid>();
 
@@ -98,16 +93,12 @@ namespace Repository
             {
                 var eId = (Tid)idProperty.GetValue(entity);
 
-                return GetById(eId,marker);
+                return GetById(eId);
 
             }
             catch (System.Exception){            }
 
             return null;
-        }
-
-        public Entity GetById<Tid>(Entity entity){
-            return GetById(entity,null);
         }
     }
 

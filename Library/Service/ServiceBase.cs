@@ -53,6 +53,8 @@ namespace Service
                 var repo = db.GetRepository<StorageEntity>();
 
                 res = repo.GetById(id);
+
+                db.Compelete();
             }
 
             return Mapper.Map<DomainEntity>(res);
