@@ -134,7 +134,7 @@ namespace Utility{
                     var constructor = type.GetConstructor(argTypes);
 
                     if (constructor!=null){
-                        return new Constructor<TCast>(constructor);
+                        return new Constructor<TCast>(constructor,argumets);
                     }
                 }
             }

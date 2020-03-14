@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Reflection;
+using DataAccess;
 
 namespace Repository
 {
@@ -21,20 +22,16 @@ namespace Repository
             return DbSet.Add(value).Entity;
         }
 
-        protected IQueryable<Entity> ApplyEagerMarking(IQueryable<Entity> queryable, Action<IEagerMarker<Entity>> mark)
+        protected IQueryable<Entity> ApplyEagerMarking(IQueryable<Entity> queryable)
         {
-            var marker = new IQuariableWrapperEagerMarker<Entity>(queryable);
-
-            mark?.Invoke(marker);
-
-            return marker.Result;
+            return EagerScopeManager.Apply(queryable);
         }
 
         protected List<Entity> GetAll(Action<IEagerMarker<Entity>> mark = null)
         {
             var ret = DbSet.Where(e => true);
 
-            ret = ApplyEagerMarking(ret, mark);
+            ret = ApplyEagerMarking(ret);
 
             var retList = ret.ToList();
 
@@ -45,7 +42,7 @@ namespace Repository
         {
             var ret = DbSet.Where(condition).AsQueryable();
 
-            ret = ApplyEagerMarking(ret, mark);
+            ret = ApplyEagerMarking(ret);
 
             return ret.ToList();
         }
@@ -56,7 +53,7 @@ namespace Repository
 
             var ret = DbSet.Where(reader).AsQueryable();
 
-            ret = ApplyEagerMarking(ret, mark);
+            ret = ApplyEagerMarking(ret);
 
             return ret.FirstOrDefault();
         }
