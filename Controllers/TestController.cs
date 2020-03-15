@@ -15,7 +15,7 @@ namespace Controllers
 
 
     [Route("api/v1/{Controller}")]
-    // [Eager(typeof(StorageModels.User),nameof(StorageModels.User.Posts))]
+    [Eager(typeof(StorageModels.User),nameof(StorageModels.User.Posts))]
     public class TestController : EntityControllerBase
         <StorageModels.User, DomainModels.User, DataTransferModels.User>
     {
@@ -35,7 +35,7 @@ namespace Controllers
             using(var scope = new EagerScopeManager()){
                 
                 scope.Mark<StorageModels.User>();
-                scope.Mark<StorageModels.User>( q => q.Include(u => u.Posts));
+                // scope.Mark<StorageModels.User>( q => q.Include(u => u.Posts));
 
                 ret = base.GetById(id);
 

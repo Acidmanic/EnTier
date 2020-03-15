@@ -14,6 +14,7 @@ namespace Controllers{
     public abstract class EntityControllerBase
         <StorageEntity,DomainEntity,TransferEntity,Tid> : 
         RitchControllerBase<DomainEntity,TransferEntity> 
+        ,IDisposable
         where StorageEntity:class
     {
 
@@ -77,33 +78,11 @@ namespace Controllers{
             _configurations = builder.Build();
 
 
-            MarkEagers();
+            _attributesScope = new EagerAttributeProcessor()
+                .MarkEagers<StorageEntity>(this);
         }
 
-        private void MarkEagers()
-        {
-            var eagers = Utility.Reflection.GetAttributes<Eager>(this);
-
-            if(eagers.Count>0){
-                
-                _attributesScope = new EagerScopeManager();
-
-                var type = typeof(StorageEntity);
-
-                foreach(var eager in eagers){
-                    
-                    if (eager.EntityType == type){
-
-                        foreach(string prop in eager.PropertyNames){
-
-                            _attributesScope.Mark<StorageEntity>( q => q.Include(prop));
-                        }
-                    }
-                }
-            }
-
-
-        }
+        
 
         protected virtual void Configure(ControllerConfigurationBuilder builder){
             builder.ImplementAll();
@@ -184,6 +163,13 @@ namespace Controllers{
             var result = SafeRun(()=> EntityService.DeleteByEntity(domain),() => NotFound());
 
             return Map<DomainEntity,TransferEntity>(result);
+        }
+
+        public void Dispose()
+        {
+            if (_attributesScope != null){
+                _attributesScope.Dispose();
+            }
         }
     }
 
