@@ -20,6 +20,18 @@ namespace DataAccess{
         {
             var type = typeof(Entity);
 
+            Mark<Entity>();
+
+            List<object> list = _actions[type];
+
+            list.Add(action);
+
+            return this;
+        }
+
+        public void Mark<Entity>(){
+            var type = typeof(Entity);
+
             List<object> list;
 
             if (!_actions.ContainsKey(type))
@@ -28,16 +40,7 @@ namespace DataAccess{
 
                 _actions.Add(type, list);
             }
-            else
-            {
-                list = _actions[type];
-            }
-
-            list.Add(action);
-
-            return this;
         }
-
 
         /// Applies all eager configurations on given IQueryable object
         /// Returns true if any configuration was registered, false if none.
@@ -61,7 +64,7 @@ namespace DataAccess{
                     ret.Value = f(ret.Value);
                 });
 
-                ret.Success = list.Count>0;
+                ret.Success = true;
             }
 
             return ret;

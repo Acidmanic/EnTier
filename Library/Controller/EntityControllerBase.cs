@@ -5,7 +5,6 @@ using System.Net;
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Repository;
 using Service;
 using Utility;
 using Plugging;
@@ -46,6 +45,7 @@ namespace Controllers{
 
         private ControllerConfigurations _configurations;
 
+        private EagerScopeManager _attributesScope;
         protected EntityControllerBase(
             IObjectMapper mapper,
             IService<DomainEntity,Tid> entityService
@@ -75,6 +75,34 @@ namespace Controllers{
             Configure(builder);
 
             _configurations = builder.Build();
+
+
+            MarkEagers();
+        }
+
+        private void MarkEagers()
+        {
+            var eagers = Utility.Reflection.GetAttributes<Eager>(this);
+
+            if(eagers.Count>0){
+                
+                _attributesScope = new EagerScopeManager();
+
+                var type = typeof(StorageEntity);
+
+                foreach(var eager in eagers){
+                    
+                    if (eager.EntityType == type){
+
+                        foreach(string prop in eager.PropertyNames){
+
+                            _attributesScope.Mark<StorageEntity>( q => q.Include(prop));
+                        }
+                    }
+                }
+            }
+
+
         }
 
         protected virtual void Configure(ControllerConfigurationBuilder builder){

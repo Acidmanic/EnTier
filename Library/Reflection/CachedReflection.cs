@@ -12,7 +12,7 @@ namespace Utility{
 
 
 
-    public class CachedReflection{
+    public class CachedReflection:Reflection{
 
 
         private readonly List<MetaType> _types;

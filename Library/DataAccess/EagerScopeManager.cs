@@ -67,6 +67,13 @@ namespace DataAccess{
 
             return this;
         }
+
+        public EagerScopeManager Mark<Entity>(){
+
+            _currentScope.Mark<Entity>();            
+
+            return this;
+        }
         
         public void Dispose()
         {
