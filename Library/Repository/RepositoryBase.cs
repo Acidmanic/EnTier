@@ -7,14 +7,21 @@ using DataAccess;
 
 namespace Repository
 {
-    public abstract class RepositoryBase<Entity> : IRepository<Entity> where Entity:class
+    public abstract class RepositoryBase<Entity> 
+        : IRepository<Entity> where Entity:class
+        , IDisposable
     {
 
         protected DbSet<Entity> DbSet{get; private set;}
 
+        private readonly EagerScopeManager _attributesScope=null;
+
         public RepositoryBase(DbSet<Entity> dbset)
         {
             DbSet = dbset;
+
+            _attributesScope = new EagerAttributeProcessor()
+                .MarkEagers<Entity>(this);
         }
 
         public virtual Entity Add(Entity value)
@@ -99,6 +106,12 @@ namespace Repository
             catch (System.Exception){            }
 
             return null;
+        }
+
+        public virtual void Dispose(){
+            if(_attributesScope !=null){
+                _attributesScope.Dispose();
+            }
         }
     }
 

@@ -11,7 +11,7 @@ using Plugging;
 
 namespace Controllers{
 
-    public abstract class EntityControllerBase
+    public abstract class GenericControllerBase
         <StorageEntity,DomainEntity,TransferEntity,Tid> : 
         RitchControllerBase<DomainEntity,TransferEntity> 
         ,IDisposable
@@ -47,7 +47,7 @@ namespace Controllers{
         private ControllerConfigurations _configurations;
 
         private EagerScopeManager _attributesScope;
-        protected EntityControllerBase(
+        protected GenericControllerBase(
             IObjectMapper mapper,
             IService<DomainEntity,Tid> entityService
             ):base(mapper)
@@ -59,7 +59,7 @@ namespace Controllers{
             
         }
 
-        protected EntityControllerBase(
+        protected GenericControllerBase(
             IObjectMapper mapper):base(mapper)
         {
 
@@ -165,7 +165,7 @@ namespace Controllers{
             return Map<DomainEntity,TransferEntity>(result);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (_attributesScope != null){
                 _attributesScope.Dispose();
@@ -174,15 +174,15 @@ namespace Controllers{
     }
 
 
-    public abstract class EntityControllerBase<StorageEntity, DomainEntity, TransferEntity>
-        : EntityControllerBase<StorageEntity, DomainEntity, TransferEntity, long>
+    public abstract class GenericControllerBase<StorageEntity, DomainEntity, TransferEntity>
+        : GenericControllerBase<StorageEntity, DomainEntity, TransferEntity, long>
         where StorageEntity : class
     {
-        protected EntityControllerBase(IObjectMapper mapper, IService<DomainEntity, long> entityService) : base(mapper, entityService)
+        protected GenericControllerBase(IObjectMapper mapper, IService<DomainEntity, long> entityService) : base(mapper, entityService)
         {
         }
 
-        protected EntityControllerBase(IObjectMapper mapper) : base(mapper)
+        protected GenericControllerBase(IObjectMapper mapper) : base(mapper)
         {
         }
     }

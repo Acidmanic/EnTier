@@ -8,22 +8,26 @@ using Reflection;
 using Repository;
 using Plugging;
 using Utility;
+using DataAccess;
 
 namespace Service
 {
     public class ServiceBase<StorageEntity,DomainEntity,Tid>
-        :IService<DomainEntity,Tid>
+        :IService<DomainEntity,Tid> , IDisposable
         where StorageEntity:class{
 
         protected IObjectMapper Mapper{get;private set;}
 
         protected IProvider<UnitOfDataAccessBase> DbProvider{get;private set;}
 
-
+        private readonly EagerScopeManager _attributesScope;
         public ServiceBase(IObjectMapper mapper,IProvider<UnitOfDataAccessBase> dbProvider):base()
         {
             Mapper = mapper;
             DbProvider = dbProvider;
+
+            _attributesScope = new EagerAttributeProcessor()
+                .MarkEagers<StorageEntity>(this);
         }
 
         public List<DomainEntity> GetAll()
@@ -142,6 +146,13 @@ namespace Service
             }
 
             return Mapper.Map<DomainEntity>(storage);
+        }
+
+        public virtual void Dispose()
+        {
+            if(_attributesScope != null){
+                _attributesScope.Dispose();
+            }
         }
     }
 
