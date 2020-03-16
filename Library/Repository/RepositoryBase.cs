@@ -8,8 +8,8 @@ using DataAccess;
 namespace Repository
 {
     public abstract class RepositoryBase<Entity> 
-        : IRepository<Entity> where Entity:class
-        , IDisposable
+        : IDisposable, IRepository<Entity> 
+        where Entity:class
     {
 
         protected DbSet<Entity> DbSet{get; private set;}

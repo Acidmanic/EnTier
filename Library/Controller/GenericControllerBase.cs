@@ -13,14 +13,16 @@ namespace Controllers{
 
     public abstract class GenericControllerBase
         <StorageEntity,DomainEntity,TransferEntity,Tid> : 
-        RitchControllerBase<DomainEntity,TransferEntity> 
+        EnTierControllerBase<DomainEntity,TransferEntity> 
         ,IDisposable
         where StorageEntity:class
     {
 
-
         private IService<DomainEntity,Tid> _service;
-        protected IService<DomainEntity,Tid> EntityService{
+
+        private EagerScopeManager _attributesScope;
+        
+        protected IService<DomainEntity,Tid> Service{
             get{
 
                 var obj = new Object();
@@ -43,19 +45,14 @@ namespace Controllers{
                 _service = value;
             }
         }
-
-        private ControllerConfigurations _configurations;
-
-        private EagerScopeManager _attributesScope;
+        
         protected GenericControllerBase(
             IObjectMapper mapper,
             IService<DomainEntity,Tid> entityService
             ):base(mapper)
         {
 
-            EntityService = entityService;
-
-            InitiateConfiguration();
+            Service = entityService;
             
         }
 
@@ -63,38 +60,24 @@ namespace Controllers{
             IObjectMapper mapper):base(mapper)
         {
 
-            EntityService = null;
-
-            InitiateConfiguration();
+            Service = null;
             
         }
 
-        private void InitiateConfiguration()
-        {
-            ControllerConfigurationBuilder builder = new ControllerConfigurationBuilder();
-
-            Configure(builder);
-
-            _configurations = builder.Build();
-
+        protected override void OnControllerInitialize(){
+            base.OnControllerInitialize();
 
             _attributesScope = new EagerAttributeProcessor()
                 .MarkEagers<StorageEntity>(this);
-        }
-
-        
-
-        protected virtual void Configure(ControllerConfigurationBuilder builder){
-            builder.ImplementAll();
         }
 
         [HttpGet]
         [Route("")]
         public virtual IActionResult GetAll(){
 
-            if(!_configurations.ImplementsGetAll) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsGetAll) return Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = SafeRun(() => EntityService.GetAll(), ()=> NotFound());
+            var result = SafeRun(() => Service.GetAll(), HttpStatusCode.NoContent);
 
             return Map<List<DomainEntity>,List<TransferEntity>>(result);
 
@@ -104,9 +87,9 @@ namespace Controllers{
         [Route("{id}")]
         public virtual IActionResult GetById(Tid id){
 
-            if(!_configurations.ImplementsGetById) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsGetById) return Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = SafeRun(()=> EntityService.GetById(id),()=> NotFound());
+            var result = SafeRun(()=> Service.GetById(id), HttpStatusCode.NotFound);
 
             return Map<DomainEntity,TransferEntity>(result);
 
@@ -116,11 +99,11 @@ namespace Controllers{
         [Route("")]
         public virtual IActionResult CreateNew(TransferEntity entity){
 
-            if(!_configurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
 
             var domain = Mapper.Map<DomainEntity>(entity);
 
-            var result = SafeRun(()=>EntityService.CreateNew(domain),()=>Error());
+            var result = SafeRun(()=>Service.CreateNew(domain));
 
             return Map<DomainEntity,TransferEntity>(result);
         }
@@ -130,11 +113,11 @@ namespace Controllers{
         [Route("")]
         public virtual IActionResult Update(TransferEntity entity){
 
-            if(!_configurations.ImplementsUpdate) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsUpdate) return Error(HttpStatusCode.MethodNotAllowed);
 
             var domain = Mapper.Map<DomainEntity>(entity);
 
-            var result = SafeRun(()=> EntityService.Update(domain));
+            var result = SafeRun(()=> Service.Update(domain));
 
             return Map<DomainEntity,TransferEntity>(result);
 
@@ -144,9 +127,9 @@ namespace Controllers{
         [Route("{id}")]
         public IActionResult DeleteById(Tid id){
 
-            if(!_configurations.ImplementsDeleteById) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsDeleteById) return Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = SafeRun(()=> EntityService.DeleteById(id),() => NotFound());
+            var result = SafeRun(()=> Service.DeleteById(id));
 
             return Map<DomainEntity,TransferEntity>(result);
 
@@ -156,11 +139,11 @@ namespace Controllers{
         [Route("")]
         public IActionResult Delete(TransferEntity entity){
 
-            if(!_configurations.ImplementsDeleteByEntity) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsDeleteByEntity) return Error(HttpStatusCode.MethodNotAllowed);
 
             var domain = Mapper.Map<DomainEntity>(entity);
             
-            var result = SafeRun(()=> EntityService.DeleteByEntity(domain),() => NotFound());
+            var result = SafeRun(()=> Service.DeleteByEntity(domain));
 
             return Map<DomainEntity,TransferEntity>(result);
         }

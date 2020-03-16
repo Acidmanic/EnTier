@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Service;
 using Plugging;
 using Microsoft.EntityFrameworkCore;
+using Utility;
+using Configuration;
 
 namespace Controllers
 {
@@ -16,16 +18,16 @@ namespace Controllers
 
     [Route("api/v1/{Controller}")]
     [Eager(typeof(StorageModels.User),nameof(StorageModels.User.Posts))]
-    public class TestController : EntityControllerBase
+    public class TestController : GenericControllerBase
         <StorageModels.User, DomainModels.User, DataTransferModels.User>
     {
 
 
         
 
-        public TestController(IObjectMapper mapper) : base(mapper)
+        public TestController(IObjectMapper mapper, IProvider<EnTierConfigurations> configurationProvider ) : base(mapper)
         {
-            
+            EnTierConfigurations = configurationProvider.Create();
         }
 
 

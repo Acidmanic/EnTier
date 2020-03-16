@@ -17,8 +17,6 @@ namespace Controllers{
 
         public bool ImplementsDeleteByEntity{get;set;}
 
-        
-        
     }
 
 }
