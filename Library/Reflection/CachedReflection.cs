@@ -122,23 +122,32 @@ namespace Utility{
 
         public Constructor<TCast> FindConstructor<TCast>(
                 Func<Type,bool> predicate,
-                params Object[] argumets
+                params Object[] arguments
         ){
             var creators = _types.FindAll(mt => predicate(mt.Type));
 
             if (creators != null){
 
                 foreach(var c in creators){
-                    var type = c.Type;
-                    var argTypes = GetTypes(argumets);
-                    var constructor = type.GetConstructor(argTypes);
-
-                    if (constructor!=null){
-                        return new Constructor<TCast>(constructor,argumets);
-                    }
+                    var res = GetConstructorForType<TCast>(c.Type,arguments);
+                    
+                    if(!res.IsNull) return res;
                 }
             }
             return Constructor<TCast>.Null();
+        }
+
+        public Constructor<TCast> GetConstructorForType<TCast>(Type type,params object[] arguments){
+
+                    var argTypes = GetTypes(arguments);
+
+                    var constructor = type.GetConstructor(argTypes);
+
+                    if (constructor!=null){
+                        return new Constructor<TCast>(constructor,arguments);
+                    }
+
+                    return Constructor<TCast>.Null();
         }
 
         public Constructor<TCast> FindConstructor<TCast>(params Object[] argumets){
@@ -148,6 +157,21 @@ namespace Utility{
                 t => Implements(t,type)
                 ,argumets
             );
+        }
+
+        public Constructor<TInterface> FindConstructorByPriority<TInterface,TLowPrType>(params Object[] arguments){
+            var type = typeof(TInterface);
+            var exclude = typeof(TLowPrType);
+            var ret =  FindConstructor<TInterface>(
+                t => t != exclude && Implements(t,type) 
+                ,arguments
+            );
+
+            if(ret.IsNull){
+                ret = GetConstructorForType<TInterface>(exclude,arguments);
+            }
+            
+            return ret;
         }
 
         public bool Implements(Type t, Type type)

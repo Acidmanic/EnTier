@@ -18,29 +18,25 @@ namespace Controllers
 
     [Route("api/v1/{Controller}")]
     [Eager(typeof(StorageModels.User),nameof(StorageModels.User.Posts))]
-    public class TestController : GenericControllerBase
+    public class TestController : EnTierControllerBase2
         <StorageModels.User, DomainModels.User, DataTransferModels.User>
     {
 
 
         
 
-        public TestController(IObjectMapper mapper, IProvider<EnTierConfigurations> configurationProvider ) : base(mapper)
-        {
-            EnTierConfigurations = configurationProvider.Create();
-        }
+        public TestController(IObjectMapper mapper, IProvider<EnTierConfigurations> configurationProvider ) : base(mapper,configurationProvider)
+        {}
 
 
-        public override IActionResult GetById(long id){
-            IActionResult ret;
+        public override IActionResult GetAll(){
+            IActionResult ret = default;
+            
+            using (var scope = new EagerScopeManager()){
 
-            using(var scope = new EagerScopeManager()){
-                
                 scope.Mark<StorageModels.User>();
-                // scope.Mark<StorageModels.User>( q => q.Include(u => u.Posts));
 
-                ret = base.GetById(id);
-
+                ret = base.GetAll();
             }
 
             return ret;

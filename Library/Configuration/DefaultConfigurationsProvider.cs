@@ -7,7 +7,7 @@ using Utility;
 namespace Configuration{
 
 
-    public class DefaulConfigurationsProvider : IProvider<EnTierConfigurations>
+    public class DefaultConfigurationsProvider : IProvider<EnTierConfigurations>
     {
         public EnTierConfigurations Create()
         {

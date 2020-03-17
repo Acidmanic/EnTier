@@ -19,9 +19,18 @@ namespace DataAccess{
             EntityType = entityType;
 
             PropertyNames = propertyNames;
+
         }
 
 
+    public override bool Match(object obj){
+
+        System.Console.WriteLine("**********************");
+        System.Console.WriteLine("Iv'e been asked to match: " + obj.ToString());
+        System.Console.WriteLine("**********************");
+
+        return base.Match(obj);
+    }        
 
         
     }

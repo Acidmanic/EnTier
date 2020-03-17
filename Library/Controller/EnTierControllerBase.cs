@@ -31,7 +31,7 @@ namespace Controllers
         {
             Mapper = mapper;
 
-            EnTierConfigurations = new DefaulConfigurationsProvider().Create();
+            EnTierConfigurations = new DefaultConfigurationsProvider().Create();
 
             InitiateConfiguration();
 
