@@ -75,11 +75,11 @@ namespace Controllers{
         [Route("")]
         public virtual IActionResult GetAll(){
 
-            if(!ControllerConfigurations.ImplementsGetAll) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsGetAll) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = SafeRun(() => Service.GetAll(), HttpStatusCode.NoContent);
+            var result = IO.SafeRun(() => Service.GetAll(), HttpStatusCode.NoContent);
 
-            return Map<List<DomainEntity>,List<TransferEntity>>(result);
+            return IO.Map<List<DomainEntity>,List<TransferEntity>>(result);
 
         }
 
@@ -87,11 +87,11 @@ namespace Controllers{
         [Route("{id}")]
         public virtual IActionResult GetById(Tid id){
 
-            if(!ControllerConfigurations.ImplementsGetById) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsGetById) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = SafeRun(()=> Service.GetById(id), HttpStatusCode.NotFound);
+            var result = IO.SafeRun(()=> Service.GetById(id), HttpStatusCode.NotFound);
 
-            return Map<DomainEntity,TransferEntity>(result);
+            return IO.Map<DomainEntity,TransferEntity>(result);
 
         }
 
@@ -99,13 +99,13 @@ namespace Controllers{
         [Route("")]
         public virtual IActionResult CreateNew(TransferEntity entity){
 
-            if(!ControllerConfigurations.ImplementsCreateNew) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsCreateNew) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
             var domain = Mapper.Map<DomainEntity>(entity);
 
-            var result = SafeRun(()=>Service.CreateNew(domain));
+            var result = IO.SafeRun(()=>Service.CreateNew(domain));
 
-            return Map<DomainEntity,TransferEntity>(result);
+            return IO.Map<DomainEntity,TransferEntity>(result);
         }
         
 
@@ -113,13 +113,13 @@ namespace Controllers{
         [Route("")]
         public virtual IActionResult Update(TransferEntity entity){
 
-            if(!ControllerConfigurations.ImplementsUpdate) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsUpdate) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
             var domain = Mapper.Map<DomainEntity>(entity);
 
-            var result = SafeRun(()=> Service.Update(domain));
+            var result = IO.SafeRun(()=> Service.Update(domain));
 
-            return Map<DomainEntity,TransferEntity>(result);
+            return IO.Map<DomainEntity,TransferEntity>(result);
 
         }
 
@@ -127,11 +127,11 @@ namespace Controllers{
         [Route("{id}")]
         public IActionResult DeleteById(Tid id){
 
-            if(!ControllerConfigurations.ImplementsDeleteById) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsDeleteById) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = SafeRun(()=> Service.DeleteById(id));
+            var result = IO.SafeRun(()=> Service.DeleteById(id));
 
-            return Map<DomainEntity,TransferEntity>(result);
+            return IO.Map<DomainEntity,TransferEntity>(result);
 
         }
 
@@ -139,13 +139,13 @@ namespace Controllers{
         [Route("")]
         public IActionResult Delete(TransferEntity entity){
 
-            if(!ControllerConfigurations.ImplementsDeleteByEntity) return Error(HttpStatusCode.MethodNotAllowed);
+            if(!ControllerConfigurations.ImplementsDeleteByEntity) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
             var domain = Mapper.Map<DomainEntity>(entity);
             
-            var result = SafeRun(()=> Service.DeleteByEntity(domain));
+            var result = IO.SafeRun(()=> Service.DeleteByEntity(domain));
 
-            return Map<DomainEntity,TransferEntity>(result);
+            return IO.Map<DomainEntity,TransferEntity>(result);
         }
 
         public virtual void Dispose()
