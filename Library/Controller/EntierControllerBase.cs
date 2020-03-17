@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reflection;
 using Configuration;
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
@@ -116,12 +117,14 @@ namespace Controllers{
         [HttpGet]
         [Route("")]
         public virtual IActionResult GetAll(){
-
             if(!ControllerConfigurations.ImplementsGetAll) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = IO.SafeRun(() => Service.GetAll());
+            using(var s = new MethodAttributesEagerScope<StorageModel>(MethodBase.GetCurrentMethod()))
+            {
+                var result = IO.SafeRun(() => Service.GetAll());
 
-            return IO.Map<List<DomainModel>,List<TransferModel>>(result);
+                return IO.Map<List<DomainModel>,List<TransferModel>>(result);
+            }
 
         }
 
@@ -131,10 +134,12 @@ namespace Controllers{
 
             if(!ControllerConfigurations.ImplementsGetById) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = IO.SafeRun(()=> Service.GetById(id), HttpStatusCode.NotFound);
+            using(var s = new MethodAttributesEagerScope<StorageModel>(MethodBase.GetCurrentMethod()))
+            {
+                var result = IO.SafeRun(()=> Service.GetById(id), HttpStatusCode.NotFound);
 
-            return IO.Map<DomainModel,TransferModel>(result);
-
+                return IO.Map<DomainModel,TransferModel>(result);
+            }
         }
 
         [HttpPost]
@@ -143,11 +148,14 @@ namespace Controllers{
 
             if(!ControllerConfigurations.ImplementsCreateNew) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var domain = Mapper.Map<DomainModel>(entity);
+            using(var s = new MethodAttributesEagerScope<StorageModel>(MethodBase.GetCurrentMethod()))
+            {
+                var domain = Mapper.Map<DomainModel>(entity);
 
-            var result = IO.SafeRun(()=>Service.CreateNew(domain));
+                var result = IO.SafeRun(()=>Service.CreateNew(domain));
 
-            return IO.Map<DomainModel,TransferModel>(result);
+                return IO.Map<DomainModel,TransferModel>(result);
+            }
         }
         
 
@@ -157,11 +165,14 @@ namespace Controllers{
 
             if(!ControllerConfigurations.ImplementsUpdate) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var domain = Mapper.Map<DomainModel>(entity);
+            using(var s = new MethodAttributesEagerScope<StorageModel>(MethodBase.GetCurrentMethod()))
+            {
+                var domain = Mapper.Map<DomainModel>(entity);
 
-            var result = IO.SafeRun(()=> Service.Update(domain));
+                var result = IO.SafeRun(()=> Service.Update(domain));
 
-            return IO.Map<DomainModel,TransferModel>(result);
+                return IO.Map<DomainModel,TransferModel>(result);
+            }
 
         }
 
@@ -171,9 +182,12 @@ namespace Controllers{
 
             if(!ControllerConfigurations.ImplementsDeleteById) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var result = IO.SafeRun(()=> Service.DeleteById(id));
+            using(var s = new MethodAttributesEagerScope<StorageModel>(MethodBase.GetCurrentMethod()))
+            {
+                var result = IO.SafeRun(()=> Service.DeleteById(id));
 
-            return IO.Map<DomainModel,TransferModel>(result);
+                return IO.Map<DomainModel,TransferModel>(result);
+            }
 
         }
 
@@ -183,11 +197,14 @@ namespace Controllers{
 
             if(!ControllerConfigurations.ImplementsDeleteByEntity) return IO.Error(HttpStatusCode.MethodNotAllowed);
 
-            var domain = Mapper.Map<DomainModel>(entity);
-            
-            var result = IO.SafeRun(()=> Service.DeleteByEntity(domain));
+            using(var s = new MethodAttributesEagerScope<StorageModel>(MethodBase.GetCurrentMethod()))
+            {
+                var domain = Mapper.Map<DomainModel>(entity);
+                
+                var result = IO.SafeRun(()=> Service.DeleteByEntity(domain));
 
-            return IO.Map<DomainModel,TransferModel>(result);
+                return IO.Map<DomainModel,TransferModel>(result);
+            }
         }
 
         public void Dispose()

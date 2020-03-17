@@ -1,7 +1,9 @@
 
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace DataAccess{
 
@@ -10,11 +12,28 @@ namespace DataAccess{
 
     internal class EagerAttributeProcessor{
 
+
+        public EagerScopeManager MarkEagers<StorageEntity>(MethodBase methodInfo)
+        where StorageEntity:class
+        {
+            var eagers  = Utility.Reflection.GetAttributes<Eager>(methodInfo);
+            
+            return MarkEagers<StorageEntity>(eagers);
+        }
+        
         public EagerScopeManager MarkEagers<StorageEntity>(object obj)
         where StorageEntity:class
         {
-            var eagers = Utility.Reflection.GetAttributes<Eager>(obj);
+            var eagers = Utility.Reflection.GetTypeAttributes<Eager>(obj);
 
+            return MarkEagers<StorageEntity>(eagers);
+
+        }
+
+
+        private EagerScopeManager MarkEagersList<StorageEntity>(List<Eager> eagers)
+        where StorageEntity:class
+        {
             if(eagers.Count>0){
                 
                 var scope = new EagerScopeManager();
@@ -36,7 +55,6 @@ namespace DataAccess{
             }
 
             return null;
-
         }
 
     }
