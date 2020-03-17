@@ -18,7 +18,7 @@ namespace Controllers
 
     [Route("api/v1/{Controller}")]
     [Eager(typeof(StorageModels.User),nameof(StorageModels.User.Posts))]
-    public class TestController : EnTierControllerBase2
+    public class TestController : EnTierControllerBase
         <StorageModels.User, DomainModels.User, DataTransferModels.User>
     {
 

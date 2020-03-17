@@ -16,7 +16,7 @@ namespace Controllers{
 
 
 
-    public class EnTierControllerBase2
+    public class EnTierControllerBase
     <StorageModel,DomainModel,TransferModel,Tid>
     :ControllerBase,IDisposable
     where StorageModel:class{
@@ -53,7 +53,7 @@ namespace Controllers{
 
         }
 
-        public EnTierControllerBase2(IObjectMapper mapper,
+        public EnTierControllerBase(IObjectMapper mapper,
                                     IService<DomainModel,Tid> service,
                                     IProvider<EnTierConfigurations> configurationProvider)
         {
@@ -62,7 +62,7 @@ namespace Controllers{
 
         }
 
-        public EnTierControllerBase2(IObjectMapper mapper,
+        public EnTierControllerBase(IObjectMapper mapper,
                                     IService<DomainModel,Tid> service)
         {
             
@@ -75,7 +75,7 @@ namespace Controllers{
             return new DefaultConfigurationsProvider();
         }
 
-        public EnTierControllerBase2(IObjectMapper mapper,
+        public EnTierControllerBase(IObjectMapper mapper,
                                     IProvider<EnTierConfigurations> configurationProvider)
         {
             InitializeDependencies(mapper,DefaultService(mapper),configurationProvider);
@@ -91,7 +91,7 @@ namespace Controllers{
                                 (mapper).Construct();
         }
 
-        public EnTierControllerBase2(IObjectMapper mapper)
+        public EnTierControllerBase(IObjectMapper mapper)
         {
             InitializeDependencies(mapper,
                 DefaultService(mapper),
@@ -197,25 +197,25 @@ namespace Controllers{
     }
 
 
-    public class EnTierControllerBase2
+    public class EnTierControllerBase
     <StorageModel, DomainModel, TransferModel>
-    : EnTierControllerBase2
+    : EnTierControllerBase
     <StorageModel, DomainModel, TransferModel, long>
     where StorageModel : class
     {
-        public EnTierControllerBase2(IObjectMapper mapper) : base(mapper)
+        public EnTierControllerBase(IObjectMapper mapper) : base(mapper)
         {
         }
 
-        public EnTierControllerBase2(IObjectMapper mapper, IService<DomainModel, long> service) : base(mapper, service)
+        public EnTierControllerBase(IObjectMapper mapper, IService<DomainModel, long> service) : base(mapper, service)
         {
         }
 
-        public EnTierControllerBase2(IObjectMapper mapper, IProvider<EnTierConfigurations> configurationProvider) : base(mapper, configurationProvider)
+        public EnTierControllerBase(IObjectMapper mapper, IProvider<EnTierConfigurations> configurationProvider) : base(mapper, configurationProvider)
         {
         }
 
-        public EnTierControllerBase2(IObjectMapper mapper, IService<DomainModel, long> service, IProvider<EnTierConfigurations> configurationProvider) : base(mapper, service, configurationProvider)
+        public EnTierControllerBase(IObjectMapper mapper, IService<DomainModel, long> service, IProvider<EnTierConfigurations> configurationProvider) : base(mapper, service, configurationProvider)
         {
         }
     }
