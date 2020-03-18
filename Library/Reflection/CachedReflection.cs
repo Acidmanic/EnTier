@@ -189,14 +189,14 @@ namespace Utility{
             return false;
         }
 
-        public bool Extends(Type t, Type type)
+        public bool Extends(Type t, Type @base)
         {
-            if(t == type) return true;
+            if(t == @base) return true;
 
             var parent = t.BaseType;
 
             if(parent != null){
-                return Extends(parent,type);
+                return Extends(parent,@base);
             }
 
             return false;

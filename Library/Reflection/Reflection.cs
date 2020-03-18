@@ -21,7 +21,7 @@ namespace Utility{
 
         public static List<T> GetAttributes<T>(MethodBase methodInfo){
 
-            var attributes = methodInfo.GetCustomAttributes(false);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
             return FilterByType<T>(attributes);
         }

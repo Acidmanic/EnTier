@@ -18,7 +18,7 @@ namespace DataAccess{
         {
             var eagers  = Utility.Reflection.GetAttributes<Eager>(methodInfo);
             
-            return MarkEagers<StorageEntity>(eagers);
+            return MarkEagersList<StorageEntity>(eagers);
         }
         
         public EagerScopeManager MarkEagers<StorageEntity>(object obj)
@@ -26,7 +26,7 @@ namespace DataAccess{
         {
             var eagers = Utility.Reflection.GetTypeAttributes<Eager>(obj);
 
-            return MarkEagers<StorageEntity>(eagers);
+            return MarkEagersList<StorageEntity>(eagers);
 
         }
 
@@ -43,7 +43,9 @@ namespace DataAccess{
                 foreach(var eager in eagers){
                     
                     if (eager.EntityType == type){
-
+                        if(eager.PropertyNames.Length==0){
+                            scope.Mark<StorageEntity>();
+                        }
                         foreach(string prop in eager.PropertyNames){
 
                             scope.Mark<StorageEntity>( q => q.Include(prop));

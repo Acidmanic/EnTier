@@ -3,6 +3,7 @@
 
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Utility{
@@ -23,7 +24,9 @@ namespace Utility{
         }
 
         public Constructor(ConstructorInfo constructor, params Object[] arguments){
-            _constructor= () => (T) constructor.Invoke(arguments);
+
+            _constructor = () =>  (T) constructor.Invoke(arguments);
+
             IsNull = false;
         }
 

@@ -7,7 +7,7 @@ using System.Linq;
 namespace DataAccess{
 
 
-    [System.AttributeUsage(System.AttributeTargets.Class
+    [System.AttributeUsage(System.AttributeTargets.Class | AttributeTargets.Method
     , Inherited = false, AllowMultiple = false)]
     sealed class Eager : Attribute
     {
@@ -21,16 +21,6 @@ namespace DataAccess{
             PropertyNames = propertyNames;
 
         }
-
-
-    public override bool Match(object obj){
-
-        System.Console.WriteLine("**********************");
-        System.Console.WriteLine("Iv'e been asked to match: " + obj.ToString());
-        System.Console.WriteLine("**********************");
-
-        return base.Match(obj);
-    }        
 
         
     }

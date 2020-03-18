@@ -29,17 +29,17 @@ namespace Controllers
         {}
 
 
+
+        
         public override IActionResult GetAll(){
-            IActionResult ret = default;
-            
-            using (var scope = new EagerScopeManager()){
+            return base.GetAll();
+        }
 
-                scope.Mark<StorageModels.User>();
-
-                ret = base.GetAll();
-            }
-
-            return ret;
+        [Eager(typeof(StorageModels.User))]
+        [HttpGet]
+        [Route("Users")]
+        public IActionResult GetUsersNonEager(){
+            return base.GetAll();
         }
     }
 }

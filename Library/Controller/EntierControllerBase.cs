@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using Configuration;
@@ -17,7 +18,7 @@ namespace Controllers{
 
 
 
-    public class EnTierControllerBase
+    public abstract class EnTierControllerBase
     <StorageModel,DomainModel,TransferModel,Tid>
     :ControllerBase,IDisposable
     where StorageModel:class{
@@ -79,17 +80,23 @@ namespace Controllers{
         public EnTierControllerBase(IObjectMapper mapper,
                                     IProvider<EnTierConfigurations> configurationProvider)
         {
-            InitializeDependencies(mapper,DefaultService(mapper),configurationProvider);
+
+            var service = DefaultService(mapper);
+
+            InitializeDependencies(mapper,service,configurationProvider);
 
         }
 
         private IService<DomainModel, Tid> DefaultService(IObjectMapper mapper)
         {
-            return ReflectionService.Make()
+            var constructor = ReflectionService.Make()
                 .FindConstructorByPriority<
                                 IService<DomainModel,Tid>,
-                                GenericService<StorageModel,DomainModel,Tid>>
-                                (mapper).Construct();
+                                GenericService<StorageModel,DomainModel,Tid>>(mapper);
+                                
+            var ret = constructor.Construct();
+
+            return ret;
         }
 
         public EnTierControllerBase(IObjectMapper mapper)
@@ -118,7 +125,7 @@ namespace Controllers{
         [Route("")]
         public virtual IActionResult GetAll(){
             if(!ControllerConfigurations.ImplementsGetAll) return IO.Error(HttpStatusCode.MethodNotAllowed);
-
+            
             using(var s = new MethodAttributesEagerScope<StorageModel>(MethodBase.GetCurrentMethod()))
             {
                 var result = IO.SafeRun(() => Service.GetAll());
@@ -214,7 +221,7 @@ namespace Controllers{
     }
 
 
-    public class EnTierControllerBase
+    public abstract class EnTierControllerBase
     <StorageModel, DomainModel, TransferModel>
     : EnTierControllerBase
     <StorageModel, DomainModel, TransferModel, long>
