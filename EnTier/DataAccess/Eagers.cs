@@ -9,7 +9,7 @@ namespace DataAccess{
 
     [System.AttributeUsage(System.AttributeTargets.Class | AttributeTargets.Method
     , Inherited = false, AllowMultiple = false)]
-    sealed class Eager : Attribute
+    public sealed class Eager : Attribute
     {
 
         public Type EntityType{get;private set;}
