@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Utility;
 
 namespace mock_server
 {
@@ -35,6 +36,8 @@ namespace mock_server
             services.AddEnTierServices();
 
             services.AddApplicationServices();
+
+            ReflectionService.Make().CacheCurrent();
 
         }
 
