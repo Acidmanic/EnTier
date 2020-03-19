@@ -20,12 +20,12 @@ namespace Repository
         private readonly CachedReflection _reflection;
         
 
-        public virtual IRepository<StorageEntity> GetRepository<StorageEntity>()
+        public virtual IRepository<StorageEntity,Tid> GetRepository<StorageEntity,Tid>()
         where StorageEntity : class
         {
 
             var ret = _reflection.GetCreatorForTypeWhichImplements
-                <IRepository<StorageEntity>>().Construct();
+                <IRepository<StorageEntity,Tid>>().Construct();
 
             return ret;
         }

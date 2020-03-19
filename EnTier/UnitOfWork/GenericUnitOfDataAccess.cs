@@ -15,10 +15,10 @@ internal class GenericUnitOfDataAccess : UnitOfDataAccessBase
     {
     }
 
-    public override IRepository<StorageEntity> GetRepository<StorageEntity>()
+    public override IRepository<StorageEntity,Tid> GetRepository<StorageEntity,Tid>()
     {
 
-        var ret = base.GetRepository<StorageEntity>();
+        var ret = base.GetRepository<StorageEntity,Tid>();
 
         if (ret == default){
 
@@ -26,11 +26,11 @@ internal class GenericUnitOfDataAccess : UnitOfDataAccessBase
 
             if(dbSet != null){
                 var constructor = ReflectionService.Make()
-                    .FindConstructor<IRepository<StorageEntity>>(dbSet);
+                    .FindConstructor<IRepository<StorageEntity,Tid>>(dbSet);
                 if(! constructor.IsNull){
                     return constructor.Construct();
                 }
-                return new GenericRepository<StorageEntity>(dbSet);
+                return new GenericRepository<StorageEntity,Tid>(dbSet);
             }
         }
 

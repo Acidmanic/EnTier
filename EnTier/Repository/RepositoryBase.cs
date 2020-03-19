@@ -7,8 +7,8 @@ using DataAccess;
 
 namespace Repository
 {
-    public abstract class RepositoryBase<Entity> 
-        : IDisposable, IRepository<Entity> 
+    public abstract class RepositoryBase<Entity,Tid> 
+        : IDisposable, IRepository<Entity,Tid> 
         where Entity:class
     {
 
@@ -56,7 +56,7 @@ namespace Repository
             return ret.ToList();
         }
 
-        public virtual Entity GetById<Tid>(Tid id)
+        public virtual Entity GetById(Tid id)
         {
             var reader = new DataReflection().IdReader<Entity,Tid>(id);
 
@@ -74,7 +74,7 @@ namespace Repository
             return DbSet.Remove(value).Entity;
         }
 
-        public virtual Entity RemoveById<Tid>(Tid id)
+        public virtual Entity RemoveById(Tid id)
         {
             var entity = GetById(id);
 
@@ -92,7 +92,7 @@ namespace Repository
         }
 
 
-        public virtual Entity GetById<Tid>(Entity entity)
+        public virtual Entity GetById(Entity entity)
         {
             var idProperty = new DataReflection().GetIdProperty<Entity,Tid>();
 
@@ -112,6 +112,15 @@ namespace Repository
             if(_attributesScope !=null){
                 _attributesScope.Dispose();
             }
+        }
+    }
+
+    public abstract class RepositoryBase<Entity>
+        : RepositoryBase<Entity, long>
+        where Entity : class
+    {
+        public RepositoryBase(DbSet<Entity> dbset) : base(dbset)
+        {
         }
     }
 

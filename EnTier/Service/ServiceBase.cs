@@ -37,7 +37,7 @@ namespace Service
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity>();
+                var repo = db.GetRepository<StorageEntity,Tid>();
 
                 res = repo.GetAll();
 
@@ -54,7 +54,7 @@ namespace Service
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity>();
+                var repo = db.GetRepository<StorageEntity,Tid>();
 
                 res = repo.GetById(id);
 
@@ -71,7 +71,7 @@ namespace Service
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity>();
+                var repo = db.GetRepository<StorageEntity,Tid>();
 
                 new DataReflection().UseId<DomainEntity,Tid>(entity,id => storage = repo.GetById(id));
 
@@ -93,7 +93,7 @@ namespace Service
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity>();
+                var repo = db.GetRepository<StorageEntity,Tid>();
 
                 new DataReflection().UseId<DomainEntity,Tid>(entity,id => storage = repo.GetById(id));
                 
@@ -111,7 +111,7 @@ namespace Service
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity>();
+                var repo = db.GetRepository<StorageEntity,Tid>();
 
                 storage = repo.RemoveById(id);
 
@@ -138,7 +138,7 @@ namespace Service
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity>();
+                var repo = db.GetRepository<StorageEntity,Tid>();
 
                 storage = repo.Add(storage);
 

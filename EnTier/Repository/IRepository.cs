@@ -4,26 +4,28 @@ using System.Collections.Generic;
 
 namespace Repository{
 
-    public interface IRepository<Entity>
+    public interface IRepository<Entity,Tid>
     {
 
         List<Entity> GetAll();
 
         List<Entity> Find(Func<Entity, bool> condition);
 
-        Entity GetById<Tid>(Tid id);
+        Entity GetById(Tid id);
 
-        Entity GetById<Tid>(Entity entity);
+        Entity GetById(Entity entity);
 
         Entity Add(Entity value);
 
         Entity Remove(Entity value);
 
-        Entity RemoveById<Tid>(Tid id);
+        Entity RemoveById(Tid id);
 
         
     }
 
-
+    public interface IRepository<Entity>:IRepository<Entity,long>{
+        
+    }
     
 }
