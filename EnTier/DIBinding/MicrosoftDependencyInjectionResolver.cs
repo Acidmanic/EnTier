@@ -9,7 +9,7 @@ namespace DIBinding{
 
     public class MicrosoftDependencyInjectionResolver : IDIResolver
     {
-        private IServiceProvider _resolver;
+        private readonly IServiceProvider _resolver;
 
         public MicrosoftDependencyInjectionResolver(IServiceProvider resolver){
             _resolver = resolver;

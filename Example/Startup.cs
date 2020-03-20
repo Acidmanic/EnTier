@@ -57,9 +57,10 @@ namespace mock_server
             }
 
             app.UseHttpsRedirection();
+
             app.UseMvc();
 
-
+            app.UseEnTier();
             
         }
     }

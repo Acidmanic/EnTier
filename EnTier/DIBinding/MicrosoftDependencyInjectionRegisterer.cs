@@ -9,7 +9,7 @@ namespace DIBinding{
 
     public class MicrosoftDependencyInjectionRegisterer : IDIRegisterer
     {
-        private IServiceCollection _registerer;
+        private readonly IServiceCollection _registerer;
 
         public MicrosoftDependencyInjectionRegisterer(IServiceCollection registerer){
             _registerer = registerer;

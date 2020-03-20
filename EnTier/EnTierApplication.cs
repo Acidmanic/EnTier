@@ -16,25 +16,27 @@ internal static class EnTierApplication{
 
     public static void Initialize(IServiceCollection services){
         Registerer = new MicrosoftDependencyInjectionRegisterer(services);
+
+        PerformRegistrations();
     }
 
     public static void Initialize(IApplicationBuilder app){
         Resolver = new MicrosoftDependencyInjectionResolver(app.ApplicationServices);
-
+        
         ApplicationStart();
     }
 
 
 
-
+    private static void PerformRegistrations(){
+        //TODO: Later figure a way to give the code user the chance to choos what 
+        Registerer.RegisterSingleton<IProvider<EnTierConfigurations>,MSExtensionsConfigurationsProvider>();
+    }
 
 
 
     private static void ApplicationStart(){
 
-        //TODO: Later figure a way to give the code user the chance to choos what 
-        // configuration provider then want to use.
-        Registerer.RegisterSingleton<IProvider<EnTierConfigurations>,MSExtensionsConfigurationsProvider>();
 
 
     }
