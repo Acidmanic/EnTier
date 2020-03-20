@@ -26,29 +26,42 @@ namespace Service{
 
             public UnitOfDataAccessBase Create()
             {
-                var reflection = ReflectionService.Make();
+                var ret = FindUnitOfWork();
 
-                DbContext context = GetContext();
+                DbContext context = null;
+
+                if(ret == null){
+                    
+                    context = GetContext();
                 
-                if (context == null){
-                    throw new Exception(
-                        String.Format("Unable To Find DbContext Containing DbSet<{0}>.",
-                        typeof(StorageEntity).FullName)
-                    );
-                }
-
-                var constructor = reflection.FindConstructor<UnitOfDataAccessBase>(context);
-
-                if(!constructor.IsNull){
-
-                    var ret = constructor.Construct();
-
-                    if( ret != null){
-                        return ret;
+                    if (context == null){
+                        throw new Exception(
+                            String.Format("Unable To Find DbContext Containing DbSet<{0}>.",
+                            typeof(StorageEntity).FullName)
+                        );
                     }
+                    
+                    ret = FindUnitOfWork(context);
                 }
 
                 return new GenericUnitOfDataAccess(context);
+            }
+
+
+            public UnitOfDataAccessBase FindUnitOfWork(params object[] args){
+
+                var reflection = ReflectionService.Make();
+
+                var constructor = reflection.FindConstructor<UnitOfDataAccessBase>(args);
+
+                if(!constructor.IsNull){
+
+                    var ret =  constructor.Construct();
+
+                    return ret;
+                }
+
+                return null;
             }
 
             private DbContext GetContext()
