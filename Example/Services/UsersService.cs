@@ -28,7 +28,7 @@ namespace  Service
 
             using(var db = DbProvider.Create()){
 
-                storage = db.GetRepository<StorageModels.User>().Add(storage);
+                storage = db.GetRepository<StorageModels.User,long>().Add(storage);
                 
                 db.Compelete();
             }
