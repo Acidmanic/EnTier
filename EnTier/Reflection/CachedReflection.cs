@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Utility{
 
@@ -72,7 +73,8 @@ namespace Utility{
 
         public List<Type> GetTypesWhichImplement(Type type){
             
-            return _types.Select(t => t.Type)
+            return _types.Where(_filter).ToList()
+                         .Select(t => t.Type)
                          .Where(t => Implements(t,type))
                          .ToList();
         }
@@ -82,9 +84,10 @@ namespace Utility{
 
             var type = typeof(T);
 
-            return _types.Select(t => t.Type)
-                         .Where(t => Extends(t,type))
-                         .Count()>0;
+            return _types.Where(_filter).ToList()
+                        .Select(t => t.Type)
+                        .Where(t => Extends(t,type))
+                        .Count()>0;
         }
 
 
@@ -92,7 +95,8 @@ namespace Utility{
 
             var type = typeof(T);
 
-            return _types.Select(t => t.Type)
+            return _types.Where(_filter).ToList()
+                        .Select(t => t.Type)
                          .Where(t => Implements(t,type))
                          .Count()>0;
         }
@@ -117,10 +121,11 @@ namespace Utility{
 
         private Constructor<TCast> GetCreatorForTypeWhich<TCast>(Func<MetaType,bool> predicate){
             
-            var res = _types.Where(predicate)
+            var res = _types.Where(_filter).ToList()
+                            .Where(predicate)
                             .Select(mt => mt.Instanciator)
                             .FirstOrDefault();
-                            
+            
             if (res != null){
                 return new Constructor<TCast>(() => (TCast)res());
             }
@@ -144,7 +149,8 @@ namespace Utility{
                 Func<Type,bool> predicate,
                 params Object[] arguments
         ){
-            var creators = _types.FindAll(mt => predicate(mt.Type));
+            var creators = _types.Where(_filter).ToList()
+                .FindAll(mt => predicate(mt.Type));
 
             if (creators != null){
 
@@ -220,6 +226,30 @@ namespace Utility{
             }
 
             return false;
+        }
+
+
+        private Func<MetaType,bool> _filter = t => true;
+
+        public CachedReflection Filter(Func<MetaType,bool> filter){
+            _filter = filter;
+
+            return this;
+        }
+
+        public CachedReflection ClearFilters(){
+            _filter = t => true;
+            return this;
+        }
+
+        public CachedReflection FilterRemoveImplementers<T>(){
+
+            var iface = typeof(T);
+
+            _filter = t => !Implements(t.Type,iface);
+
+            return this;
+
         }
 
     }

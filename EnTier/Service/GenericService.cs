@@ -14,6 +14,7 @@ namespace Service{
 
     internal class GenericService<StorageEntity,DomainEntity, Tid> :
         ServiceBase<StorageEntity,DomainEntity, Tid>
+        , IEnTierGeneric
         where StorageEntity : class
     {
         public GenericService(IObjectMapper mapper) 

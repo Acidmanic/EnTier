@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Repository;
 using Utility;
 
-internal class DatabaseContextGenericUnitOfDataAccess : DatabaseContextUnitOfWorkBase
+internal class DatabaseContextGenericUnitOfDataAccess 
+    : DatabaseContextUnitOfWorkBase, IEnTierGeneric
 {
 
 

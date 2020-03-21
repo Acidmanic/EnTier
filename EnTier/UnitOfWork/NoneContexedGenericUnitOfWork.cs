@@ -6,7 +6,7 @@ using Utility;
 
 namespace Repository{
 
-    public class NoneContexedGenericUnitOfWork : IUnitOfWork
+    public class NoneContexedGenericUnitOfWork : IUnitOfWork, IEnTierGeneric
     {
         public void Compelete()
         {        }

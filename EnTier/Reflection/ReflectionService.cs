@@ -30,6 +30,8 @@ namespace Utility{
                 if(instance == null){
                     instance = new ReflectionService();
                 }
+
+                instance.ClearFilters();
             }
 
             return instance;

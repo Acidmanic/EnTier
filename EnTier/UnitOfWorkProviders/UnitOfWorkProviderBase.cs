@@ -16,7 +16,9 @@ namespace Providers
 
                 var reflection = ReflectionService.Make();
 
-                var constructor = reflection.FindConstructor<IUnitOfWork>(args);
+                var constructor = reflection
+                    .FilterRemoveImplementers<IEnTierGeneric>()
+                    .FindConstructor<IUnitOfWork>(args);
 
                 if(!constructor.IsNull){
 

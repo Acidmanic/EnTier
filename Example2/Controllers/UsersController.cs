@@ -13,7 +13,7 @@ using Utility;
 
 namespace Example2.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UsersController : EnTierControllerBase<UserInfo, UserInfo, UserInfo, long>
     {

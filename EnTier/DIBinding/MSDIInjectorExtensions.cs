@@ -2,6 +2,8 @@
 
 
 
+using System.Diagnostics;
+using System.Reflection;
 using Configuration;
 using DIBinding;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +27,16 @@ public static class MSDIInjectorExtensios{
 
         EnTierApplication.Initialize(app);
         
+        ReflectionService.Make().CacheCurrent();
+        
+        var s = new StackTrace();
+
+        var caller = s.GetFrame(1);
+
+        var ass = caller.GetMethod().DeclaringType.Assembly;
+
+        ReflectionService.Make().Cache(ass);
+
         return app;
     }
 
