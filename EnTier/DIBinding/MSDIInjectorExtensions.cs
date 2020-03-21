@@ -25,7 +25,7 @@ public static class MSDIInjectorExtensios{
 
     public static IApplicationBuilder UseEnTier(this IApplicationBuilder app){
 
-        EnTierApplication.Initialize(app);
+        
         
         ReflectionService.Make().CacheCurrent();
         
@@ -36,6 +36,8 @@ public static class MSDIInjectorExtensios{
         var ass = caller.GetMethod().DeclaringType.Assembly;
 
         ReflectionService.Make().Cache(ass);
+
+        EnTierApplication.Initialize(app);
 
         return app;
     }

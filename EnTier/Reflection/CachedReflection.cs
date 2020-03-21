@@ -71,11 +71,30 @@ namespace Utility{
 
 
 
+        public List<Type> GetTypesWhichImplement<T>(){
+            var type = typeof(T);
+
+            return GetTypesWhichImplement(type);
+        }
         public List<Type> GetTypesWhichImplement(Type type){
             
             return _types.Where(_filter).ToList()
                          .Select(t => t.Type)
                          .Where(t => Implements(t,type))
+                         .ToList();
+        }
+
+
+        public List<Type> GetTypesWhichExtend<T>(){
+            var type = typeof(T);
+
+            return GetTypesWhichExtend(type);
+        }
+        public List<Type> GetTypesWhichExtend(Type type){
+            
+            return _types.Where(_filter).ToList()
+                         .Select(t => t.Type)
+                         .Where(t => Extends(t,type))
                          .ToList();
         }
 
@@ -133,7 +152,7 @@ namespace Utility{
             return Constructor<TCast>.Null();
         }
 
-        public Type[] GetTypes(params Object[] objects){
+        public Type[] GetTypesArrayForObjects(params Object[] objects){
 
             var ret = new Type[objects.Length];
 
@@ -165,7 +184,7 @@ namespace Utility{
 
         public Constructor<TCast> GetConstructorForType<TCast>(Type type,params object[] arguments){
 
-                    var argTypes = GetTypes(arguments);
+                    var argTypes = GetTypesArrayForObjects(arguments);
 
                     var constructor = type.GetConstructor(argTypes);
 
@@ -252,5 +271,43 @@ namespace Utility{
 
         }
 
+
+        public Type GetAncesstor(Type type,params Func<Type,bool>[] conditions){
+
+            var ancesstors = GetAncesstors(type);
+
+            bool condition(Type t)
+            {
+                foreach (var c in conditions)
+                {
+                    if (!c(t)) return false;
+                }
+                return true;
+            }
+
+            foreach (var anc in ancesstors){
+                if( condition(anc)){
+                    return anc;
+                }
+            }
+
+            return null;
+
+        }
+
+        private List<Type> GetAncesstors(Type t)
+        {
+            var ret = new List<Type>();
+
+            var parent = t;
+
+            while(parent != null){
+                ret.Add(parent);
+
+                parent = parent.BaseType;
+            }
+
+            return ret;
+        }
     }
 }

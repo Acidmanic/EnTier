@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Utility;
 using System;
 using Microsoft.EntityFrameworkCore;
+using Channels;
 
 internal static class EnTierApplication{
 
@@ -40,6 +41,8 @@ internal static class EnTierApplication{
     private static void ApplicationStart(){
 
         IsContextBased = ReflectionService.Make().IsAnyExtensionFor<DbContext>();
+
+        ChannelsService.Make().UpdateChannels();
 
     }
 

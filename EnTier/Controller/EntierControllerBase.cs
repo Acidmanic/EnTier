@@ -12,15 +12,22 @@ using Microsoft.AspNetCore.Mvc;
 using Plugging;
 using Service;
 using Utility;
+using Channels;
+using Repository;
 
 namespace Controllers{
 
 
 
 
+    public interface IEnTierController
+    {
+        Channel GetChannelInterfaces();
+    }
+
     public abstract class EnTierControllerBase
     <StorageModel,DomainModel,TransferModel,Tid>
-    :ControllerBase,IDisposable
+    :ControllerBase,IDisposable,IEnTierController
     where StorageModel:class{
 
         protected IObjectMapper Mapper {get; private set;}
@@ -217,6 +224,20 @@ namespace Controllers{
         public void Dispose()
         {
             _attributeEagerScopeManager.Dispose();
+        }
+
+        public Channel GetChannelInterfaces()
+        {
+            var ret  = new Channel();
+
+            ret.ServiceType = typeof(IService<DomainModel,Tid>);
+
+            ret.UnitOfWorkType = typeof(IUnitOfWork);
+
+            ret.RepositoryType = typeof(IRepository<StorageModel,Tid>);
+
+            return ret;
+
         }
     }
 
