@@ -7,13 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using Repository;
 using Utility;
 
-internal class GenericUnitOfDataAccess : UnitOfDataAccessBase
+internal class DatabaseContextGenericUnitOfDataAccess : DatabaseContextUnitOfWorkBase
 {
 
 
-    public GenericUnitOfDataAccess(DbContext context) : base(context)
+    public DatabaseContextGenericUnitOfDataAccess(DbContext context) : base(context)
     {
     }
+    
 
     public override IRepository<StorageEntity,Tid> GetRepository<StorageEntity,Tid>()
     {

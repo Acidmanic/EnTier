@@ -10,7 +10,7 @@ using Repository;
 
 namespace DataAccess
 {
-    public class DatabaseUnit : UnitOfDataAccessBase
+    public class DatabaseUnit : DatabaseContextUnitOfWorkBase
     {
 
 

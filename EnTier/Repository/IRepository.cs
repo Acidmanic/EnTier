@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 namespace Repository{
 
-    public interface IRepository<Entity,Tid>
+    public interface IRepository{};
+    public interface IRepository<Entity,Tid>:IRepository
     {
 
         List<Entity> GetAll();

@@ -5,6 +5,8 @@ using DIBinding;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Utility;
+using System;
+using Microsoft.EntityFrameworkCore;
 
 internal static class EnTierApplication{
 
@@ -12,7 +14,7 @@ internal static class EnTierApplication{
     public static IDIResolver Resolver{get;private set;}
 
     public static IDIRegisterer Registerer{get;private set;}
-
+    public static bool IsContextBased { get; private set; }
 
     public static void Initialize(IServiceCollection services){
         Registerer = new MicrosoftDependencyInjectionRegisterer(services);
@@ -37,8 +39,9 @@ internal static class EnTierApplication{
 
     private static void ApplicationStart(){
 
-
+        IsContextBased = ReflectionService.Make().IsAnyExtensionFor<DbContext>();
 
     }
+
 
 }

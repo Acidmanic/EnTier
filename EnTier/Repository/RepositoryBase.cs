@@ -12,6 +12,7 @@ namespace Repository
         where Entity:class
     {
 
+        
         protected DbSet<Entity> DbSet{get; private set;}
 
         private readonly EagerScopeManager _attributesScope=null;

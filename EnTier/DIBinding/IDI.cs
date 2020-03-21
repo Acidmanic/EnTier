@@ -12,6 +12,8 @@ namespace DIBinding{
     {
 
         T Resolve<T>();
+
+        object Resolve(Type serviceType);
         
     }
 

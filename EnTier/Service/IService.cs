@@ -8,8 +8,9 @@ using System.Collections.Generic;
 
 namespace Service{
 
+    public interface IService{}
 
-    public interface IService<DomainEntity,TId>{
+    public interface IService<DomainEntity,TId>:IService{
 
 
         List<DomainEntity> GetAll();

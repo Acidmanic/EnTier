@@ -12,7 +12,7 @@ namespace  Service
     public class UsersService : ServiceBase<StorageModels.User,User>, 
         IUsersService
     {
-        public UsersService(IObjectMapper mapper, IProvider<UnitOfDataAccessBase> dbProvider) : base(mapper, dbProvider)
+        public UsersService(IObjectMapper mapper, IProvider<IUnitOfWork> dbProvider) : base(mapper, dbProvider)
         {
         }
 

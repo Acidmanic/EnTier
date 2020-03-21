@@ -18,5 +18,9 @@ namespace DIBinding{
         {
             return _resolver.GetService<T>();
         }
+
+        public object Resolve(Type serviceType){
+            return _resolver.GetService(serviceType);
+        }
     }
 }

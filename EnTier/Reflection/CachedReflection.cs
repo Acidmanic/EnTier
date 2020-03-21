@@ -77,6 +77,26 @@ namespace Utility{
                          .ToList();
         }
 
+
+        public bool IsAnyExtensionFor<T>(){
+
+            var type = typeof(T);
+
+            return _types.Select(t => t.Type)
+                         .Where(t => Extends(t,type))
+                         .Count()>0;
+        }
+
+
+        public bool IsAnyImplementationFor<T>(){
+
+            var type = typeof(T);
+
+            return _types.Select(t => t.Type)
+                         .Where(t => Implements(t,type))
+                         .Count()>0;
+        }
+
         public Constructor<TCast> GetCreatorForTypeWhichImplements<TCast>(){
 
             var type = typeof(TCast);

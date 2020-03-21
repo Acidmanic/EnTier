@@ -12,7 +12,7 @@ namespace Repository
 
 
 
-    public abstract class UnitOfDataAccessBase : IUnitOfWork
+    public abstract class DatabaseContextUnitOfWorkBase : IUnitOfWork
     {
 
         protected  DbContext Context {get; private set;}
@@ -31,7 +31,7 @@ namespace Repository
         }
 
 
-        public UnitOfDataAccessBase(DbContext context)
+        public DatabaseContextUnitOfWorkBase(DbContext context)
         {
             Context = context;
 

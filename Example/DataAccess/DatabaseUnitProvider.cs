@@ -7,9 +7,9 @@ using Utility;
 
 namespace DataAccess
 {
-    public class DatabaseUnitProvider : IProvider<UnitOfDataAccessBase>
+    public class DatabaseUnitProvider : IProvider<IUnitOfWork>
     {
-        public UnitOfDataAccessBase Create()
+        public IUnitOfWork Create()
         {
             return new DatabaseUnit(new DataBaseContext());
         }

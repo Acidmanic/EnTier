@@ -47,6 +47,7 @@ namespace Example2
             app.UseMvc();
 
             app.UseEnTier();
+
         }
     }
 }

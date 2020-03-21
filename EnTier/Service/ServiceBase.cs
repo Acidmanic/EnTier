@@ -18,10 +18,10 @@ namespace Service
 
         protected IObjectMapper Mapper{get;private set;}
 
-        protected IProvider<UnitOfDataAccessBase> DbProvider{get;private set;}
+        protected IProvider<IUnitOfWork> DbProvider{get;private set;}
 
         private readonly EagerScopeManager _attributesScope;
-        public ServiceBase(IObjectMapper mapper,IProvider<UnitOfDataAccessBase> dbProvider):base()
+        public ServiceBase(IObjectMapper mapper,IProvider<IUnitOfWork> dbProvider):base()
         {
             Mapper = mapper;
             DbProvider = dbProvider;
@@ -161,7 +161,7 @@ namespace Service
         : ServiceBase<StorageEntity, DomainEntity, long>
         where StorageEntity : class
     {
-        public ServiceBase(IObjectMapper mapper, IProvider<UnitOfDataAccessBase> dbProvider) : base(mapper, dbProvider)
+        public ServiceBase(IObjectMapper mapper, IProvider<IUnitOfWork> dbProvider) : base(mapper, dbProvider)
         {
         }
     }
