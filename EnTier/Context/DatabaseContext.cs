@@ -28,7 +28,10 @@ namespace Context{
             r.GetCreatorForTypeWhich<object>(t =>{
 
                 if (r.IsSpecificOf(t.Type,genericDbSetType)){
-                    _datasets.Add(t.Type,t.Instanciator());
+
+                    var keyType = t.Type.GetGenericArguments()[0];
+
+                    _datasets.Add(keyType,t.Instanciator());
                 }
                 return false;
             });
@@ -49,7 +52,7 @@ namespace Context{
             var type = typeof(T);
 
             if(_datasets.ContainsKey(type)){
-                return (IDataset<T>) _datasets[type];
+                return new DatabaseDataset<T>((DbSet<T>)_datasets[type]);
             }
 
             //TODO: Null pattern

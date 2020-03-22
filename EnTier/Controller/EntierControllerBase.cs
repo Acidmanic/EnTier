@@ -105,6 +105,10 @@ namespace Controllers{
                                 
             var ret = constructor.Construct();
 
+            if(ret == null){
+                ret = new GenericService<StorageModel,DomainModel,Tid>();
+            }
+
             return ret;
         }
 
