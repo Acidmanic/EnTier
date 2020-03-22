@@ -17,10 +17,7 @@ namespace Service{
         , IEnTierGeneric
         where StorageEntity : class
     {
-        public GenericService(IObjectMapper mapper) 
-            : base(mapper, new UnitOfWorkProvider<StorageEntity>())
-        {
-        }
+        public GenericService() : base(){        }
 
     }
 }

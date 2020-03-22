@@ -7,7 +7,7 @@ using DataAccess;
 
 namespace Repository
 {
-    public abstract class RepositoryBase<Entity,Tid> 
+    public abstract class DatabaseContextRepositoryBase<Entity,Tid> 
         : IDisposable, IRepository<Entity,Tid> 
         where Entity:class
     {
@@ -17,7 +17,7 @@ namespace Repository
 
         private readonly EagerScopeManager _attributesScope=null;
 
-        public RepositoryBase(DbSet<Entity> dbset)
+        public DatabaseContextRepositoryBase(DbSet<Entity> dbset)
         {
             DbSet = dbset;
 
@@ -117,7 +117,7 @@ namespace Repository
     }
 
     public abstract class RepositoryBase<Entity>
-        : RepositoryBase<Entity, long>
+        : DatabaseContextRepositoryBase<Entity, long>
         where Entity : class
     {
         public RepositoryBase(DbSet<Entity> dbset) : base(dbset)

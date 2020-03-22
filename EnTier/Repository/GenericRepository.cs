@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Repository{
 
-    public class GenericRepository<StorageEntity,Tid> 
-        : RepositoryBase<StorageEntity,Tid> 
+    internal class GenericDatabaseContextRepository<StorageEntity,Tid> 
+        : DatabaseContextRepositoryBase<StorageEntity,Tid> 
         , IEnTierGeneric
         where StorageEntity:class
     {
-        public GenericRepository(DbSet<StorageEntity> dbset) : base(dbset)
+        public GenericDatabaseContextRepository(DbSet<StorageEntity> dbset) : base(dbset)
         {
         }
     }

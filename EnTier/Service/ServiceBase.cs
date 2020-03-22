@@ -9,6 +9,7 @@ using Repository;
 using Plugging;
 using Utility;
 using DataAccess;
+using Providers;
 
 namespace Service
 {
@@ -20,14 +21,53 @@ namespace Service
 
         protected IProvider<IUnitOfWork> DbProvider{get;private set;}
 
-        private readonly EagerScopeManager _attributesScope;
-        public ServiceBase(IObjectMapper mapper,IProvider<IUnitOfWork> dbProvider):base()
+        private EagerScopeManager _attributesScope;
+        public ServiceBase(IObjectMapper mapper,IProvider<IUnitOfWork> dbProvider)
         {
-            Mapper = mapper;
-            DbProvider = dbProvider;
+            Initialize(mapper,dbProvider);
+        }
 
+
+        public ServiceBase(IObjectMapper mapper)
+        {
+            var dbProvider = ResolveProvider();
+
+            Initialize(mapper,dbProvider);
+        }
+
+        public ServiceBase(IProvider<IUnitOfWork> dbProvider)
+        {
+            var mapper = ResolveMapper();
+            
+            Initialize(mapper,dbProvider);
+        }
+
+        public ServiceBase()
+        {
+            var mapper = ResolveMapper();
+
+            var dbProvider = ResolveProvider();
+            
+            Initialize(mapper,dbProvider);
+        }
+
+        private IObjectMapper ResolveMapper()
+        {
+            return EnTierApplication.Resolver.Resolve<IObjectMapper>();
+        }
+
+        private IProvider<IUnitOfWork> ResolveProvider()
+        {
+            return new UnitOfWorkProvider<StorageEntity>();
+        }
+
+        //ServiceBase Decides For it's Dependencies
+        private void Initialize(IObjectMapper mapper,IProvider<IUnitOfWork> dbProvider){
             _attributesScope = new EagerAttributeProcessor()
                 .MarkEagers<StorageEntity>(this);
+
+            Mapper = mapper;
+            DbProvider = dbProvider;
         }
 
         public List<DomainEntity> GetAll()

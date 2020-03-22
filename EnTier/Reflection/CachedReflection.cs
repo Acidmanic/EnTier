@@ -182,6 +182,26 @@ namespace Utility{
             return Constructor<TCast>.Null();
         }
 
+        public List<Constructor<TCast>> FindConstructors<TCast>(
+                Func<Type,bool> predicate,
+                params Object[] arguments
+        ){
+            var creators = _types.Where(FilterPredicate).ToList()
+                .FindAll(mt => predicate(mt.Type));
+
+            var ret = new List<Constructor<TCast>>() ;
+
+            if (creators != null){
+
+                foreach(var c in creators){
+                    var res = GetConstructorForType<TCast>(c.Type,arguments);
+                    
+                    if(!res.IsNull) ret.Add(res);
+                }
+            }
+            return ret;
+        }
+
         public Constructor<TCast> GetConstructorForType<TCast>(Type type,params object[] arguments){
 
             if(!type.IsAbstract && ! type.IsInterface){

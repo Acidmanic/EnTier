@@ -95,7 +95,7 @@ namespace Controllers{
             InitializeDependencies(mapper,service,configurationProvider);
 
         }
-
+        // Controller is deciding for it's service, when not provided.
         private IService<DomainModel, Tid> DefaultService(IObjectMapper mapper)
         {
             var constructor = ReflectionService.Make()
