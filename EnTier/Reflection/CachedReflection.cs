@@ -78,7 +78,7 @@ namespace Utility{
         }
         public List<Type> GetTypesWhichImplement(Type type){
             
-            return _types.Where(_filter).ToList()
+            return _types.Where(FilterPredicate).ToList()
                          .Select(t => t.Type)
                          .Where(t => Implements(t,type))
                          .ToList();
@@ -92,7 +92,7 @@ namespace Utility{
         }
         public List<Type> GetTypesWhichExtend(Type type){
             
-            return _types.Where(_filter).ToList()
+            return _types.Where(FilterPredicate).ToList()
                          .Select(t => t.Type)
                          .Where(t => Extends(t,type))
                          .ToList();
@@ -103,7 +103,7 @@ namespace Utility{
 
             var type = typeof(T);
 
-            return _types.Where(_filter).ToList()
+            return _types.Where(FilterPredicate).ToList()
                         .Select(t => t.Type)
                         .Where(t => Extends(t,type))
                         .Count()>0;
@@ -114,7 +114,7 @@ namespace Utility{
 
             var type = typeof(T);
 
-            return _types.Where(_filter).ToList()
+            return _types.Where(FilterPredicate).ToList()
                         .Select(t => t.Type)
                          .Where(t => Implements(t,type))
                          .Count()>0;
@@ -140,7 +140,7 @@ namespace Utility{
 
         private Constructor<TCast> GetCreatorForTypeWhich<TCast>(Func<MetaType,bool> predicate){
             
-            var res = _types.Where(_filter).ToList()
+            var res = _types.Where(FilterPredicate).ToList()
                             .Where(predicate)
                             .Select(mt => mt.Instanciator)
                             .FirstOrDefault();
@@ -168,7 +168,7 @@ namespace Utility{
                 Func<Type,bool> predicate,
                 params Object[] arguments
         ){
-            var creators = _types.Where(_filter).ToList()
+            var creators = _types.Where(FilterPredicate).ToList()
                 .FindAll(mt => predicate(mt.Type));
 
             if (creators != null){
@@ -247,17 +247,29 @@ namespace Utility{
             return false;
         }
 
+        public Type GetInterfaceWIthAttribute<TAttribute>(Type type){
+            var interfaces = type.GetInterfaces();
+            var attType = typeof(TAttribute);
+            foreach(var i in interfaces){
+                var att = i.GetCustomAttribute(attType,false);
 
-        private Func<MetaType,bool> _filter = t => true;
+                if(att != null){
+                    return i;
+                }
+            }
+            return null;
+        }
+        private readonly List<Func<MetaType,bool>> _filters = new List<Func<MetaType, bool>>();
 
         public CachedReflection Filter(Func<MetaType,bool> filter){
-            _filter = filter;
+            _filters.Add(filter);
 
             return this;
         }
 
         public CachedReflection ClearFilters(){
-            _filter = t => true;
+            _filters.Clear();
+
             return this;
         }
 
@@ -265,12 +277,34 @@ namespace Utility{
 
             var iface = typeof(T);
 
-            _filter = t => !Implements(t.Type,iface);
+            _filters.Add(t => !Implements(t.Type,iface));
 
             return this;
 
         }
 
+        public CachedReflection FilterAlloweImplementers<T>(){
+
+            var iface = typeof(T);
+
+            _filters.Add(t => Implements(t.Type,iface));
+
+            return this;
+
+        }
+
+        protected Func<MetaType,bool> FilterPredicate {
+            get{
+                return (t) => {
+                    
+                    foreach(var f in _filters){
+                        if (!f(t)) return false;
+                    }
+
+                    return true;
+                };
+            }
+        }
 
         public Type GetAncesstor(Type type,params Func<Type,bool>[] conditions){
 

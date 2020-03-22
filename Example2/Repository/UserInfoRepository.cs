@@ -5,11 +5,16 @@
 using System.Collections.Generic;
 using Models;
 using System.Linq;
-
+using DIBinding;
 
 namespace Repository{
 
-    public class UserInfoReposiroty : IRepository<UserInfo>
+
+
+    [InjectionEntry]
+    public interface IUserInfoRepository{}
+
+    public class UserInfoReposiroty :IUserInfoRepository, IRepository<UserInfo>
     {
 
 

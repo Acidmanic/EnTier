@@ -22,7 +22,6 @@ namespace Controllers{
 
     public interface IEnTierController
     {
-        Channel GetChannelInterfaces();
     }
 
     public abstract class EnTierControllerBase
@@ -42,12 +41,15 @@ namespace Controllers{
 
         protected IService<DomainModel,Tid> Service{ get; private set;}
 
+        protected ResolvedChannel<StorageModel,DomainModel,Tid> Channel{get;private set;}
 
         private void InitializeDependencies(IObjectMapper mapper,
                                     IService<DomainModel,Tid> service,
                                     IProvider<EnTierConfigurations> configurationProvider)
         {
             
+            Channel = ChannelsService.Make().ResolveChannel<StorageModel,DomainModel,Tid>();
+
             _attributeEagerScopeManager = new AttributeEagerScopeManager<StorageModel>(this);
             
             Mapper = mapper;
@@ -226,19 +228,6 @@ namespace Controllers{
             _attributeEagerScopeManager.Dispose();
         }
 
-        public Channel GetChannelInterfaces()
-        {
-            var ret  = new Channel();
-
-            ret.ServiceType = typeof(IService<DomainModel,Tid>);
-
-            ret.UnitOfWorkType = typeof(IUnitOfWork);
-
-            ret.RepositoryType = typeof(IRepository<StorageModel,Tid>);
-
-            return ret;
-
-        }
     }
 
 

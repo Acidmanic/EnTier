@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Repository;
 
 namespace Example2
 {
@@ -28,6 +29,9 @@ namespace Example2
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddEnTierServices();
+
+            services.AddTransient<IUserInfoRepository,UserInfoReposiroty>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +48,7 @@ namespace Example2
             }
             
             app.UseHttpsRedirection();
+            
             app.UseMvc();
 
             app.UseEnTier();
