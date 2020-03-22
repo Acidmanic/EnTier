@@ -3,16 +3,17 @@
 
 
 
+using Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository{
 
-    internal class GenericDatabaseContextRepository<StorageEntity,Tid> 
-        : DatabaseContextRepositoryBase<StorageEntity,Tid> 
+    internal class GenericRepository<StorageEntity,Tid> 
+        : RepositoryBase<StorageEntity,Tid> 
         , IEnTierGeneric
         where StorageEntity:class
     {
-        public GenericDatabaseContextRepository(DbSet<StorageEntity> dbset) : base(dbset)
+        public GenericRepository(IDataset<StorageEntity> dbset) : base(dbset)
         {
         }
     }

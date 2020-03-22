@@ -12,7 +12,9 @@ namespace Context{
         
         IQueryable<T> AsQueryable();
 
-        void Remove(T item);
+        T Remove(T item);
+
+        T Add(T item);
 
     }
 }

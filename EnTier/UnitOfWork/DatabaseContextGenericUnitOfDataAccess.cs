@@ -32,7 +32,7 @@ internal class DatabaseContextGenericUnitOfDataAccess
                 if(! constructor.IsNull){
                     return constructor.Construct();
                 }
-                return new GenericDatabaseContextRepository<StorageEntity,Tid>(dbSet);
+                return new GenericRepository<StorageEntity,Tid>(dbSet);
             }
         }
 

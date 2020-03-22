@@ -4,20 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Reflection;
 using DataAccess;
+using Context;
 
 namespace Repository
 {
-    public abstract class DatabaseContextRepositoryBase<Entity,Tid> 
+    public abstract class RepositoryBase<Entity,Tid> 
         : IDisposable, IRepository<Entity,Tid> 
         where Entity:class
     {
 
         
-        protected DbSet<Entity> DbSet{get; private set;}
+        protected IDataset<Entity> DbSet{get; private set;}
 
         private readonly EagerScopeManager _attributesScope=null;
 
-        public DatabaseContextRepositoryBase(DbSet<Entity> dbset)
+        public RepositoryBase(IDataset<Entity> dbset)
         {
             DbSet = dbset;
 
@@ -27,7 +28,7 @@ namespace Repository
 
         public virtual Entity Add(Entity value)
         {
-            return DbSet.Add(value).Entity;
+            return DbSet.Add(value);
         }
 
         protected IQueryable<Entity> ApplyEagerMarking(IQueryable<Entity> queryable)
@@ -37,7 +38,7 @@ namespace Repository
 
         public virtual List<Entity> GetAll()
         {
-            var ret = DbSet.Where(e => true);
+            var ret = DbSet.AsQueryable().Where(e => true);
 
             ret = ApplyEagerMarking(ret);
 
@@ -72,7 +73,7 @@ namespace Repository
 
         public virtual Entity Remove(Entity value)
         {
-            return DbSet.Remove(value).Entity;
+            return DbSet.Remove(value);
         }
 
         public virtual Entity RemoveById(Tid id)
@@ -81,7 +82,7 @@ namespace Repository
 
             if(entity != null)
             {
-                return DbSet.Remove(entity).Entity;
+                return DbSet.Remove(entity);
             }
 
             return null;
@@ -117,10 +118,10 @@ namespace Repository
     }
 
     public abstract class RepositoryBase<Entity>
-        : DatabaseContextRepositoryBase<Entity, long>
+        : RepositoryBase<Entity, long>
         where Entity : class
     {
-        public RepositoryBase(DbSet<Entity> dbset) : base(dbset)
+        public RepositoryBase(IDataset<Entity> dbset) : base(dbset)
         {
         }
     }

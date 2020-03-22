@@ -18,7 +18,7 @@ namespace Generics{
 
                 DbSet<TStorage> dbSet = null;
 
-                return new GenericDatabaseContextRepository<TStorage,Tid>(dbSet);
+                return new GenericRepository<TStorage,Tid>(dbSet);
             }
             if (!EnTierApplication.IsContextBased){
                 //TODO:

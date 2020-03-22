@@ -25,10 +25,13 @@ namespace Context{
             return _dataset;
         }
 
-        public void Remove(T item)
+        public T Remove(T item)
         {
-            _dataset.Remove(item);
+            return _dataset.Remove(item).Entity;
         }
 
+        public T Add(T item){
+            return _dataset.Add(item).Entity;
+        }
     }
 }
