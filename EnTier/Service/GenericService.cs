@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Repository;
 using Utility;
 using Plugging;
-using Providers;
 
 namespace Service{
 

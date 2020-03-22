@@ -138,7 +138,19 @@ namespace Utility{
             );
         }
 
-        private Constructor<TCast> GetCreatorForTypeWhich<TCast>(Func<MetaType,bool> predicate){
+        public List<Constructor<TCast>> GetCreatorsWhich<TCast>(Func<MetaType,bool> predicate){
+
+            var ret = new List<Constructor<TCast>>();
+
+            _types.Where(FilterPredicate).ToList()
+                .Where(predicate)
+                .Select(mt => mt.Instanciator)
+                .ToList()
+                .ForEach(f => ret.Add(new Constructor<TCast>(()=>(TCast)f())));
+
+            return ret;
+        }
+        public Constructor<TCast> GetCreatorForTypeWhich<TCast>(Func<MetaType,bool> predicate){
             
             var res = _types.Where(FilterPredicate).ToList()
                             .Where(predicate)
@@ -257,6 +269,21 @@ namespace Utility{
             if(parent != null) return Implements(parent,type);
 
             return false;
+        }
+
+        public bool Extends<TBase>(Type t){
+            var @base = typeof(TBase);
+
+            return Extends(t,@base);
+        }
+
+        public bool IsSpecificOf<TGeneric>(Type specific){
+            return IsSpecificOf(specific,typeof(TGeneric));
+        }
+
+        public bool IsSpecificOf(Type specific,Type generic){
+            return specific.IsGenericType && 
+                specific.GetGenericTypeDefinition() == generic;
         }
 
         public bool Extends(Type t, Type @base)

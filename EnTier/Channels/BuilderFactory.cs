@@ -2,9 +2,8 @@
 
 
 using System;
+using Context;
 using DIBinding;
-using Generics;
-using Providers;
 using Repository;
 using Service;
 using Utility;
@@ -36,7 +35,7 @@ namespace Channels{
                 }
 
                 if(ret == null){
-                    ret = BuildGenericItem<TInterface>();
+                    ret = BuildGenericItem<TInterface>(args);
                 }
 
                 return ret;
@@ -44,36 +43,21 @@ namespace Channels{
 
         }
 
-        public Func<IProvider<IUnitOfWork>> MakeUnitOfWorkProviderBuilder()
-        {
-            return () => new UnitOfWorkProvider<TStorage>();
-        }
 
-        private TInterface BuildGenericItem<TInterface>()
+        private TInterface BuildGenericItem<TInterface>(params object[] args)
         {
             var type = typeof(TInterface);
 
             var r = ReflectionService.Make();
 
             if (r.Implements<IService>(type)){
-                return (TInterface) EnTierApplication.Resolver
-                    .Resolve<IGenericBuilder<IService>>()
-                    .Build<TStorage,TDomain,TId>();
+                return (TInterface)(object)
+                    new GenericService<TStorage,TDomain,TDomain>();
             }
             if (r.Implements<IRepository>(type)){
-                return (TInterface) EnTierApplication.Resolver
-                    .Resolve<IGenericBuilder<IRepository>>()
-                    .Build<TStorage,TDomain,TId>();
-            }
-            if (r.Implements<IUnitOfWork>(type)){
-                return (TInterface) EnTierApplication.Resolver
-                    .Resolve<IGenericBuilder<IUnitOfWork>>()
-                    .Build<TStorage,TDomain,TId>();
-            }
-            if (r.Implements<IProvider<IUnitOfWork>>(type)){
-                return (TInterface) EnTierApplication.Resolver
-                    .Resolve<IGenericBuilder<IProvider<IUnitOfWork>>>()
-                    .Build<TStorage,TDomain,TId>();
+                return (TInterface)(object)
+                    new GenericRepository<TStorage,TId>
+                    ((IDataset<TStorage>)args[0]);
             }
 
             return default;

@@ -77,11 +77,6 @@ namespace Channels{
 
             ret.Repository = factory.MakeBuilder<IRepository<TStorage,TId>>();
 
-            ret.UnitOfWorkProvider = factory.MakeUnitOfWorkProviderBuilder();
-
-
-            var shit = ret.UnitOfWorkProvider();
-
             return ret;
         }
 
@@ -107,10 +102,6 @@ namespace Channels{
                         t => t.IsGenericType,
                         t => t.GenericTypeArguments.Length == 4
                     );
-
-                    channel.ControllerType = controller;
-
-                    _channels.Add(controller,channel);
                     
                 }
 

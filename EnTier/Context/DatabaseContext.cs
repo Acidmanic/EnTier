@@ -16,26 +16,22 @@ namespace Context{
         private readonly DbContext _context;
         private readonly Dictionary<Type,object> _datasets;
 
-        private class DbSet:DbSet<object>{}
-
         public DatabaseContext(DbContext context){
             _context = context;
 
             var r = new CachedReflection().CachePropertiesOf(_context);
 
-            var genericDbSetType = typeof(DbSet).GetGenericTypeDefinition();
-
-            var props = r.FindConstructors<object>(t => r.Extends(t,genericDbSetType) );
-
+            var genericDbSetType = typeof(DbSet<>);
+            
             _datasets = new Dictionary<Type, object>();
 
-            foreach(var p in props){
-                var dbset = p.Construct();
+            r.GetCreatorForTypeWhich<object>(t =>{
 
-                var gType = dbset.GetType().GenericTypeArguments[0];
-
-                _datasets.Add(gType,dbset);
-            }
+                if (r.IsSpecificOf(t.Type,genericDbSetType)){
+                    _datasets.Add(t.Type,t.Instanciator());
+                }
+                return false;
+            });
         }
 
         public void Apply()

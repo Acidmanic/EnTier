@@ -9,7 +9,9 @@ using Repository;
 using Plugging;
 using Utility;
 using DataAccess;
-using Providers;
+using Context;
+using Channels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service
 {
@@ -22,31 +24,31 @@ namespace Service
         protected IProvider<IUnitOfWork> DbProvider{get;private set;}
 
         private EagerScopeManager _attributesScope;
-        public ServiceBase(IObjectMapper mapper,IProvider<IUnitOfWork> dbProvider)
+        public ServiceBase(IObjectMapper mapper,IContext context)
         {
-            Initialize(mapper,dbProvider);
+            Initialize(mapper,context);
         }
 
 
         public ServiceBase(IObjectMapper mapper)
         {
-            var dbProvider = ResolveProvider();
+            var context = ResolveContext();
 
-            Initialize(mapper,dbProvider);
+            Initialize(mapper,context);
         }
 
-        public ServiceBase(IProvider<IUnitOfWork> dbProvider)
+        public ServiceBase(IContext context)
         {
             var mapper = ResolveMapper();
             
-            Initialize(mapper,dbProvider);
+            Initialize(mapper,context);
         }
 
         public ServiceBase()
         {
             var mapper = ResolveMapper();
 
-            var dbProvider = ResolveProvider();
+            var dbProvider = ResolveContext();
             
             Initialize(mapper,dbProvider);
         }
@@ -56,18 +58,28 @@ namespace Service
             return EnTierApplication.Resolver.Resolve<IObjectMapper>();
         }
 
-        private IProvider<IUnitOfWork> ResolveProvider()
+        private IContext ResolveContext()
         {
-            return new UnitOfWorkProvider<StorageEntity>();
+            //TODO: Tie this to configurations
+            if (EnTierApplication.IsContextBased){
+                var r = ReflectionService.Make();
+                var context = r.FindConstructor<DbContext>
+                (t => r.Extends<DbContext>(t)).Construct();
+
+                return new DatabaseContext(context);
+            } else{
+                //TODO: Add Otherwise context
+                throw new NotImplementedException();
+            }
+
         }
 
-        //ServiceBase Decides For it's Dependencies
-        private void Initialize(IObjectMapper mapper,IProvider<IUnitOfWork> dbProvider){
+        private void Initialize(IObjectMapper mapper,IContext context){
             _attributesScope = new EagerAttributeProcessor()
                 .MarkEagers<StorageEntity>(this);
 
             Mapper = mapper;
-            DbProvider = dbProvider;
+            DbProvider = new Provider<IUnitOfWork>(() => new UnitOfWork(context));
         }
 
         public List<DomainEntity> GetAll()
@@ -201,7 +213,19 @@ namespace Service
         : ServiceBase<StorageEntity, DomainEntity, long>
         where StorageEntity : class
     {
-        public ServiceBase(IObjectMapper mapper, IProvider<IUnitOfWork> dbProvider) : base(mapper, dbProvider)
+        public ServiceBase()
+        {
+        }
+
+        public ServiceBase(IObjectMapper mapper) : base(mapper)
+        {
+        }
+
+        public ServiceBase(IContext context) : base(context)
+        {
+        }
+
+        public ServiceBase(IObjectMapper mapper, IContext conetxt) : base(mapper, conetxt)
         {
         }
     }
