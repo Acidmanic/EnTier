@@ -184,14 +184,16 @@ namespace Utility{
 
         public Constructor<TCast> GetConstructorForType<TCast>(Type type,params object[] arguments){
 
-                    var argTypes = GetTypesArrayForObjects(arguments);
+            if(!type.IsAbstract && ! type.IsInterface){
 
-                    var constructor = type.GetConstructor(argTypes);
+                var argTypes = GetTypesArrayForObjects(arguments);
 
-                    if (constructor!=null){
-                        return new Constructor<TCast>(constructor,arguments);
-                    }
+                var constructor = type.GetConstructor(argTypes);
 
+                if (constructor!=null){
+                    return new Constructor<TCast>(constructor,arguments);
+                }
+            }
                     return Constructor<TCast>.Null();
         }
 
@@ -219,6 +221,9 @@ namespace Utility{
             return ret;
         }
 
+        public bool Implements<T>(Type t){
+            return Implements(t,typeof(T));
+        }
         public bool Implements(Type t, Type type)
         {
             var ifaces = t.GetInterfaces();
@@ -247,7 +252,7 @@ namespace Utility{
             return false;
         }
 
-        public Type GetInterfaceWIthAttribute<TAttribute>(Type type){
+        public Type GetInterfaceWithAttribute<TAttribute>(Type type){
             var interfaces = type.GetInterfaces();
             var attType = typeof(TAttribute);
             foreach(var i in interfaces){

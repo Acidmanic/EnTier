@@ -8,7 +8,7 @@ using Utility;
 
 namespace Providers
 {
-    public abstract class UnitOfWorkProviderBase : IProvider<IUnitOfWork>
+    public abstract class UnitOfWorkProviderBase : IProvider<IUnitOfWork>,IEnTierInternal
     {
         public abstract IUnitOfWork Create();
 

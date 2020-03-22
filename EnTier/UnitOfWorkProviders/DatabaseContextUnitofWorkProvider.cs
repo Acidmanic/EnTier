@@ -12,10 +12,13 @@ namespace Providers{
 
 
 
-    public class DatabaseContextUnitofWorkProvider<StorageEntity> : UnitOfWorkProviderBase
+    public class DatabaseContextUnitofWorkProvider<StorageEntity> 
+    : UnitOfWorkProviderBase,IEnTierInternal
     where StorageEntity: class
     {
 
+
+        //TODO: Replace with smart way, or atleast get from Application
         private DbContext GetContext()
         {
             return ReflectionService.Make()
@@ -56,7 +59,7 @@ namespace Providers{
                 );
             }
                     
-            return FindUnitOfWork(context);
+            return new DatabaseContextGenericUnitOfDataAccess(context);
         }
     }
 }

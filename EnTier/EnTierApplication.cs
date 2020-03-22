@@ -8,6 +8,9 @@ using Utility;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Channels;
+using Generics;
+using Service;
+using Repository;
 
 internal static class EnTierApplication{
 
@@ -34,6 +37,14 @@ internal static class EnTierApplication{
     private static void PerformRegistrations(){
         //TODO: Later figure a way to give the code user the chance to choos what 
         Registerer.RegisterSingleton<IProvider<EnTierConfigurations>,MSExtensionsConfigurationsProvider>();
+
+        Registerer.RegisterSingleton<IGenericBuilder<IService>,GenericServiceBuilder>();
+
+        Registerer.RegisterSingleton<IGenericBuilder<IRepository>,GenericRepositoryBuilder>();
+
+        Registerer.RegisterSingleton<IGenericBuilder<IUnitOfWork>,GenericUnitOfWorkBuilder>();
+
+        Registerer.RegisterSingleton<IGenericBuilder<IProvider<IUnitOfWork>>,GenericUnitOfWorkProviderBuilder>();
     }
 
 

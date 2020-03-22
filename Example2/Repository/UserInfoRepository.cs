@@ -11,9 +11,10 @@ namespace Repository{
 
 
 
-    [InjectionEntry]
+    
     public interface IUserInfoRepository{}
 
+    [InjectionEntry(typeof(IUserInfoRepository))]
     public class UserInfoReposiroty :IUserInfoRepository, IRepository<UserInfo>
     {
 

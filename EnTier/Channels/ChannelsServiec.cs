@@ -71,57 +71,16 @@ namespace Channels{
             
             var ret = new ResolvedChannel<TStorage,TDomain,TId>(key);
 
-            ret.Service = () => {
+            var factory = new BuilderFactory<TStorage,TDomain,TId>();
 
-                IService<TDomain,TId> service = null;
-                
-                var serviceType = ReflectionService.Make()
-                    .FilterRemoveImplementers<IEnTierGeneric>()
-                    .GetTypesWhichImplement(typeof(IService<TDomain,TId>));
+            ret.Service = factory.MakeBuilder<IService<TDomain,TId>>();
 
-                if(serviceType.Count > 0){
-                    service = (IService<TDomain,TId>) EnTierApplication.Resolver.Resolve(serviceType[0]);
-                }
+            ret.Repository = factory.MakeBuilder<IRepository<TStorage,TId>>();
 
-                if (service == null){
-                    var mapper = EnTierApplication.Resolver.Resolve<IObjectMapper>();
-
-                    service = new GenericService<TStorage,TDomain,TId>(mapper);
-                }
-
-                return service;
-
-            };
+            ret.UnitOfWorkProvider = factory.MakeUnitOfWorkProviderBuilder();
 
 
-            ret.Repository = () => {
-                IRepository<TStorage,TId> repo = null;
-                
-                var repoTypes = ReflectionService.Make()
-                    .FilterRemoveImplementers<IEnTierGeneric>()
-                    .GetTypesWhichImplement(typeof(IRepository<TStorage,TId>));
-
-                if(repoTypes.Count > 0){
-                    var type = repoTypes[0];
-
-                    var injectedAs = ReflectionService.Make().GetInterfaceWIthAttribute<InjectionEntry>(type);
-
-                    repo = (IRepository<TStorage,TId>) EnTierApplication.Resolver.Resolve(injectedAs);
-                }
-
-                // IFound Implemented Repository but i cant resolve it using DI
-                // when it's not registered
-
-                if (repo == null){
-                    var mapper = EnTierApplication.Resolver.Resolve<IObjectMapper>();
-
-                    //repo = new GenericService<TStorage,TDomain,TId>(mapper);
-                }
-
-                return repo;
-            };
-
-            var shit = ret.Repository();
+            var shit = ret.UnitOfWorkProvider();
 
             return ret;
         }

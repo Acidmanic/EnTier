@@ -10,7 +10,7 @@ namespace Providers{
 
 
 
-    public class NoneContexedGenericUnitOfWorkProvider : IProvider<IUnitOfWork>
+    public class NoneContexedGenericUnitOfWorkProvider : IProvider<IUnitOfWork>,IEnTierInternal
     {
         public IUnitOfWork Create()
         {
