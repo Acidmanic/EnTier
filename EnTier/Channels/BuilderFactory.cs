@@ -25,19 +25,8 @@ namespace Channels{
         Maybe NullObject
     */
     public class BuilderFactory<TStorage,TDomain,TId>
-    :IDatasetAccessor
     where TStorage:class
     {
-
-
-        private static object _storedDataset = null;
-
-        public IDataset<T> Get<T>()
-        where T:class
-        {
-            return (IDataset<T>) _storedDataset;
-        }
-
         public Func<IService<TDomain,TId>> ServiceProvider()
         {
 
@@ -91,9 +80,9 @@ namespace Channels{
             var obj = new Object();
             
             lock(obj){
-                _storedDataset = dataset;
+                SingletonInjectionDatasetProvider.Make().Set(dataset);
                 ret = ConstructByAutoInjection<IRepository<TStorage,TId>>();
-                _storedDataset = null;
+                SingletonInjectionDatasetProvider.Make().Set(null);
             }
 
             return ret;
@@ -113,6 +102,7 @@ namespace Channels{
         {
             var types = ReflectionService.Make()
                     .FilterRemoveImplementers<IEnTierGeneric>()
+                    .Filter(t => !t.Type.IsAbstract && !t.Type.IsInterface)
                     .GetTypesWhichImplement(typeof(TInterface));
 
             if(types.Count > 0){
@@ -148,8 +138,40 @@ namespace Channels{
     }
 
 
-    public class InjectionDatasetProvider : BuilderFactory<object, object, long>
+    public class SingletonInjectionDatasetProvider : IDatasetAccessor
     {
+        private SingletonInjectionDatasetProvider(){}
 
+        private static SingletonInjectionDatasetProvider instance = null;
+        public static SingletonInjectionDatasetProvider Make(){
+            var obj = new object();
+            lock(obj){
+                if(instance == null ){
+                    instance = new SingletonInjectionDatasetProvider();
+                }
+            }
+            return instance;
+        }
+
+
+        private object _storedDataset;
+
+        public IDataset<T> Get<T>() where T : class
+        {
+            return (IDataset<T>) _storedDataset;
+        }
+
+        internal void Set(object dataset){
+            _storedDataset = dataset;
+        }
+    }
+
+
+    public class InjectionDatasetAccessor : IDatasetAccessor
+    {
+        public IDataset<T> Get<T>() where T : class
+        {
+            return SingletonInjectionDatasetProvider.Make().Get<T>();
+        }
     }
 }

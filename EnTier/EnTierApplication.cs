@@ -37,7 +37,7 @@ internal static class EnTierApplication{
         //TODO: Later figure a way to give the code user the chance to choos what 
         Registerer.RegisterSingleton<IProvider<EnTierConfigurations>,MSExtensionsConfigurationsProvider>();
 
-        Registerer.RegisterSingleton<IDatasetAccessor,InjectionDatasetProvider>();
+        Registerer.RegisterTransient<IDatasetAccessor,InjectionDatasetAccessor>();
 
     }
 
