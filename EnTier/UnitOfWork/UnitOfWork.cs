@@ -32,9 +32,9 @@ namespace Repository{
 
             var factory = new BuilderFactory<StorageEntity,StorageEntity,Tid>();
 
-            var builder = factory.MakeBuilder<IRepository<StorageEntity, Tid>>(dataset);
+            var builder = factory.RepositoryBuilder();
 
-            var repository = builder();
+            var repository = builder(dataset);
 
             return repository;
 

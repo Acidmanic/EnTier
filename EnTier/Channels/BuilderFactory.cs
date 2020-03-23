@@ -8,6 +8,12 @@ using Repository;
 using Service;
 using Utility;
 
+
+public interface IDatasetAccessor{
+
+    IDataset<T> Get<T>() where T:class;
+}
+
 namespace Channels{
 
 
@@ -18,24 +24,57 @@ namespace Channels{
         Make A Generic One
         Maybe NullObject
     */
-    public class BuilderFactory<TStorage,TDomain,TId>where TStorage:class{
+    public class BuilderFactory<TStorage,TDomain,TId>
+    :IDatasetAccessor
+    where TStorage:class
+    {
 
 
-        public Func<TInterface> MakeBuilder<TInterface>(params object[] args)
-        where TInterface:class 
+        private static object _storedDataset = null;
+
+        public IDataset<T> Get<T>()
+        where T:class
+        {
+            return (IDataset<T>) _storedDataset;
+        }
+
+        public Func<IService<TDomain,TId>> ServiceProvider()
         {
 
             return () => {
-                TInterface ret = null;
+                IService<TDomain,TId> ret = null;
 
-                ret = ConstructByInjection<TInterface>();
+                ret = ConstructByAutoInjection<IService<TDomain,TId>>();
 
                 if( ret == null){
-                    ret = ConstructByInstanciation<TInterface>(args);
+                    ret = ConstructByConvention<IService<TDomain,TId>>();
                 }
 
                 if(ret == null){
-                    ret = BuildGenericItem<TInterface>(args);
+                    ret = new GenericService<TStorage,TDomain,TId>();
+                }
+
+                return ret;
+            };
+
+        }
+
+        
+
+        public Func<IDataset<TStorage>,IRepository<TStorage,TId>> RepositoryBuilder()
+        {
+
+            return (ds) => {
+                IRepository<TStorage,TId> ret = null;
+
+                ret = ConstructRepositoryByAutoInjection(ds);
+                
+                if( ret == null){
+                    ret = ConstructByConvention<IRepository<TStorage,TId>>(ds);
+                }
+
+                if(ret == null){
+                    ret = new GenericRepository<TStorage,TId>(ds);
                 }
 
                 return ret;
@@ -44,36 +83,33 @@ namespace Channels{
         }
 
 
-        private TInterface BuildGenericItem<TInterface>(params object[] args)
+        private IRepository<TStorage,TId> ConstructRepositoryByAutoInjection
+        (IDataset<TStorage> dataset)
         {
-            var type = typeof(TInterface);
+            IRepository<TStorage,TId> ret = null;
 
-            var r = ReflectionService.Make();
-
-            if (r.Implements<IService>(type)){
-                return (TInterface)(object)
-                    new GenericService<TStorage,TDomain,TDomain>();
-            }
-            if (r.Implements<IRepository>(type)){
-                return (TInterface)(object)
-                    new GenericRepository<TStorage,TId>
-                    ((IDataset<TStorage>)args[0]);
+            var obj = new Object();
+            
+            lock(obj){
+                _storedDataset = dataset;
+                ret = ConstructByAutoInjection<IRepository<TStorage,TId>>();
+                _storedDataset = null;
             }
 
-            return default;
-
+            return ret;
         }
 
-        private TInterface ConstructByInstanciation<TInterface>(object[] args) where TInterface : class
+        private TInterface ConstructByConvention<TInterface>(params object[] obj)
+        where TInterface : class
         {
             var constructor = ReflectionService.Make()
                 .FilterRemoveImplementers<IEnTierGeneric>()
-                .FindConstructor<TInterface>(args);
+                .FindConstructor<TInterface>(obj);
 
                 return constructor.Construct();
         }
 
-        private TInterface ConstructByInjection<TInterface>()
+        private TInterface ConstructByAutoInjection<TInterface>()
         {
             var types = ReflectionService.Make()
                     .FilterRemoveImplementers<IEnTierGeneric>()
@@ -91,7 +127,9 @@ namespace Channels{
             return default;
 
         }
-
+        // You can have InjectionEntry attribute on Injectable itenrface 
+        // Or you can put it on implemented Class with an argument pointing
+        // out the injectable interface
         private Type GetInjectingInterface(Type type)
         {
             var ret = ReflectionService.Make().GetInterfaceWithAttribute<InjectionEntry>(type);
@@ -106,5 +144,12 @@ namespace Channels{
 
             return ret;
         }
+
+    }
+
+
+    public class InjectionDatasetProvider : BuilderFactory<object, object, long>
+    {
+
     }
 }

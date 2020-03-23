@@ -37,6 +37,8 @@ internal static class EnTierApplication{
         //TODO: Later figure a way to give the code user the chance to choos what 
         Registerer.RegisterSingleton<IProvider<EnTierConfigurations>,MSExtensionsConfigurationsProvider>();
 
+        Registerer.RegisterSingleton<IDatasetAccessor,InjectionDatasetProvider>();
+
     }
 
 
@@ -44,8 +46,6 @@ internal static class EnTierApplication{
     private static void ApplicationStart(){
 
         IsContextBased = ReflectionService.Make().IsAnyExtensionFor<DbContext>();
-
-        ChannelsService.Make().UpdateChannels();
 
     }
 

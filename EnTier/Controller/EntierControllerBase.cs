@@ -41,15 +41,11 @@ namespace Controllers{
 
         protected IService<DomainModel,Tid> Service{ get; private set;}
 
-        protected ResolvedChannel<StorageModel,DomainModel,Tid> Channel{get;private set;}
-
         private void InitializeDependencies(IObjectMapper mapper,
                                     IService<DomainModel,Tid> service,
                                     IProvider<EnTierConfigurations> configurationProvider)
         {
             
-            Channel = ChannelsService.Make().ResolveChannel<StorageModel,DomainModel,Tid>();
-
             _attributeEagerScopeManager = new AttributeEagerScopeManager<StorageModel>(this);
             
             Mapper = mapper;
