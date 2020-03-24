@@ -8,7 +8,7 @@ namespace Context{
 
 
 
-    public class DatabaseDataset<T> : IDataset<T>
+    public class DatabaseDataset<T> : IDataset<T>,IEnTierBuiltIn
     where T:class
     {
 

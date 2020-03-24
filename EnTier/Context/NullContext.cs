@@ -6,7 +6,7 @@ namespace Context{
 
 
 
-    public class NullContext : IContext
+    public class NullContext : IContext,IEnTierBuiltIn
     {
         public void Apply()
         {

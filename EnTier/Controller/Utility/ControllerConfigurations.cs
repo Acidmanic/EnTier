@@ -1,6 +1,9 @@
 
 
 
+using System;
+using Context;
+
 namespace Controllers{
 
     public class ControllerConfigurations{
@@ -16,6 +19,11 @@ namespace Controllers{
         public bool ImplementsDeleteById{get;set;}
 
         public bool ImplementsDeleteByEntity{get;set;}
+
+        public Type ContextType {get;set;} = typeof(NullContext);
+
+        public bool UseConfiguredContextType {get;set;} = false;
+        
 
     }
 

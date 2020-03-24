@@ -9,7 +9,7 @@ using System.Reflection;
 namespace Context{
 
 
-    public class NullDataset<T> : IDataset<T>
+    public class NullDataset<T> : IDataset<T>,IEnTierBuiltIn
     where T:class
     {
         public T Add(T item)

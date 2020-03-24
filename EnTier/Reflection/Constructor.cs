@@ -30,6 +30,10 @@ namespace Utility{
             IsNull = false;
         }
 
+        public Func<T> AsDelegate(){
+            return _constructor;
+        }
+
         private Constructor()
         {
             _constructor = ()=> default;

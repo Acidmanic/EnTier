@@ -31,7 +31,7 @@ namespace Controllers{
 
         protected IObjectMapper Mapper {get; private set;}
 
-        protected ControllerConfigurations ControllerConfigurations {get;private set;}
+        internal ControllerConfigurations ControllerConfigurations {get;private set;}
 
         protected EnTierConfigurations EnTierConfigurations {get;private set;}
 
@@ -57,6 +57,8 @@ namespace Controllers{
             ControllerConfigurations = SetupControllerCOnfigurations();
 
             IO = new ControllerIO(EnTierConfigurations,Mapper,this);
+
+            ChannelProvider.AddChannel(this);
 
         }
 

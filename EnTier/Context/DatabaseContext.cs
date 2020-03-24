@@ -10,7 +10,7 @@ using Utility;
 namespace Context{
 
 
-    public class DatabaseContext : IContext
+    public class DatabaseContext : IContext,IEnTierBuiltIn
     {
 
         private readonly DbContext _context;
