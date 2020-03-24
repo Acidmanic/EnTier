@@ -282,8 +282,13 @@ namespace Utility{
         }
 
         public bool IsSpecificOf(Type specific,Type generic){
-            return specific.IsGenericType && 
-                specific.GetGenericTypeDefinition() == generic;
+            return specific != null && 
+                (
+                    (specific.IsGenericType && specific.GetGenericTypeDefinition() == generic)
+                    || 
+                    IsSpecificOf(specific.BaseType,generic)
+                );
+
         }
 
         public bool Extends(Type t, Type @base)

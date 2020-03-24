@@ -91,13 +91,13 @@ namespace Channels{
             return ret;
         }
 
-        public Channel GetCurrentChannel(){
+        public static Channel GetCurrentChannel(){
 
             var stack = new StackTrace();
 
             var r = ReflectionService.Make();
 
-            var controllerType = typeof(EnTierControllerBase<,,,>);
+            // var controllerType = typeof(EnTierControllerBase<,,,>);
 
             for(int i=0;i<stack.FrameCount;i++){
 
@@ -107,13 +107,11 @@ namespace Channels{
                     var method = frame.GetMethod();
 
                     var type = method.DeclaringType;
-
-                    if(r.IsSpecificOf(type,controllerType)){
-                        
-                        if( _channels.ContainsKey(type)){
-                            return _channels[type];
-                        }
-                    }                    
+                    // if(r.IsSpecificOf(type,controllerType)){
+                    if( _channels.ContainsKey(type)){
+                        return _channels[type];
+                    }
+                    // }                    
                 }
             }
 
