@@ -27,6 +27,19 @@ object aming to access a specific resource from higher layer to lower
 layer.
 
 
+Context
+=======
+
+
+A Context Will provide the access to data source. For different Datasources, 
+we can have different Contexts accordingly. for example, The class _DatabaseContext_ 
+is Context that provides access to SqlDatabases using EntityFramework. Each Channel 
+can have its own Context. you can use different context for each channel.
+Contexts should be Provided when channel is created. If You dont specify your context 
+in configurations, EnTier application will try to find a context for your channel 
+depending on channel's storage entity. and if it does not find it, a NullContext will 
+be used.
+
 Hooking In
 ==========
 

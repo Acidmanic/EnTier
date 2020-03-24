@@ -20,21 +20,34 @@ namespace Channels{
 
         
 
-        public static void AddChannel<TController,TStorage,TDomain,Tid>(){
+        public static void AddChannel<TController,TStorage,TDomain,Tid>()
+        where TStorage:class
+        {
 
             var key = typeof(TController);
 
             if(!_channels.ContainsKey(key)){
 
-                var channel = CreateChannel<TStorage,TDomain,Tid>();
+                var channel = CreateChannel<TStorage,TDomain,Tid>(key);
 
                 _channels.Add(key,channel);
             }
         }
 
-        private static Channel CreateChannel<TStorage, TDomain, Tid>()
+        private static Channel CreateChannel<TStorage, TDomain, Tid>(Type controllerType)
+        where TStorage:class
         {
-            throw new NotImplementedException();
+            
+            
+            var factory = new BuilderFactory<TStorage,TDomain,Tid>();
+
+            var ret = new Channel(controllerType
+                                ,factory.ServiceProvider()
+                                ,factory.RepositoryBuilder()
+                                ,
+            );
+            
+
         }
 
         public Channel GetCurrentChannel(){
