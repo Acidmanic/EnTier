@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Plugging;
 using Service;
 using Utility;
-using Channels;
 using Repository;
+using Components;
 
 namespace Controllers{
 
@@ -41,84 +41,46 @@ namespace Controllers{
 
         protected IService<DomainModel,Tid> Service{ get; private set;}
 
-        private void InitializeDependencies(IObjectMapper mapper,
+
+        public EnTierControllerBase(IObjectMapper mapper,
                                     IService<DomainModel,Tid> service,
                                     IProvider<EnTierConfigurations> configurationProvider)
         {
-            
+            //TODO: Manage this requirment
+            ReflectionService.Make().Cache(typeof(GenericService<StorageModel, DomainModel, Tid>));
+
             _attributeEagerScopeManager = new AttributeEagerScopeManager<StorageModel>(this);
-            
+
+            ControllerConfigurations = SetupControllerConfigurations();
+
             Mapper = mapper;
 
-            Service = service;
+            Service = service==null?new ComponentProducer().ProduceService<DomainModel,Tid>():service;
+
+            if(configurationProvider==null) configurationProvider = DefaultConfigurationProvider();
 
             EnTierConfigurations = configurationProvider.Create();
 
-            ControllerConfigurations = SetupControllerCOnfigurations();
-
             IO = new ControllerIO(EnTierConfigurations,Mapper,this);
 
-            ChannelProvider.AddChannel(this);
-
         }
 
-        public EnTierControllerBase(IObjectMapper mapper,
-                                    IService<DomainModel,Tid> service,
-                                    IProvider<EnTierConfigurations> configurationProvider)
-        {
-            
-            InitializeDependencies(mapper,service,configurationProvider);
-
-        }
-
-        public EnTierControllerBase(IObjectMapper mapper,
-                                    IService<DomainModel,Tid> service)
-        {
-            
-            InitializeDependencies(mapper,service,DefaultConfigurationProvider());
-
-        }
+        
+        public EnTierControllerBase(IObjectMapper mapper,IService<DomainModel,Tid> service)
+        :this(mapper,service,null){        }
 
         private IProvider<EnTierConfigurations> DefaultConfigurationProvider()
         {
             return new DefaultConfigurationsProvider();
         }
 
-        public EnTierControllerBase(IObjectMapper mapper,
-                                    IProvider<EnTierConfigurations> configurationProvider)
-        {
+        public EnTierControllerBase(IObjectMapper mapper,IProvider<EnTierConfigurations> configurationProvider)
+        :this(mapper,null,configurationProvider){ }
 
-            var service = DefaultService(mapper);
+  
+        public EnTierControllerBase(IObjectMapper mapper):this(mapper,null,null){}
 
-            InitializeDependencies(mapper,service,configurationProvider);
-
-        }
-        // Controller is deciding for it's service, when not provided.
-        private IService<DomainModel, Tid> DefaultService(IObjectMapper mapper)
-        {
-            var constructor = ReflectionService.Make()
-                .FindConstructorByPriority<
-                                IService<DomainModel,Tid>,
-                                GenericService<StorageModel,DomainModel,Tid>>(mapper);
-                                
-            var ret = constructor.Construct();
-
-            if(ret == null){
-                ret = new GenericService<StorageModel,DomainModel,Tid>();
-            }
-
-            return ret;
-        }
-
-        public EnTierControllerBase(IObjectMapper mapper)
-        {
-            InitializeDependencies(mapper,
-                DefaultService(mapper),
-                DefaultConfigurationProvider());
-
-        }
-
-        private ControllerConfigurations SetupControllerCOnfigurations()
+        private ControllerConfigurations SetupControllerConfigurations()
         {
             var builder = new ControllerConfigurationBuilder();
 

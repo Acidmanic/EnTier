@@ -29,10 +29,26 @@ namespace Utility{
             types.ToList().ForEach( t => _types.Add( new MetaType(t)));
         }
 
+        
+
         public CachedReflection CacheCurrent(){
-            var assembly = Assembly.GetCallingAssembly();
-            AddRange(assembly.GetTypes());
+
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            foreach (var ass in assemblies)
+            {
+                Cache(ass);
+            }
+
+            //Cache(Assembly.GetExecutingAssembly());
+
             return this;
+        }
+
+        internal List<MetaType> All()
+        {
+            return _types.Where(FilterPredicate).ToList();
         }
 
         public CachedReflection Cache(Assembly assembly){
@@ -40,7 +56,12 @@ namespace Utility{
             return this;
         }
 
-        
+        internal void Cache(Type type)
+        {
+            _types.Add(new MetaType(type));
+        }
+
+
 
         public CachedReflection CachePropertiesOf(Object obj){
             
@@ -349,6 +370,26 @@ namespace Utility{
             return this;
 
         }
+
+        internal CachedReflection FillterAllowAssignables<TInterface>()
+        {
+            var iface = typeof(TInterface);
+
+            _filters.Add(t => 
+            iface.IsAssignableFrom(t.Type)
+            );
+
+
+
+            return this;
+        }
+
+
+        internal List<MetaType> Debug() {
+            return _types;
+        }
+
+
 
         protected Func<MetaType,bool> FilterPredicate {
             get{

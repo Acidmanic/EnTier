@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Utility;
 using System;
 using Microsoft.EntityFrameworkCore;
-using Channels;
 using Service;
 using Repository;
+using Components;
 
 internal static class EnTierApplication{
 

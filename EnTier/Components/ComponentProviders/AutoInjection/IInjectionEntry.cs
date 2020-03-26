@@ -3,8 +3,8 @@
 
 using System;
 
-namespace DIBinding{
-
+namespace Components
+{
 
 
     public class InjectionEntry:Attribute{

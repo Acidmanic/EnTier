@@ -10,7 +10,6 @@ using Plugging;
 using Utility;
 using DataAccess;
 using Context;
-using Channels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Service
@@ -22,67 +21,24 @@ namespace Service
         protected IObjectMapper Mapper{get;private set;}
 
         protected IProvider<IUnitOfWork> DbProvider{get;private set;}
-
         private EagerScopeManager _attributesScope;
-        public ServiceBase(IObjectMapper mapper,IContext context)
-        {
-            Initialize(mapper,context);
-        }
-
-
         public ServiceBase(IObjectMapper mapper)
         {
-            var context = ResolveContext();
 
-            Initialize(mapper,context);
-        }
-
-        public ServiceBase(IContext context)
-        {
-            var mapper = ResolveMapper();
-            
-            Initialize(mapper,context);
-        }
-
-        public ServiceBase()
-        {
-            var mapper = ResolveMapper();
-
-            var dbProvider = ResolveContext();
-            
-            Initialize(mapper,dbProvider);
-        }
-
-        private IObjectMapper ResolveMapper()
-        {
-            return EnTierApplication.Resolver.Resolve<IObjectMapper>();
-        }
-
-        private IContext ResolveContext()
-        {
-            //TODO: Tie this to configurations
-            if (EnTierApplication.IsContextBased){
-                var r = ReflectionService.Make();
-                var context = r.FindConstructor<DbContext>
-                (t => r.Extends<DbContext>(t)).Construct();
-
-                return new DatabaseContext(context);
-            } else{
-                //TODO: Add Otherwise context
-                throw new NotImplementedException();
-            }
-
-        }
-
-        private void Initialize(IObjectMapper mapper,IContext context){
             _attributesScope = new EagerAttributeProcessor()
                 .MarkEagers<StorageEntity>(this);
 
+            if(mapper == null ) mapper = EnTierApplication.Resolver.Resolve<IObjectMapper>();
+
             Mapper = mapper;
-            DbProvider = new Provider<IUnitOfWork>(() => new UnitOfWork(context));
+
+            DbProvider = new Provider<IUnitOfWork>(() => new UnitOfWork());
+
         }
 
-        public List<DomainEntity> GetAll()
+        public ServiceBase():this(null){        }
+
+        public virtual List<DomainEntity> GetAll()
         {
 
             var res = new List<StorageEntity> ();
@@ -99,7 +55,7 @@ namespace Service
             return Mapper.Map<List<DomainEntity>>(res);
         }
 
-        public DomainEntity GetById(Tid id)
+        public virtual DomainEntity GetById(Tid id)
         {
 
             StorageEntity res = null;
@@ -116,7 +72,7 @@ namespace Service
             return Mapper.Map<DomainEntity>(res);
         }
 
-        public DomainEntity Update(DomainEntity entity)
+        public virtual DomainEntity Update(DomainEntity entity)
         {
             
             StorageEntity storage = null;
@@ -139,7 +95,7 @@ namespace Service
             return Mapper.Map<DomainEntity>(storage);
         }
 
-        public DomainEntity DeleteByEntity(DomainEntity entity)
+        public virtual DomainEntity DeleteByEntity(DomainEntity entity)
         {
             StorageEntity storage = null;
 
@@ -157,7 +113,7 @@ namespace Service
             return Mapper.Map<DomainEntity>(storage);
         }
 
-        public DomainEntity DeleteById(Tid id)
+        public virtual DomainEntity DeleteById(Tid id)
         {
             StorageEntity storage = null;
 
@@ -183,7 +139,7 @@ namespace Service
             throw new Exception();
         }
 
-        public DomainEntity CreateNew(DomainEntity entity)
+        public virtual DomainEntity CreateNew(DomainEntity entity)
         {
 
             var storage = Mapper.Map<StorageEntity>(entity);
@@ -221,12 +177,5 @@ namespace Service
         {
         }
 
-        public ServiceBase(IContext context) : base(context)
-        {
-        }
-
-        public ServiceBase(IObjectMapper mapper, IContext conetxt) : base(mapper, conetxt)
-        {
-        }
     }
 }
