@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -37,8 +38,6 @@ namespace mock_server
             services.AddEnTierServices();
 
             services.AddApplicationServices();
-
-            ReflectionService.Make().CacheCurrent();
 
             services.AddTransient<IProjectsRepository,ProjectsRepository>();
 

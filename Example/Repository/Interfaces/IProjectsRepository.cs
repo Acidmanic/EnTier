@@ -1,7 +1,8 @@
 
-using DIBinding;
+using Components;
 
-namespace Repository{
+namespace Repository
+{
 
 
 

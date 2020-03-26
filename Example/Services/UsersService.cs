@@ -6,7 +6,6 @@ using Repository;
 using Utility;
 using Plugging;
 
-
 namespace  Service
 {
     public class UsersService : ServiceBase<StorageModels.User,User>, 
@@ -34,7 +33,9 @@ namespace  Service
 
         List<User> IUsersService.GetAll()
         {
-            return base.GetAll();
+
+            return new List<User>();
+            // return base.GetAll();
         }
     }
 }

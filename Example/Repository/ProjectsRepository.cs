@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Channels;
+using Components;
 using Context;
 using Plugging;
 using StorageModels;
@@ -51,12 +51,10 @@ namespace Repository{
                 desc = _dataset.GetType().FullName;
             }
 
-            var currentChannel = ChannelProvider.GetCurrentChannel();
 
             return new Project{
                 Name="Received Dataset",
                 Description = desc,
-                Repository = currentChannel==null?"No Channels":currentChannel.ControllerType.Name
             };
         }
 

@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using Models;
 using System.Linq;
-using DIBinding;
+using Components;
 
 namespace Repository{
 
