@@ -11,6 +11,7 @@ namespace Components
         {
             var constructor = ReflectionService.Make()
                 .FilterRemoveImplementers<IEnTierGeneric>()
+                .FilterRemoveImplementers<IEnTierBuiltIn>()
                 .FindConstructor<TInterface>(args);
 
             return constructor.Construct();

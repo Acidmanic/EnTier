@@ -32,7 +32,7 @@ namespace Components
 
         public IContext ProduceContext()
         {
-            var strategy = new RepositoryProducingStrategy();
+            var strategy = new ContextProducingStrategy();
 
             var context = (IContext)strategy.Produce<IContext>();
 
