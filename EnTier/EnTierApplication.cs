@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Service;
 using Repository;
 using Components;
+using Context;
 
 internal static class EnTierApplication{
 
@@ -31,6 +32,9 @@ internal static class EnTierApplication{
         ApplicationStart();
     }
 
+    public static Type ContextType { get; set; } = typeof(NullContext);
+
+    public static bool UseConfiguredContextType { get; set; } = false;
 
 
     private static void PerformRegistrations(){

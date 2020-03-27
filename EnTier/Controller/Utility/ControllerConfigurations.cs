@@ -19,12 +19,7 @@ namespace Controllers{
         public bool ImplementsDeleteById{get;set;}
 
         public bool ImplementsDeleteByEntity{get;set;}
-
-        public Type ContextType {get;set;} = typeof(NullContext);
-
-        public bool UseConfiguredContextType {get;set;} = false;
         
-
     }
 
 }

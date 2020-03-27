@@ -86,19 +86,6 @@ namespace Controllers{
             return this;
         }
 
-
-        public ControllerConfigurationBuilder UseContext<T>()
-        where T:IContext
-        {
-            _configuration.ContextType = typeof(T);
-            _configuration.UseConfiguredContextType = true;
-            return this;
-        }
-
-        public ControllerConfigurationBuilder AutomaticallyProvideAContext(){
-            _configuration.UseConfiguredContextType = false;
-            return this;
-        }
         public ControllerConfigurations Build(){
             return _configuration;
         }

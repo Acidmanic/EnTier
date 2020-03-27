@@ -9,6 +9,8 @@ namespace Components
     {
         protected override void SetUpProviders(List<IComponentProvider> providers)
         {
+            providers.Add(new AppConfigurationContextProvider());
+
             providers.Add(new ByConventionComponentProvider());
 
             providers.Add(new SearchForEfDbContextComponentProvider());
