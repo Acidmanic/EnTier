@@ -23,7 +23,8 @@ namespace Repository{
 
         public void Dispose()
         {
-            _context.Dispose();
+            if(_context!=null)
+                _context.Dispose();
         }
 
         public IRepository<StorageEntity, Tid> GetRepository<StorageEntity, Tid>() where StorageEntity : class

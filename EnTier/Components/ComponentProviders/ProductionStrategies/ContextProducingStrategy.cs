@@ -12,6 +12,8 @@ namespace Components
             providers.Add(new ByConventionComponentProvider());
 
             providers.Add(new SearchForEfDbContextComponentProvider());
+
+            providers.Add(new NullContextProvider());
         }
     }
 }
