@@ -1,6 +1,3 @@
-
-
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,7 +21,7 @@ namespace Controllers{
     {
     }
 
-    public abstract class EnTierControllerBase
+    public abstract partial class EnTierControllerBase
     <StorageModel,DomainModel,TransferModel,Tid>
     :ControllerBase,IDisposable,IEnTierController
     where StorageModel:class{
@@ -40,47 +37,6 @@ namespace Controllers{
         private AttributeEagerScopeManager<StorageModel> _attributeEagerScopeManager;
 
         protected IService<DomainModel,Tid> Service{ get; private set;}
-
-
-        public EnTierControllerBase(IObjectMapper mapper,
-                                    IService<DomainModel,Tid> service,
-                                    IProvider<EnTierConfigurations> configurationProvider)
-        {
-            //TODO: Manage this requirment
-            ReflectionService.Make().Cache(typeof(GenericService<StorageModel, DomainModel, Tid>));
-
-            _attributeEagerScopeManager = new AttributeEagerScopeManager<StorageModel>(this);
-
-            ControllerConfigurations = SetupControllerConfigurations();
-
-            Mapper = mapper == null ? new ComponentProducer().ProduceMapper() : mapper;
-
-            Service = service==null?new ComponentProducer().ProduceService<DomainModel,Tid>():service;
-
-            if(configurationProvider==null) configurationProvider = DefaultConfigurationProvider();
-
-            EnTierConfigurations = configurationProvider.Create();
-
-            IO = new ControllerIO(EnTierConfigurations,Mapper,this);
-
-        }
-
-        
-        public EnTierControllerBase(IObjectMapper mapper,IService<DomainModel,Tid> service)
-        :this(mapper,service,null){        }
-
-        private IProvider<EnTierConfigurations> DefaultConfigurationProvider()
-        {
-            return new DefaultConfigurationsProvider();
-        }
-
-        public EnTierControllerBase(IObjectMapper mapper,IProvider<EnTierConfigurations> configurationProvider)
-        :this(mapper,null,configurationProvider){ }
-
-  
-        public EnTierControllerBase(IObjectMapper mapper):this(mapper,null,null){}
-
-        public EnTierControllerBase() : this(null, null, null) { }
 
         private ControllerConfigurations SetupControllerConfigurations()
         {
@@ -196,27 +152,4 @@ namespace Controllers{
 
     }
 
-
-    public abstract class EnTierControllerBase
-    <StorageModel, DomainModel, TransferModel>
-    : EnTierControllerBase
-    <StorageModel, DomainModel, TransferModel, long>
-    where StorageModel : class
-    {
-        public EnTierControllerBase(IObjectMapper mapper) : base(mapper)
-        {
-        }
-
-        public EnTierControllerBase(IObjectMapper mapper, IService<DomainModel, long> service) : base(mapper, service)
-        {
-        }
-
-        public EnTierControllerBase(IObjectMapper mapper, IProvider<EnTierConfigurations> configurationProvider) : base(mapper, configurationProvider)
-        {
-        }
-
-        public EnTierControllerBase(IObjectMapper mapper, IService<DomainModel, long> service, IProvider<EnTierConfigurations> configurationProvider) : base(mapper, service, configurationProvider)
-        {
-        }
-    }
 }
