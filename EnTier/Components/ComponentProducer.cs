@@ -1,4 +1,5 @@
 ﻿using Context;
+using Plugging;
 using Repository;
 using Service;
 using System;
@@ -37,6 +38,15 @@ namespace Components
             var context = (IContext)strategy.Produce<IContext>();
 
             return context;
+        }
+
+        internal IObjectMapper ProduceMapper()
+        {
+            var strategy = new MapperProviderStrategy();
+
+            var mapper = (IObjectMapper)strategy.Produce<IObjectMapper>();
+
+            return mapper;
         }
     }
 }

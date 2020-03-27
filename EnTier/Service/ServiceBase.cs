@@ -11,6 +11,7 @@ using Utility;
 using DataAccess;
 using Context;
 using Microsoft.EntityFrameworkCore;
+using Components;
 
 namespace Service
 {
@@ -24,19 +25,25 @@ namespace Service
         private EagerScopeManager _attributesScope;
         public ServiceBase(IObjectMapper mapper)
         {
-
-            _attributesScope = new EagerAttributeProcessor()
-                .MarkEagers<StorageEntity>(this);
-
-            if(mapper == null ) mapper = EnTierApplication.Resolver.Resolve<IObjectMapper>();
-
+            Initialize();
+           
             Mapper = mapper;
-
-            DbProvider = new Provider<IUnitOfWork>(() => new UnitOfWork());
-
         }
 
-        public ServiceBase():this(null){        }
+        public ServiceBase(){
+            Initialize();
+
+            Mapper = new ComponentProducer().ProduceMapper();
+        }
+
+
+        private void Initialize()
+        {
+            _attributesScope = new EagerAttributeProcessor()
+               .MarkEagers<StorageEntity>(this);
+
+            DbProvider = new Provider<IUnitOfWork>(() => new UnitOfWork());
+        }
 
         public virtual List<DomainEntity> GetAll()
         {

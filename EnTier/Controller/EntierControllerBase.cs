@@ -53,7 +53,7 @@ namespace Controllers{
 
             ControllerConfigurations = SetupControllerConfigurations();
 
-            Mapper = mapper;
+            Mapper = mapper == null ? new ComponentProducer().ProduceMapper() : mapper;
 
             Service = service==null?new ComponentProducer().ProduceService<DomainModel,Tid>():service;
 
@@ -79,6 +79,8 @@ namespace Controllers{
 
   
         public EnTierControllerBase(IObjectMapper mapper):this(mapper,null,null){}
+
+        public EnTierControllerBase() : this(null, null, null) { }
 
         private ControllerConfigurations SetupControllerConfigurations()
         {
