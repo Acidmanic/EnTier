@@ -2,6 +2,7 @@
 
 
 
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using Configuration;
@@ -23,7 +24,8 @@ public static class MSDIInjectorExtensios{
     }
 
 
-    public static IApplicationBuilder UseEnTier(this IApplicationBuilder app){
+    public static IApplicationBuilder UseEnTier(this IApplicationBuilder app, Action<IEnTierApplicationConfigurer> configurer =null  )
+    {
 
         
         
@@ -37,7 +39,13 @@ public static class MSDIInjectorExtensios{
 
         ReflectionService.Make().Cache(ass);
 
+        if (configurer != null)
+        {
+            configurer(new EnTierApplicationConfigurer());
+        }
+
         EnTierApplication.Initialize(app);
+
 
         return app;
     }

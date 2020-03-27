@@ -1,6 +1,7 @@
 
 
 
+using Reflection;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -49,6 +50,21 @@ namespace Utility{
             }
 
             return null;
+        }
+
+        public static PropertyWrapper<T> GetProperty<T>(object obj, string propertyName)
+        {
+            var ret = new PropertyWrapper<T>();
+
+            var type = obj.GetType();
+
+            var propInfo = type.GetProperty(propertyName);
+
+            if (propInfo != null)
+            {
+                ret = new PropertyWrapper<T>(propInfo,obj);
+            }
+            return ret;
         }
     }
 }
