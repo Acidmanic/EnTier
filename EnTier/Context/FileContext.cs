@@ -12,7 +12,20 @@ namespace Context
     public class FileContext : IContext, IEnTierBuiltIn
     {
 
+        private class JsonIdGenerator : IIDGenerator
+        {
 
+            private JsonDatabase _db;
+
+            public JsonIdGenerator(JsonDatabase db)
+            {
+                _db = db;
+            }
+            public long NewId<T>()
+            {
+                return _db.GenerateId<T>();
+            }
+        }
 
 
 
@@ -64,7 +77,7 @@ namespace Context
         {
             var datalist = _database.Table<T>();
 
-            return new InFileDataset<T>(datalist);
+            return new JsonDataset<T>(datalist, new JsonIdGenerator(_database));
 
         }
     }

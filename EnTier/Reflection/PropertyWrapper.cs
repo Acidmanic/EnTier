@@ -5,6 +5,12 @@ using System.Text;
 
 namespace Reflection
 {
+
+    public class PropertyWrapper:PropertyWrapper<object>
+    {
+
+    }
+
     public class PropertyWrapper<T>
     {
 
@@ -14,14 +20,24 @@ namespace Reflection
 
 
 
-        public T Value { get; set; }
+        public T Value
+        {
+            get
+            {
+                return _read();
+            }
+            set
+            {
+                _write(value);
+            }
+        }
 
         public PropertyWrapper()
         {
 
         }
 
-        public PropertyWrapper(PropertyInfo propertyInfo,object obj)
+        public PropertyWrapper(PropertyInfo propertyInfo, object obj)
         {
             if (propertyInfo.CanRead)
             {
@@ -29,7 +45,7 @@ namespace Reflection
                 {
                     try
                     {
-                        return (T)propertyInfo.GetValue(obj);
+                        return (T) propertyInfo.GetValue(obj);
                     }
                     catch (Exception) { }
                     return default;
@@ -41,7 +57,7 @@ namespace Reflection
                 {
                     try
                     {
-                        propertyInfo.SetValue(obj, value);
+                        propertyInfo.SetValue(obj,(object) value);
                     }
                     catch (Exception) { }
                 };

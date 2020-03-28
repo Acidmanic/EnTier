@@ -14,6 +14,29 @@ namespace Context
 
         private Dictionary<Type, object> _data = new Dictionary<Type, object>();
 
+        private Dictionary<string, long> _ids = new Dictionary<string, long>();
+
+
+        private const int INDEX_INDEX = 0;
+
+        private const int INDEX_ID = 1;
+
+        private const int INDEX_FIRST_TABLE = 2;
+
+
+        public long GenerateId<T>()
+        {
+            var key = typeof(T).FullName;
+
+            if (!_ids.ContainsKey(key))
+            {
+                _ids.Add(key, 0);
+            }
+
+            _ids[key] += 1;
+
+            return _ids[key];
+        }
 
         public List<T> Table<T>()
         {
@@ -24,7 +47,9 @@ namespace Context
             if (!_data.ContainsKey(type))
             {
                 table = new List<T>();
+
                 _data.Add(type, table);
+
                 UpdateIndex();
             }
             else
@@ -45,13 +70,15 @@ namespace Context
 
         public string[] ToJson()
         {
-            var ret = new string[_index.Count + 1];
+            var ret = new string[_index.Count + INDEX_FIRST_TABLE];
 
-            ret[0] = JsonConvert.SerializeObject(_index);
+            ret[INDEX_INDEX] = JsonConvert.SerializeObject(_index);
+
+            ret[INDEX_ID] = JsonConvert.SerializeObject(_ids);
 
             for (int i = 0; i < _index.Count; i++)
             {
-                ret[i + 1] = JsonConvert.SerializeObject(_data[_index[i]]);
+                ret[i + INDEX_FIRST_TABLE] = JsonConvert.SerializeObject(_data[_index[i]]);
             }
 
             return ret;
@@ -59,11 +86,13 @@ namespace Context
 
         public void FromJsons(string[] jsons)
         {
-            _index = JsonConvert.DeserializeObject<List<Type>>(jsons[0]);
+            _index = JsonConvert.DeserializeObject<List<Type>>(jsons[INDEX_INDEX]);
+
+            _ids = JsonConvert.DeserializeObject<Dictionary<string,long>>(jsons[INDEX_ID]);
 
             for (int i = 0; i < _index.Count; i++)
             {
-                var dataset = JsonConvert.DeserializeObject(jsons[i + 1], _index[i]);
+                var dataset = JsonConvert.DeserializeObject(jsons[i + INDEX_FIRST_TABLE], _index[i]);
 
                 _data.Add(_index[i], dataset);
             }
@@ -84,38 +113,52 @@ namespace Context
 
             var indexFile = Path.Combine(directory, "index.json");
 
-            File.WriteAllText(indexFile, jsons[0]);
+            File.WriteAllText(indexFile, jsons[INDEX_INDEX]);
 
-            for (int i = 1; i < jsons.Length; i++)
+            var idFile = Path.Combine(directory, "id.json");
+
+            File.WriteAllText(idFile, jsons[INDEX_ID]);
+
+            for (int i = INDEX_FIRST_TABLE; i < jsons.Length; i++)
             {
-                var datasetPath = Path.Combine(directory, i + ".json");
+                var datasetPath = GetFilepath(i, directory);
 
                 File.WriteAllText(datasetPath, jsons[i]);
             }
 
         }
 
+        private string GetFilepath(int index,string directory)
+        {
+            return Path.Combine(directory, index - INDEX_FIRST_TABLE + ".json");
+        }
 
         public void Load(string directory)
         {
             var indexFile = Path.Combine(directory, "index.json");
-            
-            if (File.Exists(indexFile))
+
+            var idFile = Path.Combine(directory, "id.json");
+
+            if (File.Exists(indexFile) && File.Exists(idFile))
             {
 
-                var files = Directory.EnumerateFiles(directory, "*.json", SearchOption.TopDirectoryOnly).ToList();
+                var jsons = new string[Directory.EnumerateFiles(directory,"*.json",SearchOption.TopDirectoryOnly).Count()];
 
-                var jsons = new string[files.Count + 1];
+                jsons[INDEX_INDEX] = File.ReadAllText(indexFile);
 
-                jsons[0] = File.ReadAllText(indexFile);
+                jsons[INDEX_ID] = File.ReadAllText(idFile);
 
                 _data.Clear();
 
                 _index.Clear();
 
-                for (int i = 0; i < files.Count; i++)
+                _ids.Clear();
+
+                for (int i = INDEX_FIRST_TABLE; i < jsons.Length; i++)
                 {
-                    jsons[i + 1] = File.ReadAllText(files[i]);
+                    var filename = GetFilepath(i, directory);
+
+                    jsons[i] = File.ReadAllText(filename);
                 }
 
                 FromJsons(jsons);

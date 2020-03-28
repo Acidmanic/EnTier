@@ -1,5 +1,5 @@
 ﻿using Controllers;
-using Example2.Models;
+using Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace Example2.Controllers
 {
     [Route("api/v1/[controller]")]
+    [ApiController]
     public class SongsController: EnTierControllerBase<Song, Song, Song, long>
     {
 

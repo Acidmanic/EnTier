@@ -6,23 +6,25 @@ using System.Text;
 namespace Context
 {
     
-    public class InFileDataset<TEntity> : IDataset<TEntity>, IEnTierBuiltIn
+    public class JsonDataset<TEntity> : IDataset<TEntity>, IEnTierBuiltIn
         where TEntity : class
     {
 
         private List<TEntity> _data;
+        private IIDGenerator _idGenerator;
 
-
-        public InFileDataset(List<TEntity> data)
+        public JsonDataset(List<TEntity> data,IIDGenerator idGenerator)
         {
             _data = data;
+
+            _idGenerator = idGenerator;
         }
 
         public TEntity Add(TEntity item)
         {
             var id = Utility.Reflection.GetProperty<long>(item, "Id");
 
-            id.Value = _data.Count;
+            id.Value = _idGenerator.NewId<TEntity>();
 
             _data.Add(item);
 
