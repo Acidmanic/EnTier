@@ -3,6 +3,7 @@ using Configuration;
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Plugging;
+using Repository;
 using Service;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace Controllers
         {
             //TODO: Manage this requirment
             ReflectionService.Make().Cache(typeof(GenericService<StorageModel, DomainModel, Tid>));
+            ReflectionService.Make().Cache(typeof(GenericRepository<StorageModel, Tid>));
 
             _attributeEagerScopeManager = new AttributeEagerScopeManager<StorageModel>(this);
 
@@ -82,3 +84,4 @@ namespace Controllers
         }
     }
 }
+

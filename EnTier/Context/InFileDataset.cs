@@ -6,22 +6,23 @@ using System.Text;
 namespace Context
 {
     
-    [Serializable]
     public class InFileDataset<TEntity> : IDataset<TEntity>, IEnTierBuiltIn
         where TEntity : class
     {
 
-        public long LastId { get; set; }
+        private List<TEntity> _data;
 
-        private List<TEntity> _data = new List<TEntity>();
+
+        public InFileDataset(List<TEntity> data)
+        {
+            _data = data;
+        }
 
         public TEntity Add(TEntity item)
         {
             var id = Utility.Reflection.GetProperty<long>(item, "Id");
 
-            LastId += 1;
-
-            id.Value = LastId ;
+            id.Value = _data.Count;
 
             _data.Add(item);
 
