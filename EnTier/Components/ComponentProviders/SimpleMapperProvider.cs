@@ -1,9 +1,9 @@
-﻿using Mapper;
+﻿using EnTier.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Components
+namespace EnTier.Components
 {
     class SimpleMapperProvider : IComponentProvider
     {

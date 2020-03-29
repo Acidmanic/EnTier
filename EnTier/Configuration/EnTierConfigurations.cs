@@ -1,6 +1,7 @@
 
 
-namespace Configuration{
+namespace EnTier.Configuration
+{
 
 
 

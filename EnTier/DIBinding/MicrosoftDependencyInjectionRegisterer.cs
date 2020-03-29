@@ -5,7 +5,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DIBinding{
+namespace EnTier.DIBinding{
 
     public class MicrosoftDependencyInjectionRegisterer : IDIRegisterer
     {

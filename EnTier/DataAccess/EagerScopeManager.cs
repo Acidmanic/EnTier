@@ -6,9 +6,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Repository;
+using EnTier.Repository;
 
-namespace DataAccess{
+namespace EnTier.DataAccess
+{
 
     public class EagerScopeManager:IDisposable{
 

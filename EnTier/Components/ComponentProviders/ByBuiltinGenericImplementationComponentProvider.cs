@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Utility;
+using EnTier.Utility;
 using System.Linq;
 
-namespace Components
+namespace EnTier.Components
 {
     class ByBuiltinGenericImplementationComponentProvider : IComponentProvider
     {

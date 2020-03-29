@@ -2,9 +2,10 @@
 
 
 using Microsoft.Extensions.Configuration;
-using Utility;
+using EnTier.Utility;
 
-namespace Configuration{
+namespace EnTier.Configuration
+{
 
 
 

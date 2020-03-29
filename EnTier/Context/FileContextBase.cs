@@ -1,13 +1,13 @@
-﻿using Components;
+﻿using EnTier.Components;
 using Newtonsoft.Json;
-using Plugging;
+using EnTier.Plugging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
-namespace Context
+namespace EnTier.Context
 {
     public abstract class FileContextBase : IContext
     {
@@ -27,7 +27,7 @@ namespace Context
             }
         }
 
-        private string dbDirectory;
+        private string _dbDirectory;
 
         private object _filesLock = new object();
 
@@ -36,15 +36,17 @@ namespace Context
 
         public FileContextBase(string dbDirectory)
         {
+            _dbDirectory = dbDirectory;
+
             Load(dbDirectory);
         }
 
         public FileContextBase()
         {
 
-            var dbDirectory = Path.Combine(Environment.CurrentDirectory, "SerializedDatabase");
+            _dbDirectory = Path.Combine(Environment.CurrentDirectory, "SerializedDatabase");
 
-            Load(dbDirectory);
+            Load(_dbDirectory);
 
         }
 
@@ -68,7 +70,7 @@ namespace Context
         {
             lock (_filesLock)
             {
-                _database.Save(dbDirectory);
+                _database.Save(_dbDirectory);
             }
         }
 

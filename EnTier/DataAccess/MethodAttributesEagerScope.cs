@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using Utility;
+using EnTier.Utility;
 
-namespace DataAccess{
+namespace EnTier.DataAccess
+{
 
 
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Context
+namespace EnTier.Context
 {
     public class FileContext:FileContextBase,IEnTierBuiltIn
     {

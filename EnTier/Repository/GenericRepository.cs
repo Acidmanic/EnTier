@@ -3,10 +3,11 @@
 
 
 
-using Context;
+using EnTier;
+using EnTier.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Repository{
+namespace EnTier.Repository{
 
     internal class GenericRepository<StorageEntity,Tid> 
         : RepositoryBase<StorageEntity,Tid> 

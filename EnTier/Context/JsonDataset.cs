@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Context
+namespace EnTier.Context
 {
     
     public class JsonDataset<TEntity> : IDataset<TEntity>, IEnTierBuiltIn

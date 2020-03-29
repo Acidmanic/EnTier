@@ -3,7 +3,8 @@
 
 using System;
 
-namespace DataAccess{
+namespace EnTier.DataAccess
+{
 
 
 

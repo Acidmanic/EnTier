@@ -5,50 +5,57 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using Configuration;
-using DIBinding;
+using EnTier.Configuration;
+using EnTier.DIBinding;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Utility;
+using EnTier.Utility;
+using EnTier;
 
-public static class MSDIInjectorExtensios{
-
-
-
-
-    public static IServiceCollection AddEnTierServices(this IServiceCollection services){
-
-        EnTierApplication.Initialize(services);
-
-        return services;
-    }
+namespace EnTier.DIBinding{
 
 
-    public static IApplicationBuilder UseEnTier(this IApplicationBuilder app, Action<IEnTierApplicationConfigurer> configurer =null  )
+    public static class MSDIInjectorExtensios
     {
 
-        
-        
-        ReflectionService.Make().CacheCurrent();
-        
-        var s = new StackTrace();
-
-        var caller = s.GetFrame(1);
-
-        var ass = caller.GetMethod().DeclaringType.Assembly;
-
-        ReflectionService.Make().Cache(ass);
-
-        if (configurer != null)
+        public static IServiceCollection AddEnTierServices(this IServiceCollection services)
         {
-            configurer(new EnTierApplicationConfigurer());
+
+            EnTierApplication.Initialize(services);
+
+            return services;
         }
 
-        EnTierApplication.Initialize(app);
+
+        public static IApplicationBuilder UseEnTier(this IApplicationBuilder app, Action<IEnTierApplicationConfigurer> configurer = null)
+        {
 
 
-        return app;
+
+            ReflectionService.Make().CacheCurrent();
+
+            var s = new StackTrace();
+
+            var caller = s.GetFrame(1);
+
+            var ass = caller.GetMethod().DeclaringType.Assembly;
+
+            ReflectionService.Make().Cache(ass);
+
+            if (configurer != null)
+            {
+                configurer(new EnTierApplicationConfigurer());
+            }
+
+            EnTierApplication.Initialize(app);
+
+
+            return app;
+        }
+
+
     }
-
-
 }
+
+
+

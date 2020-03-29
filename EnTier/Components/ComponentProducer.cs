@@ -1,12 +1,12 @@
-﻿using Context;
-using Plugging;
-using Repository;
-using Service;
+﻿using EnTier.Context;
+using EnTier.Plugging;
+using EnTier.Repository;
+using EnTier.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Components
+namespace EnTier.Components
 {
     class ComponentProducer
     {

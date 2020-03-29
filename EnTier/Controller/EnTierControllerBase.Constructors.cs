@@ -1,16 +1,16 @@
-﻿using Components;
-using Configuration;
-using DataAccess;
+﻿using EnTier.Components;
+using EnTier.Configuration;
+using EnTier.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using Plugging;
-using Repository;
-using Service;
+using EnTier.Plugging;
+using EnTier.Repository;
+using EnTier.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Utility;
+using EnTier.Utility;
 
-namespace Controllers
+namespace EnTier.Controllers
 {
     public abstract partial class EnTierControllerBase
         <StorageModel, DomainModel, TransferModel, Tid>

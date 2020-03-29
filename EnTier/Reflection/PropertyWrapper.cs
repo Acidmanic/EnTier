@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace Reflection
+namespace EnTier.Reflection
 {
 
     public class PropertyWrapper:PropertyWrapper<object>

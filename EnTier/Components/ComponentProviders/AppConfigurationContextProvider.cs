@@ -1,10 +1,10 @@
-﻿using Context;
+﻿using EnTier.Context;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Utility;
+using EnTier.Utility;
 
-namespace Components
+namespace EnTier.Components
 {
     class AppConfigurationContextProvider : IComponentProvider
     {

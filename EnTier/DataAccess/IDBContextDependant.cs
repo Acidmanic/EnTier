@@ -1,6 +1,6 @@
 
 
-namespace DataAccess {
+namespace EnTier.DataAccess {
 
 
 

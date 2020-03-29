@@ -2,9 +2,10 @@
 
 
 
-using Utility;
+using EnTier.Utility;
 
-namespace Configuration{
+namespace EnTier.Configuration
+{
 
 
     public class DefaultConfigurationsProvider : IProvider<EnTierConfigurations>

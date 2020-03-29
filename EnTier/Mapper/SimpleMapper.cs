@@ -1,12 +1,13 @@
-﻿using Plugging;
+﻿using EnTier;
+using EnTier.Plugging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using Utility;
+using EnTier.Utility;
 
-namespace Mapper
+namespace EnTier.Mapper
 {
     class SimpleMapper : IObjectMapper, IEnTierBuiltIn
     {

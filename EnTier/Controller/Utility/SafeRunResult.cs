@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Controllers
+namespace EnTier.Controllers
 {
 
     public class SafeRunResult<TReturn>{

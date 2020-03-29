@@ -4,7 +4,8 @@
 using System;
 using System.Linq;
 
-namespace DataAccess{
+namespace EnTier.DataAccess
+{
 
 
     [System.AttributeUsage(System.AttributeTargets.Class | AttributeTargets.Method

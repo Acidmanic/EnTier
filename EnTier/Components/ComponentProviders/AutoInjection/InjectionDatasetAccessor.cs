@@ -1,9 +1,9 @@
-﻿using Context;
+﻿using EnTier.Context;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Components
+namespace EnTier.Components
 {
     internal class InjectionDatasetAccessor : IDatasetAccessor
     {

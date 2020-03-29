@@ -8,7 +8,7 @@
 
 using System;
 
-namespace Repository
+namespace EnTier.Repository
 {
     public interface IUnitOfWork:IDisposable{
 

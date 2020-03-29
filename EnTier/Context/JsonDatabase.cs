@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Context
+namespace EnTier.Context
 {
     internal class JsonDatabase
     {

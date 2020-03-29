@@ -1,7 +1,8 @@
 
 
 
-namespace Plugging{
+namespace EnTier.Plugging
+{
 
     public interface IObjectMapper{
 

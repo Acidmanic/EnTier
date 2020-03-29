@@ -1,12 +1,12 @@
-﻿using Configuration;
-using Plugging;
-using Service;
+﻿using EnTier.Configuration;
+using EnTier.Plugging;
+using EnTier.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Utility;
+using EnTier.Utility;
 
-namespace Controllers
+namespace EnTier.Controllers
 {
     public abstract class EnTierControllerBase
     <StorageModel, DomainModel, TransferModel>

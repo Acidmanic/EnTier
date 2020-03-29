@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Context
+namespace EnTier.Context
 {
     public class DataListDataset<T> : IDataset<T>, IEnTierBuiltIn
     where T:class

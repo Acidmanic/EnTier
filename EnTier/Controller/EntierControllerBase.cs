@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Reflection;
-using Configuration;
-using DataAccess;
+using EnTier.Configuration;
+using EnTier.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using Plugging;
-using Service;
-using Utility;
-using Repository;
-using Components;
+using EnTier.Plugging;
+using EnTier.Service;
+using EnTier.Utility;
+using EnTier.Repository;
+using EnTier.Components;
 
-namespace Controllers{
+namespace EnTier.Controllers
+{
 
 
 

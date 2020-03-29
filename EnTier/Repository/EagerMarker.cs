@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Repository
+namespace EnTier.Repository
 {
     public interface IEagerMarker<Entity> where Entity : class
     {

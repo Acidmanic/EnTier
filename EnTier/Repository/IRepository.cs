@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Repository{
+namespace EnTier.Repository{
 
     public interface IRepository{};
     public interface IRepository<Entity,Tid>:IRepository

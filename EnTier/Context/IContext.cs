@@ -3,7 +3,8 @@
 
 using System;
 
-namespace Context{
+namespace EnTier.Context
+{
 
 
 

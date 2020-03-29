@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Utility{
+namespace EnTier.Utility{
 
     public interface IProvider<T> {
 

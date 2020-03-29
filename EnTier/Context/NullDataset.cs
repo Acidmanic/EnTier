@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Context{
+namespace EnTier.Context
+{
 
 
     public class NullDataset<T> : IDataset<T>,IEnTierBuiltIn

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Configuration;
-using Controllers;
+using EnTier.Configuration;
+using EnTier.Controllers;
 using Mapping;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Models;
-using Plugging;
-using Utility;
+using EnTier.Plugging;
+using EnTier.Utility;
 
 namespace Example2.Controllers
 {

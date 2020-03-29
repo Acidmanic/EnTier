@@ -1,10 +1,10 @@
 
 
 
-using Components;
-using Context;
+using EnTier.Components;
+using EnTier.Context;
 
-namespace Repository{
+namespace EnTier.Repository{
 
 
     public class UnitOfWork : IUnitOfWork

@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Reflection{
+namespace EnTier.Reflection{
 
     public class DataReflection{
 

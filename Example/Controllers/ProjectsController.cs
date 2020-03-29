@@ -3,8 +3,9 @@
 
 
 
+using EnTier.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Plugging;
+using EnTier.Plugging;
 
 namespace Controllers{
 

@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 
-namespace Service{
+namespace EnTier.Service{
 
     public interface IService{}
 

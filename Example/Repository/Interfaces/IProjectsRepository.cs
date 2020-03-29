@@ -1,5 +1,6 @@
 
-using Components;
+using EnTier.Components;
+using EnTier.Repository;
 
 namespace Repository
 {

@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Components;
-using Context;
-using Plugging;
+using EnTier.Components;
+using EnTier.Context;
+using EnTier.Plugging;
 using StorageModels;
 
 namespace Repository{
@@ -16,7 +16,6 @@ namespace Repository{
     {
 
 
-        private IObjectMapper _objectMapper;
 
         private IDataset<Project> _dataset;
 

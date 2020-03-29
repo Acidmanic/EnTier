@@ -1,12 +1,12 @@
 
 
 
-using Reflection;
+using EnTier.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Utility{
+namespace EnTier.Utility{
 
 
     public class Reflection{

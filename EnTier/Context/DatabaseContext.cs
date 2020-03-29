@@ -5,9 +5,10 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Utility;
+using EnTier.Utility;
 
-namespace Context{
+namespace EnTier.Context
+{
 
 
     public class DatabaseContext : IContext,IEnTierBuiltIn

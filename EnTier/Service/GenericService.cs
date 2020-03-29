@@ -4,11 +4,12 @@
 
 using System;
 using Microsoft.EntityFrameworkCore;
-using Repository;
-using Utility;
-using Plugging;
+using EnTier.Repository;
+using EnTier.Utility;
+using EnTier.Plugging;
+using EnTier;
 
-namespace Service{
+namespace EnTier.Service{
 
 
     internal class GenericService<StorageEntity,DomainEntity, Tid> :

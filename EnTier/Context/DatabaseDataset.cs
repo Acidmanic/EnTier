@@ -4,7 +4,8 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace Context{
+namespace EnTier.Context
+{
 
 
 

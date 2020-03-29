@@ -4,12 +4,11 @@
 
 using AutoMapper;
 
-
 namespace Mapping{
 
 
 
-    public class Automapper : Plugging.IObjectMapper
+    public class Automapper : EnTier.Plugging.IObjectMapper
     {
         private readonly IMapper _mapper;
 

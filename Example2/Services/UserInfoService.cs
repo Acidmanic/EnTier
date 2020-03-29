@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using Models;
-using Service;
+using EnTier.Service;
 
 namespace Services{
 

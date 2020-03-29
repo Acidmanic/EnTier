@@ -4,16 +4,16 @@
 
 using System;
 using System.Collections.Generic;
-using Reflection;
-using Repository;
-using Plugging;
-using Utility;
-using DataAccess;
-using Context;
+using EnTier.Reflection;
+using EnTier.Repository;
+using EnTier.Plugging;
+using EnTier.Utility;
+using EnTier.DataAccess;
+using EnTier.Context;
 using Microsoft.EntityFrameworkCore;
-using Components;
+using EnTier.Components;
 
-namespace Service
+namespace EnTier.Service
 {
     public class ServiceBase<StorageEntity,DomainEntity,Tid>
         :IService<DomainEntity,Tid> , IDisposable

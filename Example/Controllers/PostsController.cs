@@ -2,11 +2,13 @@
 
 
 using System;
-using Configuration;
+using EnTier.Configuration;
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using Plugging;
-using Utility;
+using EnTier.Plugging;
+using EnTier.Utility;
+using EnTier.Controllers;
+using EnTier.DataAccess;
 
 namespace Controllers{
 

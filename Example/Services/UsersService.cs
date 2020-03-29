@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using DataAccess;
 using DomainModels;
 using Repository;
-using Utility;
-using Plugging;
+using EnTier.Utility;
+using EnTier.Plugging;
+using EnTier.Service;
 
 namespace  Service
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Components
+namespace EnTier.Components
 {
     interface IComponentProvider
     {

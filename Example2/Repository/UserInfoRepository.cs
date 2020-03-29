@@ -5,7 +5,8 @@
 using System.Collections.Generic;
 using Models;
 using System.Linq;
-using Components;
+using EnTier.Components;
+using EnTier.Repository;
 
 namespace Repository{
 

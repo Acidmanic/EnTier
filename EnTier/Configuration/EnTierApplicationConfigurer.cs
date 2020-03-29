@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Configuration
+namespace EnTier.Configuration
 {
 
     public interface IEnTierApplicationConfigurer

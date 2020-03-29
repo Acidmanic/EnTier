@@ -7,7 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Utility{
+namespace EnTier.Utility{
 
 
     public class ReflectionService :CachedReflection{

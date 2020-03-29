@@ -1,9 +1,9 @@
 
 
 
-using Context;
+using EnTier.Context;
 
-namespace Controllers{
+namespace EnTier.Controllers{
 
     public class ControllerConfigurationBuilder{
 

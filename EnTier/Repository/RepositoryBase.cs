@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Reflection;
-using DataAccess;
-using Context;
+using EnTier.Reflection;
+using EnTier.DataAccess;
+using EnTier.Context;
 
-namespace Repository
+namespace EnTier.Repository
 {
     public abstract class RepositoryBase<Entity,Tid> 
         : IDisposable, IRepository<Entity,Tid> 

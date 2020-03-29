@@ -3,11 +3,12 @@
 
 using System;
 using System.Net;
-using Configuration;
+using EnTier.Configuration;
 using Microsoft.AspNetCore.Mvc;
-using Plugging;
+using EnTier.Plugging;
 
-namespace Controllers{
+namespace EnTier.Controllers
+{
 
 
 
