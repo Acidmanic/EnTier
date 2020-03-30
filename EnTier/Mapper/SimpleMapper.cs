@@ -1,5 +1,5 @@
 ﻿using EnTier;
-using EnTier.Plugging;
+using EnTier.Binding;
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -6,7 +6,7 @@ using System.Text;
 namespace EnTier.Context
 {
     
-    public class JsonDataset<TEntity> : IDataset<TEntity>, IEnTierBuiltIn
+    internal class JsonDataset<TEntity> : IDataset<TEntity>, IEnTierBuiltIn
         where TEntity : class
     {
 

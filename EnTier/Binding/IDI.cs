@@ -4,7 +4,7 @@
 
 using System;
 
-namespace EnTier.DIBinding{
+namespace EnTier.Binding{
 
 
 

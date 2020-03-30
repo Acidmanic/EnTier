@@ -11,7 +11,7 @@ namespace EnTier.DataAccess
 
 
 
-    public class MethodAttributesEagerScope<T> : IDisposable
+    internal class MethodAttributesEagerScope<T> : IDisposable
     where T:class
     {
 

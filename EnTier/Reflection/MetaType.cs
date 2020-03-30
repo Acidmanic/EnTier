@@ -8,7 +8,7 @@ namespace EnTier.Utility{
 
 
 
-    public class MetaType{
+    internal class MetaType{
 
 
         public Type Type {get;set;}

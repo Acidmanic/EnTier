@@ -5,9 +5,9 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EnTier.DIBinding{
+namespace EnTier.Binding{
 
-    public class MicrosoftDependencyInjectionRegisterer : IDIRegisterer
+    internal class MicrosoftDependencyInjectionRegisterer : IDIRegisterer
     {
         private readonly IServiceCollection _registerer;
 

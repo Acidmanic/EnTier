@@ -10,7 +10,7 @@ using System.Reflection;
 namespace EnTier.Utility{
 
 
-    public class ReflectionService :CachedReflection{
+    internal class ReflectionService :CachedReflection{
 
 
 

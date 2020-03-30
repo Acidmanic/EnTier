@@ -1,5 +1,5 @@
 ﻿using EnTier.Context;
-using EnTier.Plugging;
+using EnTier.Binding;
 using EnTier.Repository;
 using EnTier.Service;
 using System;

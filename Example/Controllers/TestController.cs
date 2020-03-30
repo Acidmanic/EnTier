@@ -7,13 +7,14 @@ using DataAccess;
 using DataTransferModels;
 using Microsoft.AspNetCore.Mvc;
 using Service;
-using EnTier.Plugging;
+using EnTier.Binding;
 using Microsoft.EntityFrameworkCore;
 using EnTier.Utility;
 using EnTier.Configuration;
 using System;
 using EnTier.Controllers;
 using EnTier.DataAccess;
+using EnTier.Annotations;
 
 namespace Controllers
 {

@@ -4,7 +4,7 @@ using DataAccess;
 using DomainModels;
 using Repository;
 using EnTier.Utility;
-using EnTier.Plugging;
+using EnTier.Binding;
 using EnTier.Service;
 
 namespace  Service

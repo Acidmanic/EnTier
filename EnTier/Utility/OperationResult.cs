@@ -5,7 +5,7 @@ namespace EnTier.Utility{
 
 
 
-    public class OperationResult<T>{
+    internal class OperationResult<T>{
 
 
         public bool Success {get;set;}

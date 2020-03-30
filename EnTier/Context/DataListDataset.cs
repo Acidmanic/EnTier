@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EnTier.Context
 {
-    public class DataListDataset<T> : IDataset<T>, IEnTierBuiltIn
+    internal class DataListDataset<T> : IDataset<T>, IEnTierBuiltIn
     where T:class
     {
 

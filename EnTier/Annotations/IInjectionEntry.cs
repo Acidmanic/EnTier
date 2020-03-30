@@ -3,7 +3,7 @@
 
 using System;
 
-namespace EnTier.Components
+namespace EnTier.Annotations
 {
 
 

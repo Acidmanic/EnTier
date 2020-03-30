@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 
-namespace EnTier.DataAccess
+namespace EnTier.Annotations
 {
 
 

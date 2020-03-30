@@ -8,7 +8,7 @@ namespace EnTier.DataAccess
 
 
 
-    public class AttributeEagerScopeManager<Entity> : IDisposable
+    internal class AttributeEagerScopeManager<Entity> : IDisposable
     where Entity:class
     {
 

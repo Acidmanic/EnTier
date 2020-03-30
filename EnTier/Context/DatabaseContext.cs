@@ -11,7 +11,7 @@ namespace EnTier.Context
 {
 
 
-    public class DatabaseContext : IContext,IEnTierBuiltIn
+    public sealed class DatabaseContext : IContext,IEnTierBuiltIn
     {
 
         private readonly DbContext _context;

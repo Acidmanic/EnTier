@@ -1,7 +1,7 @@
 
 
 using EnTier.Configuration;
-using EnTier.DIBinding;
+using EnTier.Binding;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using EnTier.Utility;

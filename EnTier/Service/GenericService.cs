@@ -6,7 +6,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using EnTier.Repository;
 using EnTier.Utility;
-using EnTier.Plugging;
+using EnTier.Binding;
 using EnTier;
 
 namespace EnTier.Service{

@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace EnTier.Reflection{
 
-    public class DataReflection{
+    internal class DataReflection{
 
             public Func<Entity,bool> IdReader<Entity,Tid>(Tid id)
             {

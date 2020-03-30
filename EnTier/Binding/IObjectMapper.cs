@@ -1,7 +1,7 @@
 
 
 
-namespace EnTier.Plugging
+namespace EnTier.Binding
 {
 
     public interface IObjectMapper{

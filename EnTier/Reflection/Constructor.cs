@@ -11,7 +11,7 @@ namespace EnTier.Utility{
 
 
 
-    public sealed class Constructor<T> 
+    internal sealed class Constructor<T> 
     {
         
 

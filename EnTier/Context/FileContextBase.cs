@@ -1,6 +1,6 @@
 ﻿using EnTier.Components;
 using Newtonsoft.Json;
-using EnTier.Plugging;
+using EnTier.Binding;
 using System;
 using System.Collections.Generic;
 using System.IO;

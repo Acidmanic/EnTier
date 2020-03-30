@@ -5,7 +5,7 @@ using System;
 using System.Net;
 using EnTier.Configuration;
 using Microsoft.AspNetCore.Mvc;
-using EnTier.Plugging;
+using EnTier.Binding;
 
 namespace EnTier.Controllers
 {

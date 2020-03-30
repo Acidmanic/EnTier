@@ -9,7 +9,7 @@ namespace EnTier.Context
 
 
 
-    public class DatabaseDataset<T> : IDataset<T>,IEnTierBuiltIn
+    internal class DatabaseDataset<T> : IDataset<T>,IEnTierBuiltIn
     where T:class
     {
 

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using EnTier.Components;
 using EnTier.Context;
-using EnTier.Plugging;
+using EnTier.Binding;
 using StorageModels;
 
 namespace Repository{

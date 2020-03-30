@@ -6,12 +6,12 @@ using System.Text;
 namespace EnTier.Reflection
 {
 
-    public class PropertyWrapper:PropertyWrapper<object>
+    internal class PropertyWrapper:PropertyWrapper<object>
     {
 
     }
 
-    public class PropertyWrapper<T>
+    internal class PropertyWrapper<T>
     {
 
 

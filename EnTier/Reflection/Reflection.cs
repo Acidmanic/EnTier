@@ -9,7 +9,7 @@ using System.Reflection;
 namespace EnTier.Utility{
 
 
-    public class Reflection{
+    internal class Reflection{
 
 
         public static List<T> GetTypeAttributes<T>(object obj){

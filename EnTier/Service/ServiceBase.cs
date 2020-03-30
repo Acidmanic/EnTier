@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using EnTier.Reflection;
 using EnTier.Repository;
-using EnTier.Plugging;
+using EnTier.Binding;
 using EnTier.Utility;
 using EnTier.DataAccess;
 using EnTier.Context;

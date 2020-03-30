@@ -5,9 +5,9 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EnTier.DIBinding{
+namespace EnTier.Binding{
 
-    public class MicrosoftDependencyInjectionResolver : IDIResolver
+    internal class MicrosoftDependencyInjectionResolver : IDIResolver
     {
         private readonly IServiceProvider _resolver;
 

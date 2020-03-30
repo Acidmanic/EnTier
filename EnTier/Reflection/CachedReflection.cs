@@ -13,7 +13,7 @@ namespace EnTier.Utility{
 
 
 
-    public class CachedReflection:Reflection{
+    internal class CachedReflection:Reflection{
 
 
         private readonly List<MetaType> _types;

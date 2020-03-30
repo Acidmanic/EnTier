@@ -8,7 +8,7 @@ using Mapping;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Models;
-using EnTier.Plugging;
+using EnTier.Binding;
 using EnTier.Utility;
 
 namespace Example2.Controllers

@@ -10,7 +10,7 @@ namespace EnTier.Context
 {
 
 
-    public class NullDataset<T> : IDataset<T>,IEnTierBuiltIn
+    internal class NullDataset<T> : IDataset<T>,IEnTierBuiltIn
     where T:class
     {
         public T Add(T item)

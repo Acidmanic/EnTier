@@ -8,7 +8,7 @@ namespace Mapping{
 
 
 
-    public class Automapper : EnTier.Plugging.IObjectMapper
+    public class Automapper : EnTier.Binding.IObjectMapper
     {
         private readonly IMapper _mapper;
 

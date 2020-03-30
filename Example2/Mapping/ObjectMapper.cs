@@ -3,7 +3,7 @@
 
 
 using Models;
-using EnTier.Plugging;
+using EnTier.Binding;
 
 namespace Mapping{
 

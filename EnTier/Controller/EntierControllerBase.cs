@@ -6,7 +6,7 @@ using System.Reflection;
 using EnTier.Configuration;
 using EnTier.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using EnTier.Plugging;
+using EnTier.Binding;
 using EnTier.Service;
 using EnTier.Utility;
 using EnTier.Repository;

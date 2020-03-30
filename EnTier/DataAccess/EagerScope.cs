@@ -12,7 +12,7 @@ namespace EnTier.DataAccess
 
 
 
-    public class EagerScope{
+    internal class EagerScope{
 
 
         private Dictionary<Type, List<object>> _actions = new Dictionary<Type, List<Object>>();
@@ -45,7 +45,7 @@ namespace EnTier.DataAccess
 
         /// Applies all eager configurations on given IQueryable object
         /// Returns true if any configuration was registered, false if none.
-        public OperationResult<IQueryable<Entity>> Apply<Entity>(IQueryable<Entity> subject)
+        internal OperationResult<IQueryable<Entity>> Apply<Entity>(IQueryable<Entity> subject)
         {
             var type = typeof(Entity);
 

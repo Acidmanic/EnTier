@@ -7,7 +7,7 @@ namespace EnTier.Context
 
 
 
-    public class NullContext : IContext,IEnTierBuiltIn
+    internal class NullContext : IContext,IEnTierBuiltIn
     {
         public void Apply()
         {

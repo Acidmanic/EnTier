@@ -4,16 +4,16 @@ using System.Text;
 
 namespace EnTier.Context
 {
-    public class InMemoryContext : IContext, IEnTierBuiltIn
+    public sealed class InMemoryContext : IContext, IEnTierBuiltIn
     {
 
         private Dictionary<string,object> _data = new Dictionary<string, object>();
-        public virtual void Apply()
+        public void Apply()
         {
             //Applied! :D
         }
 
-        public virtual void Dispose()
+        public void Dispose()
         {
             // Disposed ofcourse!
         }
