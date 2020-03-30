@@ -29,7 +29,7 @@ namespace Mapping{
             d.RegistrationDate=s.RegistrationDate;
             d.Surname=s.Surname;
 
-
+           
         }
     }
 }

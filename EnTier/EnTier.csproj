@@ -15,8 +15,4 @@
     <PackageReference Include="Moq" Version="4.13.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Plugging\" />
-  </ItemGroup>
-
 </Project>
