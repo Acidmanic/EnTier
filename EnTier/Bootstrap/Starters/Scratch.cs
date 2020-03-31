@@ -1,11 +1,12 @@
-﻿using EnTier.Binding.Abstractions;
+﻿using Bootstrap.Starters;
+using EnTier.Binding.Abstractions;
 using EnTier.Bootstrap;
 using EnTier.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bootstrap.Starters
+namespace EnTier.Bootstrap.Starters
 {
     public static class Scratch
     {
@@ -24,7 +25,11 @@ namespace Bootstrap.Starters
 
         public static void Start(Action<IEnTierApplicationConfigurer> configurer)
         {
-            Start(configurer, new DefaultResolver());
+            var res = new DefaultResolver();
+
+            Boot.Strap((IDIRegisterer)res);
+
+            Start(configurer, res);
         }
 
 
