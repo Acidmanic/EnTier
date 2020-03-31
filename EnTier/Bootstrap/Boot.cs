@@ -54,6 +54,24 @@ namespace EnTier.Bootstrap
             }
         }
 
+        public static void Strap(IDIResolver resolver)
+        {
+            _resolver = resolver;
+            
+        }
+
+        public static void Strap(IDIRegisterer registerer)
+        {
+            EnTierApplication.PerformRegistrations(registerer);
+
+        }
+
+        public static void Go()
+        {
+            //Manual Entry
+            ConfigureEnTieerApplication();
+        }
+
 
         private static void ConfigureEnTieerApplication()
         {
