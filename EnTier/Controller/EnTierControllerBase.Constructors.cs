@@ -32,7 +32,6 @@ namespace EnTier.Controllers
         {
             //TODO: Manage this requirment
             ReflectionService.Make().Cache(typeof(GenericService<StorageModel, DomainModel, Tid>));
-            ReflectionService.Make().Cache(typeof(GenericRepository<StorageModel, Tid>));
 
             _attributeEagerScopeManager = new AttributeEagerScopeManager<StorageModel>(this);
 

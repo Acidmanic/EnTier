@@ -40,6 +40,9 @@ namespace EnTier.Service
 
         private void Initialize()
         {
+            //TODO: Manage this requirment
+            ReflectionService.Make().Cache(typeof(GenericRepository<StorageEntity, Tid>));
+
             _attributesScope = new EagerAttributeProcessor()
                .MarkEagers<StorageEntity>(this);
 

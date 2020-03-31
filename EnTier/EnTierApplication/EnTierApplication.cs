@@ -26,7 +26,8 @@ namespace EnTier
 
         public static bool UseConfiguredContextType { get; private set; } = false;
 
-        public static bool IsEntityFrameworkPresent { get; private set; } = false;
+        //TODO: Add Following Property, initialize in startapp
+        //public static bool IsEntityFrameworkPresent { get; private set; } = false;
 
         public static void Configure(IDIResolver resolver
                                    , bool useConfiguredContextType
@@ -56,8 +57,6 @@ namespace EnTier
         {
 
             CacheReflectionAhead();
-
-            IsEntityFrameworkPresent = ReflectionService.Make().IsAnyExtensionFor<DbContext>();
 
         }
 
