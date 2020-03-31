@@ -8,7 +8,7 @@ namespace Mapping{
 
 
 
-    public class Automapper : EnTier.Binding.IObjectMapper
+    public class Automapper : EnTier.Binding.Abstractions.IObjectMapper
     {
         private readonly IMapper _mapper;
 

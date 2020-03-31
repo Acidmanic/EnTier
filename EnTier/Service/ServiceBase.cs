@@ -12,6 +12,7 @@ using EnTier.DataAccess;
 using EnTier.Context;
 using Microsoft.EntityFrameworkCore;
 using EnTier.Components;
+using EnTier.Binding.Abstractions;
 
 namespace EnTier.Service
 {

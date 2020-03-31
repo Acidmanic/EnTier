@@ -5,6 +5,7 @@ using EnTier.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using EnTier.Binding.Abstractions;
 
 namespace EnTier.Components
 {

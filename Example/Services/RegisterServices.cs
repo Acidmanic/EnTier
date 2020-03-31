@@ -4,7 +4,7 @@
 using DataAccess;
 using Mapping;
 using Microsoft.Extensions.DependencyInjection;
-using EnTier.Binding;
+using EnTier.Binding.Abstractions;
 using Service;
 
 public static class RegisterServices

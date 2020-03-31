@@ -3,6 +3,7 @@
 
 
 using System;
+using EnTier.Binding.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EnTier.Binding{

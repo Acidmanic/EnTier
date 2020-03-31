@@ -10,6 +10,7 @@ using EnTier.Utility;
 using EnTier.Controllers;
 using EnTier.DataAccess;
 using EnTier.Annotations;
+using EnTier.Binding.Abstractions;
 
 namespace Controllers{
 

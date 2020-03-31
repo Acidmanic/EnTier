@@ -7,6 +7,7 @@ using EnTier.Binding;
 using Microsoft.AspNetCore.Builder;
 using EnTier.Utility;
 using EnTier;
+using EnTier.Bootstrap;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -18,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddEnTierServices(this IServiceCollection services)
         {
 
-            EnTierApplication.Initialize(services);
+            Boot.Strap(services);
 
             return services;
         }

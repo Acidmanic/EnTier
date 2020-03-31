@@ -1,7 +1,7 @@
 
 
 
-namespace EnTier.Binding
+namespace EnTier.Binding.Abstractions
 {
 
     public interface IObjectMapper{

@@ -4,6 +4,7 @@
 
 using Models;
 using EnTier.Binding;
+using EnTier.Binding.Abstractions;
 
 namespace Mapping{
 

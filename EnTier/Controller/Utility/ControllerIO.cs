@@ -6,6 +6,7 @@ using System.Net;
 using EnTier.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using EnTier.Binding;
+using EnTier.Binding.Abstractions;
 
 namespace EnTier.Controllers
 {

@@ -11,6 +11,7 @@ using EnTier.Service;
 using EnTier.Utility;
 using EnTier.Repository;
 using EnTier.Components;
+using EnTier.Binding.Abstractions;
 
 namespace EnTier.Controllers
 {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using EnTier.Utility;
+using EnTier.Binding.Abstractions;
 
 namespace EnTier.Mapper
 {

@@ -6,6 +6,7 @@ using Repository;
 using EnTier.Utility;
 using EnTier.Binding;
 using EnTier.Service;
+using EnTier.Binding.Abstractions;
 
 namespace  Service
 {

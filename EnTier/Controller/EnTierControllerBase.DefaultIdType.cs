@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using EnTier.Utility;
+using EnTier.Binding.Abstractions;
 
 namespace EnTier.Controllers
 {
