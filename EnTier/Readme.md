@@ -1,30 +1,95 @@
 
+Easy NTier (EnTier) Library
+===========================
 
 
-What Is A Channel
-=================
+![EnTier](graphics/EnTier.png)
 
-Every API Endpoint is an entry wich gives the user access 
-to a resouce. For example this resource can be considered 
-a data in database, and the access can be a CRUD operation. 
-performing such a task in a 3-Tier/Mvc like manner, will requier 
-a Controller, a Service, and a repository. in ENTier libarary, 
-repositories are not delivered directly to the service. It will 
-be done via a UnitOfWork. Also Repositories can work with any 
-Context. In case of using a database, it will get a DatabaseContext. 
-Therefore for each access we would go through 5 objects sofar:
+EnTier is a library for easily implementing an NTier application. It gives pre implementations 
+for Controllers, Services and repositories. In simplest use case, client code , after writing it's 
+models, can create a controller for the Domain model, by extending EnTierControllerBase. to get it 
+work out of the box, writing a model and extending EnTierControllerBase, is enough to have an API-Endpoint 
+with main CRUD options.
 
-Controller
- |
-Service
- |
-UnitOfWork \
- |          |<--- Context
-Repository /
+This controller also uses a Service based on the model. The same way the service will use a UnifOfWork 
+object and this UnitOfWork object provides proper Repository to communicate with data source. This data 
+source can be a FileSystem database,an InMemory databse or a sql database. this can be determined by Context. 
 
-Such composition, Forms a Channel. A Channel is a Combination of every 
-object aming to access a specific resource from higher layer to lower 
-layer.
+Main components clinet code might be deal with, are:
+
+*   Controller
+*   Service
+*   UnitOfWork 
+*   Repository
+*   Context
+
+
+Start Simple
+============
+
+In Simplest scenario, having your model classes in hand, you can extend the __EnTierControllerBase__ class. Thats it! 
+If you're application is a mvc web api (.net core), you should add these lines of codes in your Startup class:
+
+```C#
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // ...
+
+            services.AddEnTierServices();
+
+            // ...
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            // ...
+
+            app.UseEnTier();
+
+            // ...
+        }
+```
+this should be done for all examples.
+after that, you should have a restful api end point named after your controller. 
+created api endpoint will provide these functionalities:
+
+
+
+
+
+
+
+
+
+                                    [ Controller ]
+                              ____________|_____________
+                             |                          |
+                        [ Service ]                 [ Service ]
+                             |__________________________|
+                                          |
+                                          |
+                                    [UnitOfWork]
+                                          |
+                           _______________|_______________
+                          |               |               |
+                   [ Repository ]  [ Repository ] ... [ Repository ]
+                          |               |               |
+                          |_______________|_______________|
+                                          |
+                                      [Context]
+                                           
+
+
+
+*   __EnTierControllerBase__: This is a base class for creating a new controller based on a model. 
+    _EnTierControllerBase_ takes 4 generic arguments:
+    *   StorageEntity: This represents the Type of data access layer's model.
+    *   DomainEntity: This represents the Type of bussiness layer's model.
+    *   DataTransfer: This represents the Type of presentation layer's model.
+    *   Tid: This represents the Type of id field in Entities. This Generic argument
+        is Optional, If not provided, it's default would be Long.
+*   __ServiceBase__: This class can be 
+
 
 
 Context

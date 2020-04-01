@@ -19,6 +19,7 @@ namespace Example3
 
         public class Service:ServiceBase<Info,Info>{
 
+
         }
         static void Main(string[] args)
         {

@@ -15,17 +15,22 @@
     <PackageIcon>graphics\EnTier.png</PackageIcon>
     <Description>Easy NTier Architecture, Working out of the box!(Kind of!!)</Description>
     <Summary>Easy NTier Architecture, Working out of the box!(Kind of!!)</Summary>
-
-    
+   
   </PropertyGroup>
-
+  
+  
+  
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="EntityFramework" Version="6.4.0" />
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" /> -->
     <PackageReference Include="Moq" Version="4.13.1" />
 
     <!-- NuGet -->
