@@ -68,12 +68,16 @@ attribute to your controller class to use dotnet custome routing...
 created api endpoint will provide these functionalities:
 
 
-|    API Endpoint                       | Method    | Description                           |
-|:-------------------------------------:|:---------:|:-------------------------------------:|
-|{base-url}/{uri}/{controller-name}     | GET       | Returns all availabe dara frim thread |
-|{base-url}/{uri}/{controller-name}/{id}| GET       | Returns Asked Entity if exists        |
-|{base-url}/{uri}/{controller-name}     | POST      | Creates and returns a new Entity      |
-|{base-url}/{uri}/{controller-name}     | POST      | Creates and returns a new Entity      |
+|    API Endpoint                       | Method    | Request Payload           |  Description                          |EnTierControllerBase Method        |
+|:-------------------------------------:|:---------:|:-------------------------:|:-------------------------------------:|:---------------------------------:|
+|{base-url}/{uri}/{controller-name}     | GET       |-                          | Returns all availabe dara frim thread |```List<Entity> base.GetAll()```   |
+|{base-url}/{uri}/{controller-name}/{id}| GET       |-                          | Returns Asked Entity if exists        |```Entity base.GetById(Tid Id)```  |
+|{base-url}/{uri}/{controller-name}     | POST      |Entity Object Without Id   | Creates and returns a new Entity      |```Entity base.CreateNew(Entity entity)```|
+|{base-url}/{uri}/{controller-name}     | PUT       |Entity Object With Id      | Updates An Entity                     |```Entity base.Update(Entity entity)```|
+|{base-url}/{uri}/{controller-name}/{id}| DELETE    |-                          | Deletes An Entity                     |```Entity base.DeleteById(Tid id)```|
+|{base-url}/{uri}/{controller-name}     | DELETE    |Entity Object With Id      | Deletes An Entity                     |```Entity base.DeleteByObject(Entity entity)```|
+
+
 
 
 
