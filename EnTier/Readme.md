@@ -5,30 +5,42 @@ Easy NTier (EnTier) Library
 
 ![EnTier](graphics/EnTier.png)
 
-EnTier is a library for easily implementing an NTier application. It gives pre implementations 
-for Controllers, Services and repositories. In simplest use case, client code , after writing it's 
-models, can create a controller for the Domain model, by extending EnTierControllerBase. to get it 
-work out of the box, writing a model and extending EnTierControllerBase, is enough to have an API-Endpoint 
-with main CRUD options.
+EnTier is a library for easily implementing an NTier application. It gives you pre-implementations 
+for Controllers, Services and repositories. In simplest use case, after writing models, you can 
+create a controller for Storage/Domain/Transfer set of models, by extending EnTierControllerBase. 
+This controller, will have restful CRUD api methods implemented.
 
-This controller also uses a Service based on the model. The same way the service will use a UnifOfWork 
-object and this UnitOfWork object provides proper Repository to communicate with data source. This data 
-source can be a FileSystem database,an InMemory databse or a sql database. this can be determined by Context. 
+Other than that, you can:
 
-Main components clinet code might be deal with, are:
+*   Use your own service(s) in your controller
+*   Use automatically provided Respository in your services
+*   Use your own Repositories in your services
+*   Use a builtin Context for application (FileContext, EntityFrameworkContext, InMemoryContext )
+*   Use your own implementation of IContext
+*   Use Automapper as your mapper
+*   Use EnTier's default mapper (very nive implementation, recomended only for tests)
+*   Use Services, in a different presentation for example a console aplication.
+
+Main components you might be deal with, are:
 
 *   Controller
+    *    web api presentation
 *   Service
+    *    Main bussiness logic implementations
 *   UnitOfWork 
+    *   Provides proper Repository for a service.
 *   Repository
+    *   Performs CRUD operations on Application's Context
 *   Context
+    *   Wraps Infrastructure which communicates with DataStorage.
 
 
 Start Simple
 ============
 
-In Simplest scenario, having your model classes in hand, you can extend the __EnTierControllerBase__ class. Thats it! 
-If you're application is a mvc web api (.net core), you should add these lines of codes in your Startup class:
+In Simplest scenario, having your model classes in hand, you can extend the __EnTierControllerBase__ class. Also 
+You should start and configure EnTier, which is easy. If you're application is a mvc web api (.net core), you 
+should add these lines of codes in your Startup class:
 
 ```C#
         public void ConfigureServices(IServiceCollection services)
@@ -49,14 +61,19 @@ If you're application is a mvc web api (.net core), you should add these lines o
             // ...
         }
 ```
-this should be done for all examples.
-after that, you should have a restful api end point named after your controller. 
+
+after that, you should have a restful api end point named after your controller. You can Add a [Route("uri")] 
+attribute to your controller class to use dotnet custome routing...
+
 created api endpoint will provide these functionalities:
 
 
-
-
-
+|    API Endpoint                       | Method    | Description                           |
+|:-------------------------------------:|:---------:|:-------------------------------------:|
+|{base-url}/{uri}/{controller-name}     | GET       | Returns all availabe dara frim thread |
+|{base-url}/{uri}/{controller-name}/{id}| GET       | Returns Asked Entity if exists        |
+|{base-url}/{uri}/{controller-name}     | POST      | Creates and returns a new Entity      |
+|{base-url}/{uri}/{controller-name}     | POST      | Creates and returns a new Entity      |
 
 
 
