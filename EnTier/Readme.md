@@ -77,7 +77,29 @@ created api endpoint will provide these functionalities:
 |{base-url}/{uri}/{controller-name}/{id}| DELETE    |-                          | Deletes An Entity                     |```Entity base.DeleteById(Tid id)```|
 |{base-url}/{uri}/{controller-name}     | DELETE    |Entity Object With Id      | Deletes An Entity                     |```Entity base.DeleteByObject(Entity entity)```|
 
+So in summary, You will write your models, setup EnTier Application, and Extend EnTierControllerBase. This will automatically create proper Service and Repository 
+regarding presented generic types for storage,domain and transfer models. It's possible to use the same type for all three types, but it's not recommended. 
+Besides that, you can manupilate the behavior of controller about 1) which one of these methods above gets implemented, (default is all) and 2) Determine which 
+fields of your storage model, gets loaded Eagerly. Next section show how to do these manupilations.
 
+
+
+Manipulating the Controller
+=======================
+
+
+
+
+
+you can also write and use you own service to be used in this controller. Next section will show how to do this.
+
+
+
+Hook in your own Service
+========================
+
+
+A pre-built Service which gets used in an EnTierController, provides 4 main CRUD operations. You can write your own service.
 
 
 
