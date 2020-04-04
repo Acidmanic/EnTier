@@ -7,6 +7,9 @@ using EnTier.Utility;
 using EnTier.Binding;
 using EnTier.Service;
 using EnTier.Binding.Abstractions;
+using EnTier.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using EnTier.Annotations;
 
 namespace  Service
 {
@@ -20,7 +23,6 @@ namespace  Service
 
         public User AddUser(User user)
         {
-
             var storage = Mapper.Map<StorageModels.User>(user);
 
             using(var db = DbProvider.Create()){
