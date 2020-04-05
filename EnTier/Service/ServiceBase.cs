@@ -16,9 +16,9 @@ using EnTier.Binding.Abstractions;
 
 namespace EnTier.Service
 {
-    public class ServiceBase<StorageEntity,DomainEntity,Tid>
-        :IService<DomainEntity,Tid> , IDisposable
-        where StorageEntity:class{
+    public class ServiceBase<StorageModel,DomainModel,Tid>
+        :IService<DomainModel,Tid> , IDisposable
+        where StorageModel:class{
 
         protected IObjectMapper Mapper{get;private set;}
 
@@ -41,58 +41,58 @@ namespace EnTier.Service
         private void Initialize()
         {
             //TODO: Manage this requirment
-            ReflectionService.Make().Cache(typeof(GenericRepository<StorageEntity, Tid>));
+            ReflectionService.Make().Cache(typeof(GenericRepository<StorageModel, Tid>));
 
             _attributesScope = new EagerAttributeProcessor()
-               .MarkEagers<StorageEntity>(this);
+               .MarkEagers<StorageModel>(this);
 
             DbProvider = new Provider<IUnitOfWork>(() => new UnitOfWork());
         }
 
-        public virtual List<DomainEntity> GetAll()
+        public virtual List<DomainModel> GetAll()
         {
 
-            var res = new List<StorageEntity> ();
+            var res = new List<StorageModel> ();
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity,Tid>();
+                var repo = db.GetRepository<StorageModel,Tid>();
 
                 res = repo.GetAll();
 
                 db.Compelete();
             }
 
-            return Mapper.Map<List<DomainEntity>>(res);
+            return Mapper.Map<List<DomainModel>>(res);
         }
 
-        public virtual DomainEntity GetById(Tid id)
+        public virtual DomainModel GetById(Tid id)
         {
 
-            StorageEntity res = null;
+            StorageModel res = null;
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity,Tid>();
+                var repo = db.GetRepository<StorageModel,Tid>();
 
                 res = repo.GetById(id);
 
                 db.Compelete();
             }
 
-            return Mapper.Map<DomainEntity>(res);
+            return Mapper.Map<DomainModel>(res);
         }
 
-        public virtual DomainEntity Update(DomainEntity entity)
+        public virtual DomainModel Update(DomainModel entity)
         {
             
-            StorageEntity storage = null;
+            StorageModel storage = null;
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity,Tid>();
+                var repo = db.GetRepository<StorageModel,Tid>();
 
-                new DataReflection().UseId<DomainEntity,Tid>(entity,id => storage = repo.GetById(id));
+                new DataReflection().UseId<DomainModel,Tid>(entity,id => storage = repo.GetById(id));
 
                 if (storage == null){
                     NotFound();
@@ -103,34 +103,34 @@ namespace EnTier.Service
                 db.Compelete();
             }
 
-            return Mapper.Map<DomainEntity>(storage);
+            return Mapper.Map<DomainModel>(storage);
         }
 
-        public virtual DomainEntity DeleteByEntity(DomainEntity entity)
+        public virtual DomainModel DeleteByEntity(DomainModel entity)
         {
-            StorageEntity storage = null;
+            StorageModel storage = null;
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity,Tid>();
+                var repo = db.GetRepository<StorageModel,Tid>();
 
-                new DataReflection().UseId<DomainEntity,Tid>(entity,id => storage = repo.GetById(id));
+                new DataReflection().UseId<DomainModel,Tid>(entity,id => storage = repo.GetById(id));
                 
                 storage = repo.Remove(storage);
 
                 db.Compelete();
             }
 
-            return Mapper.Map<DomainEntity>(storage);
+            return Mapper.Map<DomainModel>(storage);
         }
 
-        public virtual DomainEntity DeleteById(Tid id)
+        public virtual DomainModel DeleteById(Tid id)
         {
-            StorageEntity storage = null;
+            StorageModel storage = null;
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity,Tid>();
+                var repo = db.GetRepository<StorageModel,Tid>();
 
                 storage = repo.RemoveById(id);
 
@@ -141,7 +141,7 @@ namespace EnTier.Service
                 NotFound();
             }
 
-            return Mapper.Map<DomainEntity>(storage);
+            return Mapper.Map<DomainModel>(storage);
         }
 
         private void NotFound()
@@ -150,21 +150,21 @@ namespace EnTier.Service
             throw new Exception();
         }
 
-        public virtual DomainEntity CreateNew(DomainEntity entity)
+        public virtual DomainModel CreateNew(DomainModel entity)
         {
 
-            var storage = Mapper.Map<StorageEntity>(entity);
+            var storage = Mapper.Map<StorageModel>(entity);
 
             using(var db = DbProvider.Create()){
 
-                var repo = db.GetRepository<StorageEntity,Tid>();
+                var repo = db.GetRepository<StorageModel,Tid>();
 
                 storage = repo.Add(storage);
 
                 db.Compelete();
             }
 
-            return Mapper.Map<DomainEntity>(storage);
+            return Mapper.Map<DomainModel>(storage);
         }
 
         public virtual void Dispose()
@@ -176,9 +176,9 @@ namespace EnTier.Service
     }
 
 
-    public abstract class ServiceBase<StorageEntity, DomainEntity>
-        : ServiceBase<StorageEntity, DomainEntity, long>
-        where StorageEntity : class
+    public abstract class ServiceBase<StorageModel, DomainModel>
+        : ServiceBase<StorageModel, DomainModel, long>
+        where StorageModel : class
     {
         public ServiceBase()
         {

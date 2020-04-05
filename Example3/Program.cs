@@ -27,6 +27,7 @@ namespace Example3
 
             Scratch.Start(c => c.SetContext<FileContext>());
 
+
             var s = new Service();
 
 
