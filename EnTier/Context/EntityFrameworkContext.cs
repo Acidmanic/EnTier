@@ -11,13 +11,13 @@ namespace EnTier.Context
 {
 
 
-    public sealed class DatabaseContext : IContext,IEnTierBuiltIn
+    public sealed class EntityFrameworkContext : IContext,IEnTierBuiltIn
     {
 
         private readonly DbContext _context;
         private readonly Dictionary<Type,object> _datasets;
 
-        public DatabaseContext(DbContext context){
+        public EntityFrameworkContext(DbContext context){
             _context = context;
 
             var r = new CachedReflection().CachePropertiesOf(_context);
@@ -53,7 +53,7 @@ namespace EnTier.Context
             var type = typeof(T);
 
             if(_datasets.ContainsKey(type)){
-                return new DatabaseDataset<T>((DbSet<T>)_datasets[type]);
+                return new EntityFrameworkDataset<T>((DbSet<T>)_datasets[type]);
             }
 
             //TODO: Null pattern

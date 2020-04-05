@@ -17,7 +17,7 @@ namespace EnTier.Components
 
             if (!dbConstructor.IsNull)
             {
-                var ret = new DatabaseContext(dbConstructor.Construct());
+                var ret = new EntityFrameworkContext(dbConstructor.Construct());
 
                 return (TInterface)(object)ret;
 

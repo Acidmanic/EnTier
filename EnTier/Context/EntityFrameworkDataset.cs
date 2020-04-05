@@ -9,14 +9,14 @@ namespace EnTier.Context
 
 
 
-    internal class DatabaseDataset<T> : IDataset<T>,IEnTierBuiltIn
+    internal class EntityFrameworkDataset<T> : IDataset<T>,IEnTierBuiltIn
     where T:class
     {
 
 
         private readonly DbSet<T> _dataset;
 
-        public DatabaseDataset(DbSet<T> dataset)
+        public EntityFrameworkDataset(DbSet<T> dataset)
         {
             _dataset = dataset;
         }
