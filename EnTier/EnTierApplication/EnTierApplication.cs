@@ -26,18 +26,23 @@ namespace EnTier
 
         public static bool UseConfiguredContextType { get; private set; } = false;
 
+        private static Action<IDIRegisterer> _registerClientServices;
+
         //TODO: Add Following Property, initialize in startapp
         //public static bool IsEntityFrameworkPresent { get; private set; } = false;
 
         public static void Configure(IDIResolver resolver
                                    , bool useConfiguredContextType
-                                   , Type contextType) 
+                                   , Type contextType
+                                   ,Action<IDIRegisterer> registerClientServices) 
         {
             Resolver = resolver;
 
             UseConfiguredContextType = useConfiguredContextType;
 
             ContextType = contextType;
+
+            _registerClientServices = registerClientServices;
 
             ApplicationStart();
 
@@ -51,6 +56,7 @@ namespace EnTier
 
             registerer.RegisterTransient<IDatasetAccessor, InjectionDatasetAccessor>();
 
+            _registerClientServices?.Invoke(registerer);
         }
 
         private static void ApplicationStart()

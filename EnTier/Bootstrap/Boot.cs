@@ -14,12 +14,20 @@ namespace EnTier.Bootstrap
     internal static class Boot
     {
         private static IDIResolver _resolver;
+        private static Action<IDIRegisterer> _registerClientServices;
         private static bool _useConfiguredContextType = false;
         private static Type _contextType = typeof(NullContext);
 
 
         private class EnTierApplicationConfigurer : IEnTierApplicationConfigurer
         {
+            public IEnTierApplicationConfigurer RegisterServices(Action<IDIRegisterer> expression)
+            {
+                _registerClientServices = expression;
+
+                return this;
+            }
+
             public IEnTierApplicationConfigurer SetContext<T>()
             {
 
@@ -43,7 +51,7 @@ namespace EnTier.Bootstrap
             _resolver = new MicrosoftDependencyInjectionResolver(app.ApplicationServices);
 
             //Entry For Core.Asp
-            ConfigureEnTieerApplication();
+            ConfigureEnTierApplication();
         }
 
         public static void Strap(Action<IEnTierApplicationConfigurer> configurer)
@@ -69,13 +77,13 @@ namespace EnTier.Bootstrap
         public static void Go()
         {
             //Manual Entry
-            ConfigureEnTieerApplication();
+            ConfigureEnTierApplication();
         }
 
 
-        private static void ConfigureEnTieerApplication()
+        private static void ConfigureEnTierApplication()
         {
-            EnTierApplication.Configure(_resolver, _useConfiguredContextType, _contextType);
+            EnTierApplication.Configure(_resolver, _useConfiguredContextType, _contextType,_registerClientServices);
         }
 
         
