@@ -9,7 +9,7 @@
     <!-- NuGet -->
     <Id>EnTier</Id>
     <PackageId>EnTier</PackageId>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Mani Moayedi</Authors>
     <Company>Acidmanic</Company>
     <PackageIcon>graphics\EnTier.png</PackageIcon>

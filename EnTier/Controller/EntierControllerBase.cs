@@ -48,6 +48,7 @@ namespace EnTier.Controllers
             return builder.Build();
         }
 
+        
         protected virtual void OnConfiguringController(ControllerConfigurationBuilder builder){
             builder.ImplementAll();
         }
