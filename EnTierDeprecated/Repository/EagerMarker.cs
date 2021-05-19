@@ -5,7 +5,7 @@
 //using Microsoft.EntityFrameworkCore;
 
 
-//namespace EnTier.Repository
+//namespace EnTierDeprecated.Repository
 //{
 //    public interface IEagerMarker<Entity> where Entity : class
 //    {

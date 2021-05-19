@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EnTierDeprecated\EnTierDeprecated.csproj" />
     <ProjectReference Include="..\EnTier\EnTier.csproj" />
   </ItemGroup>
 <!-- 

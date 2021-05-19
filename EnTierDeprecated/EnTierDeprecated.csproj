@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <RootNamespace></RootNamespace>
+
+
+    <!-- NuGet -->
+    <Id>EnTier</Id>
+    <PackageId>EnTier</PackageId>
+    <Version>1.0.2</Version>
+    <Authors>Mani Moayedi</Authors>
+    <Company>Acidmanic</Company>
+    <PackageIcon>graphics\EnTier.png</PackageIcon>
+    <Description>Easy NTier Architecture, Working out of the box!(Kind of!!)</Description>
+    <Summary>Easy NTier Architecture, Working out of the box!(Kind of!!)</Summary>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+
+    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="EntityFramework" Version="6.4.0" />
+    <!-- <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" /> -->
+    <PackageReference Include="Moq" Version="4.13.1" />
+
+    <!-- NuGet -->
+    <None Include="graphics\EnTier.png" Pack="true" PackagePath="\graphics"/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt"/>
+  </ItemGroup>
+
+</Project>

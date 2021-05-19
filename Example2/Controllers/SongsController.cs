@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Example2.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/Songs")]
     [ApiController]
     public class SongsController: EnTierControllerBase<Song, Song, Song, long>
     {
