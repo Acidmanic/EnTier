@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using EnTier.DataAccess.InMemory;
 using EnTier.Mapper;
 using EnTier.Services;
 using EnTier.UnitOfWork;
@@ -15,8 +16,22 @@ namespace EnTier.Controllers
         where TStorage : class, new()
     {
         private IMapper Mapper { get; set; }
-        private IUnitOfWork UnitOfWork { get; }
+        private IUnitOfWork UnitOfWork { get; set; }
         private ICrudService<TDomain, TId> Service { get; set; }
+
+
+        public CrudControllerBase()
+        {
+            AcquirerDependencies();
+        }
+
+        public CrudControllerBase(IMapper mapper)
+        {
+            Mapper = mapper;
+
+            AcquirerDependencies();
+        }
+
 
         public CrudControllerBase(IUnitOfWork unitOfWork)
         {
@@ -41,6 +56,10 @@ namespace EnTier.Controllers
                 Mapper = new EntierBuiltinMapper();
             }
 
+            if (UnitOfWork == null)
+            {
+                UnitOfWork = new InMemoryUnitOfWork();
+            }
             Service = AcquirerCrudService();
         }
 
