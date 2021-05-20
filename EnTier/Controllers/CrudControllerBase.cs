@@ -4,17 +4,50 @@ using System.Collections.Generic;
 using System.Net;
 using EnTier.Mapper;
 using EnTier.Services;
+using EnTier.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnTier.Controllers
 {
-    public abstract class CrudControllerBase<TTransfer, TDomain, TId> : ControllerBase
+    public abstract class CrudControllerBase<TTransfer, TDomain, TStorage, TId> : ControllerBase
         where TTransfer : class, new()
         where TDomain : class, new()
+        where TStorage : class, new()
     {
-        public IMapper Mapper { get; private set; }
+        private IMapper Mapper { get; set; }
+        private IUnitOfWork UnitOfWork { get; }
+        private ICrudService<TDomain, TId> Service { get; set; }
 
-        public ICrudService<TDomain, TId> Service { get; private set; }
+        public CrudControllerBase(IUnitOfWork unitOfWork)
+        {
+            UnitOfWork = unitOfWork;
+
+            AcquirerDependencies();
+        }
+
+        public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork)
+        {
+            Mapper = mapper;
+
+            UnitOfWork = unitOfWork;
+
+            AcquirerDependencies();
+        }
+
+        private void AcquirerDependencies()
+        {
+            if (Mapper == null)
+            {
+                Mapper = new EntierBuiltinMapper();
+            }
+
+            Service = AcquirerCrudService();
+        }
+
+        protected virtual ICrudService<TDomain, TId> AcquirerCrudService()
+        {
+            return new CrudService<TDomain, TStorage, TId>(UnitOfWork, Mapper);
+        }
 
 
         private IActionResult ErrorCheck(Func<IActionResult> code)
@@ -106,6 +139,7 @@ namespace EnTier.Controllers
                 {
                     return NotFound();
                 }
+
                 return Ok();
             });
         }
@@ -119,14 +153,14 @@ namespace EnTier.Controllers
                 var domain = Mapper.Map<TDomain>(value);
 
                 var success = Service.Remove(domain);
-                
+
                 if (!success)
                 {
                     return NotFound();
                 }
+
                 return Ok();
             });
         }
-        
     }
 }
