@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier", "EnTier\EnTier.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleInMemorySingleLayerEntity", "ExampleInMemorySingleLayerEntity\ExampleInMemorySingleLayerEntity.csproj", "{07706C18-3956-4ADA-82D2-1E369B314F6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleJsonFile", "ExampleJsonFile\ExampleJsonFile.csproj", "{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,5 +102,17 @@ Global
 		{07706C18-3956-4ADA-82D2-1E369B314F6B}.Release|x64.Build.0 = Release|Any CPU
 		{07706C18-3956-4ADA-82D2-1E369B314F6B}.Release|x86.ActiveCfg = Release|Any CPU
 		{07706C18-3956-4ADA-82D2-1E369B314F6B}.Release|x86.Build.0 = Release|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Debug|x64.Build.0 = Debug|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Debug|x86.Build.0 = Debug|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|x64.ActiveCfg = Release|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|x64.Build.0 = Release|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|x86.ActiveCfg = Release|Any CPU
+		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
