@@ -1,19 +1,15 @@
-
-
-
-
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
-namespace EnTier.Utility{
+[assembly: InternalsVisibleTo("EnTier.DataAccess.EntityFramework")]
 
-
-    internal class ReflectionService :CachedReflection{
-
-
-
+namespace EnTier.Utility
+{
+    internal class ReflectionService : CachedReflection
+    {
         private static ReflectionService instance = null;
 
         private ReflectionService()
@@ -21,13 +17,14 @@ namespace EnTier.Utility{
             CacheCurrent();
         }
 
-        public static ReflectionService Make(){
-
+        public static ReflectionService Make()
+        {
             var obj = new object();
 
             lock (obj)
             {
-                if(instance == null){
+                if (instance == null)
+                {
                     instance = new ReflectionService();
                 }
 
@@ -35,9 +32,6 @@ namespace EnTier.Utility{
             }
 
             return instance;
-
         }
-
-        
     }
 }

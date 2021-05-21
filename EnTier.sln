@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleInMemorySingleLayerE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleJsonFile", "ExampleJsonFile\ExampleJsonFile.csproj", "{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier.DataAccess.EntityFramework", "EnTier.DataAccess.EntityFramework\EnTier.DataAccess.EntityFramework.csproj", "{19B024D4-7230-4AE6-839A-DC54568B070D}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,5 +116,17 @@ Global
 		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|x64.Build.0 = Release|Any CPU
 		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|x86.ActiveCfg = Release|Any CPU
 		{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}.Release|x86.Build.0 = Release|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Debug|x64.Build.0 = Debug|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Debug|x86.Build.0 = Debug|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Release|x64.ActiveCfg = Release|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Release|x64.Build.0 = Release|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Release|x86.ActiveCfg = Release|Any CPU
+		{19B024D4-7230-4AE6-839A-DC54568B070D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

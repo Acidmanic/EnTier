@@ -1,18 +1,16 @@
-
-
-
 using EnTier.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
-namespace EnTier.Utility{
-
-
-    internal class Reflection{
-
-
-        public static List<T> GetTypeAttributes<T>(object obj){
+[assembly: InternalsVisibleTo("EnTier.DataAccess.EntityFramework")]
+namespace EnTier.Utility
+{
+    internal class Reflection
+    {
+        public static List<T> GetTypeAttributes<T>(object obj)
+        {
             var type = obj.GetType();
 
             var attributes = type.GetCustomAttributes(true);
@@ -20,8 +18,8 @@ namespace EnTier.Utility{
             return FilterByType<T>(attributes);
         }
 
-        public static List<T> GetAttributes<T>(MethodBase methodInfo){
-
+        public static List<T> GetAttributes<T>(MethodBase methodInfo)
+        {
             var attributes = methodInfo.GetCustomAttributes(true);
 
             return FilterByType<T>(attributes);
@@ -31,7 +29,8 @@ namespace EnTier.Utility{
         {
             var selected = new List<T>();
 
-            foreach(var att in attributes){
+            foreach (var att in attributes)
+            {
                 if (att is T casted)
                 {
                     selected.Add(casted);
@@ -41,27 +40,29 @@ namespace EnTier.Utility{
             return selected;
         }
 
-        public static Func<Entity,TProperty> GetPropertyReader<Entity,TProperty>(string propName)
+        public static Func<Entity, TProperty> GetPropertyReader<Entity, TProperty>(string propName)
         {
             var type = typeof(Entity);
-            
+
             var property = type.GetProperty(propName);
 
-            if (property != null){
+            if (property != null)
+            {
                 return (Entity obj) => (TProperty) property.GetValue(obj);
             }
 
             return null;
         }
-        
-        public static Action<TEntity,TProperty> GetPropertyWriter<TEntity,TProperty>(string propName)
+
+        public static Action<TEntity, TProperty> GetPropertyWriter<TEntity, TProperty>(string propName)
         {
             var type = typeof(TEntity);
-            
+
             var property = type.GetProperty(propName);
 
-            if (property != null){
-                return (TEntity obj, TProperty value) => property.SetValue(obj,value);
+            if (property != null)
+            {
+                return (TEntity obj, TProperty value) => property.SetValue(obj, value);
             }
 
             return null;
@@ -77,8 +78,9 @@ namespace EnTier.Utility{
 
             if (propInfo != null)
             {
-                ret = new PropertyWrapper<T>(propInfo,obj);
+                ret = new PropertyWrapper<T>(propInfo, obj);
             }
+
             return ret;
         }
     }
