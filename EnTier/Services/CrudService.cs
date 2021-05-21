@@ -72,6 +72,8 @@ namespace EnTier.Services
             {
                 _mapper.Map(value, found);
 
+                _unitOfWork.Complete();
+                
                 return value;
             }
             return null;

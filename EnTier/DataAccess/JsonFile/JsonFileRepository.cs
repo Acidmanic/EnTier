@@ -8,28 +8,31 @@ namespace EnTier.DataAccess.JsonFile
     public class JsonFileRepository<TStorage, TId> : ICrudRepository<TStorage, TId>
         where TStorage : class, new()
     {
-        private Dictionary<TId, TStorage> _data = new Dictionary<TId, TStorage>();
+        private readonly Dictionary<TId, TStorage> _index = new Dictionary<TId, TStorage>();
+        private readonly List<TStorage> _data;
         private readonly IDGenerator<TId> _idGenerator = new IDGenerator<TId>();
 
 
-        public JsonFileRepository(IEnumerable<TStorage> data)
+        public JsonFileRepository(List<TStorage> data)
         {
             foreach (var storage in data)
             {
                 Import(storage);
             }
+
+            _data = data;
         }
         
         public IEnumerable<TStorage> All()
         {
-            return _data.Values;
+            return _data;
         }
 
         private void Import(TStorage value)
         {
             var id = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id")(value);
 
-            _data.Add(id, value);
+            _index.Add(id, value);
 
             _idGenerator.Taken(id);
         }
@@ -40,18 +43,20 @@ namespace EnTier.DataAccess.JsonFile
 
             Utility.Reflection.GetPropertyWriter<TStorage, TId>("Id").Invoke(value, id);
 
-            _data.Add(id, value);
+            _index.Add(id, value);
 
             _idGenerator.Taken(id);
+            
+            _data.Add(value);
 
             return value;
         }
 
         public TStorage GetById(TId id)
         {
-            if (_data.ContainsKey(id))
+            if (_index.ContainsKey(id))
             {
-                return _data[id];
+                return _index[id];
             }
 
             return default;
@@ -63,7 +68,7 @@ namespace EnTier.DataAccess.JsonFile
 
             var isIncluded = predicate.Compile();
 
-            foreach (var storage in _data.Values)
+            foreach (var storage in _data)
             {
                 if (isIncluded(storage))
                 {
@@ -83,11 +88,15 @@ namespace EnTier.DataAccess.JsonFile
 
         public bool Remove(TId id)
         {
-            if (_data.ContainsKey(id))
+            if (_index.ContainsKey(id))
             {
+                var item = _index[id];
+
+                _data.Remove(item);
+                
                 _idGenerator.Free(id);
 
-                _data.Remove(id);
+                _index.Remove(id);
 
                 return true;
             }
