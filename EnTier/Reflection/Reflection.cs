@@ -41,14 +41,27 @@ namespace EnTier.Utility{
             return selected;
         }
 
-        public static Func<Entity,TId> GetPropertyReader<Entity,TId>(string propName)
+        public static Func<Entity,TProperty> GetPropertyReader<Entity,TProperty>(string propName)
         {
             var type = typeof(Entity);
             
             var property = type.GetProperty(propName);
 
             if (property != null){
-                return (Entity obj) => (TId) property.GetValue(obj);
+                return (Entity obj) => (TProperty) property.GetValue(obj);
+            }
+
+            return null;
+        }
+        
+        public static Action<TEntity,TProperty> GetPropertyWriter<TEntity,TProperty>(string propName)
+        {
+            var type = typeof(TEntity);
+            
+            var property = type.GetProperty(propName);
+
+            if (property != null){
+                return (TEntity obj, TProperty value) => property.SetValue(obj,value);
             }
 
             return null;
