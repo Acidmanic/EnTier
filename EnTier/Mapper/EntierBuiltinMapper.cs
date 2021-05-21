@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using EnTier.Reflection;
 using EnTier.Utility;
 
 namespace EnTier.Mapper
@@ -9,6 +10,37 @@ namespace EnTier.Mapper
     public class EntierBuiltinMapper : IMapper
     {
         public TDestination Map<TDestination>(object src)
+        {
+            if (ReflectionService.Make().Implements<IEnumerable,TDestination>())
+            {
+                var type = typeof(TDestination);
+
+                var entityType = type.GenericTypeArguments[0];
+                
+                var list = new DynamicList(entityType);
+
+                var srcEnumerable = (IEnumerable) src;
+
+                var constructor = ReflectionService.Make().GetConstructorForType(entityType);
+                
+                foreach (var item in srcEnumerable)
+                {
+
+                    var entity = constructor.Construct();
+                    
+                    MapProperties(item,entity);
+                    
+                    list.Add(entity);
+                }
+
+                return list.Cast<TDestination>();
+            }
+
+            return MapSingleObject<TDestination>(src);
+        }
+        
+        
+        private TDestination MapSingleObject<TDestination>(object src)
         {
             var Constructor = ReflectionService.Make().GetConstructorForType<TDestination>(typeof(TDestination));
 

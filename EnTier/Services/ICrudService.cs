@@ -11,6 +11,8 @@ namespace EnTier.Services
         TEntity Add(TEntity value);
 
         TEntity Update(TEntity value);
+        
+        TEntity Update(TId id,TEntity value);
 
         bool Remove(TEntity value);
 

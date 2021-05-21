@@ -58,6 +58,11 @@ namespace EnTier.Services
         {
             var id = Utility.Reflection.GetPropertyReader<TDomain, TId>("Id").Invoke(value);
 
+            return Update(id, value);
+        }
+        
+        public TDomain Update(TId id,TDomain value)
+        {
             var idReader = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id");
 
             var foundValues = _unitOfWork.GetCrudRepository<TStorage, TId>()
@@ -69,7 +74,6 @@ namespace EnTier.Services
 
                 return value;
             }
-
             return null;
         }
 

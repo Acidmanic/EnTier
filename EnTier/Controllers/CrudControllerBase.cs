@@ -77,7 +77,7 @@ namespace EnTier.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int) HttpStatusCode.InternalServerError, e);
+                return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
             }
         }
 
@@ -108,7 +108,7 @@ namespace EnTier.Controllers
                     return NotFound();
                 }
 
-                var transfer = Mapper.Map<List<TTransfer>>(domain);
+                var transfer = Mapper.Map<TTransfer>(domain);
 
                 return Ok(transfer);
             });
@@ -132,6 +132,22 @@ namespace EnTier.Controllers
 
         [HttpPut]
         [Route("")]
+        public virtual IActionResult Update(TId id,TTransfer value)
+        {
+            return ErrorCheck(() =>
+            {
+                var domain = Mapper.Map<TDomain>(value);
+
+                domain = Service.Update(domain);
+
+                var transfer = Mapper.Map<TTransfer>(domain);
+
+                return Ok(transfer);
+            });
+        }
+        
+        [HttpPut]
+        [Route("{id}")]
         public virtual IActionResult Update(TTransfer value)
         {
             return ErrorCheck(() =>
