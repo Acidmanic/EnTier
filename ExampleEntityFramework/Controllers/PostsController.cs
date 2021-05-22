@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EnTier.Controllers;
 using EnTier.Services;
+using EnTier.UnitOfWork;
 using ExampleEntityFramework.DomainModels;
 using ExampleEntityFramework.StoragesModels;
 using ExampleEntityFramework.TransferModels;
@@ -16,6 +17,8 @@ namespace ExampleEntityFramework.Controllers
     [Route("[controller]")]
     public class PostsController : CrudControllerBase<PostDto,Post,PostStg,long>
     {
-        
+        public PostsController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+        }
     }
 }
