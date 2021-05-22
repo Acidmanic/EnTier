@@ -4,6 +4,7 @@ using ExampleJsonFile.Storage;
 
 namespace Example.UnitTest.Fixtures
 {
+    
     public class PostsControllerFixture
     {
         public void Setup(ICrudRepository<PostStg, string> repo)

@@ -17,7 +17,7 @@ namespace ExampleEntityFramework.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("ExampleEntityFramework.StoragesModels.PostStg", b =>
+            modelBuilder.Entity("Example.EntityFramework.StoragesModels.PostStg", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

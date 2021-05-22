@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EnTier\EnTier.csproj" />
-    <ProjectReference Include="..\ExampleJsonFile\ExampleJsonFile.csproj" />
+    <ProjectReference Include="..\Example.JsonFile\Example.JsonFile.csproj" />
   </ItemGroup>
 
 </Project>

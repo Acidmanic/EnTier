@@ -7,13 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTierDeprecated", "EnTierD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier", "EnTier\EnTier.csproj", "{D38A9DB9-0D88-42B1-840E-BC06EE7EBB05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleInMemorySingleLayerEntity", "ExampleInMemorySingleLayerEntity\ExampleInMemorySingleLayerEntity.csproj", "{07706C18-3956-4ADA-82D2-1E369B314F6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.InMemorySingleLayerEntity", "Example.InMemorySingleLayerEntity\Example.InMemorySingleLayerEntity.csproj", "{07706C18-3956-4ADA-82D2-1E369B314F6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleJsonFile", "ExampleJsonFile\ExampleJsonFile.csproj", "{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.JsonFile", "Example.JsonFile\Example.JsonFile.csproj", "{FFF1C592-1EFB-40F8-82CC-ED91C8A17F3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier.DataAccess.EntityFramework", "EnTier.DataAccess.EntityFramework\EnTier.DataAccess.EntityFramework.csproj", "{19B024D4-7230-4AE6-839A-DC54568B070D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleEntityFramework", "ExampleEntityFramework\ExampleEntityFramework.csproj", "{3BD327EE-0214-4FA1-976A-BDBC7302975C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.EntityFramework", "Example.EntityFramework\Example.EntityFramework.csproj", "{3BD327EE-0214-4FA1-976A-BDBC7302975C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Test", "Example.Test\Example.Test.csproj", "{B9AF7246-B805-4931-B4BD-29D7DDE29FA8}"
 EndProject
