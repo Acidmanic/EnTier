@@ -29,7 +29,7 @@ namespace ExampleEntityFramework
         {
             services.AddControllers();
 
-            services.AddSingleton<IUnitOfWork>(new EntityFrameworkUnitOfWork(new ExampleContext()));
+            services.AddEntityFrameworkUnitOfWork(new ExampleContext());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
