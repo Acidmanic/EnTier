@@ -16,8 +16,16 @@ namespace EnTier.Fixture
         public FixtureExecuter(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-
-            var unitOfWork = serviceProvider.GetService<IUnitOfWork>();
+            
+            IUnitOfWork unitOfWork;
+            try
+            {
+                unitOfWork = serviceProvider.GetService<IUnitOfWork>();
+            }
+            catch (Exception e)
+            {
+                unitOfWork = null;
+            }
 
             if (unitOfWork == null)
             {
@@ -34,12 +42,46 @@ namespace EnTier.Fixture
             {
                 return;
             }
-
-            var fixture = _serviceProvider.GetService(fixtureType);
-
+            var fixture = CreateFixtureObject(fixtureType);
+            
             var setupMethods = ExtractFixtureSetupMethods(fixtureType);
-
+            
             setupMethods.ForEach(method => ExecuteSetup(fixture, method));
+        }
+
+        private object CreateFixtureObject(Type fixtureType)
+        {
+            var constructors = fixtureType.GetConstructors();
+
+            ConstructorInfo constructorToUse = null;
+            var maxArguments = -1;
+            
+            foreach (var constructor in constructors)
+            {
+                if (constructor.IsPublic)
+                {
+                    var numberOfParameters = constructor.GetParameters().Length;
+
+                    if (numberOfParameters > maxArguments)
+                    {
+                        constructorToUse = constructor;
+                        
+                        maxArguments = numberOfParameters;
+                    }
+                }
+            }
+
+            // ReSharper disable once PossibleNullReferenceException
+            var parameters = constructorToUse.GetParameters();
+
+            var arguments = new object[maxArguments];
+
+            for (int i = 0; i < maxArguments; i++)
+            {
+                arguments[i] = _serviceProvider.GetService(parameters[i].ParameterType);
+            }
+
+            return constructorToUse.Invoke(arguments);
         }
 
         private void ExecuteSetup(object fixture, MethodInfo method)
@@ -54,6 +96,8 @@ namespace EnTier.Fixture
             }
 
             method.Invoke(fixture, arguments);
+
+            _unitOfWork.Complete();
         }
 
         private object CreateRepositoryFor(ParameterInfo parameter)
@@ -71,8 +115,9 @@ namespace EnTier.Fixture
             {
                 var genericMethod = createRepositoryMethod.MakeGenericMethod(storageType, idType);
 
-                return genericMethod.Invoke(_unitOfWork,new object[]{});
+                return genericMethod.Invoke(_unitOfWork, new object[] { });
             }
+
             return null;
         }
 
@@ -108,7 +153,7 @@ namespace EnTier.Fixture
 
                 foreach (var parameter in parameters)
                 {
-                    if (parameter.ParameterType != repoType)
+                    if (parameter.ParameterType.GetGenericTypeDefinition() != repoType)
                     {
                         return false;
                     }
@@ -116,7 +161,6 @@ namespace EnTier.Fixture
 
                 return true;
             }
-
             return false;
         }
     }

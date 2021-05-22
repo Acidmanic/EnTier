@@ -1,3 +1,4 @@
+using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
 using EnTier.UnitOfWork;
 
@@ -9,6 +10,11 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddJsonFileUnitOfWork(this IServiceCollection services)
         {
             return services.AddSingleton<IUnitOfWork>(new JsonFileUnitOfWork());
+        }
+        
+        public static IServiceCollection AddInMemoryUnitOfWork(this IServiceCollection services)
+        {
+            return services.AddSingleton<IUnitOfWork>(new InMemoryUnitOfWork());
         }
     }
 }
