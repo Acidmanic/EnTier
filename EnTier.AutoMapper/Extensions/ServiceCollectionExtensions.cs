@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using EnTier.AutoMapper;
 
@@ -10,6 +11,15 @@ namespace Microsoft.Extensions.DependencyInjection
             IConfigurationProvider configurationProvider)
         {
             services.AddSingleton<EnTier.Mapper.IMapper>(new AutoMapperAdapter(configurationProvider));
+
+            return services;
+        }
+        public static IServiceCollection AddAutoMapper(this IServiceCollection services,
+            Action<IMapperConfigurationExpression> configure)
+        {
+            services.AddSingleton<EnTier.Mapper.IMapper>(new AutoMapperAdapter(
+                new MapperConfiguration(configure)
+                ));
 
             return services;
         }

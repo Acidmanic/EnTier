@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Test", "Example.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier.AutoMapper", "EnTier.AutoMapper\EnTier.AutoMapper.csproj", "{6F95F9EA-9636-4EB0-A2BD-DC64D7DAC730}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.AutoMapper", "Example.AutoMapper\Example.AutoMapper.csproj", "{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,5 +130,17 @@ Global
 		{6F95F9EA-9636-4EB0-A2BD-DC64D7DAC730}.Release|x64.Build.0 = Release|Any CPU
 		{6F95F9EA-9636-4EB0-A2BD-DC64D7DAC730}.Release|x86.ActiveCfg = Release|Any CPU
 		{6F95F9EA-9636-4EB0-A2BD-DC64D7DAC730}.Release|x86.Build.0 = Release|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Debug|x64.Build.0 = Debug|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Debug|x86.Build.0 = Debug|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Release|x64.ActiveCfg = Release|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Release|x64.Build.0 = Release|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Release|x86.ActiveCfg = Release|Any CPU
+		{EBC0E0C2-42DB-4C2E-8AE0-05F68C677156}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
