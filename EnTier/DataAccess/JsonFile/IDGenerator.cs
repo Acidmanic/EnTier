@@ -3,36 +3,65 @@ using System.Collections.Generic;
 
 namespace EnTier.DataAccess.JsonFile
 {
-    public class IDGenerator<TId>
+    public class IdGenerator
     {
-        private readonly List<TId> _takenIds;
+        private readonly List<object> _takenIds;
 
-        public IDGenerator()
+        public IdGenerator()
         {
-            _takenIds = new List<TId>();
+            _takenIds = new List<object>();
         }
 
-        public IDGenerator(List<TId> takenIds)
+        public IdGenerator(List<object> takenIds)
         {
             _takenIds = takenIds;
         }
 
-        public TId New()
+        public TId New<TId>()
         {
-            var id = PopNewId();
+            var idType = typeof(TId);
+
+            var id = New(idType);
+            
+            return (TId)id;
+        }
+
+        public object SetId(object value)
+        {
+            if (value != null)
+            {
+                var type = value.GetType();
+
+                var idProperty = type.GetProperty("Id");
+
+                if (idProperty != null)
+                {
+                    var idType = idProperty.PropertyType;
+
+                    var id = New(idType);
+                    
+                    idProperty.SetValue(value,id);
+
+                    return id;
+                }
+            }
+            return null;
+        }
+        
+        private object New(Type idType)
+        {
+            var id = PopNewId(idType);
 
             while (_takenIds.Contains(id))
             {
-                id = PopNewId();
+                id = PopNewId(idType,id);
             }
             return id;
         }
 
 
-        private TId PopNewId(TId lastOne = default)
+        private object PopNewId(Type idType, object lastOne = default)
         {
-            var idType = typeof(TId);
-
             if (
                 idType == typeof(int) || idType == typeof(long) || idType == typeof(short) ||
                 idType == typeof(double) || idType == typeof(decimal) || idType == typeof(byte)
@@ -46,7 +75,7 @@ namespace EnTier.DataAccess.JsonFile
             {
                 try
                 {
-                    return (TId) (object) (Number(lastOne) + 1);
+                    return (object) (Number(lastOne) + 1);
                 }
                 catch (Exception e)
                 {
@@ -56,12 +85,12 @@ namespace EnTier.DataAccess.JsonFile
 
             if (idType == typeof(string))
             {
-                return (TId)(object)Guid.NewGuid().ToString().Replace("-", "");
+                return Guid.NewGuid().ToString().Replace("-", "");
             }
 
             if (idType == typeof(Guid))
             {
-                return (TId) (object) Guid.NewGuid();
+                return Guid.NewGuid();
             }
 
             try
@@ -70,7 +99,7 @@ namespace EnTier.DataAccess.JsonFile
 
                 if (constructor != null)
                 {
-                    return (TId)constructor.Invoke(new object[]{ });
+                    return constructor.Invoke(new object[]{ });
                 }
             }
             catch (Exception)
@@ -81,24 +110,22 @@ namespace EnTier.DataAccess.JsonFile
         }
 
 
-        private double Number(TId id)
+        private double Number(object id)
         {
-            object idObject = id;
-
-            if (idObject == null)
+            if (id == null)
             {
                 return 0;
             }
 
-            return (double) idObject;
+            return (double) id;
         }
 
-        public void Taken(TId id)
+        public void Taken(object id)
         {
             _takenIds.Add(id);
         }
 
-        public void Free(TId id)
+        public void Free(object id)
         {
             _takenIds.Remove(id);
         }

@@ -10,7 +10,7 @@ namespace EnTier.DataAccess.JsonFile
     {
         private readonly Dictionary<TId, TStorage> _index = new Dictionary<TId, TStorage>();
         private readonly List<TStorage> _data;
-        private readonly IDGenerator<TId> _idGenerator = new IDGenerator<TId>();
+        private readonly IdGenerator _idGenerator = new IdGenerator();
 
 
         public JsonFileRepository(List<TStorage> data)
@@ -39,10 +39,9 @@ namespace EnTier.DataAccess.JsonFile
 
         public TStorage Add(TStorage value)
         {
-            var id = _idGenerator.New();
 
-            Utility.Reflection.GetPropertyWriter<TStorage, TId>("Id").Invoke(value, id);
-
+            var id = (TId) _idGenerator.SetId(value);
+            
             _index.Add(id, value);
 
             _idGenerator.Taken(id);
