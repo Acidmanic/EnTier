@@ -1,4 +1,5 @@
 using System;
+using EnTier.DependencyInjection.CastleWindsor;
 using EnTier.Fixture;
 
 // ReSharper disable once CheckNamespace
@@ -6,9 +7,9 @@ namespace Microsoft.AspNetCore.Builder
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseFixture<TFixture>(this IApplicationBuilder app)
+        public static IApplicationBuilder UseFixtureByWindsor<TFixture>(this IApplicationBuilder app)
         {
-            var serviceResolver = new ServiceProviderFixtureResolver(app.ApplicationServices);
+            var serviceResolver = new CastleWindsorFixtureResolver(app.ApplicationServices);
             
             var executer = new FixtureExecuter(serviceResolver);
 
@@ -18,7 +19,8 @@ namespace Microsoft.AspNetCore.Builder
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                //ignore
+                //TODO: Add Logs
             }
 
             return app;

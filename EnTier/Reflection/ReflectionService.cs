@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("EnTier.DataAccess.EntityFramework")]
 
 namespace EnTier.Utility
 {

@@ -10,17 +10,17 @@ namespace EnTier.Fixture
 {
     internal class FixtureExecuter
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IFixtureResolver _fixtureResolver;
         private readonly IUnitOfWork _unitOfWork;
 
-        public FixtureExecuter(IServiceProvider serviceProvider)
+        public FixtureExecuter(IFixtureResolver fixtureResolver)
         {
-            _serviceProvider = serviceProvider;
+            _fixtureResolver = fixtureResolver;
             
             IUnitOfWork unitOfWork;
             try
             {
-                unitOfWork = serviceProvider.GetService<IUnitOfWork>();
+                unitOfWork = _fixtureResolver.Resolve<IUnitOfWork>();
             }
             catch (Exception e)
             {
@@ -78,7 +78,7 @@ namespace EnTier.Fixture
 
             for (int i = 0; i < maxArguments; i++)
             {
-                arguments[i] = _serviceProvider.GetService(parameters[i].ParameterType);
+                arguments[i] = _fixtureResolver.Resolve(parameters[i].ParameterType);
             }
 
             return constructorToUse.Invoke(arguments);
