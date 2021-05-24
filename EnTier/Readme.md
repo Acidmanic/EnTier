@@ -49,6 +49,8 @@ Directly Supported DI
 
 So far, Only dotnet core's builtin DI system is supported. 
 
+Changing the DI, means methods like AddAutoMapper() are not there and you need to register 
+```AutoMapperAdapter``` for ```EnTier.Mapper.IMapper``` on your DI system manually. 
 
 Tests
 ======
