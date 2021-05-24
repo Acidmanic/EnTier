@@ -37,9 +37,7 @@ namespace EnTier.DataAccess.EntityFramework
 
         public TStorage GetById(TId id)
         {
-            var idReader = EnTier.Utility.Reflection.GetPropertyReader<TStorage, TId>("Id");
-
-            var found = DbSet.FirstOrDefault(s => id.Equals(idReader(s)));
+            var found = DbSet.Find(id);
 
             return found;
         }

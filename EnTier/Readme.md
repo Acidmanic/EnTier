@@ -20,18 +20,26 @@ Through The Injection
 Declare Unit Of Work
 ------------
 
-Each application will has its own unit of work and repositories, 
-isolating the data access layer. If you dont define any unit of work, 
-EnTier will create an InMemory UnitOfWork which will produce InMemory 
-Crud Repositories. But in real case scenario you will create your own 
-UnitOfWork class and inject it into CrudControllers. For this to work 
-you need to implement ```IUnitOfWork``` in it, so the CrudControllers 
-use the same data access layer as your main application. You also need 
-to deliver this unitOfWork instance through your DI, so you need to 
-override one of the constructors in the CrudControllerBase which takes
- IUnitOfWork argument.
+Each application will has its own unit-of-work implementation and repositories, 
+isolating the data-access layer. If you dont define any unit of work, 
+EnTier will create an ```InMemoryUnitOfWork``` which will produce ```InMemoryCrudRepository```s. 
+But in real case scenario you will create your own UnitOfWork class and inject 
+it into CrudControllers ___through the constructor___. For this to work you need 
+to implement ```IUnitOfWork``` in it, so the CrudControllers use the same data access
+ layer as your main application. You also need to deliver this unitOfWork instance 
+ through your DI, so you need to override one of the constructors in the CrudControllerBase 
+ which takes IUnitOfWork argument.
 
+There are two Builtin data access layers shipped with library:
 
+1) __InMemory__: Suitable for unit tests, contract/integration tests and etc..
+2) __JsonFile__: Suitable mostly for demos.
+
+3) __EntityFramework__: This one is not actually within the EnTier nuget package,
+ since it adds EntityFramework dependency to your application, this part is packaged 
+ separately, you can get it from NuGet.org. (EnTier.DataAccess.EntityFramework)
+ 
+    
 
 Directly Supported DI
 ================
@@ -69,3 +77,19 @@ Notes
  process of familiarizing and first usages. Using 
  Automapper is Highly recommended.  
  
+ 
+ Id Types
+ =========
+ 
+ Type of Ids _Can_ be different in each layer for an entity. But 
+ in order to use different Id Types you need to take in
+  consideration 
+  1) Mapping of Entities,
+  2) Mapping of Ids.
+  * The Builtin Mapper does not support configurations, therefore it
+   cannot handle mapping different types for ids.
+   
+  The Example: __Example.AutoMapper__ shows a use-case with storage and domain 
+  using Guid for id type and transfer objects having string Ids.
+  
+  

@@ -2,20 +2,20 @@ using System.Collections.Generic;
 
 namespace EnTier.Services
 {
-    public interface ICrudService<TEntity, in TId> where TEntity : class, new()
+    public interface ICrudService<TEntity, in TDomainId> where TEntity : class, new()
     {
         IEnumerable<TEntity> GetAll();
 
-        TEntity GetById(TId id);
+        TEntity GetById(TDomainId id);
 
         TEntity Add(TEntity value);
 
         TEntity Update(TEntity value);
         
-        TEntity Update(TId id,TEntity value);
+        TEntity Update(TDomainId id,TEntity value);
 
         bool Remove(TEntity value);
 
-        bool RemoveById(TId id);
+        bool RemoveById(TDomainId id);
     }
 }

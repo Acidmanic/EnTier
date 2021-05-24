@@ -4,7 +4,7 @@ using EnTier.UnitOfWork;
 
 namespace EnTier.Services
 {
-    public class CrudService<TDomain, TStorage, TId> : ICrudService<TDomain, TId>
+    public class CrudService<TDomain, TStorage, TDomainId, TStorageId> : ICrudService<TDomain, TDomainId>
         where TDomain : class, new()
         where TStorage : class, new()
     {
@@ -20,16 +20,18 @@ namespace EnTier.Services
 
         public IEnumerable<TDomain> GetAll()
         {
-            var storages = _unitOfWork.GetCrudRepository<TStorage, TId>().All();
+            var storages = _unitOfWork.GetCrudRepository<TStorage, TDomainId>().All();
 
             var domains = _mapper.Map<IEnumerable<TDomain>>(storages);
 
             return domains;
         }
 
-        public TDomain GetById(TId id)
+        public TDomain GetById(TDomainId id)
         {
-            var storage = _unitOfWork.GetCrudRepository<TStorage, TId>().GetById(id);
+            var storageId = _mapper.MapId<TStorageId>(id);
+
+            var storage = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().GetById(storageId);
 
             if (storage == null)
             {
@@ -45,7 +47,7 @@ namespace EnTier.Services
         {
             var storage = _mapper.Map<TStorage>(value);
 
-            storage = _unitOfWork.GetCrudRepository<TStorage, TId>().Add(storage);
+            storage = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
 
             _unitOfWork.Complete();
 
@@ -56,16 +58,23 @@ namespace EnTier.Services
 
         public TDomain Update(TDomain value)
         {
-            var id = Utility.Reflection.GetPropertyReader<TDomain, TId>("Id").Invoke(value);
+            var id = Utility.Reflection.GetPropertyReader<TDomain, TStorageId>("Id").Invoke(value);
 
             return Update(id, value);
         }
-        
-        public TDomain Update(TId id,TDomain value)
-        {
-            var idReader = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id");
 
-            var foundValues = _unitOfWork.GetCrudRepository<TStorage, TId>()
+        public TDomain Update(TDomainId id, TDomain value)
+        {
+            var storageId = _mapper.MapId<TStorageId>(id);
+
+            return Update(storageId, value);
+        }
+
+        private TDomain Update(TStorageId id, TDomain value)
+        {
+            var idReader = Utility.Reflection.GetPropertyReader<TStorage, TDomainId>("Id");
+
+            var foundValues = _unitOfWork.GetCrudRepository<TStorage, TDomainId>()
                 .Find(s => idReader(s).Equals(id));
 
             foreach (var found in foundValues)
@@ -73,9 +82,10 @@ namespace EnTier.Services
                 _mapper.Map(value, found);
 
                 _unitOfWork.Complete();
-                
+
                 return value;
             }
+
             return null;
         }
 
@@ -83,12 +93,27 @@ namespace EnTier.Services
         {
             var storage = _mapper.Map<TStorage>(value);
 
-            return _unitOfWork.GetCrudRepository<TStorage, TId>().Remove(storage);
+            var success = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storage);
+
+            if (success)
+            {
+                _unitOfWork.Complete();
+            }
+
+            return success;
         }
 
-        public bool RemoveById(TId id)
+        public bool RemoveById(TDomainId id)
         {
-            return _unitOfWork.GetCrudRepository<TStorage, TId>().Remove(id);
+            var storageId = _mapper.MapId<TStorageId>(id);
+
+            var success = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storageId);
+            
+            if (success)
+            {
+                _unitOfWork.Complete();
+            }
+            return success;
         }
     }
 }

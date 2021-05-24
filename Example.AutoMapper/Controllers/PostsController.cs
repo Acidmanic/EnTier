@@ -1,4 +1,5 @@
-﻿using EnTier.Controllers;
+﻿using System;
+using EnTier.Controllers;
 using EnTier.Mapper;
 using EnTier.UnitOfWork;
 using Example.AutoMapper.Domain;
@@ -10,7 +11,7 @@ namespace Example.AutoMapper.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PostsController : CrudControllerBase<PostDto,Post,PostStg,string>
+    public class PostsController : CrudControllerBase<PostDto,Post,PostStg,string,Guid,Guid>
     {
         public PostsController(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
         {
