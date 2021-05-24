@@ -39,11 +39,13 @@ There are two Builtin data access layers shipped with library:
  since it adds EntityFramework dependency to your application, this part is packaged 
  separately, you can get it from NuGet.org. (EnTier.DataAccess.EntityFramework)
  
-    
+If your using Dotnet Core's builtin DI, To use one of Builtin UnitOfWorks (InMemory,JsonFile,EntityFramework)  
+you can either register your IUnitOfWork implementation of choice into IServiceCollection using 
+AddTransient/AddSingleton/etc methods. Or you can Use ```AddJsonFileUnitOfWork()``` 
+, ```AddInMemoryUnitOfWork()``` or ```AddEntityFrameworkUnitOfWork()``` extension methods.
 
 Directly Supported DI
 ================
-
 
 So far, Only dotnet core's builtin DI system is supported. 
 
