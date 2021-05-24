@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExampleEntityFramework.Migrations
 {
     [DbContext(typeof(ExampleContext))]
-    [Migration("20210522040854_AddDbSEt")]
-    partial class AddDbSEt
+    [Migration("20210524072429_InitialiseWithPostModel")]
+    partial class InitialiseWithPostModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -17,7 +17,7 @@ namespace ExampleEntityFramework.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("Example.EntityFramework.StoragesModels.PostStg", b =>
+            modelBuilder.Entity("ExampleEntityFramework.StoragesModels.PostStg", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

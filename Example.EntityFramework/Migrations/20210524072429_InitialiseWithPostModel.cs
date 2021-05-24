@@ -2,7 +2,7 @@
 
 namespace ExampleEntityFramework.Migrations
 {
-    public partial class AddDbSEt : Migration
+    public partial class InitialiseWithPostModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
