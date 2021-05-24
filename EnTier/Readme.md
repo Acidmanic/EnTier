@@ -69,6 +69,12 @@ There are some points to take into consideration:
  * If no UnitOfWork has been registered, it will use InMemoryUnitOfWork 
  by default.  
 
+ * Note: When there is no UnitOfWork Registered on DI system, EnTier will 
+ instantiate an ```InMemoryUnitOfWork``` by default, __BUT__ if you intentionally
+  want to use any UnitOfWork (any data-access) for your tests, including InMemory 
+  data-access, you have to explicitly register it in your DI for Fixture mechanism 
+  to recognize it and work properly. 
+
 Notes
 =========
 
