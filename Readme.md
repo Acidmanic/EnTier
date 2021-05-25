@@ -144,6 +144,12 @@ EnTier also provides a very simple Fixture creation mechanism which will pre pop
      By calling ```app.UseFixture<ExampleFixture>();``` in ```Configure(IApplicationBuilder app, ...)``` method 
      of your startup class, you can use each Fixture class.
      
+ Example project __Example.Test__ shows an integration-like test with EnTier and InMemory data access layer. 
+ it uses [xUnit](https://github.com/xunit/xunit) as test frame work and tests the project 
+ __Example.JsonFile__
+ 
+  
+     
         
  * Note: If you change your DI, from a DI other than dotnet's builtin DI, the UseFixture method 
  will change slightly regarding the DI/Container you are using. 
