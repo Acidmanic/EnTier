@@ -1,15 +1,38 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Repositories\CrudRepository.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+    </ItemGroup>
 
+    <PropertyGroup>
+        <!-- NuGet -->
+        <Id>EnTier</Id>
+        <PackageId>EnTier</PackageId>
+        <Version>2.0.0</Version>
+        <Authors>Mani Moayedi</Authors>
+        <Company>Acidmanic</Company>
+        <PackageIcon>graphics/EnTier.png</PackageIcon>
+        <Description>Easy N-Tier Architecture, Working out of the box!(Kind of!!)</Description>
+        <Summary>Easy N-Tier Architecture, Working out of the box!(Kind of!!)</Summary>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <!-- NuGet -->
+        <None Include="../graphics/EnTier.png">
+          <Pack>true</Pack>
+          <PackagePath>graphics/EnTier.png</PackagePath>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="../LICENSE.txt">
+          <Pack>true</Pack>
+          <PackagePath>LICENSE.txt</PackagePath>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>
