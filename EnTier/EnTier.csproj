@@ -22,6 +22,9 @@
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <RepositoryUrl>https://github.com/Acidmanic/EnTier</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/Acidmanic/EnTier</PackageProjectUrl>
+        <Title>EnTier EZ N-Tier!</Title>
+        
     </PropertyGroup>
     
     <ItemGroup>
