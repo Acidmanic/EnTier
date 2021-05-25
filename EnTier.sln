@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.CastleWindsor", "Ex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Unity", "Example.Unity\Example.Unity.csproj", "{5EE2C858-BE5D-4810-B5F5-1DC282DBD255}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier.DependencyInjection.Unity", "EnTier.DependencyInjection.Unity\EnTier.DependencyInjection.Unity.csproj", "{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,5 +186,17 @@ Global
 		{5EE2C858-BE5D-4810-B5F5-1DC282DBD255}.Release|x64.Build.0 = Release|Any CPU
 		{5EE2C858-BE5D-4810-B5F5-1DC282DBD255}.Release|x86.ActiveCfg = Release|Any CPU
 		{5EE2C858-BE5D-4810-B5F5-1DC282DBD255}.Release|x86.Build.0 = Release|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Debug|x64.Build.0 = Debug|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Release|x64.ActiveCfg = Release|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Release|x64.Build.0 = Release|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C9A2E02-E0A4-4959-862A-EFD41DB545FE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

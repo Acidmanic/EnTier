@@ -39,7 +39,7 @@ namespace Example.CastleWindsor
             // Adding a dependency
             Container.Register(Component.For<ITitleSuggestionService>().ImplementedBy<TitleSuggestionService>());
             // Running a fixture for prepopulating the db
-            Container.UseFixtureByWindsor<WelcomePostFixture>();
+            Container.UseFixtureWithWindsor<WelcomePostFixture>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

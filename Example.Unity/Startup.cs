@@ -1,4 +1,5 @@
 using Example.Unity.Contracts;
+using Example.Unity.Fixtures;
 using Example.Unity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,6 +50,8 @@ namespace Example.Unity
             {
                 endpoints.MapControllers();
             });
+
+            app.UseFixtureWithUnity<WelcomePostFixture>();
         }
     }
 }

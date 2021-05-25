@@ -21,7 +21,7 @@ namespace Castle.Windsor
             return container.Register(Component.For<IUnitOfWork,InMemoryUnitOfWork>());
         }
         
-        public static IWindsorContainer UseFixtureByWindsor<TFixture>(this IWindsorContainer container)
+        public static IWindsorContainer UseFixtureWithWindsor<TFixture>(this IWindsorContainer container)
         {
             var serviceResolver = new CastleWindsorFixtureResolver(container);
             
