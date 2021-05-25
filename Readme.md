@@ -1,8 +1,13 @@
 Easy NTier (EnTier) Library
 ===========================
 
+![EnTier](graphics/EnTier.png) __v2.0.0__
 
-![EnTier](graphics/EnTier.png) __V2.0.0__
+Changes From v1.0.x
+===============
+There were epic major changes from version 1 to 2. I will try to provide guides to switch to 2.0 
+as soon as i can.
+
 
 About
 =====
@@ -177,6 +182,7 @@ Notes
  * Do not forget to add ```[ApiController]``` and ```[Route(...)]```,
   attributes on controllers, otherwise it might take a long time to figure the cause of 
   silent bugs!
+
   
  Id Types
  ------
@@ -194,9 +200,8 @@ Notes
   
   
   
-  
 ```text
-  I Hope this save some of your time
+  I Hope this saves some of your time
   Regards
   Mani
 ```
