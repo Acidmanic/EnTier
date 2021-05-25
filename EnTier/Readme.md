@@ -87,7 +87,10 @@ Notes
  process of familiarizing and first usages. Using 
  Automapper is Highly recommended.  
  
- 
+ * Do not forget to add ```[ApiController]``` and ```[Route(...)]```,
+  attributes on controllers, otherwise it might take a long time to figure the cause of 
+  silent bugs!
+  
  Id Types
  =========
  

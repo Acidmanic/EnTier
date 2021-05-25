@@ -133,6 +133,7 @@ namespace EnTier.Controllers
             });
         }
 
+
         [HttpPut]
         [Route("")]
         public virtual IActionResult Update(TTransferId id, TTransfer value)
@@ -167,7 +168,7 @@ namespace EnTier.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult DeleteById(TTransferId id)
+        public virtual IActionResult DeleteById(TTransferId id)
         {
             return ErrorCheck(() =>
             {
@@ -186,7 +187,7 @@ namespace EnTier.Controllers
 
         [HttpDelete]
         [Route("")]
-        public IActionResult Delete(TTransfer value)
+        public virtual IActionResult Delete(TTransfer value)
         {
             return ErrorCheck(() =>
             {
