@@ -12,4 +12,36 @@
     <PackageReference Include="Castle.Windsor" Version="5.1.1" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <!-- NuGet -->
+    <Id>EnTier.DependencyInjection.CastleWindsor</Id>
+    <PackageId>EnTier.DependencyInjection.CastleWindsor</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Mani Moayedi</Authors>
+    <Company>Acidmanic</Company>
+    <PackageIcon>graphics/EnTier.png</PackageIcon>
+    <Description>This package adds extensions to use Castle Windsor with EnTier</Description>
+    <Summary>This package adds extensions to use Castle Windsor with EnTier</Summary>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/Acidmanic/EnTier</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/Acidmanic/EnTier/tree/master/EnTier.DependencyInjection.CastleWindsor</PackageProjectUrl>
+    <Title>EnTier with Castle Windsor</Title>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- NuGet -->
+    <None Include="../graphics/EnTier.png">
+      <Pack>true</Pack>
+      <PackagePath>graphics/EnTier.png</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="../LICENSE.txt">
+      <Pack>true</Pack>
+      <PackagePath>LICENSE.txt</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
