@@ -1,12 +1,13 @@
 using System;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
+using EnTier.DependencyInjection.CastleWindsor;
 using EnTier.Fixture;
 using EnTier.UnitOfWork;
 
-namespace EnTier.DependencyInjection.CastleWindsor.Extensions
+// ReSharper disable once CheckNamespace
+namespace Castle.Windsor
 {
     public static class WindsorContainerExtensions
     {

@@ -2,6 +2,7 @@ using Castle.Facilities.AspNetCore;
 using Castle.Windsor;
 using Example.CastleWindsor.Contracts;
 using Example.CastleWindsor.Controllers;
+using Example.CastleWindsor.Fixtures;
 using Example.CastleWindsor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,8 @@ namespace Example.CastleWindsor
             
             // Adding a dependency
             Container.Register(Component.For<ITitleSuggestionService>().ImplementedBy<TitleSuggestionService>());
+            // Running a fixture for prepopulating the db
+            Container.UseFixtureByWindsor<WelcomePostFixture>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +61,8 @@ namespace Example.CastleWindsor
             {
                 builder.MapControllers();
             });
+
+            
         }
   
     }
