@@ -20,6 +20,8 @@
         <Description>Easy N-Tier Architecture, Working out of the box!(Kind of!!)</Description>
         <Summary>Easy N-Tier Architecture, Working out of the box!(Kind of!!)</Summary>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <RepositoryUrl>https://github.com/Acidmanic/EnTier</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
     
     <ItemGroup>
