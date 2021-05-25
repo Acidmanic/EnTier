@@ -1,22 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Castle.Facilities.AspNetCore;
+using Castle.Windsor;
 using Example.CastleWindsor.Contracts;
+using Example.CastleWindsor.Controllers;
 using Example.CastleWindsor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Component = Castle.MicroKernel.Registration.Component;
 
 namespace Example.CastleWindsor
 {
     public class Startup
     {
+        private static readonly WindsorContainer Container = new WindsorContainer();
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,29 +27,38 @@ namespace Example.CastleWindsor
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
-            services.AddTransient<ITitleSuggestionService, TitleSuggestionService>();
+            // Windsor setups...
+            Container.AddFacility<AspNetCoreFacility>(f => f.CrossWiresInto(services));
+            services.AddMvc();
+            Container.Register(Component.For<IHttpContextAccessor>().ImplementedBy<HttpContextAccessor>());
+            services.AddWindsor(Container, 
+                opts => opts.UseEntryAssembly(typeof(PostsController).Assembly), // <- Recommended
+                () => services.BuildServiceProvider(validateScopes:false)); // <- Optional
+            
+            // Adding a dependency
+            Container.Register(Component.For<ITitleSuggestionService>().ImplementedBy<TitleSuggestionService>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Windsor setups...
+            Container.GetFacility<AspNetCoreFacility>().RegistersMiddlewareInto(app);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
-
+            
             app.UseRouting();
 
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            app.UseEndpoints(builder =>
             {
-                endpoints.MapControllers();
+                builder.MapControllers();
             });
         }
+  
     }
 }
