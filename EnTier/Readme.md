@@ -1,83 +1,166 @@
 
 
+About
+=====
 
+This library gives you a pre-implementation of  an N-Tier crud application. So you 
+focus on writing other functionalities of your code. By Inheriting ```CrudControllerBase``` 
+you basically have a Controller using a service using UnitOfWork pattern to get a 
+repository to perform restful crud operations and all are plugged together and working.
 
+ * You can create a CrudController then add other endpoints to it if necessary.
+ * You can inject any service you need into your Controller
+ * You can Create your service from scratch, also you can extend ```CrudService``` 
+ which already has crud operations implemented, then add additional functionalities 
+ you need to it.
+ * Since best practice for Uni-of-work pattern implies to have __One__ UnitOfWork 
+ per application, if you want to implement your own UnitOfWork class, you can implement 
+ ```IUnitOfWork``` interface or to have crud operations already implemented, you can extend 
+ or wrap ```UnitOfWork``` class shipped with the package to do so.
+ * For Repositories, it's the same as Services; you can write them from scratch, implement 
+ ```ICrudRepository``` or extend (or wrap) ```CrudRepository```.
+ 
+ Getting started
+ ========
+ 
+ Adding the library
+ ----------
+ First you will add the package. It's available on 
+ [NuGet.org](https://www.nuget.org/packages/EnTier/). you can add the reference
+  to your &lt;project&gt;.csproj:
+  
+```
+PackageReference Include="EnTier" Version="2.0.0" />
+```
+or via package manager console:
 
+```
+Install-Package EnTier -Version 2.0.0
+```
 
+or dotnet Cli:
+```
+dotnet add package EnTier --version 2.0.0
+```
 
+Running a simple example
+------
+ 
+The simplest use-case of the library would be 
+ 1) create and new webapi dotnet core project 
+ 2) creating a model
+ 3) adding a crud controller by extending ```CrudControllerBase``` , and adding a ```[Route(...)]``` 
+attribute to it.
+ 
+ Done!
+ The example project __Example.SingleLayerEntity__ implements such use case. This way 
+ EnTier will create and use an ```InMemoryUnitOfWork```, which itself produces in-memory 
+ repositories and use them with ```CrudService```(s).
+ 
+ Using JsonFile data access layer
+ -------
+ 
+ In-Memory data access layer is suitable for testing. But you can change it to JsonFile 
+ data access layer easily by calling ```services.AddJsonFileUnitOfWork();``` at the 
+ Startup class. This way you will use builtin ```JsonFileUnitOfWork``` which produces 
+ ```JsonFileCrudRepository```(s). This data access, persists data in json files kept 
+ in a directory called __JsonDatabase__ where your executable file is.
+ 
+ This data access layer might be more suitable for instant demos or such use cases.
+ 
+ The example project __Example.JsonFile__ shows this implementation. In this example 
+ also different models are used for Transfer (Dtos), Domain and Storage. so EnTier 
+ uses its internal Mapper to map objects. Later you will see how to use another 
+ mapper instead. 
+ 
+ Using EntityFramework
+ ----------    
+ 
+ Same as Json data access layer, you can switch your data access layer to EntityFramework 
+ just by calling  ```services.AddEntityFrameworkUnitOfWork(context);``` at 
+ startup class. This method takes a DbContext as argument, and uses this db context to 
+ perform all crud data operations.
+ 
+ for this to work you should 
+  1) Have Entity Framework packages installed 
+  2) Add extension package: 'EnTier.DataAccess.EntityFramework' which is also available on NuGet.
+  3) You should have your ef migrations created and applied. 
+  
+   * __Important note__: do not forget to add DBSets<Entity> properties for each entity  
+    into your DBContext class. Otherwise Entity Framework would not recognize your entities
+    and they will not be included in your migrations.
+    
+ The example project __Example.EntityFramework__ shows a this implementation. This example also 
+ uses isolated models for each layer.
+  
 
-Manipulate Crud Service
---------
-
-Override Acquirer CrudService
-
-
-Manipulate Mapper
+Using a Mapper
 ----------
 
-Through The Injection
+The builtin mapper, is very limited and is not capable of handling a production situation. 
+since mappers are being added using injection, you can use any Mapper of your choice 
+just by wrapping it in an implementation of ```IMapper``` which is a very simple interface.
 
-Declare Unit Of Work
-------------
+This is already done for [AutoMapper](https://github.com/AutoMapper/AutoMapper) package, so 
+if you prefer to use AutoMapper, just add its [AutoMapper package](https://www.nuget.org/packages/AutoMapper/),
+then add AutoMapper extension package: 'EnTier.AutoMapper' from NuGet. And add AutoMapperAdapter 
+to Ioc container for IMapper. 
 
-Each application will has its own unit-of-work implementation and repositories, 
-isolating the data-access layer. If you dont define any unit of work, 
-EnTier will create an ```InMemoryUnitOfWork``` which will produce ```InMemoryCrudRepository```s. 
-But in real case scenario you will create your own UnitOfWork class and inject 
-it into CrudControllers ___through the constructor___. For this to work you need 
-to implement ```IUnitOfWork``` in it, so the CrudControllers use the same data access
- layer as your main application. You also need to deliver this unitOfWork instance 
- through your DI, so you need to override one of the constructors in the CrudControllerBase 
- which takes IUnitOfWork argument.
-
-There are two Builtin data access layers shipped with library:
-
-1) __InMemory__: Suitable for unit tests, contract/integration tests and etc..
-2) __JsonFile__: Suitable mostly for demos.
-
-3) __EntityFramework__: This one is not actually within the EnTier nuget package,
- since it adds EntityFramework dependency to your application, this part is packaged 
- separately, you can get it from NuGet.org. (EnTier.DataAccess.EntityFramework)
+```c#
+    services.AddAutoMapper(config => ...);
+``` 
  
-If your using Dotnet Core's builtin DI, To use one of Builtin UnitOfWorks (InMemory,JsonFile,EntityFramework)  
-you can either register your IUnitOfWork implementation of choice into IServiceCollection using 
-AddTransient/AddSingleton/etc methods. Or you can Use ```AddJsonFileUnitOfWork()``` 
-, ```AddInMemoryUnitOfWork()``` or ```AddEntityFrameworkUnitOfWork()``` extension methods.
+ The example project __Example.AutoMapper__ shows this implementation. This project also shows
+  how to have different types for Id property on Entity models using Mapper. 
 
-Directly Supported DI
+Tests!
+------
+
+One thing this library solves for me, is to ease decoupling of data access layer from services. 
+You can use for example EntityFramework for production, and in UnitTest os services, Contract tests 
+and some of integration tests (basically any type of test that is not supposed to cover your data-access 
+code itself), you can use InMemory data access. 
+
+EnTier also provides a very simple Fixture creation mechanism which will pre populate your data base
+ easily. To do so you just 
+ 
+ 1) __Add a Fixture class__: 
+     Its a normal class which supports constructor injection. Plus you can declare any number of 
+     methods called ```Setup(...)```. these methods will be executed before application starts. 
+     setup methods can have any number of ```IRepository<TStorage,TId>``` arguments. These repositories 
+     will be injected into method before being called, based on the unit of work you are using in your 
+     test project. 
+     
+ 2) __Use Fixture classes at Startup class__: 
+     By calling ```app.UseFixture<ExampleFixture>();``` in ```Configure(IApplicationBuilder app, ...)``` method 
+     of your startup class, you can use each Fixture class.
+     
+        
+ * Note: If you change your DI, from a DI other than dotnet's builtin DI, the UseFixture method 
+ will change slightly regarding the DI/Container you are using. 
+
+Dependency Injection / Ioc Container
 ================
 
-So far, Only dotnet core's builtin DI system is supported. 
+By default, EnTier supports and uses dotnet core's builtin Di. But you can use it with 
 
-Changing the DI, means methods like AddAutoMapper() are not there and you need to register 
-```AutoMapperAdapter``` for ```EnTier.Mapper.IMapper``` on your DI system manually. 
+ * __CastleWindsor__: by adding the package __EnTier.DependencyInjection.CastleWindsor__ from 
+nuget.org. 
+     * CastleWindsor may or may not be registered on ```IServiceCollection```, so for adding 
+     fixtures, to make sure it works correctly, you should call ```AddFixtureWithWindsor<T>()``` 
+      on your container object (```IWindsorContainer```).
+ * __Unity__: by adding the package __EnTier.DependencyInjection.Unity__ from nuget.org. 
+     * For adding fixtures, you would call ```app.AddFixtureWithUnity<T>()``` at 
+     ```Configure(IApplicationBuilder app,...)``` method in your startup class. 
 
-Tests
-======
-
-For tests, you can wrap your fixture preparation codes, into Fixture classes. Fixture classes 
-does not need to extend or implement any abstraction. And they can have constructor injections. 
+ * The example project __Example.CastleWindsor__ shows a use case of EnTier alongside Castle.Windsor Ioc.
  
- * Fixture class will be instantiated through DI
- * Fixture class can declare one or more ```Setup(.)``` methods with arguments 
- of type ```ICrudRepository<TStorage,TId>```. These methods will seed 
- the test data.
- * The order of execution of Fixture classes, would be the same
-  order they has been added.
-  
-There are some points to take into consideration:
-
- * Fixture mechanism is for unit tests, not production.
- * It will deliver crud repositories based on registered UnitOfWork 
- on the DI. (Currently only supports dotnet core builtin DI). 
- * If no UnitOfWork has been registered, it will use InMemoryUnitOfWork 
- by default.  
-
- * Note: When there is no UnitOfWork Registered on DI system, EnTier will 
- instantiate an ```InMemoryUnitOfWork``` by default, __BUT__ if you intentionally
-  want to use any UnitOfWork (any data-access) for your tests, including InMemory 
-  data-access, you have to explicitly register it in your DI for Fixture mechanism 
-  to recognize it and work properly. 
+ * The example project __Example.Unity__ shows a use case of EnTier alongside Unity Container Ioc.
+ 
+ * Changing the DI, means methods like ```services.AddAutoMapper()``` are not there and you need to register 
+```AutoMapperAdapter``` for ```EnTier.Mapper.IMapper``` on your DI system manually. Its also 
+the same for ```services.AddEntityFrameworkUnitOfWork()```, and you should register an instance
+ of ```EntityFrameworkUnitOfWork``` (or any custom UnitOfWork implementation) for interface ```IUnitOfWork``` manually.
 
 Notes
 =========
@@ -92,7 +175,7 @@ Notes
   silent bugs!
   
  Id Types
- =========
+ ------
  
  Type of Ids _Can_ be different in each layer for an entity. But 
  in order to use different Id Types you need to take in
@@ -106,3 +189,10 @@ Notes
   using Guid for id type and transfer objects having string Ids.
   
   
+  
+  
+```text
+  I Hope this save some of your time
+  Regards
+  Mani
+```
