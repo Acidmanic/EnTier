@@ -199,6 +199,18 @@ namespace EnTier.DataAccess.JsonFile
             
             return new JsonFileRepository<TStorage, TId>(table);
         }
+        
+        public TCustomCrudRepository GetCrudRepository<TStorage, TId, TCustomCrudRepository>()
+            where TStorage : class, new()
+            where TCustomCrudRepository:ICrudRepository<TStorage,TId>
+        {
+            var repoType = typeof(TCustomCrudRepository);
+
+            var repository  = repoType.GetConstructor(new Type[]{})
+                .Invoke(new object[]{});
+            
+            return (TCustomCrudRepository) repository;
+        }
 
         public void Complete()
         {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using EnTier.Repositories;
@@ -20,6 +21,18 @@ namespace EnTier.DataAccess.InMemory
                 Repositories.Add(key,repository);
             }
             return (ICrudRepository<TStorage, TId>) Repositories[key];
+        }
+
+        public TCustomCrudRepository GetCrudRepository<TStorage, TId, TCustomCrudRepository>()
+            where TStorage : class, new()
+            where TCustomCrudRepository:ICrudRepository<TStorage,TId>
+        {
+            var repoType = typeof(TCustomCrudRepository);
+
+            var repository  = repoType.GetConstructor(new Type[]{})
+                .Invoke(new object[]{});
+            
+            return (TCustomCrudRepository) repository;
         }
 
         public void Complete() { }
