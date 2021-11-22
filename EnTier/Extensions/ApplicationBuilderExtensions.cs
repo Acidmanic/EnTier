@@ -1,5 +1,7 @@
 using System;
 using EnTier.Fixture;
+using EnTier.Repositories;
+using EnTier.UnitOfWork;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
@@ -21,6 +23,15 @@ namespace Microsoft.AspNetCore.Builder
                 Console.WriteLine(e);
             }
 
+            return app;
+        }
+
+        public static IApplicationBuilder UseRepository<TAbstraction, TRepository>(this IApplicationBuilder app)
+        where TRepository:TAbstraction
+        {
+
+            UnitOfWorkRepositoryConfigurations.GetInstance().RegisterCustomRepository<TAbstraction,TRepository>();
+            
             return app;
         }
     }

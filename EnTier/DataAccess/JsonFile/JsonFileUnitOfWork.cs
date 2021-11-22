@@ -9,9 +9,8 @@ using Newtonsoft.Json;
 
 namespace EnTier.DataAccess.JsonFile
 {
-    public class JsonFileUnitOfWork:IUnitOfWork
+    public class JsonFileUnitOfWork : IUnitOfWork
     {
-
         private List<Type> _index = new List<Type>();
 
         private readonly Dictionary<Type, object> _data = new Dictionary<Type, object>();
@@ -43,13 +42,14 @@ namespace EnTier.DataAccess.JsonFile
 
         public JsonFileUnitOfWork()
         {
-            var executionDirectory = new FileInfo(Assembly.GetEntryAssembly()?.Location ?? "").Directory?.FullName ?? "";
+            var executionDirectory =
+                new FileInfo(Assembly.GetEntryAssembly()?.Location ?? "").Directory?.FullName ?? "";
 
             _dataDirectory = Path.Combine(executionDirectory, "JsonDatabase");
-            
+
             Load(_dataDirectory);
         }
-        
+
         private List<T> Table<T>()
         {
             var type = typeof(List<T>);
@@ -66,7 +66,7 @@ namespace EnTier.DataAccess.JsonFile
             }
             else
             {
-                table = (List<T>)_data[type];
+                table = (List<T>) _data[type];
             }
 
             return table;
@@ -100,7 +100,7 @@ namespace EnTier.DataAccess.JsonFile
         {
             _index = JsonConvert.DeserializeObject<List<Type>>(jsons[IndexIndex]);
 
-            _ids = JsonConvert.DeserializeObject<Dictionary<string,long>>(jsons[IndexId]);
+            _ids = JsonConvert.DeserializeObject<Dictionary<string, long>>(jsons[IndexId]);
 
             for (int i = 0; i < _index.Count; i++)
             {
@@ -108,12 +108,10 @@ namespace EnTier.DataAccess.JsonFile
 
                 _data.Add(_index[i], dataset);
             }
-
         }
 
         private void Save(string directory)
         {
-
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
@@ -137,10 +135,9 @@ namespace EnTier.DataAccess.JsonFile
 
                 File.WriteAllText(datasetPath, jsons[i]);
             }
-
         }
 
-        private string GetFilepath(int index,string directory)
+        private string GetFilepath(int index, string directory)
         {
             return Path.Combine(directory, index - IndexFirstTable + ".json");
         }
@@ -153,8 +150,8 @@ namespace EnTier.DataAccess.JsonFile
 
             if (File.Exists(indexFile) && File.Exists(idFile))
             {
-
-                var jsons = new string[Directory.EnumerateFiles(directory,"*.json",SearchOption.TopDirectoryOnly).Count()];
+                var jsons = new string[Directory.EnumerateFiles(directory, "*.json", SearchOption.TopDirectoryOnly)
+                    .Count()];
 
                 jsons[IndexIndex] = File.ReadAllText(indexFile);
 
@@ -175,7 +172,6 @@ namespace EnTier.DataAccess.JsonFile
 
                 FromJsons(jsons);
             }
-            
         }
 
 
@@ -189,26 +185,34 @@ namespace EnTier.DataAccess.JsonFile
                 {
                     File.Delete(file);
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                }
             }
         }
 
         public ICrudRepository<TStorage, TId> GetCrudRepository<TStorage, TId>() where TStorage : class, new()
         {
             var table = Table<TStorage>();
-            
+
             return new JsonFileRepository<TStorage, TId>(table);
         }
-        
+
         public TCustomCrudRepository GetCrudRepository<TStorage, TId, TCustomCrudRepository>()
             where TStorage : class, new()
-            where TCustomCrudRepository:ICrudRepository<TStorage,TId>
+            where TCustomCrudRepository : ICrudRepository<TStorage, TId>
         {
-            var repoType = typeof(TCustomCrudRepository);
+            var repoType = UnitOfWorkRepositoryConfigurations.GetInstance().GetRepositoryType<TCustomCrudRepository>();
 
-            var repository  = repoType.GetConstructor(new Type[]{})
-                .Invoke(new object[]{});
-            
+            if (repoType == null)
+            {
+                throw new Exception(
+                    "You should register your custom repository in your startup class, using applicationBuilder.");
+            }
+
+            var repository = repoType.GetConstructor(new Type[] { })
+                .Invoke(new object[] { });
+
             return (TCustomCrudRepository) repository;
         }
 
@@ -217,5 +221,4 @@ namespace EnTier.DataAccess.JsonFile
             Save(_dataDirectory);
         }
     }
-
 }

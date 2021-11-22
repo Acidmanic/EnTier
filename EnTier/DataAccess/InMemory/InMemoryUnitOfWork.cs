@@ -27,7 +27,12 @@ namespace EnTier.DataAccess.InMemory
             where TStorage : class, new()
             where TCustomCrudRepository:ICrudRepository<TStorage,TId>
         {
-            var repoType = typeof(TCustomCrudRepository);
+            var repoType = UnitOfWorkRepositoryConfigurations.GetInstance().GetRepositoryType<TCustomCrudRepository>();
+
+            if (repoType == null)
+            {
+                throw new Exception("You should register your custom repository in your startup class, using applicationBuilder.");
+            }
 
             var repository  = repoType.GetConstructor(new Type[]{})
                 .Invoke(new object[]{});
