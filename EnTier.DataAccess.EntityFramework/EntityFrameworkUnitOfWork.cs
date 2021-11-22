@@ -22,13 +22,19 @@ namespace EnTier.DataAccess.EntityFramework
             return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet);
         }
 
+    
         public TCustomCrudRepository GetCrudRepository<TStorage, TId, TCustomCrudRepository>()
             where TStorage : class, new()
             where TCustomCrudRepository:ICrudRepository<TStorage,TId>
         {
             var dbSet = _context.Set<TStorage>();
 
-            var repoType = typeof(TCustomCrudRepository);
+            var repoType = UnitOfWorkRepositoryConfigurations.GetInstance().GetRepositoryType<TCustomCrudRepository>();
+
+            if (repoType == null)
+            {
+                throw new Exception("You should register your custom repository in your startup class, using applicationBuilder.");
+            }
 
             var repository  = repoType.GetConstructor(new Type[] {typeof(DbSet<TStorage>)})
                 .Invoke(new object[]{dbSet});
