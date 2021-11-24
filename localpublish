@@ -1,0 +1,9 @@
+
+(cd EnTier && dotnet pack && cp bin/Debug/*.nupkg /home/diego/Projects/PublishedNuGets/)
+(cd EnTier.DependencyInjection.Unity && dotnet pack && cp bin/Debug/*.nupkg /home/diego/Projects/PublishedNuGets/)
+(cd EnTier.DependencyInjection.CastleWindsor && dotnet pack && cp bin/Debug/*.nupkg /home/diego/Projects/PublishedNuGets/)
+(cd EnTier.AutoMapper && dotnet pack && cp bin/Debug/*.nupkg /home/diego/Projects/PublishedNuGets/)
+(cd EnTier.AutoMapper && dotnet pack && cp bin/Debug/*.nupkg /home/diego/Projects/PublishedNuGets/)
+
+
+

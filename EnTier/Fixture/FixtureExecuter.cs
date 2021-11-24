@@ -16,7 +16,7 @@ namespace EnTier.Fixture
         public FixtureExecuter(IFixtureResolver fixtureResolver)
         {
             _fixtureResolver = fixtureResolver;
-            
+
             IUnitOfWork unitOfWork;
             try
             {
@@ -31,6 +31,7 @@ namespace EnTier.Fixture
             {
                 unitOfWork = new InMemoryUnitOfWork();
             }
+
             _unitOfWork = unitOfWork;
         }
 
@@ -42,10 +43,11 @@ namespace EnTier.Fixture
             {
                 return;
             }
+
             var fixture = CreateFixtureObject(fixtureType);
-            
+
             var setupMethods = ExtractFixtureSetupMethods(fixtureType);
-            
+
             setupMethods.ForEach(method => ExecuteSetup(fixture, method));
         }
 
@@ -55,7 +57,7 @@ namespace EnTier.Fixture
 
             ConstructorInfo constructorToUse = null;
             var maxArguments = -1;
-            
+
             foreach (var constructor in constructors)
             {
                 if (constructor.IsPublic)
@@ -65,7 +67,7 @@ namespace EnTier.Fixture
                     if (numberOfParameters > maxArguments)
                     {
                         constructorToUse = constructor;
-                        
+
                         maxArguments = numberOfParameters;
                     }
                 }
@@ -109,7 +111,7 @@ namespace EnTier.Fixture
             var storageType = parameterType.GetGenericArguments()[0];
             var idType = parameterType.GetGenericArguments()[1];
 
-            var createRepositoryMethod = unitOfWorkType.GetMethod(nameof(IUnitOfWork.GetCrudRepository));
+            var createRepositoryMethod = GetBuiltinCrudRepositoryCreatorMethod(unitOfWorkType);
 
             if (createRepositoryMethod != null)
             {
@@ -118,6 +120,25 @@ namespace EnTier.Fixture
                 return genericMethod.Invoke(_unitOfWork, new object[] { });
             }
 
+            return null;
+        }
+
+        private MethodInfo GetBuiltinCrudRepositoryCreatorMethod(Type unitOfWorkType)
+        {
+            var allMethods = unitOfWorkType.GetMethods();
+
+            var methodName = nameof(IUnitOfWork.GetCrudRepository);
+
+            foreach (var method in allMethods)
+            {
+                if (method.Name.Equals(methodName))
+                {
+                    if (method.ReturnType.GenericTypeArguments.Length == 2)
+                    {
+                        return method;
+                    }
+                }
+            }
             return null;
         }
 
@@ -161,6 +182,7 @@ namespace EnTier.Fixture
 
                 return true;
             }
+
             return false;
         }
     }
