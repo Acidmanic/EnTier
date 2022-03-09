@@ -11,6 +11,7 @@ namespace EnTier.DataAccess.EntityFramework
     {
         private readonly DbContext _context;
         private readonly Func<Type, object> GetDbSetByType;
+
         public EntityFrameworkUnitOfWork(DbContext context)
         {
             _context = context;
@@ -18,16 +19,14 @@ namespace EnTier.DataAccess.EntityFramework
 
             var contextType = typeof(DbContext);
 
-            var getDbSetMethod = contextType.GetMethod(nameof(DbContext.Set));
+            var getDbSetMethod = contextType.GetMethod(nameof(DbContext.Set), new Type[] { });
 
             GetDbSetByType = entityType =>
             {
-                var method = getDbSetMethod?.MakeGenericMethod(new Type[] { });
+                var method = getDbSetMethod?.MakeGenericMethod(new Type[] { entityType});
 
                 return method?.Invoke(_context, new object[] { });
             };
-
-
         }
 
 
@@ -70,7 +69,7 @@ namespace EnTier.DataAccess.EntityFramework
         private object[] ProvideDbSetArgs(ConstructorInfo repoConstructor)
         {
             var dbSetTypes = repoConstructor.GetParameters()
-                .Select( p => p.ParameterType).ToList();
+                .Select(p => p.ParameterType).ToList();
 
             var parameterValues = new object[dbSetTypes.Count];
 
@@ -80,9 +79,9 @@ namespace EnTier.DataAccess.EntityFramework
 
                 if (modelTypes == null || modelTypes.Length != 1)
                 {
-                    throw  new Exception(dbSetTypes[i].FullName +
-                                         " is not acceptable for a CrudRepository " +
-                                         "constructor argument.");
+                    throw new Exception(dbSetTypes[i].FullName +
+                                        " is not acceptable for a CrudRepository " +
+                                        "constructor argument.");
                 }
 
                 object dbSet = GetDbSetByType(modelTypes[0]);
@@ -101,7 +100,7 @@ namespace EnTier.DataAccess.EntityFramework
 
             var setOnlyConstructors = dbSetOnlyConstructors as ConstructorInfo[] ?? dbSetOnlyConstructors.ToArray();
 
-            if (setOnlyConstructors.Any())
+            if (setOnlyConstructors.Length > 0)
             {
                 var theConstructor = setOnlyConstructors[0];
 
@@ -128,18 +127,34 @@ namespace EnTier.DataAccess.EntityFramework
         private bool IsDbSetOnly(ParameterInfo[] parameters)
         {
             var dbSetType = typeof(DbSet<>);
-            
+
             foreach (var parameter in parameters)
             {
                 var type = parameter.ParameterType;
 
-                if (!type.IsInstanceOfType(dbSetType))
+                if (!ExtendsGeneric(type,dbSetType))
                 {
                     return false;
                 }
             }
 
             return true;
+        }
+
+        private bool ExtendsGeneric(Type type, Type genericParent)
+        {
+            Type current = type;
+
+            while (current != null)
+            {
+                if (current.GetGenericTypeDefinition() == genericParent)
+                {
+                    return true;
+                }
+
+                current = current.BaseType;
+            }
+            return false;
         }
 
         public void Complete()
