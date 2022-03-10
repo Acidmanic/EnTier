@@ -16,7 +16,7 @@
     <!-- NuGet -->
     <Id>EnTier.DataAccess.EntityFramework</Id>
     <PackageId>EnTier.DataAccess.EntityFramework</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.1.0</Version>
     <Authors>Mani Moayedi</Authors>
     <Company>Acidmanic</Company>
     <PackageIcon>graphics/EnTier.png</PackageIcon>
