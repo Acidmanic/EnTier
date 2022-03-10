@@ -146,7 +146,7 @@ in your startup file like this:
         {
             //...
 
-            app.UseRepository<ICrudRepository<PostStg, long>, DummyRepository>();
+            app.UseRepository<ICrudRepository<PostStg, long>, CustomRepository>();
         }
  ```
 
@@ -154,8 +154,17 @@ in your startup file like this:
  ```UnitOfWorkRepositoryConfigurations.GetInstance().RegisterCustomRepository<TAbstraction,TRepository>()```.
 
 
+In ___Example.EntityFramework.CustomRepository___, notice that the https://localhost:5001/Posts/ endpoint 
+will return data from CustomRepository, without explicitly using CustomRepository like the other endpoint 
+(https://localhost:5001/Posts/custom). That is because ```CustomRepository``` is registered as the 
+implementation for ```ICrudRepository``` at the startup. If you delete that line in startup code, then 
+https://localhost:5001/Posts/ method will return database data without any manipulation, because it will 
+use a default crud repository. But the https://localhost:5001/Posts/custom endpoint will still return 
+data from custom repository because it's explicitly using ```IUnitOfWork.GetRepository<TStorage,TId,TCustom>()```.
 
-__Custom Repositories and injection__
+
+
+__Custom Repositories and constructor injection__
 
 
 When you write a custom repository, it will be instantiated by your UnitOfWork. So That determines the limitations of 
@@ -169,7 +178,6 @@ injected into the repository through the constructor. the __EntityFrameworkUnitO
 deliver these. But just make sure you have such db-sets as properties of your DbContext. Using this feature, you can have 
 access to any db-set in your repository, create required queries inside the repository and return in-memory objects 
 (vs queriables) to your services.
-
 
 Tests!
 ------
