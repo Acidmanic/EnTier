@@ -10,26 +10,26 @@ namespace EnTier.DataAccess.InMemory
     {
         private readonly List<TStorage> _data = new List<TStorage>();
 
-        public IEnumerable<TStorage> All()
+        public virtual IEnumerable<TStorage> All()
         {
             return _data;
         }
 
-        public TStorage Add(TStorage value)
+        public virtual TStorage Add(TStorage value)
         {
             _data.Add(value);
 
             return value;
         }
 
-        public TStorage GetById(TId id)
+        public virtual TStorage GetById(TId id)
         {
             var idReader = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id");
 
             return _data.Find(s => id.Equals(idReader(s)));
         }
 
-        public IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
+        public virtual IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
         {
             var result = new List<TStorage>();
 
@@ -46,14 +46,14 @@ namespace EnTier.DataAccess.InMemory
             return result;
         }
 
-        public bool Remove(TStorage value)
+        public virtual bool Remove(TStorage value)
         {
             var id = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id").Invoke(value);
 
             return Remove(id);
         }
 
-        public bool Remove(TId id)
+        public virtual bool Remove(TId id)
         {
             int index = 0;
 

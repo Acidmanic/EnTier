@@ -18,12 +18,12 @@ namespace EnTier.DataAccess.EntityFramework
             DbSet = dbSet;
         }
 
-        public IEnumerable<TStorage> All()
+        public virtual IEnumerable<TStorage> All()
         {
             return DbSet;
         }
 
-        public TStorage Add(TStorage value)
+        public virtual TStorage Add(TStorage value)
         {
             var entry = DbSet.Add(value);
 
@@ -35,26 +35,26 @@ namespace EnTier.DataAccess.EntityFramework
             return default;
         }
 
-        public TStorage GetById(TId id)
+        public virtual TStorage GetById(TId id)
         {
             var found = DbSet.Find(id);
 
             return found;
         }
 
-        public IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
+        public virtual IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
         {
             var isIncluded = predicate.Compile();
 
             return DbSet.Where(isIncluded).ToList();
         }
 
-        public bool Remove(TStorage value)
+        public virtual bool Remove(TStorage value)
         {
             return DbSet.Remove(value).State == EntityState.Deleted;
         }
 
-        public bool Remove(TId id)
+        public virtual bool Remove(TId id)
         {
             var entity = GetById(id);
 

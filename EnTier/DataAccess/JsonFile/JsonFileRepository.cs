@@ -23,7 +23,7 @@ namespace EnTier.DataAccess.JsonFile
             _data = data;
         }
         
-        public IEnumerable<TStorage> All()
+        public virtual IEnumerable<TStorage> All()
         {
             return _data;
         }
@@ -37,7 +37,7 @@ namespace EnTier.DataAccess.JsonFile
             _idGenerator.Taken(id);
         }
 
-        public TStorage Add(TStorage value)
+        public virtual TStorage Add(TStorage value)
         {
 
             var id = (TId) _idGenerator.SetId(value);
@@ -51,7 +51,7 @@ namespace EnTier.DataAccess.JsonFile
             return value;
         }
 
-        public TStorage GetById(TId id)
+        public virtual TStorage GetById(TId id)
         {
             if (_index.ContainsKey(id))
             {
@@ -61,7 +61,7 @@ namespace EnTier.DataAccess.JsonFile
             return default;
         }
 
-        public IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
+        public virtual IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
         {
             var found = new List<TStorage>();
 
@@ -78,14 +78,14 @@ namespace EnTier.DataAccess.JsonFile
             return found;
         }
 
-        public bool Remove(TStorage value)
+        public virtual bool Remove(TStorage value)
         {
             var id = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id")(value);
 
             return Remove(id);
         }
 
-        public bool Remove(TId id)
+        public virtual bool Remove(TId id)
         {
             if (_index.ContainsKey(id))
             {

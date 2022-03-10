@@ -26,7 +26,7 @@ repository to perform restful crud operations and all are plugged together and w
  per application, if you want to implement your own UnitOfWork class, you can implement 
  ```IUnitOfWork``` interface or you can extends the ```UnitOfWorkBase``` class to create your 
  own unit of work.
- * For Repositories, it's the same as Services; you can write them from scratch, implement 
+ * For Repositories, it's the same; you can write them from scratch, implement 
  ```ICrudRepository``` or extend (or wrap) ```CrudRepository```. 
 
  
@@ -59,9 +59,9 @@ Running a simple example
 ------
  
 The simplest use-case of the library would be 
- 1) create and new webapi dotnet core project 
- 2) creating a model
- 3) adding a crud controller by extending ```CrudControllerBase``` , and adding a ```[Route(...)]``` 
+ 1) create and new web-api dotnet core project 
+ 2) create a model
+ 3) add a crud controller by extending ```CrudControllerBase``` , and adding a ```[Route(...)]``` 
 attribute to it.
  
  Done!
@@ -102,7 +102,7 @@ Using EntityFramework
     into your DBContext class. Otherwise Entity Framework would not recognize your entities
     and they will not be included in your migrations.
     
- The example project __Example.EntityFramework__ shows a this implementation. This example also 
+ The example project __Example.EntityFramework__ shows this implementation. This example also 
  uses isolated models for each layer.
   
 

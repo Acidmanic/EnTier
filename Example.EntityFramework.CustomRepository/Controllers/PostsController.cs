@@ -21,8 +21,8 @@ namespace ExampleEntityFramework.Controllers
 
 
         [HttpGet]
-        [Route("morgh")]
-        public IActionResult morgh()
+        [Route("custom")]
+        public IActionResult Custom()
         {
             var repo = _unitOfWork.GetCrudRepository<PostStg, long, DummyRepository>();
 
