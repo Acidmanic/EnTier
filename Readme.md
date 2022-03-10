@@ -1,7 +1,7 @@
 Easy NTier (EnTier) Library
 ===========================
 
-![EnTier](graphics/EnTier.png) __v2.0.0__
+![EnTier](graphics/EnTier.png) __v2__
 
 Changes From v1.0.x
 ===============
@@ -42,17 +42,17 @@ Adding the library
   to your &lt;project&gt;.csproj:
   
 ```
-PackageReference Include="EnTier" Version="2.0.0" />
+PackageReference Include="EnTier" Version="2.1.0" />
 ```
 or via package manager console:
 
 ```
-Install-Package EnTier -Version 2.0.0
+Install-Package EnTier -Version 2.1.0
 ```
 
 or dotnet Cli:
 ```
-dotnet add package EnTier --version 2.0.0
+dotnet add package EnTier --version 2.1.0
 ```
 
 Running a simple example
