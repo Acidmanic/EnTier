@@ -16,7 +16,7 @@ namespace EnTier.UnitOfWork
             if (customRepositoryType != null)
             {
                 //Return Custom Repository
-                return GetCrudRepository<TStorage, TId>();
+                return GetCustomRepository<TStorage, TId>(customRepositoryType);
             }
             var repository = CreateDefaultCrudRepository<TStorage, TId>();
             
@@ -30,6 +30,13 @@ namespace EnTier.UnitOfWork
             where TStorage : class, new() where TCustomCrudRepository : ICrudRepository<TStorage, TId>
         {
             var repositoryType = typeof(TCustomCrudRepository);
+
+            return (TCustomCrudRepository) GetCustomRepository<TStorage, TId>(repositoryType);
+        }
+        
+        private ICrudRepository<TStorage,TId> GetCustomRepository<TStorage, TId>(Type repositoryType)
+            where TStorage : class, new()
+        {
             
             var repoConstructor = GetConstructor(repositoryType);
 
@@ -42,7 +49,7 @@ namespace EnTier.UnitOfWork
             
             var repository = repoConstructor.Invoke(parameterValues);
 
-            return (TCustomCrudRepository) repository;
+            return (ICrudRepository<TStorage,TId>) repository;
         }
 
         private object[] ProvideConstructorParameters(ConstructorInfo repoConstructor)

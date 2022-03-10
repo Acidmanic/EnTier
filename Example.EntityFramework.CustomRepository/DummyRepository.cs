@@ -23,8 +23,18 @@ namespace ExampleEntityFramework
                 }
             };
         }
-        
-        
-        
+
+        public override IEnumerable<PostStg> All()
+        {
+            return new List<PostStg>()
+            {
+                new PostStg
+                {
+                    Content = "This Content are coming from override method in custom repository",
+                    Title = "CustomRepositoryUsed",
+                    PostStgId = 1
+                }
+            };
+        }
     }
 }
