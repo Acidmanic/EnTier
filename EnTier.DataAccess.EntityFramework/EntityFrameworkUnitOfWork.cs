@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
@@ -7,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EnTier.DataAccess.EntityFramework
 {
-    public class EntityFrameworkUnitOfWork : IUnitOfWork
+    public class EntityFrameworkUnitOfWork : UnitOfWorkBase
     {
         private readonly DbContext _context;
-        private readonly Func<Type, object> GetDbSetByType;
+        private readonly Func<Type, object> _getDbSetByType;
 
         public EntityFrameworkUnitOfWork(DbContext context)
         {
@@ -21,16 +20,15 @@ namespace EnTier.DataAccess.EntityFramework
 
             var getDbSetMethod = contextType.GetMethod(nameof(DbContext.Set), new Type[] { });
 
-            GetDbSetByType = entityType =>
+            _getDbSetByType = entityType =>
             {
                 var method = getDbSetMethod?.MakeGenericMethod(new Type[] { entityType});
 
                 return method?.Invoke(_context, new object[] { });
             };
         }
-
-
-        public ICrudRepository<TStorage, TId> GetCrudRepository<TStorage, TId>() where TStorage : class, new()
+        
+        protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             var dbSet = _context.Set<TStorage>();
 
@@ -38,90 +36,22 @@ namespace EnTier.DataAccess.EntityFramework
         }
 
 
-        public TCustomCrudRepository GetCrudRepository<TStorage, TId, TCustomCrudRepository>()
-            where TStorage : class, new()
-            where TCustomCrudRepository : ICrudRepository<TStorage, TId>
+        protected override bool IsConstructorAcceptable(ConstructorInfo constructor)
         {
-            var repoType = UnitOfWorkRepositoryConfigurations.GetInstance().GetRepositoryType<TCustomCrudRepository>();
-
-            if (repoType == null)
-            {
-                throw new Exception(
-                    "You should register your custom repository in your startup class, using applicationBuilder.");
-            }
-
-            var repoConstructor = GetConstructor(repoType);
-
-            if (repoConstructor == null)
-            {
-                throw new Exception("Your repository type should have" +
-                                    " a constructor with (0 to any number " +
-                                    "of) DbSet<TDalModel> arguments.");
-            }
-
-            object[] arguments = ProvideDbSetArgs(repoConstructor);
-
-            var repository = repoConstructor.Invoke(arguments);
-
-            return (TCustomCrudRepository) repository;
+            return IsDbSetOnly(constructor.GetParameters());
         }
 
-        private object[] ProvideDbSetArgs(ConstructorInfo repoConstructor)
+        protected override object ProvideConstructorParameter(Type parameterType)
         {
-            var dbSetTypes = repoConstructor.GetParameters()
-                .Select(p => p.ParameterType).ToList();
+            var genericArguments = parameterType.GenericTypeArguments;
 
-            var parameterValues = new object[dbSetTypes.Count];
-
-            for (int i = 0; i < parameterValues.Length; i++)
+            if (genericArguments == null || genericArguments.Length != 1)
             {
-                var modelTypes = dbSetTypes[i].GenericTypeArguments;
-
-                if (modelTypes == null || modelTypes.Length != 1)
-                {
-                    throw new Exception(dbSetTypes[i].FullName +
-                                        " is not acceptable for a CrudRepository " +
-                                        "constructor argument.");
-                }
-
-                object dbSet = GetDbSetByType(modelTypes[0]);
-
-                parameterValues[i] = dbSet;
+                throw new Exception("Custom repositories can only accept " +
+                                    "parameters of type DbSet<TStorage>");
             }
-
-            return parameterValues;
-        }
-
-        private ConstructorInfo GetConstructor(Type repoType)
-        {
-            var constructors = repoType.GetConstructors();
-
-            var dbSetOnlyConstructors = constructors.Where(c => IsDbSetOnly(c.GetParameters()));
-
-            var setOnlyConstructors = dbSetOnlyConstructors as ConstructorInfo[] ?? dbSetOnlyConstructors.ToArray();
-
-            if (setOnlyConstructors.Length > 0)
-            {
-                var theConstructor = setOnlyConstructors[0];
-
-                int longest = theConstructor.GetParameters().Length;
-
-                foreach (var c in setOnlyConstructors)
-                {
-                    var len = c.GetParameters().Length;
-
-                    if (len > longest)
-                    {
-                        longest = len;
-
-                        theConstructor = c;
-                    }
-                }
-
-                return theConstructor;
-            }
-
-            return null;
+            
+            return _getDbSetByType(genericArguments[0]);
         }
 
         private bool IsDbSetOnly(ParameterInfo[] parameters)
@@ -137,7 +67,6 @@ namespace EnTier.DataAccess.EntityFramework
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -157,7 +86,7 @@ namespace EnTier.DataAccess.EntityFramework
             return false;
         }
 
-        public void Complete()
+        public override void Complete()
         {
             _context.SaveChanges();
         }

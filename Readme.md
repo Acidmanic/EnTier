@@ -24,16 +24,19 @@ repository to perform restful crud operations and all are plugged together and w
  you need to it.
  * Since best practice for Uni-of-work pattern implies to have __One__ UnitOfWork 
  per application, if you want to implement your own UnitOfWork class, you can implement 
- ```IUnitOfWork``` interface or to have crud operations already implemented, you can extend 
- or wrap ```UnitOfWork``` class shipped with the package to do so.
+ ```IUnitOfWork``` interface or you can extends the ```UnitOfWorkBase``` class to create your 
+ own unit of work.
  * For Repositories, it's the same as Services; you can write them from scratch, implement 
- ```ICrudRepository``` or extend (or wrap) ```CrudRepository```.
+ ```ICrudRepository``` or extend (or wrap) ```CrudRepository```. 
+
  
- Getting started
- ========
+Getting started
+===============
  
- Adding the library
- ----------
+Adding the library
+------------------
+
+
  First you will add the package. It's available on 
  [NuGet.org](https://www.nuget.org/packages/EnTier/). you can add the reference
   to your &lt;project&gt;.csproj:
@@ -66,8 +69,8 @@ attribute to it.
  EnTier will create and use an ```InMemoryUnitOfWork```, which itself produces in-memory 
  repositories and use them with ```CrudService```(s).
  
- Using JsonFile data access layer
- -------
+Using JsonFile data access layer
+-------
  
  In-Memory data access layer is suitable for testing. But you can change it to JsonFile 
  data access layer easily by calling ```services.AddJsonFileUnitOfWork();``` at the 
@@ -82,8 +85,8 @@ attribute to it.
  uses its internal Mapper to map objects. Later you will see how to use another 
  mapper instead. 
  
- Using EntityFramework
- ----------    
+Using EntityFramework
+----------    
  
  Same as Json data access layer, you can switch your data access layer to EntityFramework 
  just by calling  ```services.AddEntityFrameworkUnitOfWork(context);``` at 
@@ -103,6 +106,7 @@ attribute to it.
  uses isolated models for each layer.
   
 
+
 Using a Mapper
 ----------
 
@@ -121,6 +125,51 @@ to Ioc container for IMapper.
  
  The example project __Example.AutoMapper__ shows this implementation. This project also shows
   how to have different types for Id property on Entity models using Mapper. 
+
+
+Custom Repositories
+-------------------
+
+
+When you implement your own ```ICrudRepository```, you can get your Custom repository 
+in your services by calling ```IUnitOfWork.GetCrudRepository<TStorage, TId, TCustomCrudRepository>()```.
+This way everything will work fine but ```IUnitOfWork.GetCrudRepository<TStorage, TId>()``` 
+method still will return the default Crud-Repository for you model, not the Custom Repository 
+you just created. To override this behavior, and get your custom repository used for every usage 
+in your EnTier application, you need to do one step more and register your custom repository. 
+to do so, in the web applications you can call ```IApplicationBuilder.UseRepository<TCustomRepository>()``` 
+in your startup file like this:
+
+
+ ```c#
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            //...
+
+            app.UseRepository<ICrudRepository<PostStg, long>, DummyRepository>();
+        }
+ ```
+
+ and for other types of application like console applications you can just simply call 
+ ```UnitOfWorkRepositoryConfigurations.GetInstance().RegisterCustomRepository<TAbstraction,TRepository>()```.
+
+
+
+__Custom Repositories and injection__
+
+
+When you write a custom repository, it will be instantiated by your UnitOfWork. So That determines the limitations of 
+injection.
+
+* If you are using the builtin _Json DataAccessLayer_ or _InMemory DataAccessLayer_, then there will be no 
+injection available for your custom repositories. Your custom repository must have a parameter-less constructor.
+
+* If you are using _Entier.DataAccess.EntityFramework_, you can have any number of ```DbSet<TStorage>``` parameters 
+injected into the repository through the constructor. the __EntityFrameworkUnitOfWork__ will find and instantiate and 
+deliver these. But just make sure you have such db-sets as properties of your DbContext. Using this feature, you can have 
+access to any db-set in your repository, create required queries inside the repository and return in-memory objects 
+(vs queriables) to your services.
+
 
 Tests!
 ------

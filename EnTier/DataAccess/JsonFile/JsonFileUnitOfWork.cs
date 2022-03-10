@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace EnTier.DataAccess.JsonFile
 {
-    public class JsonFileUnitOfWork : IUnitOfWork
+    public class JsonFileUnitOfWork : UnitOfWorkBase
     {
         private List<Type> _index = new List<Type>();
 
@@ -191,32 +191,14 @@ namespace EnTier.DataAccess.JsonFile
             }
         }
 
-        public ICrudRepository<TStorage, TId> GetCrudRepository<TStorage, TId>() where TStorage : class, new()
+        protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             var table = Table<TStorage>();
 
             return new JsonFileRepository<TStorage, TId>(table);
         }
 
-        public TCustomCrudRepository GetCrudRepository<TStorage, TId, TCustomCrudRepository>()
-            where TStorage : class, new()
-            where TCustomCrudRepository : ICrudRepository<TStorage, TId>
-        {
-            var repoType = UnitOfWorkRepositoryConfigurations.GetInstance().GetRepositoryType<TCustomCrudRepository>();
-
-            if (repoType == null)
-            {
-                throw new Exception(
-                    "You should register your custom repository in your startup class, using applicationBuilder.");
-            }
-
-            var repository = repoType.GetConstructor(new Type[] { })
-                .Invoke(new object[] { });
-
-            return (TCustomCrudRepository) repository;
-        }
-
-        public void Complete()
+        public override void Complete()
         {
             Save(_dataDirectory);
         }

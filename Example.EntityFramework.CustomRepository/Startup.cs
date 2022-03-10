@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EnTier.DataAccess.EntityFramework;
+using EnTier.Repositories;
 using EnTier.UnitOfWork;
+using ExampleEntityFramework.StoragesModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -48,7 +50,7 @@ namespace ExampleEntityFramework
             
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            app.UseRepository<DummyRepository, DummyRepository>();
+            app.UseRepository<ICrudRepository<PostStg, long>, DummyRepository>();
         }
     }
 }
