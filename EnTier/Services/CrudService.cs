@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using EnTier.Exceptions;
 using EnTier.Mapper;
+using EnTier.Regulation;
 using EnTier.UnitOfWork;
 
 namespace EnTier.Services
@@ -10,12 +12,20 @@ namespace EnTier.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IDataAccessRegulator<TDomain, TStorage> _regulator;
 
-        public CrudService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CrudService(IUnitOfWork unitOfWork, IMapper mapper) : this(unitOfWork, mapper,
+            new NullDataAccessRegulator<TDomain, TStorage>())
+        {
+        }
+
+        public CrudService(IUnitOfWork unitOfWork, IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
         {
             _unitOfWork = unitOfWork;
 
             _mapper = mapper;
+
+            _regulator = regulator;
         }
 
         public IEnumerable<TDomain> GetAll()
@@ -43,11 +53,36 @@ namespace EnTier.Services
             return domain;
         }
 
+        private TStorage Regulate(TDomain value)
+        {
+            TStorage regulatedStorage = default;
+
+            if (_regulator is NullDataAccessRegulator)
+            {
+                regulatedStorage = _mapper.Map<TStorage>(value);
+            }
+            else
+            {
+                var regulationResult = _regulator.Regulate(value);
+
+                if (regulationResult.Status != RegulationStatus.UnAcceptable)
+                {
+                    regulatedStorage = regulationResult.Storage;
+                }
+                else
+                {
+                    throw new UnAcceptableModelException();
+                }
+            }
+
+            return regulatedStorage;
+        }
+        
         public TDomain Add(TDomain value)
         {
-            var storage = _mapper.Map<TStorage>(value);
+            var storage = Regulate(value);
 
-            storage = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
+             storage =  _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
 
             _unitOfWork.Complete();
 
@@ -72,6 +107,8 @@ namespace EnTier.Services
 
         private TDomain Update(TStorageId id, TDomain value)
         {
+            Regulate(value);
+            
             var idReader = Utility.Reflection.GetPropertyReader<TStorage, TDomainId>("Id");
 
             var foundValues = _unitOfWork.GetCrudRepository<TStorage, TDomainId>()
@@ -108,11 +145,12 @@ namespace EnTier.Services
             var storageId = _mapper.MapId<TStorageId>(id);
 
             var success = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storageId);
-            
+
             if (success)
             {
                 _unitOfWork.Complete();
             }
+
             return success;
         }
     }

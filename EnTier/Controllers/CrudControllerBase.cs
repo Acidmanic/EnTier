@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using EnTier.DataAccess.InMemory;
 using EnTier.Mapper;
+using EnTier.Regulation;
 using EnTier.Services;
 using EnTier.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace EnTier.Controllers
         private IUnitOfWork UnitOfWork { get; set; }
         private ICrudService<TDomain, TDomainId> Service { get; set; }
 
+        private IDataAccessRegulator<TDomain, TStorage> Regulator { get; } = new NullDataAccessRegulator<TDomain, TStorage>();
 
         public CrudControllerBase()
         {
@@ -32,6 +34,12 @@ namespace EnTier.Controllers
             AcquirerDependencies();
         }
 
+        public CrudControllerBase(IDataAccessRegulator<TDomain, TStorage> regulator)
+        {
+            Regulator = regulator;
+
+            AcquirerDependencies();
+        }
 
         public CrudControllerBase(IUnitOfWork unitOfWork)
         {
@@ -45,6 +53,36 @@ namespace EnTier.Controllers
             Mapper = mapper;
 
             UnitOfWork = unitOfWork;
+
+            AcquirerDependencies();
+        }
+
+        public CrudControllerBase(IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
+        {
+            Mapper = mapper;
+
+            Regulator = regulator;
+
+            AcquirerDependencies();
+        }
+
+        public CrudControllerBase(IUnitOfWork unitOfWork, IDataAccessRegulator<TDomain, TStorage> regulator)
+        {
+            UnitOfWork = unitOfWork;
+
+            Regulator = regulator;
+
+            AcquirerDependencies();
+        }
+
+        public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork,
+            IDataAccessRegulator<TDomain, TStorage> regulator)
+        {
+            Mapper = mapper;
+
+            UnitOfWork = unitOfWork;
+
+            Regulator = regulator;
 
             AcquirerDependencies();
         }
@@ -66,7 +104,7 @@ namespace EnTier.Controllers
 
         protected virtual ICrudService<TDomain, TDomainId> AcquirerCrudService()
         {
-            return new CrudService<TDomain, TStorage, TDomainId, TStorageId>(UnitOfWork, Mapper);
+            return new CrudService<TDomain, TStorage, TDomainId, TStorageId>(UnitOfWork, Mapper,Regulator);
         }
 
 
