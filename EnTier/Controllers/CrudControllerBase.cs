@@ -75,8 +75,7 @@ namespace EnTier.Controllers
             AcquirerDependencies();
         }
 
-        public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork,
-            IDataAccessRegulator<TDomain, TStorage> regulator)
+        public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork, IDataAccessRegulator<TDomain, TStorage> regulator)
         {
             Mapper = mapper;
 
