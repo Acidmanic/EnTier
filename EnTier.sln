@@ -33,6 +33,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.EntityFramework.Cus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Regulation", "Example.Regulation\Example.Regulation.csproj", "{E745753D-CC17-42F1-B8BC-6AC66D7F0361}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{DF3D024F-5EAF-4E46-95E8-B4019FCFA0C1}"
+ProjectSection(SolutionItems) = preProject
+	LICENSE.txt = LICENSE.txt
+	Readme.md = Readme.md
+	Readme.nuget.md = Readme.nuget.md
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

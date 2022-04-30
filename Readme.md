@@ -179,6 +179,70 @@ deliver these. But just make sure you have such db-sets as properties of your Db
 access to any db-set in your repository, create required queries inside the repository and return in-memory objects 
 (vs queriables) to your services.
 
+
+Custom Services
+-----
+
+You can add your custom service instead of the default Crud service that EnTier automatically will create for you. 
+Your custom service must implement ```ICrudService<..>``` interface. The you can 
+
+  * Pass your service instance to Controller's constructor
+
+  Or (Recommended)  
+   * Creat a contract (interface/abstraction) for your custom service and register your custom service for your contract
+   via your DI container. Then inject your contract into your controller's constructor. and pass the injected object into 
+   base constructor.
+   
+   
+ This way, your custom service will be used in EnTier calls and you will be able to manipulate the service's behavior in 
+ any way you need.
+ 
+ 
+ *  NOTE: You can implement your custom service, by extending the class ```CrudServiceBase<>``` easier.
+ *  NOTE: If you are injecting your custom service into your controller, DO NOT FORGET TO REGISTER it on your container.
+ 
+ Data Access Regulation
+ ----------------------
+ 
+ 
+ In some cases you might need to have some kind of regulation on your data before its being processed or stored. 
+ For example you might be receiving a chunk of data from the user to be inserted into Database, and it's crucial 
+ that a specific field of your data be filled, or an id must already be existing in the database or thing like this.
+ 
+ The DataAccessRegulation helps to implement this in __Service__ level. An ```IDataAccessRegulator<TDomain,TStorage>```, has a 
+ ```Regulate(TDomain model)``` method. This method takes a domain value and returns a ```RegulationResult```. A RegulationResult 
+ object, has a __Status__ field, a ```TModel``` field containing domain model, and a ```TStorage``` field containing mapped 
+ storage model. (So in practice you might need to inject your mapper into your regulators). 
+ 
+ The Status field can be rejected, Accepted or Suspicious. The paradigm is to investigate received domain-model, 
+ and provide a valid storage counterpart for it and putting both this values into a ```RegulationResult``` object 
+ with _Ok_ Status. 
+ 
+  * a RegulationResult with status = Ok, Means that both Domain and Storage fields are trustable and safe to use.
+  
+ If the received domain model, is somehow un acceptable, The ```Regulate``` method will return a RegulationResult object 
+ with _UnAcceptable_ status, meaning that the data is rejected and Domain and Storage fields are not trustable.
+ 
+ * a RegulationResult with status = UnAcceptable, Means that data is rejected and nighter Domain or Storage fields are not valid.
+ 
+ In some cases, the received data might be incorrect but you find it safe to fix the data and use it. In such cases the 
+ ```Regulate``` method will produce a fixed and valid storage model, and put it into a RegulationResult object with the 
+ _Suspicious_ status.
+ 
+ * a RegulationResult with status = Suspicious, Means that the Storage field is usable but there was a problem with the received data.
+  
+  
+  You can create Regulators by implementing ```IDataAccessRegulator<TDomain,TStorage>``` or extending 
+  ```DataAccessRegulatorBase<TDomain,TStorage>```. Regulators can be injected and used in your services.
+  
+  __Use Regulators in Default CrudServices__
+  
+  If you have a regulator for your storage/domain model pairs, you can make EnTier to use your regulator before performing 
+  __Create__ and __Update__ operations. To do that, you just need to pass an instance to the base controller's constructor.
+  The better practice would be to define a contract for the regulator, Registering the regulators for its contract in DI 
+  Container. and injecting it into the controller to be passed to base controller. ___Example.Regulation___ project shows such a 
+  use case. For simplicity, this example only uses one Model type for all layers.  
+
 Tests!
 ------
 
