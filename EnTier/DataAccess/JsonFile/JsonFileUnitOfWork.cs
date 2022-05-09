@@ -202,5 +202,10 @@ namespace EnTier.DataAccess.JsonFile
         {
             Save(_dataDirectory);
         }
+
+        public override void Dispose()
+        {
+            
+        }
     }
 }

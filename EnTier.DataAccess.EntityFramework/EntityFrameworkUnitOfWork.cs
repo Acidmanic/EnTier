@@ -15,7 +15,6 @@ namespace EnTier.DataAccess.EntityFramework
         {
             _context = context;
 
-
             var contextType = typeof(DbContext);
 
             var getDbSetMethod = contextType.GetMethod(nameof(DbContext.Set), new Type[] { });
@@ -89,6 +88,11 @@ namespace EnTier.DataAccess.EntityFramework
         public override void Complete()
         {
             _context.SaveChanges();
+        }
+
+        public override void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

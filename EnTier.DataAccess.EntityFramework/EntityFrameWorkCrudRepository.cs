@@ -11,6 +11,7 @@ namespace EnTier.DataAccess.EntityFramework
     public class EntityFrameWorkCrudRepository<TStorage, TId> : ICrudRepository<TStorage, TId>
         where TStorage : class, new()
     {
+        
         protected DbSet<TStorage> DbSet { get; }
 
         public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet)

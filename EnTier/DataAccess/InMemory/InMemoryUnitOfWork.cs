@@ -24,6 +24,11 @@ namespace EnTier.DataAccess.InMemory
         }
 
         public override void Complete() { }
+        
+        public override void Dispose()
+        {
+            Repositories.Clear();
+        }
 
         private string GetKey<TStorage, TId>()
         {

@@ -113,5 +113,6 @@ namespace EnTier.UnitOfWork
             return null;
         }
         public abstract void Complete();
+        public abstract void Dispose();
     }
 }
