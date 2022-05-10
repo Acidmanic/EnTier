@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace EnTier.Repositories
 {
@@ -25,20 +26,19 @@ namespace EnTier.Repositories
         {
             var type = typeof(TEntity);
 
-            var fields = type.GetFields();
-
+            var properties = type.GetProperties();
+            
             var clone = new TEntity();
 
-            foreach (var field in fields)
+            foreach (var property in properties)
             {
-                if (field.FieldType.IsPrimitive)
+                if (property.PropertyType.IsPrimitive)
                 {
-                    var value = field.GetValue(entity);
+                    var value = property.GetValue(entity);
 
-                    field.SetValue(clone, value);
+                    property.SetValue(clone, value);
                 }
             }
-
             return clone;
         }
     }

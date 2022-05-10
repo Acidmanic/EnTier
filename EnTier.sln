@@ -34,11 +34,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Regulation", "Example.Regulation\Example.Regulation.csproj", "{E745753D-CC17-42F1-B8BC-6AC66D7F0361}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{DF3D024F-5EAF-4E46-95E8-B4019FCFA0C1}"
-ProjectSection(SolutionItems) = preProject
-	LICENSE.txt = LICENSE.txt
-	Readme.md = Readme.md
-	Readme.nuget.md = Readme.nuget.md
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+		Readme.md = Readme.md
+		Readme.nuget.md = Readme.nuget.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entier.Test.Unit", "Entier.Test.Unit\Entier.Test.Unit.csproj", "{C28F5C58-D87E-43B9-9B89-B293B55E673A}"
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
@@ -233,5 +235,17 @@ Global
 		{E745753D-CC17-42F1-B8BC-6AC66D7F0361}.Release|x64.Build.0 = Release|Any CPU
 		{E745753D-CC17-42F1-B8BC-6AC66D7F0361}.Release|x86.ActiveCfg = Release|Any CPU
 		{E745753D-CC17-42F1-B8BC-6AC66D7F0361}.Release|x86.Build.0 = Release|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Debug|x64.Build.0 = Debug|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Debug|x86.Build.0 = Debug|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Release|x64.ActiveCfg = Release|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Release|x64.Build.0 = Release|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Release|x86.ActiveCfg = Release|Any CPU
+		{C28F5C58-D87E-43B9-9B89-B293B55E673A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
