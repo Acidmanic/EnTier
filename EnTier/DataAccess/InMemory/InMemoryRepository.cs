@@ -5,31 +5,31 @@ using EnTier.Repositories;
 
 namespace EnTier.DataAccess.InMemory
 {
-    public class InMemoryRepository<TStorage, TId> : ICrudRepository<TStorage, TId>
+    public class InMemoryRepository<TStorage, TId> : CrudRepositoryBase<TStorage, TId>
         where TStorage : class, new()
     {
         private readonly List<TStorage> _data = new List<TStorage>();
 
-        public virtual IEnumerable<TStorage> All()
+        public override IEnumerable<TStorage> All()
         {
             return _data;
         }
 
-        public virtual TStorage Add(TStorage value)
+        public override TStorage Add(TStorage value)
         {
             _data.Add(value);
 
             return value;
         }
 
-        public virtual TStorage GetById(TId id)
+        public override TStorage GetById(TId id)
         {
             var idReader = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id");
 
             return _data.Find(s => id.Equals(idReader(s)));
         }
 
-        public virtual IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
+        public override IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
         {
             var result = new List<TStorage>();
 
@@ -46,14 +46,14 @@ namespace EnTier.DataAccess.InMemory
             return result;
         }
 
-        public virtual bool Remove(TStorage value)
+        public override bool Remove(TStorage value)
         {
             var id = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id").Invoke(value);
 
             return Remove(id);
         }
 
-        public virtual bool Remove(TId id)
+        public override bool Remove(TId id)
         {
             int index = 0;
 

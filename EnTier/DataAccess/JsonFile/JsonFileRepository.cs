@@ -5,7 +5,7 @@ using EnTier.Repositories;
 
 namespace EnTier.DataAccess.JsonFile
 {
-    public class JsonFileRepository<TStorage, TId> : ICrudRepository<TStorage, TId>
+    public class JsonFileRepository<TStorage, TId> : CrudRepositoryBase<TStorage, TId>
         where TStorage : class, new()
     {
         private readonly Dictionary<TId, TStorage> _index = new Dictionary<TId, TStorage>();
@@ -22,8 +22,8 @@ namespace EnTier.DataAccess.JsonFile
 
             _data = data;
         }
-        
-        public virtual IEnumerable<TStorage> All()
+
+        public override IEnumerable<TStorage> All()
         {
             return _data;
         }
@@ -37,21 +37,20 @@ namespace EnTier.DataAccess.JsonFile
             _idGenerator.Taken(id);
         }
 
-        public virtual TStorage Add(TStorage value)
+        public override TStorage Add(TStorage value)
         {
-
             var id = (TId) _idGenerator.SetId(value);
-            
+
             _index.Add(id, value);
 
             _idGenerator.Taken(id);
-            
+
             _data.Add(value);
 
             return value;
         }
 
-        public virtual TStorage GetById(TId id)
+        public override TStorage GetById(TId id)
         {
             if (_index.ContainsKey(id))
             {
@@ -61,7 +60,7 @@ namespace EnTier.DataAccess.JsonFile
             return default;
         }
 
-        public virtual IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
+        public override IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
         {
             var found = new List<TStorage>();
 
@@ -78,27 +77,28 @@ namespace EnTier.DataAccess.JsonFile
             return found;
         }
 
-        public virtual bool Remove(TStorage value)
+        public override bool Remove(TStorage value)
         {
             var id = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id")(value);
 
             return Remove(id);
         }
 
-        public virtual bool Remove(TId id)
+        public override bool Remove(TId id)
         {
             if (_index.ContainsKey(id))
             {
                 var item = _index[id];
 
                 _data.Remove(item);
-                
+
                 _idGenerator.Free(id);
 
                 _index.Remove(id);
 
                 return true;
             }
+
             return false;
         }
     }

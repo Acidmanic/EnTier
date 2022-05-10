@@ -8,10 +8,9 @@ using Newtonsoft.Json.Serialization;
 
 namespace EnTier.DataAccess.EntityFramework
 {
-    public class EntityFrameWorkCrudRepository<TStorage, TId> : ICrudRepository<TStorage, TId>
+    public class EntityFrameWorkCrudRepository<TStorage, TId> : CrudRepositoryBase<TStorage, TId>
         where TStorage : class, new()
     {
-        
         protected DbSet<TStorage> DbSet { get; }
 
         public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet)
@@ -19,12 +18,12 @@ namespace EnTier.DataAccess.EntityFramework
             DbSet = dbSet;
         }
 
-        public virtual IEnumerable<TStorage> All()
+        public override IEnumerable<TStorage> All()
         {
             return DbSet;
         }
 
-        public virtual TStorage Add(TStorage value)
+        public override TStorage Add(TStorage value)
         {
             var entry = DbSet.Add(value);
 
@@ -36,26 +35,41 @@ namespace EnTier.DataAccess.EntityFramework
             return default;
         }
 
-        public virtual TStorage GetById(TId id)
+        public TStorage Add(TStorage value, bool strip)
+        {
+            if (strip)
+            {
+                value = StripNonPrimitives(value);
+            }
+            var entry = DbSet.Add(value);
+
+            if (entry.State == EntityState.Added)
+            {
+                return entry.Entity;
+            }
+            return default;
+        }
+
+        public override TStorage GetById(TId id)
         {
             var found = DbSet.Find(id);
 
             return found;
         }
 
-        public virtual IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
+        public override IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate)
         {
             var isIncluded = predicate.Compile();
 
             return DbSet.Where(isIncluded).ToList();
         }
 
-        public virtual bool Remove(TStorage value)
+        public override bool Remove(TStorage value)
         {
             return DbSet.Remove(value).State == EntityState.Deleted;
         }
 
-        public virtual bool Remove(TId id)
+        public override bool Remove(TId id)
         {
             var entity = GetById(id);
 
@@ -63,6 +77,7 @@ namespace EnTier.DataAccess.EntityFramework
             {
                 return DbSet.Remove(entity).State == EntityState.Deleted;
             }
+
             return false;
         }
     }
