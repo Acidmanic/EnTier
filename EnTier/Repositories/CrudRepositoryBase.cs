@@ -10,6 +10,14 @@ namespace EnTier.Repositories
     {
         public abstract IEnumerable<TStorage> All();
         public abstract TStorage Add(TStorage value);
+        
+        public TStorage AddStripped(TStorage value)
+        {
+            var entity = StripNonPrimitives(value);
+
+            return Add(entity);
+        }
+
         public abstract TStorage GetById(TId id);
         public abstract IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate);
         public abstract bool Remove(TStorage value);

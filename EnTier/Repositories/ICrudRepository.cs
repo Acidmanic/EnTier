@@ -13,6 +13,8 @@ namespace EnTier.Repositories
         IEnumerable<TStorage> All();
 
         TStorage Add(TStorage value);
+        
+        TStorage AddStripped(TStorage value);
 
         TStorage GetById(TId id);
 
