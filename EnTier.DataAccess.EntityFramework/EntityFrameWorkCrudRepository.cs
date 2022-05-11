@@ -23,7 +23,7 @@ namespace EnTier.DataAccess.EntityFramework
             return DbSet;
         }
 
-        public override TStorage Add(TStorage value)
+        protected override TStorage Insert(TStorage value)
         {
             var entry = DbSet.Add(value);
 
@@ -32,21 +32,6 @@ namespace EnTier.DataAccess.EntityFramework
                 return entry.Entity;
             }
 
-            return default;
-        }
-
-        public TStorage Add(TStorage value, bool strip)
-        {
-            if (strip)
-            {
-                value = StripNonPrimitives(value);
-            }
-            var entry = DbSet.Add(value);
-
-            if (entry.State == EntityState.Added)
-            {
-                return entry.Entity;
-            }
             return default;
         }
 
