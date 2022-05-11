@@ -14,8 +14,6 @@ namespace EnTier.Repositories
 
         TStorage Add(TStorage value);
         
-        TStorage AddStripped(TStorage value);
-
         TStorage GetById(TId id);
 
         IEnumerable<TStorage> Find(Expression<Func<TStorage,bool>> predicate);

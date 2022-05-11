@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using EnTier.Repositories;
+using EnTier.Repositories.Attributes;
 
 namespace EnTier.DataAccess.InMemory
 {
@@ -15,7 +16,13 @@ namespace EnTier.DataAccess.InMemory
             return _data;
         }
 
+        [KeepAllProperties()]
         public override TStorage Add(TStorage value)
+        {
+            return base.Add(value);
+        } 
+        
+        protected override TStorage Insert(TStorage value)
         {
             _data.Add(value);
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using EnTier.Repositories;
+using EnTier.Repositories.Attributes;
 
 namespace EnTier.DataAccess.JsonFile
 {
@@ -36,8 +37,14 @@ namespace EnTier.DataAccess.JsonFile
 
             _idGenerator.Taken(id);
         }
-
+        
+        [KeepAllProperties()]
         public override TStorage Add(TStorage value)
+        {
+            return base.Add(value);
+        } 
+
+        protected override TStorage Insert(TStorage value)
         {
             var id = (TId) _idGenerator.SetId(value);
 
