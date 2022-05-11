@@ -179,6 +179,55 @@ deliver these. But just make sure you have such db-sets as properties of your Db
 access to any db-set in your repository, create required queries inside the repository and return in-memory objects 
 (vs queriables) to your services.
 
+__Stripping Non-Primitive-Properties__
+
+While inserting data into storage at data access layer, in most cases we store a pocco without non-primitive properties. 
+So by default, CrudRepositoryBase class will strip away any non-primitive properties from entity by setting thos values 
+to null. But In some cases (ie. test repositories and etc.) we might for some reason prefer to insert those values as well. so 
+we would want to override this behavior. To do so, We can decorate the insert method with following attributes.
+
+ * ```[KeepAllProperties]```
+ * ```[StripAllProperties]```
+ * ```[KeepProperty]```
+ * ```[StripProperty]```
+ 
+ These attributes can be placed on ```ICrudRepository.Add(.)``` method, or in higher lever, on ```ICrudService.Add(.)``` 
+ method or in higher level on ```Controller.Add(.)``` method. Basically on any method in call chain from Controller to 
+ repository. In General, ```[StripProperty]``` attributes supersede ```[KeepProperty]``` attributes. And between 
+ ```[KeepAllProperties]``` and ```[StripAllProperties]```, the latter supersedes the former.
+ 
+ You can mark any number of entity types with ```[KeepProperty]``` or ```[StripProperty]```, while using these attributes:
+ 
+ ```c#
+
+    [StripProperty(typeof(StrippingProperty1),typeof(StrippingProperty2))]
+    [KeepProperty(typeof(KeepingProperty1))]
+    public Model Add(Model value){
+    
+    //...
+
+    }
+```  
+
+ * Note: You can change these behaviors while driving from ```CrudRepositoryBase``` class by overriding the add method.
+
+ * Note: While driving from ```CrudRepositoryBase```, you can use ```StripNonPrimitives()``` method which stripes all non-primitive 
+properties, and ```StripMarkedSubEntities()``` method which strips marked non-primitive properties regarding the delivered 
+attributes to the call chain.
+
+* Note: Since InMemoryCrudRepository and JsonFileCrudRepository, are mainly purposed for tests and demoes, these repositoreies 
+will keep and actually insert all non-primitive properties by overriding the add method and adding ```[KeepAllProperties]``` 
+attribute on it. This way you can override this behavior again inside your code.
+
+```c#
+     [KeepAllProperties()]
+    public override TStorage Add(TStorage value)
+    {
+        return base.Add(value);
+    } 
+``` 
+
+you can achieve same result by overriding the ```Add()``` method and calling ```base.Insert()``` instead, for less overhead.
 
 Custom Services
 -----
