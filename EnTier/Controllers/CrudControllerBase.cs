@@ -16,11 +16,12 @@ namespace EnTier.Controllers
         where TDomain : class, new()
         where TStorage : class, new()
     {
-        private IMapper Mapper { get; set; }
-        private IUnitOfWork UnitOfWork { get; set; }
-        private ICrudService<TDomain, TDomainId> Service { get; set; }
+        protected IMapper Mapper { get; set; }
+        protected IUnitOfWork UnitOfWork { get; set; }
+        protected ICrudService<TDomain, TDomainId> Service { get; set; }
 
-        private IDataAccessRegulator<TDomain, TStorage> Regulator { get; } = new NullDataAccessRegulator<TDomain, TStorage>();
+        protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; } =
+            new NullDataAccessRegulator<TDomain, TStorage>();
 
         public CrudControllerBase()
         {
@@ -75,7 +76,8 @@ namespace EnTier.Controllers
             AcquirerDependencies();
         }
 
-        public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork, IDataAccessRegulator<TDomain, TStorage> regulator)
+        public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork,
+            IDataAccessRegulator<TDomain, TStorage> regulator)
         {
             Mapper = mapper;
 
@@ -103,7 +105,7 @@ namespace EnTier.Controllers
 
         protected virtual ICrudService<TDomain, TDomainId> AcquirerCrudService()
         {
-            return new CrudService<TDomain, TStorage, TDomainId, TStorageId>(UnitOfWork, Mapper,Regulator);
+            return new CrudService<TDomain, TStorage, TDomainId, TStorageId>(UnitOfWork, Mapper, Regulator);
         }
 
 
