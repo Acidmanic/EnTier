@@ -125,14 +125,17 @@ namespace EnTier.Controllers
         [Route("")]
         public virtual IActionResult GetAll()
         {
-            return ErrorCheck(() =>
-            {
-                var allDomainObjects = Service.GetAll();
+            return ErrorCheck(() => Ok(this.OnGetAll()));
+        }
 
-                var allTransferObjects = Mapper.Map<List<TTransfer>>(allDomainObjects);
 
-                return Ok(allTransferObjects);
-            });
+        protected virtual IEnumerable<TTransfer> OnGetAll()
+        {
+            var allDomainObjects = Service.GetAll();
+
+            var allTransferObjects = Mapper.Map<List<TTransfer>>(allDomainObjects);
+
+            return allTransferObjects;
         }
 
         [HttpGet]
@@ -141,19 +144,31 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var domainId = Mapper.MapId<TDomainId>(id);
+                var transfer = OnGetById(id);
 
-                var domain = Service.GetById(domainId);
-
-                if (domain == null)
+                if (transfer == null)
                 {
                     return NotFound();
                 }
 
-                var transfer = Mapper.Map<TTransfer>(domain);
-
                 return Ok(transfer);
             });
+        }
+
+        protected virtual TTransfer OnGetById(TTransferId id)
+        {
+            var domainId = Mapper.MapId<TDomainId>(id);
+
+            var domain = Service.GetById(domainId);
+
+            if (domain == null)
+            {
+                return null;
+            }
+
+            var transfer = Mapper.Map<TTransfer>(domain);
+
+            return transfer;
         }
 
         [HttpPost]
@@ -162,16 +177,22 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var domain = Mapper.Map<TDomain>(value);
-
-                domain = Service.Add(domain);
-
-                var transfer = Mapper.Map<TTransfer>(domain);
+                var transfer = OnCreateNew(value);
 
                 return StatusCode((int) HttpStatusCode.Created, transfer);
             });
         }
 
+        protected virtual TTransfer OnCreateNew(TTransfer value)
+        {
+            var domain = Mapper.Map<TDomain>(value);
+
+            domain = Service.Add(domain);
+
+            var transfer = Mapper.Map<TTransfer>(domain);
+
+            return transfer;
+        }
 
         [HttpPut]
         [Route("")]
@@ -179,14 +200,21 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var domain = Mapper.Map<TDomain>(value);
-
-                domain = Service.Update(domain);
-
-                var transfer = Mapper.Map<TTransfer>(domain);
+                var transfer = OnUpdate(id, value);
 
                 return Ok(transfer);
             });
+        }
+
+        protected virtual TTransfer OnUpdate(TTransferId id, TTransfer value)
+        {
+            var domain = Mapper.Map<TDomain>(value);
+
+            domain = Service.Update(domain);
+
+            var transfer = Mapper.Map<TTransfer>(domain);
+
+            return transfer;
         }
 
         [HttpPut]
@@ -195,14 +223,21 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var domain = Mapper.Map<TDomain>(value);
-
-                domain = Service.Update(domain);
-
-                var transfer = Mapper.Map<TTransfer>(domain);
+                var transfer = OnUpdate(value);
 
                 return Ok(value);
             });
+        }
+
+        protected virtual TTransfer OnUpdate(TTransfer value)
+        {
+            var domain = Mapper.Map<TDomain>(value);
+
+            domain = Service.Update(domain);
+
+            var transfer = Mapper.Map<TTransfer>(domain);
+
+            return transfer;
         }
 
         [HttpDelete]
@@ -211,9 +246,7 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var domainId = Mapper.MapId<TDomainId>(id);
-
-                var success = Service.RemoveById(domainId);
+                var success = OnDeleteById(id);
 
                 if (!success)
                 {
@@ -224,15 +257,22 @@ namespace EnTier.Controllers
             });
         }
 
+        protected virtual bool OnDeleteById(TTransferId id)
+        {
+            var domainId = Mapper.MapId<TDomainId>(id);
+
+            var success = Service.RemoveById(domainId);
+
+            return success;
+        }
+
         [HttpDelete]
         [Route("")]
         public virtual IActionResult Delete(TTransfer value)
         {
             return ErrorCheck(() =>
             {
-                var domain = Mapper.Map<TDomain>(value);
-
-                var success = Service.Remove(domain);
+                var success = OnDelete(value);
 
                 if (!success)
                 {
@@ -241,6 +281,16 @@ namespace EnTier.Controllers
 
                 return Ok();
             });
+        }
+
+
+        protected virtual bool OnDelete(TTransfer value)
+        {
+            var domain = Mapper.Map<TDomain>(value);
+
+            var success = Service.Remove(domain);
+
+            return success;
         }
     }
 }
