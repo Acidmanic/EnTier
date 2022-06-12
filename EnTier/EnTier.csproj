@@ -7,7 +7,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
-        
+        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.0-b2" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -42,9 +42,4 @@
         </None>
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Acidmanic.Utilities.Reflection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Reflections.netcore\Acidmanic.Utilities.Reflection\bin\Debug\netstandard2.1\Acidmanic.Utilities.Reflection.dll</HintPath>
-      </Reference>
-    </ItemGroup>
 </Project>
