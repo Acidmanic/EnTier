@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using EnTier.Reflection;
-using EnTier.Utility;
+using Acidmanic.Utilities.Reflection;
+using Acidmanic.Utilities.Reflection.TypeCenter;
 
 namespace EnTier.Mapper
 {
@@ -11,7 +11,7 @@ namespace EnTier.Mapper
     {
         public TDestination Map<TDestination>(object src)
         {
-            if (ReflectionService.Make().Implements<IEnumerable,TDestination>())
+            if (TypeCenterService.Make().Implements<IEnumerable,TDestination>())
             {
                 var type = typeof(TDestination);
 
@@ -21,7 +21,7 @@ namespace EnTier.Mapper
 
                 var srcEnumerable = (IEnumerable) src;
 
-                var constructor = ReflectionService.Make().GetConstructorForType(entityType);
+                var constructor = TypeCenterService.Make().GetConstructorForType(entityType);
                 
                 foreach (var item in srcEnumerable)
                 {
@@ -42,14 +42,14 @@ namespace EnTier.Mapper
         
         private TDestination MapSingleObject<TDestination>(object src)
         {
-            var Constructor = ReflectionService.Make().GetConstructorForType<TDestination>(typeof(TDestination));
+            var constructor = TypeCenterService.Make().GetConstructorForType<TDestination>(typeof(TDestination));
 
-            if (Constructor.IsNull)
+            if (constructor.IsNull)
             {
                 return default;
             }
 
-            var dst = Constructor.Construct();
+            var dst = constructor.Construct();
 
             MapByObjects(src, dst);
 
@@ -83,8 +83,8 @@ namespace EnTier.Mapper
 
                 if (keyvalueTypes.Length == 2)
                 {
-                    var dstKeyMaker = ReflectionService.Make().GetConstructorForType<object>(keyvalueTypes[0]);
-                    var dstValueMaker = ReflectionService.Make().GetConstructorForType<object>(keyvalueTypes[1]);
+                    var dstKeyMaker = TypeCenterService.Make().GetConstructorForType<object>(keyvalueTypes[0]);
+                    var dstValueMaker = TypeCenterService.Make().GetConstructorForType<object>(keyvalueTypes[1]);
 
                     foreach (var sKey in srcAsDic.Keys)
                     {
@@ -114,7 +114,7 @@ namespace EnTier.Mapper
 
             foreach (var iface in all)
             {
-                if (ReflectionService.Make().IsSpecificOf(iface, genericInterface))
+                if (TypeCenterService.Make().IsSpecificOf(iface, genericInterface))
                 {
                     if (iface.IsGenericType)
                     {
@@ -145,7 +145,7 @@ namespace EnTier.Mapper
 
                     if (dgTypes.Length > 0)
                     {
-                        var dConst = ReflectionService.Make().GetConstructorForType<object>(dgTypes[0]);
+                        var dConst = TypeCenterService.Make().GetConstructorForType<object>(dgTypes[0]);
 
                         foreach (var s in srcEnum)
                         {

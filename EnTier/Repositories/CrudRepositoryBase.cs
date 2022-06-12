@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Acidmanic.Utilities.Reflection;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
 
@@ -11,19 +12,20 @@ namespace EnTier.Repositories
         where TStorage : class, new()
     {
         public abstract IEnumerable<TStorage> All();
-        
+
         protected abstract TStorage Insert(TStorage value);
         public abstract TStorage GetById(TId id);
         public abstract IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate);
         public abstract bool Remove(TStorage value);
         public abstract bool Remove(TId id);
-        
+
         public virtual TStorage Add(TStorage value)
         {
             var stripped = StripMarkedSubEntities(value);
 
             return this.Insert(stripped);
         }
+
         /// <summary>
         /// This method, takes an entity, and returns a clone with only primitive members copied.
         /// It is useful as a pre-check before inserts.  
@@ -41,7 +43,7 @@ namespace EnTier.Repositories
 
             foreach (var property in properties)
             {
-                if (property.PropertyType.IsPrimitive)
+                if (TypeCheck.IsEffectivelyPrimitive(property.PropertyType))
                 {
                     var value = property.GetValue(entity);
 
@@ -75,7 +77,7 @@ namespace EnTier.Repositories
             {
                 var propertyType = property.PropertyType;
 
-                if (propertyType.IsPrimitive || authorizer.IsAllowed(propertyType))
+                if (TypeCheck.IsEffectivelyPrimitive(propertyType) || authorizer.IsAllowed(propertyType))
                 {
                     var value = property.GetValue(entity);
 

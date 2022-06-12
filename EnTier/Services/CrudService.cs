@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Exceptions;
 using EnTier.Mapper;
 using EnTier.Regulation;
@@ -93,7 +94,7 @@ namespace EnTier.Services
 
         public TDomain Update(TDomain value)
         {
-            var id = Utility.Reflection.GetPropertyReader<TDomain, TStorageId>("Id").Invoke(value);
+            var id = TypeCenter.GetPropertyReader<TDomain, TStorageId>("Id").Invoke(value);
 
             return Update(id, value);
         }
@@ -109,7 +110,7 @@ namespace EnTier.Services
         {
             Regulate(value);
             
-            var idReader = Utility.Reflection.GetPropertyReader<TStorage, TDomainId>("Id");
+            var idReader = TypeCenter.GetPropertyReader<TStorage, TDomainId>("Id");
 
             var foundValues = _unitOfWork.GetCrudRepository<TStorage, TDomainId>()
                 .Find(s => idReader(s).Equals(id));

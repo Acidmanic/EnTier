@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 
@@ -31,7 +32,7 @@ namespace EnTier.DataAccess.JsonFile
 
         private void Import(TStorage value)
         {
-            var id = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id")(value);
+            var id = TypeCenter.GetPropertyReader<TStorage, TId>("Id")(value);
 
             _index.Add(id, value);
 
@@ -86,7 +87,7 @@ namespace EnTier.DataAccess.JsonFile
 
         public override bool Remove(TStorage value)
         {
-            var id = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id")(value);
+            var id = TypeCenter.GetPropertyReader<TStorage, TId>("Id")(value);
 
             return Remove(id);
         }

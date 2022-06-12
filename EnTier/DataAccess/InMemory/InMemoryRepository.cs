@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 
@@ -31,7 +32,7 @@ namespace EnTier.DataAccess.InMemory
 
         public override TStorage GetById(TId id)
         {
-            var idReader = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id");
+            var idReader = TypeCenter.GetPropertyReader<TStorage, TId>("Id");
 
             return _data.Find(s => id.Equals(idReader(s)));
         }
@@ -55,7 +56,7 @@ namespace EnTier.DataAccess.InMemory
 
         public override bool Remove(TStorage value)
         {
-            var id = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id").Invoke(value);
+            var id = TypeCenter.GetPropertyReader<TStorage, TId>("Id").Invoke(value);
 
             return Remove(id);
         }
@@ -64,7 +65,7 @@ namespace EnTier.DataAccess.InMemory
         {
             int index = 0;
 
-            var idReader = Utility.Reflection.GetPropertyReader<TStorage, TId>("Id");
+            var idReader = TypeCenter.GetPropertyReader<TStorage, TId>("Id");
 
             bool removedAny = false;
 
