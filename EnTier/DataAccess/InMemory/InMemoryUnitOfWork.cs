@@ -13,18 +13,27 @@ namespace EnTier.DataAccess.InMemory
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             string key = GetKey<TStorage, TId>();
-            
-            if (!Repositories.ContainsKey(key))
-            {
-                var repository = new InMemoryRepository<TStorage,TId>();
+           
+            var repository = new InMemoryRepository<TStorage,TId>();
                 
-                Repositories.Add(key,repository);
-            }
+            Repositories.Add(key,repository);
+            
             return (ICrudRepository<TStorage, TId>) Repositories[key];
         }
 
         public override void Complete() { }
 
+        protected override ICrudRepository<TStorage, TId> ByPassRepositoryInstantiation<TStorage, TId>()
+        {
+            string key = GetKey<TStorage, TId>();
+            
+            if (Repositories.ContainsKey(key))
+            {
+                return (ICrudRepository<TStorage, TId>) Repositories[key];
+            }
+
+            return null;
+        }
 
         protected override void OnDeliveringRepository<TStorage, TId>(ICrudRepository<TStorage, TId> repository)
         {

@@ -10,22 +10,23 @@ namespace EnTier.UnitOfWork
     {
         public ICrudRepository<TStorage, TId> GetCrudRepository<TStorage, TId>() where TStorage : class, new()
         {
-            var customRepositoryType = UnitOfWorkRepositoryConfigurations.GetInstance()
-                .GetRepositoryType<ICrudRepository<TStorage, TId>>();
+            ICrudRepository<TStorage, TId> repository = ByPassRepositoryInstantiation<TStorage, TId>();
 
-
-            ICrudRepository<TStorage, TId> repository;
-
-            if (customRepositoryType != null)
+            if (repository == null)
             {
-                //Return Custom Repository
-                repository = GetCustomRepository<TStorage, TId>(customRepositoryType);
-            }
-            else
-            {
-                repository = CreateDefaultCrudRepository<TStorage, TId>();
-            }
+                var customRepositoryType = UnitOfWorkRepositoryConfigurations.GetInstance()
+                    .GetRepositoryType<ICrudRepository<TStorage, TId>>();
 
+                if (customRepositoryType != null)
+                {
+                    //Return Custom Repository
+                    repository = GetCustomRepository<TStorage, TId>(customRepositoryType);
+                }
+                else
+                {
+                    repository = CreateDefaultCrudRepository<TStorage, TId>();
+                }
+            }
             OnDeliveringRepository(repository);
 
             return repository;
@@ -41,8 +42,8 @@ namespace EnTier.UnitOfWork
         {
             var repositoryType = typeof(TCustomCrudRepository);
 
-            var repository =  (TCustomCrudRepository) GetCustomRepository<TStorage, TId>(repositoryType);
-            
+            var repository = (TCustomCrudRepository) GetCustomRepository<TStorage, TId>(repositoryType);
+
             OnDeliveringRepository(repository);
 
             return repository;
@@ -80,6 +81,21 @@ namespace EnTier.UnitOfWork
             }
 
             return parameterValues;
+        }
+
+        /// <summary>
+        /// This method will allow the derived classes to bypass Repository creation before <code>UnitOfWorkBase</code>
+        /// creates a new instance. Overriding this method will make derived class able to implement caching and etc. 
+        /// </summary>
+        /// <typeparam name="TStorage">Type of Storage model</typeparam>
+        /// <typeparam name="TId">Type of Id Field of Storage model</typeparam>
+        /// <returns>returns An instance of <code>ICrudRepository&lt;TStorage, TId&gt;</code> to bypass Repository creation.
+        /// Or returns null to let <code>UnitOfWorkBase</code> to create a repository instance.
+        /// </returns>
+        protected virtual ICrudRepository<TStorage, TId> ByPassRepositoryInstantiation<TStorage, TId>()
+            where TStorage : class, new()
+        {
+            return null;
         }
 
         protected virtual void OnDeliveringRepository<TStorage, TId>(
