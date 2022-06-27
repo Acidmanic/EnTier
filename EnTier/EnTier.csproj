@@ -14,7 +14,7 @@
         <!-- NuGet -->
         <Id>EnTier</Id>
         <PackageId>EnTier</PackageId>
-        <Version>2.4.0</Version>
+        <Version>2.4.1</Version>
         <Authors>Mani Moayedi</Authors>
         <Company>Acidmanic</Company>
         <PackageIcon>graphics/EnTier.png</PackageIcon>

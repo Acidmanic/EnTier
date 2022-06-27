@@ -15,3 +15,10 @@
  -----
  
   * Add overridable crud methods before error checking for easier driving methods.
+  
+  
+  2.4.1
+  -----
+  
+  * Separate Repository Creation from Indexing it in InMemoryRepositoryBase, 
+    Fixes the issue of un-indexed custom repositories. 
