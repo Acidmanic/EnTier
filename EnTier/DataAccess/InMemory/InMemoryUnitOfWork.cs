@@ -24,7 +24,18 @@ namespace EnTier.DataAccess.InMemory
         }
 
         public override void Complete() { }
-        
+
+
+        protected override void OnDeliveringRepository<TStorage, TId>(ICrudRepository<TStorage, TId> repository)
+        {
+            string key = GetKey<TStorage, TId>();
+            
+            if (!Repositories.ContainsKey(key))
+            {
+                Repositories.Add(key,repository);
+            }
+        }
+
         public override void Dispose()
         {
             Repositories.Clear();

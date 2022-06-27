@@ -13,31 +13,44 @@ namespace EnTier.UnitOfWork
             var customRepositoryType = UnitOfWorkRepositoryConfigurations.GetInstance()
                 .GetRepositoryType<ICrudRepository<TStorage, TId>>();
 
+
+            ICrudRepository<TStorage, TId> repository;
+
             if (customRepositoryType != null)
             {
                 //Return Custom Repository
-                return GetCustomRepository<TStorage, TId>(customRepositoryType);
+                repository = GetCustomRepository<TStorage, TId>(customRepositoryType);
             }
-            var repository = CreateDefaultCrudRepository<TStorage, TId>();
-            
+            else
+            {
+                repository = CreateDefaultCrudRepository<TStorage, TId>();
+            }
+
+            OnDeliveringRepository(repository);
+
             return repository;
         }
 
         protected abstract ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
             where TStorage : class, new();
 
+        [Obsolete(
+            "Using this method can lead your code in a way that your service-layer would have to 'Know about' your data access layer concretely which is a bad practice, so this will be removed in later versions. ")]
         public TCustomCrudRepository GetCrudRepository<TStorage, TId, TCustomCrudRepository>()
             where TStorage : class, new() where TCustomCrudRepository : ICrudRepository<TStorage, TId>
         {
             var repositoryType = typeof(TCustomCrudRepository);
 
-            return (TCustomCrudRepository) GetCustomRepository<TStorage, TId>(repositoryType);
+            var repository =  (TCustomCrudRepository) GetCustomRepository<TStorage, TId>(repositoryType);
+            
+            OnDeliveringRepository(repository);
+
+            return repository;
         }
-        
-        private ICrudRepository<TStorage,TId> GetCustomRepository<TStorage, TId>(Type repositoryType)
+
+        private ICrudRepository<TStorage, TId> GetCustomRepository<TStorage, TId>(Type repositoryType)
             where TStorage : class, new()
         {
-            
             var repoConstructor = GetConstructor(repositoryType);
 
             if (repoConstructor == null)
@@ -46,16 +59,16 @@ namespace EnTier.UnitOfWork
             }
 
             object[] parameterValues = ProvideConstructorParameters(repoConstructor);
-            
+
             var repository = repoConstructor.Invoke(parameterValues);
 
-            return (ICrudRepository<TStorage,TId>) repository;
+            return (ICrudRepository<TStorage, TId>) repository;
         }
 
         private object[] ProvideConstructorParameters(ConstructorInfo repoConstructor)
         {
             var parameters = repoConstructor.GetParameters();
-            
+
             var dbSetTypes = repoConstructor.GetParameters()
                 .Select(p => p.ParameterType).ToList();
 
@@ -69,13 +82,18 @@ namespace EnTier.UnitOfWork
             return parameterValues;
         }
 
+        protected virtual void OnDeliveringRepository<TStorage, TId>(
+            ICrudRepository<TStorage, TId> repository) where TStorage : class, new()
+        {
+        }
+
         protected virtual bool IsConstructorAcceptable(ConstructorInfo constructor)
         {
             return constructor.IsAbstract == false &&
                    constructor.IsPrivate == false &&
                    constructor.GetParameters().Length == 0;
         }
-        
+
         private ConstructorInfo GetConstructor(Type repoType)
         {
             var constructors = repoType.GetConstructors();
@@ -112,6 +130,7 @@ namespace EnTier.UnitOfWork
         {
             return null;
         }
+
         public abstract void Complete();
         public abstract void Dispose();
     }
