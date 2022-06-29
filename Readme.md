@@ -133,11 +133,11 @@ Custom Repositories
 
 When you implement your own ```ICrudRepository```, you can get your Custom repository 
 in your services by calling ```IUnitOfWork.GetCrudRepository<TStorage, TId, TCustomCrudRepository>()```.
-This way everything will work fine but ```IUnitOfWork.GetCrudRepository<TStorage, TId>()``` 
-method still will return the default Crud-Repository for you model, not the Custom Repository 
-you just created. To override this behavior, and get your custom repository used for every usage 
+This way, everything will work fine but the ```IUnitOfWork.GetCrudRepository<TStorage, TId>()``` 
+method still will return the default Crud-Repository for your model, not the Custom Repository 
+you just created. To override this behavior, and get your that custom repository, for every usage 
 in your EnTier application, you need to do one step more and register your custom repository. 
-to do so, in the web applications you can call ```IApplicationBuilder.UseRepository<TCustomRepository>()``` 
+to do so, in the web applications you can call ```IApplicationBuilder.UseRepository<TStorage,TId,TCustomRepository>()``` 
 in your startup file like this:
 
 
@@ -146,12 +146,12 @@ in your startup file like this:
         {
             //...
 
-            app.UseRepository<ICrudRepository<PostStg, long>, CustomRepository>();
+            app.UseRepository<PostStg, long, CustomRepository>();
         }
  ```
 
  and for other types of application like console applications you can just simply call 
- ```UnitOfWorkRepositoryConfigurations.GetInstance().RegisterCustomRepository<TAbstraction,TRepository>()```.
+ ```UnitOfWorkRepositoryConfigurations.GetInstance().RegisterCustomRepository<TStorage,TId,TCustomRepository>()```.
 
 
 In ___Example.EntityFramework.CustomRepository___, notice that the https://localhost:5001/Posts/ endpoint 

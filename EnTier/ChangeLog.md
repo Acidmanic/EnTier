@@ -22,3 +22,10 @@
   
   * Separate Repository Creation from Indexing it in InMemoryRepositoryBase, 
     Fixes the issue of un-indexed custom repositories. 
+    
+    
+  2.5.0
+  ------
+  
+  * Added adapter for Meadow 
+  * Fixed Misleading Custom Repository registration
