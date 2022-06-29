@@ -24,8 +24,7 @@
     Fixes the issue of un-indexed custom repositories. 
     
     
-  2.5.0
+  2.4.3
   ------
-  
-  * Added adapter for Meadow 
-  * Fixed Misleading Custom Repository registration
+   
+    * Fixed Misleading Custom Repository registration
