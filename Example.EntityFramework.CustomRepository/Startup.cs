@@ -47,10 +47,10 @@ namespace ExampleEntityFramework
             app.UseRouting();
 
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            app.UseRepository<ICrudRepository<PostStg, long>, DummyRepository>();
+            app.UseRepository<PostStg, long, DummyRepository>();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using EnTier.Repositories;
 
 namespace EnTier.UnitOfWork
 {
@@ -8,15 +9,15 @@ namespace EnTier.UnitOfWork
     {
         private readonly  Dictionary<Type, Type> _repositoryMap = new Dictionary<Type, Type>();
 
-        public void RegisterCustomRepository<TAbstraction, TRepository>()
+        public void RegisterCustomRepository<TStorage,TId, TRepository>() where TStorage : class, new()
         {
-            this._repositoryMap[typeof(TAbstraction)] = typeof(TRepository);
+            this._repositoryMap[typeof(ICrudRepository<TStorage,TId>)] = typeof(TRepository);
         }
 
 
-        public Type GetRepositoryType<TAbstraction>()
+        public Type GetRepositoryType<TStorage,TId>() where TStorage : class, new()
         {
-            var type = typeof(TAbstraction);
+            var type = typeof(ICrudRepository<TStorage,TId>);
 
             if (this._repositoryMap.ContainsKey(type))
             {

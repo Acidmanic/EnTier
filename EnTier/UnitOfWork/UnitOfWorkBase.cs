@@ -15,7 +15,7 @@ namespace EnTier.UnitOfWork
             if (repository == null)
             {
                 var customRepositoryType = UnitOfWorkRepositoryConfigurations.GetInstance()
-                    .GetRepositoryType<ICrudRepository<TStorage, TId>>();
+                    .GetRepositoryType<TStorage, TId>();
 
                 if (customRepositoryType != null)
                 {

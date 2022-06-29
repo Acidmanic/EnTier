@@ -1,4 +1,5 @@
 using System;
+using System.Data.SqlTypes;
 using EnTier.Fixture;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
@@ -11,7 +12,7 @@ namespace Microsoft.AspNetCore.Builder
         public static IApplicationBuilder UseFixture<TFixture>(this IApplicationBuilder app)
         {
             var serviceResolver = new ServiceProviderFixtureResolver(app.ApplicationServices);
-            
+
             var executer = new FixtureExecuter(serviceResolver);
 
             try
@@ -26,12 +27,11 @@ namespace Microsoft.AspNetCore.Builder
             return app;
         }
 
-        public static IApplicationBuilder UseRepository<TAbstraction, TRepository>(this IApplicationBuilder app)
-        where TRepository:TAbstraction
+        public static IApplicationBuilder UseRepository<TStorage, TId, TRepository>(this IApplicationBuilder app)
+            where TRepository : ICrudRepository<TStorage, TId> where TStorage : class, new()
         {
+            UnitOfWorkRepositoryConfigurations.GetInstance().RegisterCustomRepository<TStorage, TId, TRepository>();
 
-            UnitOfWorkRepositoryConfigurations.GetInstance().RegisterCustomRepository<TAbstraction,TRepository>();
-            
             return app;
         }
     }
