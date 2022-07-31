@@ -31,9 +31,13 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
 
         protected abstract string PickProcedureName(NameConvention nameConvention);
 
-        protected override string GetRequestText()
+        public override string RequestText
         {
-            return PickProcedureName(NameConvention);
+            get
+            {
+                return PickProcedureName(NameConvention);
+            }
+            protected set{}
         }
 
         protected override bool FullTreeReadWrite()
