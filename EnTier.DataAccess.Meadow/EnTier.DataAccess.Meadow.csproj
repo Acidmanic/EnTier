@@ -9,14 +9,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Meadow.Framework" Version="1.0.0"/>
+        <PackageReference Include="Meadow.Framework" Version="1.0.1"/>
     </ItemGroup>
 
     <PropertyGroup>
         <!-- NuGet -->
         <Id>EnTier.DataAccess.Meadow</Id>
         <PackageId>EnTier.DataAccess.Meadow</PackageId>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <Authors>Mani Moayedi</Authors>
         <Company>Acidmanic</Company>
         <PackageIcon>graphics/EnTier.png</PackageIcon>
