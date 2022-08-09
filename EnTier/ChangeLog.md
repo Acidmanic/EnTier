@@ -27,10 +27,15 @@
   2.4.3
   ------
    
-    * Fixed Misleading Custom Repository registration
+   * Fixed Misleading Custom Repository registration
     
   2.4.4
   -----
   
-    * Added ```UseFixture<TFixture>``` also to IServiceProvider.
-    * Fixed StorageRequest<> regarding meadow updates
+   * Added ```UseFixture<TFixture>``` also to IServiceProvider.
+   * Fixed StorageRequest<> regarding meadow updates
+    
+  2.4.5
+  -----
+  
+   * Updated Reflection to b7

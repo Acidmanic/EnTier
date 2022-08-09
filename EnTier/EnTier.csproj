@@ -7,7 +7,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
-        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.0-b2" />
+        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.0-b7" />
     </ItemGroup>
 
     <PropertyGroup>
