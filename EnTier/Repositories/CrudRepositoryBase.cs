@@ -14,6 +14,7 @@ namespace EnTier.Repositories
         public abstract IEnumerable<TStorage> All();
 
         protected abstract TStorage Insert(TStorage value);
+        public abstract TStorage Set(TStorage value);
         public abstract TStorage GetById(TId id);
         public abstract IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate);
         public abstract bool Remove(TStorage value);
@@ -25,6 +26,8 @@ namespace EnTier.Repositories
 
             return this.Insert(stripped);
         }
+
+        public abstract TStorage Update(TStorage value);
 
         /// <summary>
         /// This method, takes an entity, and returns a clone with only primitive members copied.

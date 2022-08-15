@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EnTier.DataAccess.JsonFile
+namespace EnTier.Utility
 {
     public class IdGenerator
     {
@@ -22,8 +22,8 @@ namespace EnTier.DataAccess.JsonFile
             var idType = typeof(TId);
 
             var id = New(idType);
-            
-            return (TId)id;
+
+            return (TId) id;
         }
 
         public object SetId(object value)
@@ -39,23 +39,25 @@ namespace EnTier.DataAccess.JsonFile
                     var idType = idProperty.PropertyType;
 
                     var id = New(idType);
-                    
-                    idProperty.SetValue(value,id);
+
+                    idProperty.SetValue(value, id);
 
                     return id;
                 }
             }
+
             return null;
         }
-        
-        private object New(Type idType)
+
+        public object New(Type idType)
         {
             var id = PopNewId(idType);
 
             while (_takenIds.Contains(id))
             {
-                id = PopNewId(idType,id);
+                id = PopNewId(idType, id);
             }
+
             return id;
         }
 
@@ -65,13 +67,13 @@ namespace EnTier.DataAccess.JsonFile
             if (
                 idType == typeof(int) || idType == typeof(long) || idType == typeof(short) ||
                 idType == typeof(double) || idType == typeof(decimal) || idType == typeof(byte)
-                || idType == typeof(float) || idType == typeof(uint) || idType == typeof(ulong) 
+                || idType == typeof(float) || idType == typeof(uint) || idType == typeof(ulong)
                 || idType == typeof(ushort) || idType == typeof(sbyte)
                 || idType == typeof(Int16) || idType == typeof(Int32) || idType == typeof(Int64) ||
                 idType == typeof(Double) || idType == typeof(Decimal) || idType == typeof(Byte)
                 || idType == typeof(UInt16) || idType == typeof(UInt32) || idType == typeof(UInt64)
                 || idType == typeof(SByte)
-                )
+            )
             {
                 try
                 {
@@ -99,13 +101,14 @@ namespace EnTier.DataAccess.JsonFile
 
                 if (constructor != null)
                 {
-                    return constructor.Invoke(new object[]{ });
+                    return constructor.Invoke(new object[] { });
                 }
             }
             catch (Exception)
             {
                 // ignored
             }
+
             throw new Exception($"Given Id Type, {idType.Name}, is not regenerative.");
         }
 
