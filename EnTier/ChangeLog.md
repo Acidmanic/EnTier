@@ -35,7 +35,10 @@
    * Added ```UseFixture<TFixture>``` also to IServiceProvider.
    * Fixed StorageRequest<> regarding meadow updates
     
-  2.4.5
+  2.5.0
   -----
   
    * Updated Reflection to b7
+   * Added Set Method to repository
+   
+   
