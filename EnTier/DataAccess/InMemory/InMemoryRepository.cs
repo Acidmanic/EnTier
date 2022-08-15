@@ -56,6 +56,8 @@ namespace EnTier.DataAccess.InMemory
             {
                 var id = _idGenerator.New<TId>();
                 
+                _idGenerator.Taken(id);
+                
                 _idLeaf.Evaluator.Write(value,id);
             }
             return value;
