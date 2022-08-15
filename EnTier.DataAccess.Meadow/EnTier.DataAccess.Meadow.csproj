@@ -5,11 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EnTier\EnTier.csproj"/>
+        <ProjectReference Include="..\EnTier\EnTier.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Meadow.Framework" Version="1.0.1"/>
+        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.0-b8" />
+        <PackageReference Include="Meadow.Framework" Version="1.0.3" />
     </ItemGroup>
 
     <PropertyGroup>
