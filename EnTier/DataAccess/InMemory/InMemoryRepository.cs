@@ -32,7 +32,20 @@ namespace EnTier.DataAccess.InMemory
 
         public override TStorage Update(TStorage value)
         {
-            throw new NotImplementedException();
+            if (_idLeaf != null)
+            {
+                var id = (TId) _idLeaf.Evaluator.Read(value) ;
+
+                if (id != null)
+                {
+                    if (Remove(id))
+                    {
+                        return this.Add(value);
+                    }
+                }
+            }
+            
+            return default;
         }
 
         protected override TStorage Insert(TStorage value)
