@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
@@ -14,7 +15,7 @@ namespace EnTier.DataAccess.JsonFile
         private readonly Dictionary<TId, TStorage> _index = new Dictionary<TId, TStorage>();
         private readonly List<TStorage> _data;
         private readonly IdGenerator _idGenerator = new IdGenerator();
-
+        private readonly AccessNode _idLeaf = IdHelper.GetIdNode<TStorage, TId>();
 
         public JsonFileRepository(List<TStorage> data)
         {
@@ -39,12 +40,30 @@ namespace EnTier.DataAccess.JsonFile
 
             _idGenerator.Taken(id);
         }
-        
+
         [KeepAllProperties()]
         public override TStorage Add(TStorage value)
         {
             return base.Add(value);
-        } 
+        }
+
+        public override TStorage Update(TStorage value)
+        {
+            if (_idLeaf != null)
+            {
+                var id = (TId) _idLeaf.Evaluator.Read(value) ;
+
+                if (id != null)
+                {
+                    if (Remove(id))
+                    {
+                        return this.Add(value);
+                    }
+                }
+            }
+            
+            return default;
+        }
 
         protected override TStorage Insert(TStorage value)
         {
@@ -57,6 +76,20 @@ namespace EnTier.DataAccess.JsonFile
             _data.Add(value);
 
             return value;
+        }
+
+        public override TStorage Set(TStorage value)
+        {
+            if (_idLeaf != null)
+            {
+                var id = (TId) _idLeaf.Evaluator.Read(value) ;
+
+                if (id != null)
+                {
+                    Remove(id);
+                }
+            }
+            return this.Add(value);
         }
 
         public override TStorage GetById(TId id)
