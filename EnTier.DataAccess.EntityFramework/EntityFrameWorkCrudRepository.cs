@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using EnTier.Repositories;
+using EnTier.Utility;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 
@@ -33,6 +34,31 @@ namespace EnTier.DataAccess.EntityFramework
             }
 
             return default;
+        }
+
+        public override TStorage Update(TStorage value)
+        {
+            return DbSet.Update(value).Entity;
+        }
+
+        public override TStorage Set(TStorage value)
+        {
+            var idLeaf = IdHelper.GetIdNode<TStorage, TId>();
+
+            if (idLeaf != null)
+            {
+                if (idLeaf.Evaluator.Read(value) is TId id)
+                {
+                    var found = DbSet.Find(id);
+
+                    if (found != null)
+                    {
+                        return DbSet.Update(value).Entity;
+                    }
+                }
+            }
+
+            return Insert(value);
         }
 
         public override TStorage GetById(TId id)
