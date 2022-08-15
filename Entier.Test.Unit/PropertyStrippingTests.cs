@@ -41,6 +41,16 @@ namespace Entier.Test.Unit
                 return value;
             }
 
+            public override Model Update(Model value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override Model Set(Model value)
+            {
+                throw new NotImplementedException();
+            }
+
 
             public override Model GetById(long id)
             {
