@@ -48,6 +48,32 @@ namespace EnTier.DataAccess.Meadow
             return result;
         }
 
+        public override TStorage Update(TStorage value)
+        {
+            var request = new UpdateStorageRequest<TStorage> {ToStorage = value};
+
+            var engine = GetEngine();
+
+            var response = engine.PerformRequest(request);
+
+            var result = response.FromStorage.FirstOrDefault();
+
+            return result;
+        }
+
+        public override TStorage Set(TStorage value)
+        {
+            var request = new SaveStorageRequest<TStorage> {ToStorage = value};
+
+            var engine = GetEngine();
+
+            var response = engine.PerformRequest(request);
+
+            var result = response.FromStorage.FirstOrDefault();
+
+            return result;
+        }
+
         public override TStorage GetById(TId id)
         {
             var request = new ReadByIdStorageRequest<TStorage, TId>()
