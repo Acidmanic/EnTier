@@ -1,7 +1,4 @@
 
-
-
-
 2.3.1
 -----
 
@@ -15,8 +12,7 @@
  -----
  
   * Add overridable crud methods before error checking for easier driving methods.
-  
-  
+    
   2.4.2
   -----
   
@@ -40,5 +36,12 @@
   
    * Updated Reflection to b7
    * Added Set Method to repository
+   
+   2.5.1
+   -----
+   * Updated Reflection to b8
+   * Fix Set and Update issues
+   * Clarify and update Id-field detection 
+   
    
    
