@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Exceptions;
 using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.UnitOfWork;
+using EnTier.Utility;
 
 namespace EnTier.Services
 {
@@ -14,7 +18,9 @@ namespace EnTier.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IDataAccessRegulator<TDomain, TStorage> _regulator;
-
+        private readonly AccessNode _storageIdLeaf = IdHelper.GetIdNode<TStorage, TStorageId>();
+        private readonly AccessNode _domainIdLeaf = IdHelper.GetIdNode<TDomain, TDomainId>();
+        
         public CrudService(IUnitOfWork unitOfWork, IMapper mapper) : this(unitOfWork, mapper,
             new NullDataAccessRegulator<TDomain, TStorage>())
         {
@@ -94,9 +100,12 @@ namespace EnTier.Services
 
         public TDomain Update(TDomain value)
         {
-            var id = TypeCenter.GetPropertyReader<TDomain, TStorageId>("Id").Invoke(value);
-
-            return Update(id, value);
+            if (_domainIdLeaf.Evaluator.Read(value) is TDomainId id )
+            {
+                return Update(id, value);    
+            }
+            // Not Successful
+            return null;
         }
 
         public TDomain Update(TDomainId id, TDomain value)
@@ -109,15 +118,18 @@ namespace EnTier.Services
         private TDomain Update(TStorageId id, TDomain value)
         {
             Regulate(value);
-            
-            var idReader = TypeCenter.GetPropertyReader<TStorage, TDomainId>("Id");
 
-            var foundValues = _unitOfWork.GetCrudRepository<TStorage, TDomainId>()
-                .Find(s => idReader(s).Equals(id));
+            var repo = _unitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
-            foreach (var found in foundValues)
+            var found = repo.Find(s => _storageIdLeaf.Evaluator.Read(s).Equals(id))
+                .FirstOrDefault();
+
+            if(found != null)
             {
-                _mapper.Map(value, found);
+                
+                var storageUpdate =_mapper.Map<TStorage>(value);
+
+                repo.Set(storageUpdate);
 
                 _unitOfWork.Complete();
 

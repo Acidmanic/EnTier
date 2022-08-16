@@ -15,4 +15,9 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Meadow.Framework" Version="1.0.3" />
+      <PackageReference Include="Meadow.SqlServer" Version="1.0.0" />
+    </ItemGroup>
+
 </Project>

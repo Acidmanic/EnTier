@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Meadow;
 using Meadow.Configuration;
 using Meadow.Log;
+using Meadow.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -62,6 +63,8 @@ namespace Example.Meadow
             
             var engine = new MeadowEngine(new MeadowConfigurationProvider().GetConfigurations(),new ConsoleLogger());
 
+            engine.UseSqlServer();
+            
             if (engine.DatabaseExists())
             {
                 engine.DropDatabase();

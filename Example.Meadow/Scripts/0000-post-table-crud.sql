@@ -49,3 +49,20 @@ AS
             select cast(0 as bit) Success
 GO
 ------------------------------------------------------------------------------------------------------------------------
+CREATE  PROCEDURE spSavePost(@Id bigint,@Title nvarchar(32),@Content nvarchar(256))
+AS
+    IF EXISTS (SELECT 1 FROM Posts WHERE Id=@Id)
+        BEGIN
+            UPDATE Posts SET Title=@Title,Content=@Content
+            WHERE Id=@Id
+        END
+    ELSE
+        BEGIN
+            INSERT INTO Posts (Title, Content)
+            VALUES (@Title,@Content)
+            DECLARE @newId bigint=(IDENT_CURRENT('Posts'));
+            SELECT * FROM Posts WHERE Id=@newId;
+        END
+GO
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------

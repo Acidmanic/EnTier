@@ -161,12 +161,7 @@ namespace EnTier.Controllers
 
             var domain = Service.GetById(domainId);
 
-            if (domain == null)
-            {
-                return null;
-            }
-
-            var transfer = Mapper.Map<TTransfer>(domain);
+            var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
             return transfer;
         }
@@ -189,7 +184,7 @@ namespace EnTier.Controllers
 
             domain = Service.Add(domain);
 
-            var transfer = Mapper.Map<TTransfer>(domain);
+            var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
             return transfer;
         }
@@ -212,7 +207,7 @@ namespace EnTier.Controllers
 
             domain = Service.Update(domain);
 
-            var transfer = Mapper.Map<TTransfer>(domain);
+            var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
             return transfer;
         }
@@ -235,7 +230,7 @@ namespace EnTier.Controllers
 
             domain = Service.Update(domain);
 
-            var transfer = Mapper.Map<TTransfer>(domain);
+            var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
             return transfer;
         }
