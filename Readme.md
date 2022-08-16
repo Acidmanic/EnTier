@@ -85,6 +85,11 @@ Using JsonFile data access layer
  uses its internal Mapper to map objects. Later you will see how to use another 
  mapper instead. 
  
+  * Note: __EnTier__ NEEDS TO FIND YOUR ID FIELD IN YOUR ENTITY MODEL, THAT WOULD BE POSSIBLE WHEN,
+  YOU USE ATTRIBUTE ```AutoValuedMember``` ON THE ID PROPERTY OF THE ENTITY. WHITOUT THAT, OPERATIONS 
+  WHICH ARE BASED ON IDS WOULD NOT WORK AS EXPECTED.
+  
+  
 Using EntityFramework
 ----------    
  
