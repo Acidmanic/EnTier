@@ -17,7 +17,7 @@ namespace EnTier.DataAccess.InMemory
     {
         private readonly List<TStorage> _data = new List<TStorage>();
         private readonly  IdGenerator _idGenerator = new IdGenerator();
-        private readonly AccessNode _idLeaf =  IdHelper.GetIdNode<TStorage, TId>();
+        private readonly AccessNode _idLeaf =  IdHelper.GetIdLeaf<TStorage, TId>();
         
         public override IEnumerable<TStorage> All()
         {

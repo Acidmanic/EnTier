@@ -19,8 +19,8 @@ namespace EnTier.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IDataAccessRegulator<TDomain, TStorage> _regulator;
-        private readonly AccessNode _storageIdLeaf = IdHelper.GetIdNode<TStorage, TStorageId>();
-        private readonly AccessNode _domainIdLeaf = IdHelper.GetIdNode<TDomain, TDomainId>();
+        private readonly AccessNode _storageIdLeaf = IdHelper.GetIdLeaf<TStorage, TStorageId>();
+        private readonly AccessNode _domainIdLeaf = IdHelper.GetIdLeaf<TDomain, TDomainId>();
         private readonly bool _entityHasId;
 
 

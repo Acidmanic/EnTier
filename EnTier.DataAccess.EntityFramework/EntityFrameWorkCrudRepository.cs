@@ -45,7 +45,7 @@ namespace EnTier.DataAccess.EntityFramework
 
         public override TStorage Set(TStorage value)
         {
-            var idLeaf = IdHelper.GetIdNode<TStorage, TId>();
+            var idLeaf = IdHelper.GetIdLeaf<TStorage, TId>();
 
             if (idLeaf != null)
             {

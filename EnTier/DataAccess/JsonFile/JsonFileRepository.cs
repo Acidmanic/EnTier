@@ -15,7 +15,7 @@ namespace EnTier.DataAccess.JsonFile
         private readonly Dictionary<TId, TStorage> _index = new Dictionary<TId, TStorage>();
         private readonly List<TStorage> _data;
         private readonly IdGenerator _idGenerator = new IdGenerator();
-        private readonly AccessNode _idLeaf = IdHelper.GetIdNode<TStorage, TId>();
+        private readonly AccessNode _idLeaf = IdHelper.GetIdLeaf<TStorage, TId>();
 
         public JsonFileRepository(List<TStorage> data)
         {
