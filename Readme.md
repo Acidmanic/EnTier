@@ -69,6 +69,19 @@ attribute to it.
  EnTier will create and use an ```InMemoryUnitOfWork```, which itself produces in-memory 
  repositories and use them with ```CrudService```(s).
  
+ 
+ Models - Ids
+ ------------
+ __EnTier__ needs to find the id field in your models for certain operations. You can use Member attributes 
+ (```AutovalueMember```, ```UniqueMember```) on the properties or signal the Id field ba naming it Id. (case insensitive).
+ this is the priority that __EnTier__ uses to detect your Id field:
+ 
+  1. The property has an ```AutovalueMember``` attribute
+  2. A property with ```UniqueMember```  attribute
+  3. The property that its name is "Id" (case-insensitive)
+ 
+ 
+ 
 Using JsonFile data access layer
 -------
  
@@ -84,10 +97,6 @@ Using JsonFile data access layer
  also different models are used for Transfer (Dtos), Domain and Storage. so EnTier 
  uses its internal Mapper to map objects. Later you will see how to use another 
  mapper instead. 
- 
-  * Note: __EnTier__ NEEDS TO FIND YOUR ID FIELD IN YOUR ENTITY MODEL, THAT WOULD BE POSSIBLE WHEN,
-  YOU USE ATTRIBUTE ```AutoValuedMember``` ON THE ID PROPERTY OF THE ENTITY. WHITOUT THAT, OPERATIONS 
-  WHICH ARE BASED ON IDS WOULD NOT WORK AS EXPECTED.
   
   
 Using EntityFramework
