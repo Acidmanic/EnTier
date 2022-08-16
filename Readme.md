@@ -163,6 +163,8 @@ use a default crud repository. But the https://localhost:5001/Posts/custom endpo
 data from custom repository because it's explicitly using ```IUnitOfWork.GetRepository<TStorage,TId,TCustom>()```.
 
 
+ * Note: PLEASE NOTE THAT THE ```ICrudRepository.Update(.)``` METHOD IS NOT ACTUALLY WELL-CONFIRMING WITH the __Repository Design Pattern__. 
+ IT ONLY EXISTS FOR SO THAT THE _CrudRepository_ OBJECTS HAVE A MORE COMPLETE AND HANDY SET OF METHODS FOR CASES THAT A LITTLE _YAGNI_ WOULD BE MORE BENEFICIAL. 
 
 __Custom Repositories and constructor injection__
 
