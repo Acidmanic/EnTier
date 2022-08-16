@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Exceptions;
@@ -20,10 +21,13 @@ namespace EnTier.Services
         private readonly IDataAccessRegulator<TDomain, TStorage> _regulator;
         private readonly AccessNode _storageIdLeaf = IdHelper.GetIdNode<TStorage, TStorageId>();
         private readonly AccessNode _domainIdLeaf = IdHelper.GetIdNode<TDomain, TDomainId>();
-        
+        private readonly bool _entityHasId;
+
+
         public CrudService(IUnitOfWork unitOfWork, IMapper mapper) : this(unitOfWork, mapper,
             new NullDataAccessRegulator<TDomain, TStorage>())
         {
+            _entityHasId = _storageIdLeaf != null && _domainIdLeaf != null;
         }
 
         public CrudService(IUnitOfWork unitOfWork, IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
@@ -33,7 +37,10 @@ namespace EnTier.Services
             _mapper = mapper;
 
             _regulator = regulator;
+
+            _entityHasId = _storageIdLeaf != null && _domainIdLeaf != null;
         }
+
 
         public IEnumerable<TDomain> GetAll()
         {
@@ -84,12 +91,12 @@ namespace EnTier.Services
 
             return regulatedStorage;
         }
-        
+
         public TDomain Add(TDomain value)
         {
             var storage = Regulate(value);
 
-             storage =  _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
+            storage = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
 
             _unitOfWork.Complete();
 
@@ -100,10 +107,11 @@ namespace EnTier.Services
 
         public TDomain Update(TDomain value)
         {
-            if (_domainIdLeaf.Evaluator.Read(value) is TDomainId id )
+            if (_entityHasId && _domainIdLeaf.Evaluator.Read(value) is TDomainId id)
             {
-                return Update(id, value);    
+                return Update(id, value);
             }
+
             // Not Successful
             return null;
         }
@@ -121,13 +129,13 @@ namespace EnTier.Services
 
             var repo = _unitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
-            var found = repo.Find(s => _storageIdLeaf.Evaluator.Read(s).Equals(id))
-                .FirstOrDefault();
+            Expression<Func<TStorage, bool>> selector = s => _entityHasId && (_storageIdLeaf.Evaluator.Read(s).Equals(id));
 
-            if(found != null)
+            var found = repo.Find(selector).FirstOrDefault();
+
+            if (found != null)
             {
-                
-                var storageUpdate =_mapper.Map<TStorage>(value);
+                var storageUpdate = _mapper.Map<TStorage>(value);
 
                 repo.Set(storageUpdate);
 

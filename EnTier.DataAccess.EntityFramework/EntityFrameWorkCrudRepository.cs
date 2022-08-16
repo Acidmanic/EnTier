@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Acidmanic.Utilities.Reflection.Extensions;
+using EnTier.DataAccess.EntityFramework.Extensions;
 using EnTier.Repositories;
 using EnTier.Utility;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +55,9 @@ namespace EnTier.DataAccess.EntityFramework
 
                     if (found != null)
                     {
-                        return DbSet.Update(value).Entity;
+                        value.CopyInto(found,idLeaf.GetFullName());
+
+                        return DbSet.Update(found).Entity;
                     }
                 }
             }
