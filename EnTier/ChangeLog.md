@@ -41,7 +41,11 @@
    -----
    * Updated Reflection to b8
    * Fix Set and Update issues
-   * Clarify and update Id-field detection 
+   * Clarify and update Id-field detection
+   
+  2.5.2
+  -----
+   * Add Logging 
    
    
    
