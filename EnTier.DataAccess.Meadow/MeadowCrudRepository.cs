@@ -26,7 +26,7 @@ namespace EnTier.DataAccess.Meadow
         {
             if (response.Failed)
             {
-                Logger.LogError("Meadow Request Failed.",response.FailureException);
+                Logger.LogError("Meadow Request Failed: {response.FailureException}",response.FailureException);
             }
         }
         
