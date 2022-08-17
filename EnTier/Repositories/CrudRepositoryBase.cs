@@ -5,6 +5,7 @@ using System.Reflection;
 using Acidmanic.Utilities.Reflection;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories
 {
@@ -19,6 +20,8 @@ namespace EnTier.Repositories
         public abstract IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate);
         public abstract bool Remove(TStorage value);
         public abstract bool Remove(TId id);
+        
+        protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
 
         public virtual TStorage Add(TStorage value)
         {

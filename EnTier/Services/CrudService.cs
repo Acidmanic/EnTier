@@ -8,6 +8,7 @@ using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.UnitOfWork;
 using EnTier.Utility;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services
 {
@@ -23,6 +24,8 @@ namespace EnTier.Services
         private readonly bool _entityHasId;
 
 
+        protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
+        
         public CrudService(IUnitOfWork unitOfWork, IMapper mapper) : this(unitOfWork, mapper,
             new NullDataAccessRegulator<TDomain, TStorage>())
         {

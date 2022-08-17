@@ -3,11 +3,15 @@ using System.Linq;
 using System.Reflection;
 using EnTier.Exceptions;
 using EnTier.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.UnitOfWork
 {
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
+        
+        protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
+        
         public ICrudRepository<TStorage, TId> GetCrudRepository<TStorage, TId>() where TStorage : class, new()
         {
             ICrudRepository<TStorage, TId> repository = ByPassRepositoryInstantiation<TStorage, TId>();
@@ -19,7 +23,8 @@ namespace EnTier.UnitOfWork
 
                 if (customRepositoryType != null)
                 {
-                    //Return Custom Repository
+                    Logger.Log(LogLevel.Debug, "Found Repository {customRepositoryType.FullName} for model {typeof(TStorage).Name}",customRepositoryType.FullName,typeof(TStorage).Name);
+                    
                     repository = GetCustomRepository<TStorage, TId>(customRepositoryType);
                 }
                 else

@@ -7,6 +7,7 @@ using EnTier.Regulation;
 using EnTier.Services;
 using EnTier.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Controllers
 {
@@ -19,6 +20,8 @@ namespace EnTier.Controllers
         protected IMapper Mapper { get; set; }
         protected IUnitOfWork UnitOfWork { get; set; }
         protected ICrudService<TDomain, TDomainId> Service { get; set; }
+
+        protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
 
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; } =
             new NullDataAccessRegulator<TDomain, TStorage>();
