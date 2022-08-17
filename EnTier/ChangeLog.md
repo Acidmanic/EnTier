@@ -43,9 +43,10 @@
    * Fix Set and Update issues
    * Clarify and update Id-field detection
    
-  2.5.2
+  2.5.3
   -----
-   * Add Logging 
+   * Add Logging
+   * Add Extension method to ILoggers so they can be set for EnTier logging 
    
    
    

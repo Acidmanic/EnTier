@@ -363,6 +363,9 @@ nuget.org.
 the same for ```services.AddEntityFrameworkUnitOfWork()```, and you should register an instance
  of ```EntityFrameworkUnitOfWork``` (or any custom UnitOfWork implementation) for interface ```IUnitOfWork``` manually.
 
+
+
+
 Notes
 =========
 
