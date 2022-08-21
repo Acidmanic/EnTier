@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Acidmanic.Utilities.Reflection.Extensions;
-using EnTier.DataAccess.EntityFramework.Extensions;
 using EnTier.Repositories;
 using EnTier.Utility;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Serialization;
 
 namespace EnTier.DataAccess.EntityFramework
 {
