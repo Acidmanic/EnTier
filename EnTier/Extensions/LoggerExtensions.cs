@@ -1,3 +1,4 @@
+using EnTier.Logging;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Extensions

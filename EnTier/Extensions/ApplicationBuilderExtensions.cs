@@ -2,6 +2,7 @@ using System;
 using System.Data.SqlTypes;
 using EnTier;
 using EnTier.Fixture;
+using EnTier.Logging;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
 using Microsoft.Extensions.Logging;

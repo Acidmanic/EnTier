@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using EnTier.DataAccess.InMemory;
+using EnTier.Logging;
 using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.Services;

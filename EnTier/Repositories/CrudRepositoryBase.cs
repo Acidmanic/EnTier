@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Acidmanic.Utilities.Reflection;
+using EnTier.Logging;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
 using Microsoft.Extensions.Logging;

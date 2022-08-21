@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using EnTier.Exceptions;
+using EnTier.Logging;
 using EnTier.Repositories;
 using Microsoft.Extensions.Logging;
 

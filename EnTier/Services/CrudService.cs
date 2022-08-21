@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.Exceptions;
+using EnTier.Logging;
 using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.UnitOfWork;
