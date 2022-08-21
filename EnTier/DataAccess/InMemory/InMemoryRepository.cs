@@ -50,9 +50,7 @@ namespace EnTier.DataAccess.InMemory
 
         protected override TStorage Insert(TStorage value)
         {
-            _data.Add(value);
-
-            if (_idLeaf != null)
+            if (_idLeaf != null && _idLeaf.IsAutoValued)
             {
                 var id = _idGenerator.New<TId>();
                 
@@ -60,6 +58,8 @@ namespace EnTier.DataAccess.InMemory
                 
                 _idLeaf.Evaluator.Write(value,id);
             }
+            _data.Add(value);
+            
             return value;
         }
 

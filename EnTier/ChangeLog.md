@@ -48,13 +48,14 @@
    * Add Logging
    * Add Extension method to ILoggers so they can be set for EnTier logging 
 
-  2.5.5
+  2.5.6
   ------
   
    * Update Reflection module
    * Add Logging Adapters for Entier
    * Add FixtureManager to help using fixtures in non-web applications
    * Fix IdGenerator's casting issue
+   * Limit InMemory and JsonFile crud repositories id-generation to only AutoValues Ids
    
    
    

@@ -67,14 +67,18 @@ namespace EnTier.DataAccess.JsonFile
 
         protected override TStorage Insert(TStorage value)
         {
-            var id = (TId) _idGenerator.SetId(value);
-
-            _index.Add(id, value);
-
-            _idGenerator.Taken(id);
-
+            if (_idLeaf != null && _idLeaf.IsAutoValued)
+            {
+                var id = _idGenerator.New<TId>();
+                
+                _idGenerator.Taken(id);
+                
+                _idLeaf.Evaluator.Write(value,id);
+                
+                _index.Add(id, value);
+            }
             _data.Add(value);
-
+            
             return value;
         }
 
