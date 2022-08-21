@@ -17,16 +17,7 @@ namespace Microsoft.AspNetCore.Builder
         {
             var serviceResolver = new ServiceProviderFixtureResolver(app.ApplicationServices);
 
-            var executer = new FixtureExecuter(serviceResolver);
-
-            try
-            {
-                executer.Execute<TFixture>();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            FixtureManager.UseFixture<TFixture>(serviceResolver);
 
             return app;
         }
