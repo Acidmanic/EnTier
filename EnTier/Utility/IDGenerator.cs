@@ -58,7 +58,19 @@ namespace EnTier.Utility
                 id = PopNewId(idType, id);
             }
 
-            return id;
+            if (id == null)
+            {
+                return null;
+            }
+
+            var casted = id;
+
+            if (idType != id.GetType())
+            {
+                casted = Convert.ChangeType(id, idType);
+            }
+            
+            return casted;
         }
 
 
