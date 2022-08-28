@@ -52,7 +52,7 @@
   ------
   
    * Update Reflection module
-   * Add Logging Adapters for Entier
+   * Add Logging Adapters for EnTier
    * Add FixtureManager to help using fixtures in non-web applications
    * Fix IdGenerator's casting issue
    * Limit InMemory and JsonFile crud repositories id-generation to only AutoValues Ids
