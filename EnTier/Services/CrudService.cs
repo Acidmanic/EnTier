@@ -17,11 +17,15 @@ namespace EnTier.Services
         where TDomain : class, new()
         where TStorage : class, new()
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        private readonly IDataAccessRegulator<TDomain, TStorage> _regulator;
-        private readonly AccessNode _storageIdLeaf = IdHelper.GetIdLeaf<TStorage, TStorageId>();
-        private readonly AccessNode _domainIdLeaf = IdHelper.GetIdLeaf<TDomain, TDomainId>();
+        protected IUnitOfWork UnitOfWork { get; }
+        protected IMapper Mapper{ get; }
+        protected IDataAccessRegulator<TDomain, TStorage> Regulator{ get; }
+        
+        
+        protected AccessNode StorageIdLeaf { get; } = IdHelper.GetIdLeaf<TStorage, TStorageId>();
+        protected AccessNode DomainIdLeaf { get; }= IdHelper.GetIdLeaf<TDomain, TDomainId>();
+        
+        
         private readonly bool _entityHasId;
 
 
@@ -30,42 +34,42 @@ namespace EnTier.Services
         public CrudService(IUnitOfWork unitOfWork, IMapper mapper) : this(unitOfWork, mapper,
             new NullDataAccessRegulator<TDomain, TStorage>())
         {
-            _entityHasId = _storageIdLeaf != null && _domainIdLeaf != null;
+            _entityHasId = StorageIdLeaf != null && DomainIdLeaf != null;
         }
 
         public CrudService(IUnitOfWork unitOfWork, IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
         {
-            _unitOfWork = unitOfWork;
+            UnitOfWork = unitOfWork;
 
-            _mapper = mapper;
+            Mapper = mapper;
 
-            _regulator = regulator;
+            Regulator = regulator;
 
-            _entityHasId = _storageIdLeaf != null && _domainIdLeaf != null;
+            _entityHasId = StorageIdLeaf != null && DomainIdLeaf != null;
         }
 
 
         public IEnumerable<TDomain> GetAll()
         {
-            var storages = _unitOfWork.GetCrudRepository<TStorage, TDomainId>().All();
+            var storages = UnitOfWork.GetCrudRepository<TStorage, TDomainId>().All();
 
-            var domains = _mapper.Map<IEnumerable<TDomain>>(storages);
+            var domains = Mapper.Map<IEnumerable<TDomain>>(storages);
 
             return domains;
         }
 
         public TDomain GetById(TDomainId id)
         {
-            var storageId = _mapper.MapId<TStorageId>(id);
+            var storageId = Mapper.MapId<TStorageId>(id);
 
-            var storage = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().GetById(storageId);
+            var storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().GetById(storageId);
 
             if (storage == null)
             {
                 return null;
             }
 
-            var domain = _mapper.Map<TDomain>(storage);
+            var domain = Mapper.Map<TDomain>(storage);
 
             return domain;
         }
@@ -74,13 +78,13 @@ namespace EnTier.Services
         {
             TStorage regulatedStorage = default;
 
-            if (_regulator is NullDataAccessRegulator)
+            if (Regulator is NullDataAccessRegulator)
             {
-                regulatedStorage = _mapper.Map<TStorage>(value);
+                regulatedStorage = Mapper.Map<TStorage>(value);
             }
             else
             {
-                var regulationResult = _regulator.Regulate(value);
+                var regulationResult = Regulator.Regulate(value);
 
                 if (regulationResult.Status != RegulationStatus.UnAcceptable)
                 {
@@ -99,18 +103,18 @@ namespace EnTier.Services
         {
             var storage = Regulate(value);
 
-            storage = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
+            storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
 
-            _unitOfWork.Complete();
+            UnitOfWork.Complete();
 
-            var domain = _mapper.Map<TDomain>(storage);
+            var domain = Mapper.Map<TDomain>(storage);
 
             return domain;
         }
 
         public TDomain Update(TDomain value)
         {
-            if (_entityHasId && _domainIdLeaf.Evaluator.Read(value) is TDomainId id)
+            if (_entityHasId && DomainIdLeaf.Evaluator.Read(value) is TDomainId id)
             {
                 return Update(id, value);
             }
@@ -121,7 +125,7 @@ namespace EnTier.Services
 
         public TDomain Update(TDomainId id, TDomain value)
         {
-            var storageId = _mapper.MapId<TStorageId>(id);
+            var storageId = Mapper.MapId<TStorageId>(id);
 
             return Update(storageId, value);
         }
@@ -130,19 +134,19 @@ namespace EnTier.Services
         {
             Regulate(value);
 
-            var repo = _unitOfWork.GetCrudRepository<TStorage, TDomainId>();
+            var repo = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
-            Expression<Func<TStorage, bool>> selector = s => _entityHasId && (_storageIdLeaf.Evaluator.Read(s).Equals(id));
+            Expression<Func<TStorage, bool>> selector = s => _entityHasId && (StorageIdLeaf.Evaluator.Read(s).Equals(id));
 
             var found = repo.Find(selector).FirstOrDefault();
 
             if (found != null)
             {
-                var storageUpdate = _mapper.Map<TStorage>(value);
+                var storageUpdate = Mapper.Map<TStorage>(value);
 
                 repo.Set(storageUpdate);
 
-                _unitOfWork.Complete();
+                UnitOfWork.Complete();
 
                 return value;
             }
@@ -152,13 +156,13 @@ namespace EnTier.Services
 
         public bool Remove(TDomain value)
         {
-            var storage = _mapper.Map<TStorage>(value);
+            var storage = Mapper.Map<TStorage>(value);
 
-            var success = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storage);
+            var success = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storage);
 
             if (success)
             {
-                _unitOfWork.Complete();
+                UnitOfWork.Complete();
             }
 
             return success;
@@ -166,13 +170,13 @@ namespace EnTier.Services
 
         public bool RemoveById(TDomainId id)
         {
-            var storageId = _mapper.MapId<TStorageId>(id);
+            var storageId = Mapper.MapId<TStorageId>(id);
 
-            var success = _unitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storageId);
+            var success = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storageId);
 
             if (success)
             {
-                _unitOfWork.Complete();
+                UnitOfWork.Complete();
             }
 
             return success;
