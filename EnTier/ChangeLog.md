@@ -58,4 +58,7 @@
    * Limit InMemory and JsonFile crud repositories id-generation to only AutoValues Ids
    
    
-   
+ 2.5.7
+ ------
+   * Update Meadow to 1.1.0
+   * Allow access to Main Properties for driven classes of CrudService     
