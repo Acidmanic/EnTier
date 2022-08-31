@@ -61,4 +61,9 @@
  2.5.7
  ------
    * Update Meadow to 1.1.0
-   * Allow access to Main Properties for driven classes of CrudService     
+   * Allow access to Main Properties for driven classes of CrudService    
+   
+   
+ 2.5.8
+ -----
+   * Controllers will be (by default) able to auto-wrap returning collections on Get-All  
