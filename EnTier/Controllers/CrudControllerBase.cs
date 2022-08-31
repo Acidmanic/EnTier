@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using Acidmanic.Utilities.Reflection;
+using Acidmanic.Utilities.Reflection.Dynamics;
+using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.DataAccess.InMemory;
+using EnTier.Extensions;
 using EnTier.Logging;
 using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.Services;
 using EnTier.UnitOfWork;
+using EnTier.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -24,6 +30,9 @@ namespace EnTier.Controllers
 
         protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
 
+        protected virtual bool AutoWrap { get; } = true;
+        
+        protected CollectionDtoWrapper<TTransfer> AutoWrapper = new CollectionDtoWrapper<TTransfer>();
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; } =
             new NullDataAccessRegulator<TDomain, TStorage>();
 
@@ -129,7 +138,21 @@ namespace EnTier.Controllers
         [Route("")]
         public virtual IActionResult GetAll()
         {
-            return ErrorCheck(() => Ok(this.OnGetAll()));
+            if (AutoWrap)
+            {
+                return ErrorCheck(() =>
+                {
+                    var data = OnGetAll();
+                    
+                    var wrapped = AutoWrapper.Wrap(data);
+                    
+                    return Ok(wrapped);
+                }); 
+            }
+            return ErrorCheck(() =>
+            {
+                return Ok(this.OnGetAll());
+            });
         }
 
 
@@ -290,6 +313,29 @@ namespace EnTier.Controllers
             var success = Service.Remove(domain);
 
             return success;
+        }
+
+        protected IActionResult WrapCollection<T>(IEnumerable<T> data)
+        {
+            return WrapCollection(data, HttpStatusCode.OK);
+        }
+        protected IActionResult WrapCollection<T>(IEnumerable<T> data, string name )
+        {
+            return WrapCollection(data, HttpStatusCode.OK, name);
+        }
+
+        protected IActionResult WrapCollection<T>(IEnumerable<T> data, HttpStatusCode status)
+        {
+            return WrapCollection(data, HttpStatusCode.OK, typeof(T).Name.Plural());
+        }
+
+        protected IActionResult WrapCollection<T>(IEnumerable<T> data, HttpStatusCode status, string name)
+        {
+            var wrapper = new CollectionDtoWrapper<T>(name);
+
+            var wrappedObject = wrapper.Wrap(data);
+            
+            return StatusCode((int) status, wrappedObject);
         }
     }
 }
