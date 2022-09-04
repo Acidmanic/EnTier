@@ -1,5 +1,6 @@
 using System;
 using Acidmanic.Utilities.Reflection.ObjectTree;
+using Acidmanic.Utilities.Reflection.ObjectTree.FieldAddressing;
 
 namespace EnTier.DataAccess.Meadow.GenericCrudRequests
 {
@@ -12,8 +13,10 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
         public Type Type { get; }
 
         public bool Exists { get; }
+        
+        public FieldKey Key { get; }
 
-        public ExpectedFieldProperties(AccessNode leaf)
+        public ExpectedFieldProperties(AccessNode leaf, FieldKey key)
         {
             Exists = leaf != null;
 
@@ -24,6 +27,8 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
                 Type = leaf.Type;
 
                 Leaf = leaf;
+
+                Key = key;
             }
         }
     }
