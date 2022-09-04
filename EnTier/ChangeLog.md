@@ -66,4 +66,10 @@
    
  2.5.8
  -----
-   * Controllers will be (by default) able to auto-wrap returning collections on Get-All  
+   * Controllers will be (by default) able to auto-wrap returning collections on Get-All
+   
+ 2.5.9
+ -----
+   * Added Prepopulation Module, help seeding in production (vs fixtures which are aimed for tests)
+   * Updated Meadow to 1.1.2
+ 
