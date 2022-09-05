@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using Acidmanic.Utilities.Reflection;
-using Acidmanic.Utilities.Reflection.Dynamics;
-using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.DataAccess.InMemory;
 using EnTier.Extensions;
 using EnTier.Logging;
@@ -12,7 +9,6 @@ using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.Services;
 using EnTier.UnitOfWork;
-using EnTier.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -32,7 +28,7 @@ namespace EnTier.Controllers
 
         protected virtual bool AutoWrap { get; } = true;
         
-        protected CollectionDtoWrapper<TTransfer> AutoWrapper = new CollectionDtoWrapper<TTransfer>();
+        protected EnumerableDynamicWrapper<TTransfer> AutoWrapper = new EnumerableDynamicWrapper<TTransfer>();
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; } =
             new NullDataAccessRegulator<TDomain, TStorage>();
 
@@ -331,7 +327,7 @@ namespace EnTier.Controllers
 
         protected IActionResult WrapCollection<T>(IEnumerable<T> data, HttpStatusCode status, string name)
         {
-            var wrapper = new CollectionDtoWrapper<T>(name);
+            var wrapper = new EnumerableDynamicWrapper<T>(name);
 
             var wrappedObject = wrapper.Wrap(data);
             

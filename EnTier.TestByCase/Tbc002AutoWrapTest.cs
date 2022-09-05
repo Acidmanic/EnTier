@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Dynamics;
 using EnTier.Extensions;
 using EnTier.Fixture;
@@ -44,7 +45,7 @@ namespace EnTier.TestByCase
                 }
             };
             
-            var wrapped = new CollectionDtoWrapper<Model>().Wrap(data);
+            var wrapped = new EnumerableDynamicWrapper<Model>().Wrap(data);
 
             Console.WriteLine(wrapped);
         }
