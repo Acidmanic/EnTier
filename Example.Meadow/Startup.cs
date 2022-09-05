@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using EnTier.Extensions;
 using Meadow;
-using Meadow.Configuration;
-using Meadow.Log;
+using Meadow.Extensions;
 using Meadow.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Example.Meadow
 {
@@ -31,6 +24,7 @@ namespace Example.Meadow
         {
             services.AddControllers();
 
+            new ConsoleLogger().UseLoggerForEnTier().UserForMeadow();
             
             // You could call this method in a simpler way, by just passing a MeadowConfiguration object.
             // like: services.AddMeadowUnitOfWork(new MeadowConfiguration
@@ -61,7 +55,7 @@ namespace Example.Meadow
                 endpoints.MapControllers();
             });
             
-            var engine = new MeadowEngine(new MeadowConfigurationProvider().GetConfigurations(),new ConsoleLogger());
+            var engine = new MeadowEngine(new MeadowConfigurationProvider().GetConfigurations());
 
             engine.UseSqlServer();
             
