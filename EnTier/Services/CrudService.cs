@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.Exceptions;
 using EnTier.Logging;
@@ -18,19 +19,19 @@ namespace EnTier.Services
         where TStorage : class, new()
     {
         protected IUnitOfWork UnitOfWork { get; }
-        protected IMapper Mapper{ get; }
-        protected IDataAccessRegulator<TDomain, TStorage> Regulator{ get; }
-        
-        
-        protected AccessNode StorageIdLeaf { get; } = IdHelper.GetIdLeaf<TStorage, TStorageId>();
-        protected AccessNode DomainIdLeaf { get; }= IdHelper.GetIdLeaf<TDomain, TDomainId>();
-        
-        
+        protected IMapper Mapper { get; }
+        protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; }
+
+
+        protected AccessNode StorageIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TStorage, TStorageId>();
+        protected AccessNode DomainIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TDomain, TDomainId>();
+
+
         private readonly bool _entityHasId;
 
 
         protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
-        
+
         public CrudService(IUnitOfWork unitOfWork, IMapper mapper) : this(unitOfWork, mapper,
             new NullDataAccessRegulator<TDomain, TStorage>())
         {
@@ -136,7 +137,8 @@ namespace EnTier.Services
 
             var repo = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
-            Expression<Func<TStorage, bool>> selector = s => _entityHasId && (StorageIdLeaf.Evaluator.Read(s).Equals(id));
+            Expression<Func<TStorage, bool>> selector = s =>
+                _entityHasId && (StorageIdLeaf.Evaluator.Read(s).Equals(id));
 
             var found = repo.Find(selector).FirstOrDefault();
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.ObjectTree.FieldAddressing;
@@ -29,7 +30,7 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
             
             var allLeaves = evaluator.RootNode.EnumerateLeavesBelow();
 
-            var idLeaf = IdHelper.GetIdLeaf(entityType);
+            var idLeaf = TypeIdentity.FindIdentityLeaf(entityType);
 
             FieldKey idKey = GetKey(idLeaf, evaluator, allLeaves);
             
