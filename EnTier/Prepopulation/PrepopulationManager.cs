@@ -4,14 +4,16 @@ using System.Linq;
 using System.Reflection;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
+using EnTier.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Prepopulation
 {
     public class PrepopulationManager
     {
         private static PrepopulationManager _instance = null;
-        private static object _locker = new object();
-        private Action<string> _log = Console.WriteLine;
+        private static readonly object Locker = new object();
+        private static ILogger _logger = EnTierLogging.GetInstance().Logger;
 
         private PrepopulationManager()
         {
@@ -19,7 +21,7 @@ namespace EnTier.Prepopulation
 
         public static PrepopulationManager GetInstance()
         {
-            lock (_locker)
+            lock (Locker)
             {
                 if (_instance == null)
                 {
@@ -30,9 +32,9 @@ namespace EnTier.Prepopulation
             return _instance;
         }
 
-        public void SetLogger(Action<string> log)
+        public void SetLogger(ILogger logger)
         {
-            _log = log;
+            _logger = logger;
         }
 
 
@@ -50,9 +52,10 @@ namespace EnTier.Prepopulation
                 }
                 catch (Exception e)
                 {
-                    _log($"Could not create {seedType.FullName} because of an error: {e.Message}");
-                    _log($"It is probable, that you have missed registering your seed type {seedType.Name}," +
-                         $" or one of its dependencies on your DI.");
+                    _logger.LogError(e, "Could not create {seedType.FullName} because of an error.", seedType.FullName);
+                    _logger.LogDebug(
+                        "It is probable, that you have missed registering your seed type {seedType.Name}," +
+                        " or one of its dependencies on your DI.", seedType.Name);
                 }
 
 
@@ -66,11 +69,13 @@ namespace EnTier.Prepopulation
 
             foreach (var seed in seeds)
             {
-                _log("Running " + seed.Tag);
+                _logger.LogDebug("Running {seed.Tag}", seed.Tag);
 
                 var result = seed.Seed();
 
-                _log($"{seed.Tag} has been run {(result.Success ? "Successfully" : "With failure.")}");
+                var msgResult = (result.Success ? "Successfully" : "With failure.");
+                
+                _logger.LogDebug("{seed.Tag} has been run {MsgResult}",msgResult);
             }
         }
 
@@ -86,10 +91,10 @@ namespace EnTier.Prepopulation
                 var types = assembly
                     .GetAvailableTypes()
                     .Where((Func<Type, bool>) ValidSeedSelector);
-                
+
                 seedTypes.AddRange(types);
             }
-           
+
             PerformPrepopulation(resolver, seedTypes);
         }
 

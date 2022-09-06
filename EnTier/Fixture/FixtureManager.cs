@@ -1,4 +1,6 @@
 using System;
+using EnTier.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Fixture
 {
@@ -14,7 +16,7 @@ namespace EnTier.Fixture
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                EnTierLogging.GetInstance().Logger.LogError(e,"Problem executing Fixture.");
             }
         }
     }
