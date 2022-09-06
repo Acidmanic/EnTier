@@ -3,6 +3,7 @@ using EnTier.Extensions;
 using EnTier.Fixture;
 using EnTier.Logging;
 using EnTier.TestByCase.Fixtures;
+using Microsoft.Extensions.Logging.LightWeight;
 
 namespace EnTier.TestByCase
 {

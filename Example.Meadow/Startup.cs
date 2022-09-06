@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.LightWeight;
 
 namespace Example.Meadow
 {
@@ -24,7 +26,7 @@ namespace Example.Meadow
         {
             services.AddControllers();
 
-            new ConsoleLogger().UseLoggerForEnTier().UserForMeadow();
+            new ConsoleLogger().Disable(LogLevel.Debug).UseLoggerForEnTier().UseForMeadow();
             
             // You could call this method in a simpler way, by just passing a MeadowConfiguration object.
             // like: services.AddMeadowUnitOfWork(new MeadowConfiguration

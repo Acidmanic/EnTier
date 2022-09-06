@@ -16,8 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Meadow.Framework" Version="1.1.5" />
-      <PackageReference Include="Meadow.SqlServer" Version="1.1.3" />
+      <PackageReference Include="Acidmanic.MSLogging.LightWeight" Version="1.0.0" />
+      <PackageReference Include="Meadow.Framework" Version="1.1.6" />
+      <PackageReference Include="Meadow.SqlServer" Version="1.1.4" />
     </ItemGroup>
 
 </Project>
