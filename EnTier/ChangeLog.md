@@ -78,3 +78,8 @@
   * Replace IdHelper with TypeIdentity
   * Replace CollectionDtoWrapper with EnumerableDynamicWrapper
   * Make Prepopulation Conform with ILogger
+  
+2.5.11
+------
+  * Set Prepopulation logger at the same time with EnTier
+  * Fix Log messages.
