@@ -1,12 +1,12 @@
+using Acidmanic.Utilities.Reflection.FieldInclusion;
 using Meadow.Reflection.Conventions;
-using Meadow.Requests.FieldManipulation;
 
 namespace EnTier.DataAccess.Meadow.GenericCrudRequests
 {
     public class InsertStorageRequest<TStorage> : StorageRequest<TStorage, TStorage>
         where TStorage : class, new()
     {
-        protected override void OnFieldManipulation(IFieldManipulator<TStorage> toStorage, IFieldManipulator<TStorage> fromStorage)
+        protected override void OnFieldManipulation(IFieldInclusionMarker<TStorage> toStorage, IFieldInclusionMarker<TStorage> fromStorage)
         {
             base.OnFieldManipulation(toStorage, fromStorage);
 

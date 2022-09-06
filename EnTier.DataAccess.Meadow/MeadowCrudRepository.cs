@@ -143,7 +143,9 @@ namespace EnTier.DataAccess.Meadow
         protected MeadowEngine GetEngine()
         {
             var engine = new MeadowEngine(Configuration);
-
+            
+            MeadowEngine.UseLogger(Logger);
+            
             return engine;
         }
 

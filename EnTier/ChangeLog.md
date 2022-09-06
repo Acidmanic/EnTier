@@ -73,3 +73,7 @@
    * Added Prepopulation Module, help seeding in production (vs fixtures which are aimed for tests)
    * Updated Meadow to 1.1.2
  
+2.5.10
+-----
+  * Replace IdHelper with TypeIdentity
+  * Replace CollectionDtoWrapper with EnumerableDynamicWrapper

@@ -6,7 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+
         <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.1" />
     </ItemGroup>
 

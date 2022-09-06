@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
+using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
-using Microsoft.Extensions.FileProviders;
 
 namespace EnTier.DataAccess.InMemory
 {
@@ -17,7 +16,7 @@ namespace EnTier.DataAccess.InMemory
     {
         private readonly List<TStorage> _data = new List<TStorage>();
         private readonly  IdGenerator _idGenerator = new IdGenerator();
-        private readonly AccessNode _idLeaf =  IdHelper.GetIdLeaf<TStorage, TId>();
+        private readonly AccessNode _idLeaf =  TypeIdentity.FindIdentityLeaf<TStorage, TId>();
         
         public override IEnumerable<TStorage> All()
         {

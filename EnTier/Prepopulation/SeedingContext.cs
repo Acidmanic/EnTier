@@ -1,4 +1,5 @@
 using System;
+using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
@@ -19,7 +20,7 @@ namespace EnTier.Prepopulation
 
         public SeedingContext(IUnitOfWork unitOfWork)
         {
-            IdLeaf = EnTier.Utility.IdHelper.GetIdLeaf<TModel, TId>();
+            IdLeaf = TypeIdentity.FindIdentityLeaf<TModel, TId>();
 
             HasId = IdLeaf != null;
 

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using EnTier.Repositories;
-using EnTier.Utility;
 using Microsoft.EntityFrameworkCore;
 
 namespace EnTier.DataAccess.EntityFramework
@@ -43,7 +43,7 @@ namespace EnTier.DataAccess.EntityFramework
 
         public override TStorage Set(TStorage value)
         {
-            var idLeaf = IdHelper.GetIdLeaf<TStorage, TId>();
+            var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
 
             if (idLeaf != null)
             {

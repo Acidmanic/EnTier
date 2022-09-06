@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Repositories;
@@ -15,7 +16,7 @@ namespace EnTier.DataAccess.JsonFile
         private readonly Dictionary<TId, TStorage> _index = new Dictionary<TId, TStorage>();
         private readonly List<TStorage> _data;
         private readonly IdGenerator _idGenerator = new IdGenerator();
-        private readonly AccessNode _idLeaf = IdHelper.GetIdLeaf<TStorage, TId>();
+        private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
 
         public JsonFileRepository(List<TStorage> data)
         {
