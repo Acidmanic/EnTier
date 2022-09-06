@@ -1,3 +1,4 @@
+using EnTier.Prepopulation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -33,6 +34,7 @@ namespace EnTier.Logging
         public void Set(ILogger logger)
         {
             Logger = logger;
+            PrepopulationManager.GetInstance().SetLogger(logger);
         }
 
     }
