@@ -52,7 +52,7 @@ namespace EnTier.Prepopulation
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Could not create {seedType.FullName} because of an error.", seedType.FullName);
+                    _logger.LogError(e, "Could not create {SeedTypeFullName} because of an error.", seedType.FullName);
                     _logger.LogDebug(
                         "It is probable, that you have missed registering your seed type {seedType.Name}," +
                         " or one of its dependencies on your DI.", seedType.Name);
@@ -74,8 +74,8 @@ namespace EnTier.Prepopulation
                 var result = seed.Seed();
 
                 var msgResult = (result.Success ? "Successfully" : "With failure.");
-                
-                _logger.LogDebug("{seed.Tag} has been run {MsgResult}",msgResult);
+
+                _logger.LogDebug("{SeedTag} has been run {MsgResult}", seed.Tag, msgResult);
             }
         }
 
