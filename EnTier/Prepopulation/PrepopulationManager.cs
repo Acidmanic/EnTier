@@ -69,7 +69,7 @@ namespace EnTier.Prepopulation
 
             foreach (var seed in seeds)
             {
-                _logger.LogDebug("Running {seed.Tag}", seed.Tag);
+                _logger.LogDebug("Running {SeedTag}", seed.Tag);
 
                 var result = seed.Seed();
 

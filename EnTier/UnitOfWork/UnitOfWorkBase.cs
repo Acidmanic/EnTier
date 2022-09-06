@@ -24,7 +24,12 @@ namespace EnTier.UnitOfWork
 
                 if (customRepositoryType != null)
                 {
-                    Logger.Log(LogLevel.Debug, "Found Repository {customRepositoryType.FullName} for model {typeof(TStorage).Name}",customRepositoryType.FullName,typeof(TStorage).Name);
+                    var modelName = typeof(TStorage).Name;
+
+                    var customRepositoryTypeFullName = customRepositoryType.FullName;
+                    
+                    Logger.Log(LogLevel.Debug, "Found Repository {CustomRepositoryTypeFullName} for model {Model}"
+                        ,customRepositoryTypeFullName,modelName);
                     
                     repository = GetCustomRepository<TStorage, TId>(customRepositoryType);
                 }

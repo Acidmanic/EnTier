@@ -26,10 +26,10 @@ namespace EnTier.DataAccess.Meadow
         {
             if (response.Failed)
             {
-                Logger.LogError("Meadow Request Failed: {response.FailureException}",response.FailureException);
+                Logger.LogError(response.FailureException, "Meadow Request Failed.");
             }
         }
-        
+
 
         public override IEnumerable<TStorage> All()
         {
@@ -39,7 +39,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = engine.PerformRequest(request);
 
-           ErrorCheck(response);
+            ErrorCheck(response);
 
             return response.FromStorage;
         }
@@ -54,7 +54,7 @@ namespace EnTier.DataAccess.Meadow
             var engine = GetEngine();
 
             var response = engine.PerformRequest(request);
-            
+
             ErrorCheck(response);
 
             var result = response.FromStorage.FirstOrDefault();
@@ -69,7 +69,7 @@ namespace EnTier.DataAccess.Meadow
             var engine = GetEngine();
 
             var response = engine.PerformRequest(request);
-            
+
             ErrorCheck(response);
 
             var result = response.FromStorage.FirstOrDefault();
@@ -84,7 +84,7 @@ namespace EnTier.DataAccess.Meadow
             var engine = GetEngine();
 
             var response = engine.PerformRequest(request);
-            
+
             ErrorCheck(response);
 
             var result = response.FromStorage.FirstOrDefault();
@@ -102,7 +102,7 @@ namespace EnTier.DataAccess.Meadow
             var engine = GetEngine();
 
             var response = engine.PerformRequest(request);
-            
+
             ErrorCheck(response);
 
             return response.FromStorage.FirstOrDefault();
@@ -128,11 +128,11 @@ namespace EnTier.DataAccess.Meadow
             {
                 Id = id
             };
-            
+
             var engine = GetEngine();
 
             var response = engine.PerformRequest(request);
-            
+
             ErrorCheck(response);
 
             var result = response.FromStorage.FirstOrDefault();
@@ -143,9 +143,9 @@ namespace EnTier.DataAccess.Meadow
         protected MeadowEngine GetEngine()
         {
             var engine = new MeadowEngine(Configuration);
-            
+
             MeadowEngine.UseLogger(Logger);
-            
+
             return engine;
         }
 
@@ -164,7 +164,7 @@ namespace EnTier.DataAccess.Meadow
             }
             catch (Exception e)
             {
-                Logger.LogError("There was an error finding Id filed for given model",e);
+                Logger.LogError(e, "There was an error finding Id filed for given model");
             }
 
             return default;
