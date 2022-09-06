@@ -77,3 +77,4 @@
 -----
   * Replace IdHelper with TypeIdentity
   * Replace CollectionDtoWrapper with EnumerableDynamicWrapper
+  * Make Prepopulation Conform with ILogger
