@@ -79,7 +79,8 @@
   * Replace CollectionDtoWrapper with EnumerableDynamicWrapper
   * Make Prepopulation Conform with ILogger
   
-2.5.11
+2.5.12
 ------
   * Set Prepopulation logger at the same time with EnTier
   * Fix Log messages.
+  * Update Reflection be able to use ```[TreatAssLeaf]``` Attributes
