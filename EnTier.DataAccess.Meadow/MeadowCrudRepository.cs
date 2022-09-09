@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Acidmanic.Utilities.Reflection.Extensions;
+using Acidmanic.Utilities.Reflection;
 using EnTier.DataAccess.Meadow.GenericCrudRequests;
 using EnTier.Repositories;
 using Meadow;
@@ -155,7 +155,7 @@ namespace EnTier.DataAccess.Meadow
             {
                 var type = typeof(TStorage);
 
-                var leaf = type.GetUniqueIdFieldLeaf();
+                var leaf = TypeIdentity.FindIdentityLeaf(type);
 
                 if (leaf != null)
                 {

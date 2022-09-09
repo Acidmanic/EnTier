@@ -54,7 +54,7 @@ namespace EnTier.Prepopulation
                 {
                     _logger.LogError(e, "Could not create {SeedTypeFullName} because of an error.", seedType.FullName);
                     _logger.LogDebug(
-                        "It is probable, that you have missed registering your seed type {seedType.Name}," +
+                        "It is probable, that you have missed registering your seed type {seedTypeName}," +
                         " or one of its dependencies on your DI.", seedType.Name);
                 }
 
