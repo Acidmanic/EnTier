@@ -50,7 +50,7 @@ namespace EnTier.Services
         }
 
 
-        public IEnumerable<TDomain> GetAll()
+        public virtual IEnumerable<TDomain> GetAll()
         {
             var storages = UnitOfWork.GetCrudRepository<TStorage, TDomainId>().All();
 
@@ -59,7 +59,7 @@ namespace EnTier.Services
             return domains;
         }
 
-        public TDomain GetById(TDomainId id)
+        public virtual TDomain GetById(TDomainId id)
         {
             var storageId = Mapper.MapId<TStorageId>(id);
 
@@ -100,7 +100,7 @@ namespace EnTier.Services
             return regulatedStorage;
         }
 
-        public TDomain Add(TDomain value)
+        public virtual TDomain Add(TDomain value)
         {
             var storage = Regulate(value);
 
@@ -113,7 +113,7 @@ namespace EnTier.Services
             return domain;
         }
 
-        public TDomain Update(TDomain value)
+        public virtual TDomain Update(TDomain value)
         {
             if (_entityHasId && DomainIdLeaf.Evaluator.Read(value) is TDomainId id)
             {
@@ -124,7 +124,7 @@ namespace EnTier.Services
             return null;
         }
 
-        public TDomain Update(TDomainId id, TDomain value)
+        public virtual TDomain Update(TDomainId id, TDomain value)
         {
             var storageId = Mapper.MapId<TStorageId>(id);
 
@@ -156,7 +156,7 @@ namespace EnTier.Services
             return null;
         }
 
-        public bool Remove(TDomain value)
+        public virtual bool Remove(TDomain value)
         {
             var storage = Mapper.Map<TStorage>(value);
 
@@ -170,7 +170,7 @@ namespace EnTier.Services
             return success;
         }
 
-        public bool RemoveById(TDomainId id)
+        public virtual bool RemoveById(TDomainId id)
         {
             var storageId = Mapper.MapId<TStorageId>(id);
 
