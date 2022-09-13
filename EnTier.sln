@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Meadow", "Example.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier.TestByCase", "EnTier.TestByCase\EnTier.TestByCase.csproj", "{AAC3C75E-FD6F-4340-9F06-932428F1B532}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.ServiceManipulation", "Example.ServiceManipulation\Example.ServiceManipulation.csproj", "{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -289,5 +291,17 @@ Global
 		{AAC3C75E-FD6F-4340-9F06-932428F1B532}.Release|x64.Build.0 = Release|Any CPU
 		{AAC3C75E-FD6F-4340-9F06-932428F1B532}.Release|x86.ActiveCfg = Release|Any CPU
 		{AAC3C75E-FD6F-4340-9F06-932428F1B532}.Release|x86.Build.0 = Release|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Debug|x64.Build.0 = Debug|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Debug|x86.Build.0 = Debug|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Release|x64.ActiveCfg = Release|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Release|x64.Build.0 = Release|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Release|x86.ActiveCfg = Release|Any CPU
+		{93D5F9C7-A54B-48AC-BD1E-067FA2B2A01D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

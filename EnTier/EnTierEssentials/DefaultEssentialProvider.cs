@@ -21,11 +21,16 @@ namespace EnTier.EnTierEssentials
             Mapper = Acquire(mapper, () => new EntierBuiltinMapper());
             UnitOfWork = Acquire(unitOfWork, () => new InMemoryUnitOfWork());
             DataAccessRegulator = Acquire(regulator, () => new NullDataAccessRegulator<TDomain, TStorage>());
-            Service = Acquire(service, () 
-                => new CrudService<TDomain, TStorage, TDomainId, TStorageId>(
-                    UnitOfWork,
-                    Mapper,
-                    DataAccessRegulator));
+            
+            
+            Service = Acquire(service, () => new CrudService<TDomain, TStorage, TDomainId, TStorageId>());
+
+            if (Service is CrudService<TDomain, TStorage, TDomainId, TStorageId> initee)
+            {
+                initee.InitializeEssentials(UnitOfWork, Mapper, DataAccessRegulator);    
+            }
+            
+            
 
         }
         

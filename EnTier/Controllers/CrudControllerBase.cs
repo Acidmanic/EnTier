@@ -116,12 +116,6 @@ namespace EnTier.Controllers
                 null
             );
         }
-        
-        protected virtual ICrudService<TDomain, TDomainId> AcquirerCrudService()
-        {
-            return new CrudService<TDomain, TStorage, TDomainId, TStorageId>(UnitOfWork, Mapper, Regulator);
-        }
-
 
         private IActionResult ErrorCheck(Func<IActionResult> code)
         {

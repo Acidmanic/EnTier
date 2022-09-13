@@ -18,9 +18,9 @@ namespace EnTier.Services
         where TDomain : class, new()
         where TStorage : class, new()
     {
-        protected IUnitOfWork UnitOfWork { get; }
-        protected IMapper Mapper { get; }
-        protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; }
+        protected IUnitOfWork UnitOfWork { get; private set; }
+        protected IMapper Mapper { get;  private set;}
+        protected IDataAccessRegulator<TDomain, TStorage> Regulator { get;  private set;}
 
 
         protected AccessNode StorageIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TStorage, TStorageId>();
@@ -32,13 +32,15 @@ namespace EnTier.Services
 
         protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
 
-        public CrudService(IUnitOfWork unitOfWork, IMapper mapper) : this(unitOfWork, mapper,
-            new NullDataAccessRegulator<TDomain, TStorage>())
+        /// <summary>
+        /// Entier would not use it, Its for 
+        /// </summary>
+        public CrudService()
         {
             _entityHasId = StorageIdLeaf != null && DomainIdLeaf != null;
         }
 
-        public CrudService(IUnitOfWork unitOfWork, IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
+        internal CrudService<TDomain, TStorage, TDomainId, TStorageId> InitializeEssentials(IUnitOfWork unitOfWork, IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
         {
             UnitOfWork = unitOfWork;
 
@@ -46,7 +48,7 @@ namespace EnTier.Services
 
             Regulator = regulator;
 
-            _entityHasId = StorageIdLeaf != null && DomainIdLeaf != null;
+            return this;
         }
 
 
