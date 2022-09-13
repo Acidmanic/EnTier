@@ -84,3 +84,9 @@
   * Set Prepopulation logger at the same time with EnTier
   * Fix Log messages.
   * Update Reflection be able to use ```[TreatAssLeaf]``` Attributes
+
+2.6.0
+-----
+  * Fixed Id generation issue in InMemory and JsonFile UnitOfWorks
+  * Made it possible to override default crud service using injection
+  * Unified EnTier static configurations under EnTierEssence class
