@@ -22,7 +22,7 @@ namespace EnTier.Controllers
         where TStorage : class, new()
     {
 
-        private readonly IEnTierEssentialsProvider<TDomain, TStorage, TDomainId, TStorageId> _essentialsProvider;
+        private readonly DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId> _essentialsProvider;
 
         protected IMapper Mapper => _essentialsProvider.Mapper;
         protected IUnitOfWork UnitOfWork => _essentialsProvider.UnitOfWork;

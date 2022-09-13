@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
+using EnTier.EnTierEssentials;
 using EnTier.Exceptions;
 using EnTier.Logging;
 using EnTier.Mapper;
@@ -23,6 +24,10 @@ namespace EnTier.Services
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get;  private set;}
 
 
+        private readonly bool _unitOfWorkInjected=false;
+        private readonly bool _mapperInjected=false;
+        private readonly bool _regulatorInjected=false;
+        
         protected AccessNode StorageIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TStorage, TStorageId>();
         protected AccessNode DomainIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TDomain, TDomainId>();
 
@@ -31,23 +36,70 @@ namespace EnTier.Services
 
 
         protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
-
         /// <summary>
-        /// Entier would not use it, Its for 
+        /// Using this constructor EnTier will try to instantiate Mapper, UnitOfWork and Regulator.
         /// </summary>
         public CrudService()
         {
             _entityHasId = StorageIdLeaf != null && DomainIdLeaf != null;
+        
+            var serviceEssentialsProvider = new ServiceEssentialsProvider<TDomain, TStorage, TDomainId, TStorageId>
+                (null,null,null);
+
+            UnitOfWork = serviceEssentialsProvider.UnitOfWork;
+            Mapper = serviceEssentialsProvider.Mapper;
+            Regulator = serviceEssentialsProvider.DataAccessRegulator;
+
+        }
+        /// <summary>
+        /// You can override di-registered and default values for UnitOfWork, Mapper and Regulators using this
+        /// constructor. Also you can pass null for each one you needed EnTier to creates an instance for.
+        /// These values will be override by 
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <param name="mapper"></param>
+        /// <param name="regulator"></param>
+        public CrudService(IUnitOfWork unitOfWork, IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
+        {
+            _unitOfWorkInjected = unitOfWork != null;
+            _mapperInjected = unitOfWork != null;
+            _regulatorInjected = unitOfWork != null;
+            
+            _entityHasId = StorageIdLeaf != null && DomainIdLeaf != null;
+        
+            var serviceEssentialsProvider = new ServiceEssentialsProvider<TDomain, TStorage, TDomainId, TStorageId>
+                (mapper,unitOfWork,regulator);
+
+            UnitOfWork = serviceEssentialsProvider.UnitOfWork;
+            Mapper = serviceEssentialsProvider.Mapper;
+            Regulator = serviceEssentialsProvider.DataAccessRegulator;
+
         }
 
+        /// <summary>
+        /// Controller will call this and set only the values that client code has not injected
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <param name="mapper"></param>
+        /// <param name="regulator"></param>
+        /// <returns></returns>
         internal CrudService<TDomain, TStorage, TDomainId, TStorageId> InitializeEssentials(IUnitOfWork unitOfWork, IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
         {
-            UnitOfWork = unitOfWork;
 
-            Mapper = mapper;
+            if (!_unitOfWorkInjected)
+            {
+                UnitOfWork = unitOfWork;    
+            }
 
-            Regulator = regulator;
+            if (!_mapperInjected)
+            {
+                Mapper = mapper;    
+            }
 
+            if (!_regulatorInjected)
+            {
+                Regulator = regulator;    
+            }
             return this;
         }
 
