@@ -15,7 +15,7 @@ namespace EnTier.DataAccess.JsonFile
     {
         private readonly Dictionary<TId, TStorage> _index = new Dictionary<TId, TStorage>();
         private readonly List<TStorage> _data;
-        private readonly IdGenerator _idGenerator = new IdGenerator();
+        private readonly IdGenerator<TId> _idGenerator = new IdGenerator<TId>();
         private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
 
         public JsonFileRepository(List<TStorage> data)
@@ -70,7 +70,7 @@ namespace EnTier.DataAccess.JsonFile
         {
             if (_idLeaf != null && _idLeaf.IsAutoValued)
             {
-                var id = _idGenerator.New<TId>();
+                var id = _idGenerator.New();
                 
                 _idGenerator.Taken(id);
                 

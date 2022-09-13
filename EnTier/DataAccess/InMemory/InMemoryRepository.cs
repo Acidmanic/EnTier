@@ -15,7 +15,7 @@ namespace EnTier.DataAccess.InMemory
         where TStorage : class, new()
     {
         private readonly List<TStorage> _data = new List<TStorage>();
-        private readonly  IdGenerator _idGenerator = new IdGenerator();
+        private readonly  IdGenerator<TId> _idGenerator = new IdGenerator<TId>();
         private readonly AccessNode _idLeaf =  TypeIdentity.FindIdentityLeaf<TStorage, TId>();
         
         public override IEnumerable<TStorage> All()
@@ -51,7 +51,7 @@ namespace EnTier.DataAccess.InMemory
         {
             if (_idLeaf != null && _idLeaf.IsAutoValued)
             {
-                var id = _idGenerator.New<TId>();
+                var id = _idGenerator.New();
                 
                 _idGenerator.Taken(id);
                 

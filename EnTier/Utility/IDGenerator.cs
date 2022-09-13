@@ -1,23 +1,24 @@
 using System;
 using System.Collections.Generic;
+using EnTier.Utility.IdGenerating;
 
 namespace EnTier.Utility
 {
-    public class IdGenerator
+    public class IdGenerator<TId>
     {
-        private readonly List<object> _takenIds;
+        private readonly List<TId> _takenIds;
 
         public IdGenerator()
         {
-            _takenIds = new List<object>();
+            _takenIds = new List<TId>();
         }
 
-        public IdGenerator(List<object> takenIds)
+        public IdGenerator(List<TId> takenIds)
         {
             _takenIds = takenIds;
         }
 
-        public TId New<TId>()
+        public TId New()
         {
             var idType = typeof(TId);
 
@@ -51,11 +52,11 @@ namespace EnTier.Utility
 
         public object New(Type idType)
         {
-            var id = PopNewId(idType);
+            var id = PopNewId() ;
 
             while (_takenIds.Contains(id))
             {
-                id = PopNewId(idType, id);
+                id = PopNewId(id);
             }
 
             if (id == null)
@@ -63,57 +64,38 @@ namespace EnTier.Utility
                 return null;
             }
 
-            var casted = id;
-
-            if (idType != id.GetType())
-            {
-                casted = Convert.ChangeType(id, idType);
-            }
+            return id;
             
-            return casted;
         }
 
 
-        private object PopNewId(Type idType, object lastOne = default)
+        private TId PopNewId(TId lastOne = default)
         {
-            if (
-                idType == typeof(int) || idType == typeof(long) || idType == typeof(short) ||
-                idType == typeof(double) || idType == typeof(decimal) || idType == typeof(byte)
-                || idType == typeof(float) || idType == typeof(uint) || idType == typeof(ulong)
-                || idType == typeof(ushort) || idType == typeof(sbyte)
-                || idType == typeof(Int16) || idType == typeof(Int32) || idType == typeof(Int64) ||
-                idType == typeof(Double) || idType == typeof(Decimal) || idType == typeof(Byte)
-                || idType == typeof(UInt16) || idType == typeof(UInt32) || idType == typeof(UInt64)
-                || idType == typeof(SByte)
-            )
+            var incrementor = new IncrementerFactory().Make<TId>();
+
+            if (incrementor != null)
             {
-                try
-                {
-                    return (object) (Number(lastOne) + 1);
-                }
-                catch (Exception e)
-                {
-                    return default;
-                }
+                return incrementor.Increment(lastOne);
             }
 
-            if (idType == typeof(string))
+            var type = typeof(TId);
+            
+            if (type == typeof(string))
             {
-                return Guid.NewGuid().ToString().Replace("-", "");
+                return (TId)(object)(Guid.NewGuid().ToString().Replace("-", ""));
             }
 
-            if (idType == typeof(Guid))
+            if (type == typeof(Guid))
             {
-                return Guid.NewGuid();
+                return (TId)(object)Guid.NewGuid();
             }
-
             try
             {
-                var constructor = idType.GetConstructor(new Type[] { });
+                var constructor = type.GetConstructor(new Type[] { });
 
                 if (constructor != null)
                 {
-                    return constructor.Invoke(new object[] { });
+                    return (TId)constructor.Invoke(new object[] { });
                 }
             }
             catch (Exception)
@@ -121,9 +103,8 @@ namespace EnTier.Utility
                 // ignored
             }
 
-            throw new Exception($"Given Id Type, {idType.Name}, is not regenerative.");
+            throw new Exception($"Given Id Type, {type.Name}, is not regenerative.");
         }
-
 
         private double Number(object id)
         {
@@ -135,12 +116,12 @@ namespace EnTier.Utility
             return (double) id;
         }
 
-        public void Taken(object id)
+        public void Taken(TId id)
         {
             _takenIds.Add(id);
         }
 
-        public void Free(object id)
+        public void Free(TId id)
         {
             _takenIds.Remove(id);
         }
