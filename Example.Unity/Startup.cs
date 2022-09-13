@@ -30,6 +30,8 @@ namespace Example.Unity
         public void ConfigureContainer(IUnityContainer container)
         {
             container.RegisterType<ITitleSuggestionService, TitleSuggestionService>();
+            
+            container.IntroduceUnityDiToEnTier();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
