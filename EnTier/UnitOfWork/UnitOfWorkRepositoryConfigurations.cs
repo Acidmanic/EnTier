@@ -5,6 +5,7 @@ using EnTier.Repositories;
 
 namespace EnTier.UnitOfWork
 {
+    [Obsolete("This class would not be public in upcoming releases. Please consider using EnTierEssence class instead.",false)]
     public class UnitOfWorkRepositoryConfigurations
     {
         private readonly  Dictionary<Type, Type> _repositoryMap = new Dictionary<Type, Type>();

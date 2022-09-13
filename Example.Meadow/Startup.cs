@@ -56,6 +56,8 @@ namespace Example.Meadow
             {
                 endpoints.MapControllers();
             });
+
+            app.IntroduceDotnetResolverToEnTier();
             
             var engine = new MeadowEngine(new MeadowConfigurationProvider().GetConfigurations());
 

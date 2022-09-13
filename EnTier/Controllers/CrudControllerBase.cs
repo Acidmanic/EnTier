@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Acidmanic.Utilities.Reflection;
 using EnTier.DataAccess.InMemory;
+using EnTier.EnTierEssentials;
 using EnTier.Extensions;
 using EnTier.Logging;
 using EnTier.Mapper;
@@ -20,9 +21,12 @@ namespace EnTier.Controllers
         where TDomain : class, new()
         where TStorage : class, new()
     {
-        protected IMapper Mapper { get; set; }
-        protected IUnitOfWork UnitOfWork { get; set; }
-        protected ICrudService<TDomain, TDomainId> Service { get; set; }
+
+        private readonly IEnTierEssentialsProvider<TDomain, TStorage, TDomainId, TStorageId> _essentialsProvider;
+
+        protected IMapper Mapper => _essentialsProvider.Mapper;
+        protected IUnitOfWork UnitOfWork => _essentialsProvider.UnitOfWork;
+        protected ICrudService<TDomain, TDomainId> Service => _essentialsProvider.Service;
 
         protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
 
@@ -34,84 +38,85 @@ namespace EnTier.Controllers
 
         public CrudControllerBase()
         {
-            AcquirerDependencies();
+            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
+                null,
+                null,
+                null,
+                null
+            );
         }
 
         public CrudControllerBase(IMapper mapper)
         {
-            Mapper = mapper;
-
-            AcquirerDependencies();
+            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
+                mapper,
+                null,
+                null,
+                null
+                );
         }
 
         public CrudControllerBase(IDataAccessRegulator<TDomain, TStorage> regulator)
         {
-            Regulator = regulator;
-
-            AcquirerDependencies();
+            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
+                null,
+                null,
+                regulator,
+                null
+            );
         }
 
         public CrudControllerBase(IUnitOfWork unitOfWork)
         {
-            UnitOfWork = unitOfWork;
-
-            AcquirerDependencies();
+            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
+                null,
+                unitOfWork,
+                null,
+                null
+            );
         }
 
         public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            Mapper = mapper;
-
-            UnitOfWork = unitOfWork;
-
-            AcquirerDependencies();
+            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
+                mapper,
+                unitOfWork,
+                null,
+                null
+            );
         }
 
         public CrudControllerBase(IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
         {
-            Mapper = mapper;
-
-            Regulator = regulator;
-
-            AcquirerDependencies();
+            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
+                mapper,
+                null,
+                regulator,
+                null
+            );
         }
 
         public CrudControllerBase(IUnitOfWork unitOfWork, IDataAccessRegulator<TDomain, TStorage> regulator)
         {
-            UnitOfWork = unitOfWork;
-
-            Regulator = regulator;
-
-            AcquirerDependencies();
+            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
+                null,
+                unitOfWork,
+                regulator,
+                null
+            );
         }
 
         public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork,
             IDataAccessRegulator<TDomain, TStorage> regulator)
         {
-            Mapper = mapper;
-
-            UnitOfWork = unitOfWork;
-
-            Regulator = regulator;
-
-            AcquirerDependencies();
+            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
+                mapper,
+                unitOfWork,
+                null,
+                null
+            );
         }
-
-        private void AcquirerDependencies()
-        {
-            if (Mapper == null)
-            {
-                Mapper = new EntierBuiltinMapper();
-            }
-
-            if (UnitOfWork == null)
-            {
-                UnitOfWork = new InMemoryUnitOfWork();
-            }
-
-            Service = AcquirerCrudService();
-        }
-
+        
         protected virtual ICrudService<TDomain, TDomainId> AcquirerCrudService()
         {
             return new CrudService<TDomain, TStorage, TDomainId, TStorageId>(UnitOfWork, Mapper, Regulator);

@@ -1,6 +1,7 @@
 using System;
 using System.Data.SqlTypes;
 using EnTier;
+using EnTier.DependencyInjection;
 using EnTier.Fixture;
 using EnTier.Logging;
 using EnTier.Repositories;
@@ -21,19 +22,29 @@ namespace Microsoft.AspNetCore.Builder
 
             return app;
         }
+        
+        public static IApplicationBuilder IntroduceDotnetResolverToEnTier(this IApplicationBuilder app)
+        {
+            var serviceProvider =app.ApplicationServices;
+
+            EnTierEssence.IntroduceDiResolver(new DotnetResolverFacade(serviceProvider));
+            
+            return app;
+        }
 
         public static IApplicationBuilder UseRepository<TStorage, TId, TRepository>(this IApplicationBuilder app)
             where TRepository : ICrudRepository<TStorage, TId> where TStorage : class, new()
         {
-            UnitOfWorkRepositoryConfigurations.GetInstance().RegisterCustomRepository<TStorage, TId, TRepository>();
-
+            EnTierEssence.RegisterCustomRepository<TStorage, TId, TRepository>();
+            
             return app;
         }
 
         public static IApplicationBuilder UseLoggerForEnTier(this IApplicationBuilder app, ILogger logger)
         {
-            EnTierLogging.GetInstance().Set(logger);
 
+            EnTierEssence.SetLogger(logger);
+            
             return app;
         }
 
@@ -48,8 +59,8 @@ namespace Microsoft.AspNetCore.Builder
             catch (Exception e)
             {
             }
-            
-            EnTierLogging.GetInstance().Set(logger);
+
+            EnTierEssence.SetLogger(logger);
 
             return app;
         }
