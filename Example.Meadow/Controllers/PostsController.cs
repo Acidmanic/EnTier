@@ -1,3 +1,4 @@
+using EnTier.AutoWrap;
 using EnTier.Controllers;
 using EnTier.Mapper;
 using EnTier.UnitOfWork;

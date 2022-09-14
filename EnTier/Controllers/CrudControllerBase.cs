@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using Acidmanic.Utilities.Reflection;
+using EnTier.AutoWrap;
 using EnTier.DataAccess.InMemory;
 using EnTier.EnTierEssentials;
 using EnTier.Extensions;
@@ -21,7 +22,6 @@ namespace EnTier.Controllers
         where TDomain : class, new()
         where TStorage : class, new()
     {
-
         private readonly DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId> _essentialsProvider;
 
         protected IMapper Mapper => _essentialsProvider.Mapper;
@@ -30,9 +30,8 @@ namespace EnTier.Controllers
 
         protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
 
-        protected virtual bool AutoWrap { get; } = true;
-        
-        protected EnumerableDynamicWrapper<TTransfer> AutoWrapper = new EnumerableDynamicWrapper<TTransfer>();
+        protected readonly EnTierAutoWrapper<TTransfer> AutoWrapper;
+
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; } =
             new NullDataAccessRegulator<TDomain, TStorage>();
 
@@ -44,16 +43,18 @@ namespace EnTier.Controllers
                 null,
                 null
             );
+            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
 
-        public CrudControllerBase(IMapper mapper)
+        public CrudControllerBase(IMapper mapper) : this()
         {
             _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
                 mapper,
                 null,
                 null,
                 null
-                );
+            );
+            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
 
         public CrudControllerBase(IDataAccessRegulator<TDomain, TStorage> regulator)
@@ -64,6 +65,7 @@ namespace EnTier.Controllers
                 regulator,
                 null
             );
+            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
 
         public CrudControllerBase(IUnitOfWork unitOfWork)
@@ -74,6 +76,7 @@ namespace EnTier.Controllers
                 null,
                 null
             );
+            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
 
         public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork)
@@ -84,6 +87,7 @@ namespace EnTier.Controllers
                 null,
                 null
             );
+            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
 
         public CrudControllerBase(IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
@@ -94,6 +98,7 @@ namespace EnTier.Controllers
                 regulator,
                 null
             );
+            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
 
         public CrudControllerBase(IUnitOfWork unitOfWork, IDataAccessRegulator<TDomain, TStorage> regulator)
@@ -104,6 +109,7 @@ namespace EnTier.Controllers
                 regulator,
                 null
             );
+            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
 
         public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork,
@@ -115,7 +121,9 @@ namespace EnTier.Controllers
                 null,
                 null
             );
+            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
+
 
         private IActionResult ErrorCheck(Func<IActionResult> code)
         {
@@ -133,20 +141,13 @@ namespace EnTier.Controllers
         [Route("")]
         public virtual IActionResult GetAll()
         {
-            if (AutoWrap)
-            {
-                return ErrorCheck(() =>
-                {
-                    var data = OnGetAll();
-                    
-                    var wrapped = AutoWrapper.Wrap(data);
-                    
-                    return Ok(wrapped);
-                }); 
-            }
             return ErrorCheck(() =>
             {
-                return Ok(this.OnGetAll());
+                var data = OnGetAll();
+
+                var wrapped = AutoWrapper.WrapIfNeeded(data);
+
+                return Ok(wrapped);
             });
         }
 
@@ -314,7 +315,8 @@ namespace EnTier.Controllers
         {
             return WrapCollection(data, HttpStatusCode.OK);
         }
-        protected IActionResult WrapCollection<T>(IEnumerable<T> data, string name )
+
+        protected IActionResult WrapCollection<T>(IEnumerable<T> data, string name)
         {
             return WrapCollection(data, HttpStatusCode.OK, name);
         }
@@ -329,7 +331,7 @@ namespace EnTier.Controllers
             var wrapper = new EnumerableDynamicWrapper<T>(name);
 
             var wrappedObject = wrapper.Wrap(data);
-            
+
             return StatusCode((int) status, wrappedObject);
         }
     }

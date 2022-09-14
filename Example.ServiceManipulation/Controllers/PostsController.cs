@@ -8,6 +8,8 @@ namespace ServiceManipulationExample.Controllers
     [Route("[controller]")]
     public class PostsController : CrudControllerBase<Post,long>
     {
+
         
+       
     }
 }
