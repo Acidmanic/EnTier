@@ -90,3 +90,9 @@
   * Fixed Id generation issue in InMemory and JsonFile UnitOfWorks
   * Made it possible to override default crud service using injection
   * Unified EnTier static configurations under EnTierEssence class
+  
+  
+2.6.2
+-----
+  * Fixed the issues of un initialized essentials of services make outside of controller
+  * Gives More control over auto-wrapping using attributes instead of boolean property
