@@ -11,7 +11,7 @@ using EnTier.Utility;
 
 namespace EnTier.DataAccess.InMemory
 {
-    public class InMemoryRepository<TStorage, TId> : CrudRepositoryBase<TStorage, TId>
+    public class InMemoryRepository<TStorage, TId> : CrudRepositoryForwardAsyncBase<TStorage, TId>
         where TStorage : class, new()
     {
         private readonly List<TStorage> _data = new List<TStorage>();
