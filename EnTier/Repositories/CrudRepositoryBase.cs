@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using EnTier.Logging;
 using EnTier.Repositories.Attributes;
@@ -13,6 +14,8 @@ namespace EnTier.Repositories
         where TStorage : class, new()
     {
         public abstract IEnumerable<TStorage> All();
+        
+        public abstract TStorage Update(TStorage value);
 
         protected abstract TStorage Insert(TStorage value);
         public abstract TStorage Set(TStorage value);
@@ -20,7 +23,17 @@ namespace EnTier.Repositories
         public abstract IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate);
         public abstract bool Remove(TStorage value);
         public abstract bool Remove(TId id);
+        public abstract Task<IEnumerable<TStorage>> AllAsync();
         
+        public abstract Task<TStorage> UpdateAsync(TStorage value);
+        
+        protected abstract Task<TStorage> InsertAsync(TStorage value);
+        public abstract Task<TStorage> SetAsync(TStorage value);
+        public abstract Task<TStorage> GetByIdAsync(TId id);
+        public abstract Task<IEnumerable<TStorage>> FindAsync(Expression<Func<TStorage, bool>> predicate);
+        public abstract Task<bool> RemoveAsync(TStorage value);
+        public abstract Task<bool> RemoveAsync(TId id);
+
         protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
 
         public virtual TStorage Add(TStorage value)
@@ -30,7 +43,13 @@ namespace EnTier.Repositories
             return this.Insert(stripped);
         }
 
-        public abstract TStorage Update(TStorage value);
+        public Task<TStorage> AddAsync(TStorage value)
+        {
+            var stripped = StripMarkedSubEntities(value);
+
+            return this.InsertAsync(stripped);
+        }
+        
 
         /// <summary>
         /// This method, takes an entity, and returns a clone with only primitive members copied.

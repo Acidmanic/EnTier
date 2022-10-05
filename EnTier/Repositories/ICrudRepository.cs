@@ -55,7 +55,7 @@ namespace EnTier.Repositories
         /// <summary>
         /// Provides all existing instances of Entity
         /// </summary>
-        Task<IEnumerable<TStorage>> AllAsyn();
+        Task<IEnumerable<TStorage>> AllAsync();
 
         /// <summary>
         /// Adds new instance of Entity
