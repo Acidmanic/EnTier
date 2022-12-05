@@ -26,6 +26,8 @@ namespace ExampleInMemorySingleLayerEntity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddEnTier();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +48,8 @@ namespace ExampleInMemorySingleLayerEntity
             {
                 endpoints.MapControllers();
             });
+
+            app.ConfigureEnTierResolver();
         }
     }
 }

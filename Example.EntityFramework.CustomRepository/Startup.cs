@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,7 +32,11 @@ namespace ExampleEntityFramework
         {
             services.AddControllers();
 
+            services.AddEnTier();
+            
             services.AddEntityFrameworkUnitOfWork(new ExampleContext());
+
+            services.AddTransient<ICrudRepository<PostStg, long>, DummyRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +55,9 @@ namespace ExampleEntityFramework
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            app.UseRepository<PostStg, long, DummyRepository>();
+            app.ConfigureEnTierResolver();
+
+            app.GetService<DbContext>().Database.EnsureCreated();
         }
     }
 }

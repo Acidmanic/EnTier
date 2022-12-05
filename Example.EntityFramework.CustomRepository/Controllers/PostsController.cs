@@ -1,4 +1,5 @@
-﻿using EnTier.Controllers;
+﻿using EnTier;
+using EnTier.Controllers;
 using EnTier.UnitOfWork;
 using ExampleEntityFramework.DomainModels;
 using ExampleEntityFramework.StoragesModels;
@@ -12,21 +13,18 @@ namespace ExampleEntityFramework.Controllers
     public class PostsController : CrudControllerBase<PostDto,Post,PostStg,long>
     {
 
-        private readonly  IUnitOfWork _unitOfWork;
-        
-        public PostsController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public PostsController(EnTierEssence essence) : base(essence)
         {
-            _unitOfWork = unitOfWork;
         }
-
 
         [HttpGet]
         [Route("custom")]
         public IActionResult Custom()
         {
-            var repo = _unitOfWork.GetCrudRepository<PostStg, long, DummyRepository>();
+            var repo = UnitOfWork.GetCrudRepository<PostStg, long>() as DummyRepository;
 
-            return Ok(repo.GetNoneExistingPosts());
+            return Ok(repo?.GetNoneExistingPosts());
         }
+
     }
 }
