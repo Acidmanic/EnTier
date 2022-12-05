@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EnTier.Regulation;
 using ExampleRegulation.Contracts;
+using ExampleRegulation.Models;
 using ExampleRegulation.Regulators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +31,9 @@ namespace ExampleRegulation
         {
             services.AddControllers();
 
-            services.AddTransient<IPostRegulator, PostRegulator>();
+            services.AddEnTier();
+            
+            services.AddTransient<IDataAccessRegulator<Post,Post>, PostRegulator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +54,8 @@ namespace ExampleRegulation
             {
                 endpoints.MapControllers();
             });
+
+            app.ConfigureEnTierResolver();
         }
     }
 }

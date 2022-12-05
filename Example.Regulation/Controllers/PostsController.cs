@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EnTier;
 using EnTier.Controllers;
 using EnTier.Regulation;
 using ExampleRegulation.Contracts;
@@ -16,7 +17,7 @@ namespace ExampleRegulation.Controllers
     [Route("[controller]")]
     public class PostsController : CrudControllerBase<Post, string>
     {
-        public PostsController(IPostRegulator regulator) : base(regulator)
+        public PostsController(EnTierEssence essence) : base(essence)
         {
         }
     }
