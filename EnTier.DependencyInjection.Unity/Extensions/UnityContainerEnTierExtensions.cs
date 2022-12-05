@@ -3,6 +3,7 @@ using EnTier;
 using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
 using EnTier.DependencyInjection.Unity;
+using EnTier.Fixture;
 using EnTier.UnitOfWork;
 
 // ReSharper disable once CheckNamespace
@@ -24,7 +25,7 @@ namespace Unity
             return essence;
         }
 
-        public static IUnityContainer IntroduceUnityDiToEnTier(this IUnityContainer container)
+        public static IUnityContainer ConfigureEnTierResolver(this IUnityContainer container)
         {
             var essence = container.GetEssence();
 
@@ -32,7 +33,6 @@ namespace Unity
 
             return container;
         }
-        
         
         public static IUnityContainer AddJsonFileUnitOfWork(this IUnityContainer container)
         {
@@ -42,6 +42,26 @@ namespace Unity
         public static IUnityContainer AddInMemoryUnitOfWork(this IUnityContainer container)
         {
             return container.RegisterSingleton<IUnitOfWork, InMemoryUnitOfWork>();
+        }
+        
+        public static EnTierEssence AddEnTier(this IUnityContainer container)
+        {
+            var essence = new EnTierEssence();
+            
+            container.RegisterInstance(essence);
+            
+            container.RegisterSingleton<IUnitOfWork, InMemoryUnitOfWork>();
+
+            return essence;
+        }
+
+        public static IUnityContainer UseFixture<TFixture>(this IUnityContainer container)
+        {
+            var essence = container.GetEssence();
+            
+            FixtureManager.UseFixture<TFixture>(essence);
+
+            return container;
         }
     }
 }

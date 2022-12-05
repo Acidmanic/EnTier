@@ -29,9 +29,14 @@ namespace Example.Unity
         
         public void ConfigureContainer(IUnityContainer container)
         {
+
+            container.AddEnTier();
+            
             container.RegisterType<ITitleSuggestionService, TitleSuggestionService>();
             
-            container.IntroduceUnityDiToEnTier();
+            container.ConfigureEnTierResolver();
+
+            container.UseFixture<WelcomePostFixture>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,8 +57,6 @@ namespace Example.Unity
             {
                 endpoints.MapControllers();
             });
-
-            app.UseFixtureWithUnity<WelcomePostFixture>();
         }
     }
 }

@@ -1,3 +1,4 @@
+using EnTier;
 using EnTier.Controllers;
 using Example.Unity.Contracts;
 using Example.Unity.Models;
@@ -11,7 +12,7 @@ namespace Example.Unity.Controllers
     {
         private readonly ITitleSuggestionService _titleSuggestionService;
         
-        public PostsController(ITitleSuggestionService titleSuggestionService)
+        public PostsController(EnTierEssence essence, ITitleSuggestionService titleSuggestionService):base(essence)
         {
             _titleSuggestionService = titleSuggestionService;
         }
