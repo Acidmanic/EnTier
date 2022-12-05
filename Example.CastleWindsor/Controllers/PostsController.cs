@@ -1,3 +1,4 @@
+using EnTier;
 using EnTier.Controllers;
 using Example.CastleWindsor.Contracts;
 using Example.CastleWindsor.Models;
@@ -11,7 +12,7 @@ namespace Example.CastleWindsor.Controllers
     {
         private readonly ITitleSuggestionService _titleSuggestionService;
         
-        public PostsController(ITitleSuggestionService titleSuggestionService)
+        public PostsController(EnTierEssence essence, ITitleSuggestionService titleSuggestionService) : base(essence)
         {
             _titleSuggestionService = titleSuggestionService;
         }

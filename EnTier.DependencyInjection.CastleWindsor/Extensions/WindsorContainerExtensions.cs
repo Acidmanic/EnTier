@@ -14,6 +14,16 @@ namespace Castle.Windsor
     public static class WindsorContainerExtensions
     {
 
+        public static IWindsorContainer AddEnTier(this IWindsorContainer container)
+        {
+
+            var essence = new EnTierEssence();
+
+            container.Register(Component.For<EnTierEssence>().Instance(essence).LifestyleSingleton());
+            
+            return container;
+        }
+        
         public static IWindsorContainer ConfigureEnTierResolver(this IWindsorContainer container)
         {
 

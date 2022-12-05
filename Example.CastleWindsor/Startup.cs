@@ -35,8 +35,9 @@ namespace Example.CastleWindsor
             services.AddWindsor(Container, 
                 opts => opts.UseEntryAssembly(typeof(PostsController).Assembly), // <- Recommended
                 () => services.BuildServiceProvider(validateScopes:false)); // <- Optional
-            // Introducing CastleWindsor to EnTier (needed for EnTier to work properly) 
-            Container.ConfigureEnTierResolver();
+            // Introducing CastleWindsor to EnTier (needed for EnTier to work properly)
+            
+            Container.AddEnTier().ConfigureEnTierResolver();
             
             // Adding a dependency
             Container.Register(Component.For<ITitleSuggestionService>().ImplementedBy<TitleSuggestionService>());
