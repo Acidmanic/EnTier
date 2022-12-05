@@ -7,29 +7,15 @@ namespace EnTier.DataAccess.Meadow
 {
     public class MeadowUnitOfWork:UnitOfWorkBase
     {
-        public MeadowUnitOfWork(IMeadowConfigurationProvider configurationProvider)
+        public MeadowUnitOfWork(EnTierEssence essence, IMeadowConfigurationProvider configurationProvider):base(essence)
         {
             ConfigurationProvider = configurationProvider;
         }
 
-        private class WrapperProvider : IMeadowConfigurationProvider
-        {
-            private readonly MeadowConfiguration _config;
-
-            public WrapperProvider(MeadowConfiguration config)
-            {
-                _config = config;
-            }
-
-            public MeadowConfiguration GetConfigurations()
-            {
-                return _config;
-            }
-        }
         
-        public MeadowUnitOfWork(MeadowConfiguration configuration)
+        
+        public MeadowUnitOfWork(EnTierEssence essence, MeadowConfiguration configuration):this(essence,new ByInstanceMeadowConfigurationProvider(configuration))
         {
-            ConfigurationProvider = new WrapperProvider(configuration);
         }
 
         private IMeadowConfigurationProvider ConfigurationProvider { get; }

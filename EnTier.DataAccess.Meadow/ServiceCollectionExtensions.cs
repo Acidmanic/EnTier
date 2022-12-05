@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using EnTier.DataAccess.Meadow;
 using EnTier.UnitOfWork;
 using Litbid.DataAccess.Meadow;
@@ -14,14 +15,35 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddMeadowUnitOfWork(this IServiceCollection services,
             MeadowConfiguration configuration)
         {
-            return services.AddSingleton<IUnitOfWork>(new MeadowUnitOfWork(configuration));
+
+            var configurationProvider = new ByInstanceMeadowConfigurationProvider(configuration);
+
+            services.AddSingleton<IMeadowConfigurationProvider>(configurationProvider);
+            
+            services.AddSingleton<IUnitOfWork,MeadowUnitOfWork>();
+
+            return services;
         }
 
 
-        public static IServiceCollection AddMeadowUnitOfWork(this IServiceCollection services,
-            IMeadowConfigurationProvider configurationProvider)
+        public static IServiceCollection AddMeadowUnitOfWork
+            (this IServiceCollection services,IMeadowConfigurationProvider configurationProvider)
         {
-            return services.AddSingleton<IUnitOfWork>(new MeadowUnitOfWork(configurationProvider));
+            services.AddSingleton<IMeadowConfigurationProvider>(configurationProvider);
+            
+            services.AddSingleton<IUnitOfWork,MeadowUnitOfWork>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddMeadowUnitOfWork<TConfigurationProvider>(this IServiceCollection services)
+        where TConfigurationProvider: class, IMeadowConfigurationProvider
+        {
+            services.AddSingleton<IMeadowConfigurationProvider, TConfigurationProvider>();
+            
+            services.AddSingleton<IUnitOfWork,MeadowUnitOfWork>();
+
+            return services;
         }
     }
 }
