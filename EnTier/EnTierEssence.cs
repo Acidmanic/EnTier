@@ -29,7 +29,7 @@ namespace EnTier
         {
             Resolver = new EnTierResolver(resolver);
 
-            Logger = ResolveOrDefault(new ConsoleLogger());
+            Logger = ResolveOrDefault<ILogger>(new ConsoleLogger());
             
             return this;
         }
@@ -40,12 +40,12 @@ namespace EnTier
         }
 
 
-        internal T ResolveOrDefault<T>(T defaultValue, bool shootError = false)
+        internal T ResolveOrDefault<T>(object defaultValue, bool shootError = false) where T : class
         {
-            return ResolveOrDefault(() => defaultValue, shootError);
+            return ResolveOrDefault<T>(() => defaultValue, shootError);
         }
         
-        internal T ResolveOrDefault<T>(Func<T> defaultFactory, bool shootError = false)
+        internal T ResolveOrDefault<T>(Func<object> defaultFactory, bool shootError = false) where T : class
         {
             var resolved = Resolver.TryResolve<T>();
 
@@ -63,13 +63,13 @@ namespace EnTier
                 }
             }
 
-            return defaultFactory();
+            return defaultFactory() as T;
         }
 
 
-        internal IUnitOfWork UnitOfWork => ResolveOrDefault(new InMemoryUnitOfWork(this));
+        internal IUnitOfWork UnitOfWork => ResolveOrDefault<IUnitOfWork>(new InMemoryUnitOfWork(this));
         
-        internal IMapper Mapper => ResolveOrDefault(new EntierBuiltinMapper());
+        internal IMapper Mapper => ResolveOrDefault<IMapper>(new EntierBuiltinMapper());
         
         internal IDataAccessRegulator<TDomain, TStorage>  Regulator<TDomain, TStorage>()
         {

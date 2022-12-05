@@ -37,7 +37,7 @@ namespace EnTier.Controllers
             
             Mapper = essence.Mapper;
             UnitOfWork = essence.UnitOfWork;
-            Service = essence.ResolveOrDefault(() =>
+            Service = essence.ResolveOrDefault<ICrudService<TDomain, TDomainId>>(() =>
                 new CrudService<TDomain, TStorage, TDomainId, TStorageId>(essence));
             Logger = essence.Logger;
             Regulator = essence.Regulator<TDomain, TStorage>();

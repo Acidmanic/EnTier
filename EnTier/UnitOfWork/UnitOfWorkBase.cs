@@ -22,7 +22,8 @@ namespace EnTier.UnitOfWork
 
             if (repository == null)
             {
-                repository = Essence.ResolveOrDefault(CreateDefaultCrudRepository<TStorage, TId>);
+                repository = Essence.ResolveOrDefault<ICrudRepository<TStorage, TId>>
+                    (CreateDefaultCrudRepository<TStorage, TId>);
             }
 
             OnDeliveringRepository(repository);

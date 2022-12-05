@@ -16,6 +16,7 @@ namespace Example.AutoMapper.Controllers
     {
         public PostsController(EnTierEssence essence) : base(essence)
         {
+            
         }
     }
 }
