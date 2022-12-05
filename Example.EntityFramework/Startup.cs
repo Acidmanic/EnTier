@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +30,8 @@ namespace ExampleEntityFramework
         {
             services.AddControllers();
 
+            services.AddEnTier();
+            
             services.AddEntityFrameworkUnitOfWork(new ExampleContext());
         }
 
@@ -47,6 +50,12 @@ namespace ExampleEntityFramework
             app.UseAuthorization();
             
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            app.ConfigureEnTierResolver();
+
+            var context = app.GetService<DbContext>();
+
+            context.Database.EnsureCreated();
         }
     }
 }

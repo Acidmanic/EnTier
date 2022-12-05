@@ -1,4 +1,5 @@
-﻿using EnTier.Controllers;
+﻿using EnTier;
+using EnTier.Controllers;
 using EnTier.UnitOfWork;
 using ExampleEntityFramework.DomainModels;
 using ExampleEntityFramework.StoragesModels;
@@ -11,7 +12,7 @@ namespace ExampleEntityFramework.Controllers
     [Route("[controller]")]
     public class PostsController : CrudControllerBase<PostDto,Post,PostStg,long>
     {
-        public PostsController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public PostsController(EnTierEssence essence) : base(essence)
         {
         }
     }
