@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using EnTier.Results;
+using Acidmanic.Utilities.Results;
 using EnTier.UnitOfWork;
 
 namespace EnTier.Prepopulation

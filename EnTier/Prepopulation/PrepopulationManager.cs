@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
-using EnTier.Logging;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace EnTier.Prepopulation
 {
@@ -13,7 +13,7 @@ namespace EnTier.Prepopulation
     {
         private static PrepopulationManager _instance = null;
         private static readonly object Locker = new object();
-        private static ILogger _logger = EnTierLogging.GetInstance().Logger;
+        private static ILogger _logger = NullLogger.Instance;
 
         private PrepopulationManager()
         {
