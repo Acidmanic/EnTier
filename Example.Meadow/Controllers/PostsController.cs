@@ -1,3 +1,4 @@
+using EnTier;
 using EnTier.AutoWrap;
 using EnTier.Controllers;
 using EnTier.Mapper;
@@ -11,13 +12,8 @@ namespace Example.Meadow.Controllers
     [Route("posts")]
     public class PostsController : CrudControllerBase<Post, long>
     {
-        public PostsController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public PostsController(EnTierEssence essence) : base(essence)
         {
-        }
-
-        public override IActionResult GetAll()
-        {
-            return base.GetAll();
         }
     }
 }

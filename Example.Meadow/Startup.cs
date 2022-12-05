@@ -26,14 +26,10 @@ namespace Example.Meadow
         {
             services.AddControllers();
 
-            new ConsoleLogger().Disable(LogLevel.Debug).UseLoggerForEnTier().UseForMeadow();
+            services.AddEnTier();
             
-            // You could call this method in a simpler way, by just passing a MeadowConfiguration object.
-            // like: services.AddMeadowUnitOfWork(new MeadowConfiguration
-            // {
-            //    ConnectionString = "..",
-            //    BuildupScriptDirectory ="Scripts"
-            // })
+            services.AddTransient<ILogger>(sp => new ConsoleLogger().Disable(LogLevel.Debug));
+            
             services.AddMeadowUnitOfWork(new MeadowConfigurationProvider());
             
         }
@@ -57,7 +53,7 @@ namespace Example.Meadow
                 endpoints.MapControllers();
             });
 
-            app.IntroduceDotnetResolverToEnTier();
+            app.ConfigureEnTierResolver();
             
             var engine = new MeadowEngine(new MeadowConfigurationProvider().GetConfigurations());
 
