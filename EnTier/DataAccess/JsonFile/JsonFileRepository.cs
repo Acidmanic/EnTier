@@ -10,7 +10,7 @@ using EnTier.Utility;
 
 namespace EnTier.DataAccess.JsonFile
 {
-    public class JsonFileRepository<TStorage, TId> : CrudRepositoryBase<TStorage, TId>
+    public class JsonFileRepository<TStorage, TId> : CrudRepositoryForwardAsyncBase<TStorage, TId>
         where TStorage : class, new()
     {
         private readonly Dictionary<TId, TStorage> _index = new Dictionary<TId, TStorage>();

@@ -29,7 +29,7 @@ namespace Entier.Test.Unit
             public KeepingProperty KeepingProperty { get; set; }
         }
 
-        private class DummyRepo : CrudRepositoryBase<Model, long>
+        private class DummyRepo : CrudRepositoryForwardAsyncBase<Model, long>
         {
             public override IEnumerable<Model> All()
             {

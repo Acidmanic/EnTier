@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EnTier.DataAccess.EntityFramework
 {
-    public class EntityFrameWorkCrudRepository<TStorage, TId> : CrudRepositoryBase<TStorage, TId>
+    public class EntityFrameWorkCrudRepository<TStorage, TId> : CrudRepositoryForwardAsyncBase<TStorage, TId>
         where TStorage : class, new()
     {
         protected DbSet<TStorage> DbSet { get; }
