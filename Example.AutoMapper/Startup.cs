@@ -33,7 +33,7 @@ namespace Example.AutoMapper
             
             services.AddControllers();
 
-            services.AddAutoMapper(config => config.AddProfile<ExampleProfile>());
+            services.AddAutoMapperForEnTier(config => config.AddProfile<ExampleProfile>());
 
             services.AddJsonFileUnitOfWork();
         }
