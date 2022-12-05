@@ -4,32 +4,27 @@ using System.Reflection;
 using EnTier.DataAccess.InMemory;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Fixture
 {
     internal class FixtureExecuter
     {
-        private readonly IFixtureResolver _fixtureResolver;
         private readonly IUnitOfWork _unitOfWork;
-
-        public FixtureExecuter(IFixtureResolver fixtureResolver)
+        private readonly EnTierEssence _essence;
+        public ILogger Logger { get; private set; }
+        
+        public FixtureExecuter(EnTierEssence essence)
         {
-            _fixtureResolver = fixtureResolver;
+            _essence = essence;
 
-            IUnitOfWork unitOfWork;
-            try
-            {
-                unitOfWork = _fixtureResolver.Resolve<IUnitOfWork>();
-            }
-            catch (Exception e)
-            {
-                unitOfWork = null;
-            }
+            Logger = essence.Logger;
+
+            var unitOfWork =essence.UnitOfWork;
 
             if (unitOfWork == null)
             {
-                unitOfWork = new InMemoryUnitOfWork();
+                unitOfWork = new InMemoryUnitOfWork(essence);
             }
 
             _unitOfWork = unitOfWork;
@@ -80,7 +75,7 @@ namespace EnTier.Fixture
 
             for (int i = 0; i < maxArguments; i++)
             {
-                arguments[i] = _fixtureResolver.Resolve(parameters[i].ParameterType);
+                arguments[i] = _essence.Resolver.Resolve(parameters[i].ParameterType);
             }
 
             return constructorToUse.Invoke(arguments);

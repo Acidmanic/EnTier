@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Acidmanic.Utilities.Reflection;
 using EnTier.AutoWrap;
-using EnTier.DataAccess.InMemory;
-using EnTier.EnTierEssentials;
 using EnTier.Extensions;
-using EnTier.Logging;
 using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.Services;
@@ -22,105 +19,28 @@ namespace EnTier.Controllers
         where TDomain : class, new()
         where TStorage : class, new()
     {
-        private readonly DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId> _essentialsProvider;
+        private readonly EnTierEssence _essence;
 
-        protected IMapper Mapper => _essentialsProvider.Mapper;
-        protected IUnitOfWork UnitOfWork => _essentialsProvider.UnitOfWork;
-        protected ICrudService<TDomain, TDomainId> Service => _essentialsProvider.Service;
+        protected IMapper Mapper { get; private set; }
+        protected IUnitOfWork UnitOfWork { get; private set; }
+        protected ICrudService<TDomain, TDomainId> Service { get; private set; }
 
-        protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
+        protected ILogger Logger { get; private set; }
 
         protected readonly EnTierAutoWrapper<TTransfer> AutoWrapper;
 
-        protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; } =
-            new NullDataAccessRegulator<TDomain, TStorage>();
+        protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; private set; }
 
-        public CrudControllerBase()
+        public CrudControllerBase(EnTierEssence essence)
         {
-            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
-                null,
-                null,
-                null,
-                null
-            );
-            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
-        }
-
-        public CrudControllerBase(IMapper mapper) : this()
-        {
-            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
-                mapper,
-                null,
-                null,
-                null
-            );
-            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
-        }
-
-        public CrudControllerBase(IDataAccessRegulator<TDomain, TStorage> regulator)
-        {
-            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
-                null,
-                null,
-                regulator,
-                null
-            );
-            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
-        }
-
-        public CrudControllerBase(IUnitOfWork unitOfWork)
-        {
-            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
-                null,
-                unitOfWork,
-                null,
-                null
-            );
-            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
-        }
-
-        public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork)
-        {
-            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
-                mapper,
-                unitOfWork,
-                null,
-                null
-            );
-            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
-        }
-
-        public CrudControllerBase(IMapper mapper, IDataAccessRegulator<TDomain, TStorage> regulator)
-        {
-            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
-                mapper,
-                null,
-                regulator,
-                null
-            );
-            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
-        }
-
-        public CrudControllerBase(IUnitOfWork unitOfWork, IDataAccessRegulator<TDomain, TStorage> regulator)
-        {
-            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
-                null,
-                unitOfWork,
-                regulator,
-                null
-            );
-            AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
-        }
-
-        public CrudControllerBase(IMapper mapper, IUnitOfWork unitOfWork,
-            IDataAccessRegulator<TDomain, TStorage> regulator)
-        {
-            _essentialsProvider = new DefaultEssentialProvider<TDomain, TStorage, TDomainId, TStorageId>(
-                mapper,
-                unitOfWork,
-                null,
-                null
-            );
+            _essence = essence;
+            
+            Mapper = essence.Mapper;
+            UnitOfWork = essence.UnitOfWork;
+            Service = essence.ResolveOrDefault(() =>
+                new CrudService<TDomain, TStorage, TDomainId, TStorageId>(essence));
+            Logger = essence.Logger;
+            Regulator = essence.Regulator<TDomain, TStorage>();
             AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
         }
 

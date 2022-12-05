@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
-using EnTier.Logging;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace EnTier.Repositories
 {
@@ -33,8 +33,12 @@ namespace EnTier.Repositories
         public abstract Task<IEnumerable<TStorage>> FindAsync(Expression<Func<TStorage, bool>> predicate);
         public abstract Task<bool> RemoveAsync(TStorage value);
         public abstract Task<bool> RemoveAsync(TId id);
+        public void SetLogger(ILogger logger)
+        {
+            Logger = logger;
+        }
 
-        protected ILogger Logger { get; } = EnTierLogging.GetInstance().Logger;
+        protected ILogger Logger { get;private set; } = NullLogger.Instance;
 
         public virtual TStorage Add(TStorage value)
         {

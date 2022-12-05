@@ -39,8 +39,8 @@ namespace EnTier.DataAccess.JsonFile
 
             return _ids[key];
         }
-
-        public JsonFileUnitOfWork()
+        
+        public JsonFileUnitOfWork(EnTierEssence essence) : base(essence)
         {
             var executionDirectory =
                 new FileInfo(Assembly.GetEntryAssembly()?.Location ?? "").Directory?.FullName ?? "";

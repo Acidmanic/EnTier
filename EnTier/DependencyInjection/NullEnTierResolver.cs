@@ -1,33 +1,30 @@
 using System;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.LightWeight;
 
 namespace EnTier.DependencyInjection
 {
-    internal class NullEnTierResolver:EnTierResolver
+    internal class NullEnTierResolver : EnTierResolver
     {
-        private class NullResolverFacade:IResolverFacade
+        private class NullResolverFacade : IResolverFacade
         {
-            private readonly ILogger _logger;
-
-            public NullResolverFacade(ILogger logger)
+            public NullResolverFacade()
             {
-                _logger = logger;
             }
 
             public object Resolve(Type type)
             {
-                _logger.LogError("No Resolver has been introduced to EnTier. " +
-                                 "\n\t\tPlease Use EnTierEssence " +
-                                 "to introduce your resolver.");
+                new ConsoleLogger()
+                    .LogError("No Resolver has been introduced to EnTier. " +
+                              "\n\t\tPlease Use EnTierEssence " +
+                              "to introduce your resolver.");
 
                 return null;
             }
         }
 
-        public NullEnTierResolver(ILogger logger) : base(new NullResolverFacade(logger))
+        public NullEnTierResolver() : base(new NullResolverFacade())
         {
-            
         }
-        
     }
 }

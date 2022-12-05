@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services
 {
@@ -17,5 +18,7 @@ namespace EnTier.Services
         bool Remove(TEntity value);
 
         bool RemoveById(TDomainId id);
+
+        void SetLogger(ILogger logger);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories
 {
@@ -49,9 +50,9 @@ namespace EnTier.Repositories
         /// Removes an existing Entity
         /// </summary>
         bool Remove(TId id);
-        
+
         //>>>>>>>>>>>>>>>>
-        
+
         /// <summary>
         /// Provides all existing instances of Entity
         /// </summary>
@@ -92,5 +93,11 @@ namespace EnTier.Repositories
         /// Removes an existing Entity
         /// </summary>
         Task<bool> RemoveAsync(TId id);
+
+        /// <summary>
+        /// Sets the internal repository logger
+        /// </summary>
+        /// <param name="logger"></param>
+        void SetLogger(ILogger logger);
     }
 }

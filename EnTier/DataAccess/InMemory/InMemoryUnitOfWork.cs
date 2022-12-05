@@ -56,5 +56,10 @@ namespace EnTier.DataAccess.InMemory
 
             return key;
         }
+
+        //TODO: Fix Circular Dependency
+        public InMemoryUnitOfWork(EnTierEssence essence) : base(essence)
+        {
+        }
     }
 }

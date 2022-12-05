@@ -1,6 +1,5 @@
 using System;
-using EnTier.Logging;
-using EnTier.Results;
+using Acidmanic.Utilities.Results;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.DependencyInjection
@@ -9,10 +8,6 @@ namespace EnTier.DependencyInjection
     {
         private readonly IResolverFacade _resolverFacade;
 
-
-        public EnTierResolver(IServiceProvider serviceProvider):this(new DotnetResolverFacade(serviceProvider))
-        { }
-        
         public EnTierResolver(IResolverFacade resolverFacade)
         {
             this._resolverFacade = resolverFacade;
@@ -23,22 +18,28 @@ namespace EnTier.DependencyInjection
             return _resolverFacade.Resolve(type);
         }
 
-        public Result<object> TryResolve(Type type)
+        public Result<object, Exception> TryResolve(Type type)
         {
+            Exception exception = null;
+            var success = false;
+            object value = null;
+
             try
             {
                 var resolved = _resolverFacade.Resolve(type);
 
                 if (resolved != null)
                 {
-                    return new Result<object>().Succeed(resolved);
+                    success = true;
+                    value = resolved;
                 }
             }
             catch (Exception e)
             {
-                EnTierLogging.GetInstance().Logger.LogError(e,"Problem resolving {TypeFullName}",type.FullName);
+                exception = e;
             }
-            return new Result<object>().FailAndDefaultValue();
+
+            return new Result<object, Exception>(success, exception, value);
         }
 
         public T Resolve<T>()
@@ -47,10 +48,10 @@ namespace EnTier.DependencyInjection
 
             var resolved = Resolve(type);
 
-            return (T) resolved;
+            return (T)resolved;
         }
 
-        public Result<T> TryResolve<T>()
+        public Result<T, Exception> TryResolve<T>()
         {
             var type = typeof(T);
 
@@ -58,14 +59,24 @@ namespace EnTier.DependencyInjection
 
             if (result.Success)
             {
-                var resolved = result.Value;
+                var resolved = result.Primary;
 
                 if (resolved is T casted)
                 {
-                    return new Result<T>().Succeed(casted);
+                    return new Result<T, Exception>
+                    {
+                        Primary = casted,
+                        Secondary = null,
+                        Success = true
+                    };
                 }
+
+                return new Result<T, Exception>(false, new Exception("Type Miss Match"), default);
             }
-            return new Result<T>().FailAndDefaultValue();
+            else
+            {
+                return new Result<T, Exception>(false, result.Secondary, default);
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using EnTier.Results;
 using EnTier.Utility;
 
 namespace EnTier.AutoWrap

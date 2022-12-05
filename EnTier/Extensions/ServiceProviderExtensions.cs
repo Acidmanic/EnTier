@@ -1,7 +1,5 @@
 using System;
 using EnTier.Fixture;
-using EnTier.Logging;
-using Microsoft.Extensions.Logging;
 
 namespace EnTier.Extensions
 {
@@ -9,19 +7,11 @@ namespace EnTier.Extensions
     {
         public static IServiceProvider UseFixture<TFixture>(this IServiceProvider serviceProvider)
         {
-            var serviceResolver = new ServiceProviderFixtureResolver(serviceProvider);
-
-            var executer = new FixtureExecuter(serviceResolver);
-
-            try
+            if (serviceProvider.GetService(typeof(EnTierEssence)) is EnTierEssence essence)
             {
-                executer.Execute<TFixture>();
+                FixtureManager.UseFixture<TFixture>(essence);    
             }
-            catch (Exception e)
-            {
-                EnTierLogging.GetInstance().Logger.LogError(e,"Problem executing Fixture.");
-            }
-
+            
             return serviceProvider;
         }
     }

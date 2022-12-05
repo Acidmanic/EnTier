@@ -1,6 +1,5 @@
 using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
-using EnTier.DependencyInjection;
 using EnTier.UnitOfWork;
 
 // ReSharper disable once CheckNamespace
@@ -11,12 +10,12 @@ namespace Microsoft.Extensions.DependencyInjection
         
         public static IServiceCollection AddJsonFileUnitOfWork(this IServiceCollection services)
         {
-            return services.AddSingleton<IUnitOfWork>(new JsonFileUnitOfWork());
+            return services.AddSingleton<IUnitOfWork,JsonFileUnitOfWork>();
         }
         
         public static IServiceCollection AddInMemoryUnitOfWork(this IServiceCollection services)
         {
-            return services.AddSingleton<IUnitOfWork>(new InMemoryUnitOfWork());
+            return services.AddSingleton<IUnitOfWork,InMemoryUnitOfWork>();
         }
     }
 }

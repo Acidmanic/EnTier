@@ -1,13 +1,5 @@
-using System;
-using System.Data.SqlTypes;
 using EnTier;
-using EnTier.DependencyInjection;
 using EnTier.Fixture;
-using EnTier.Logging;
-using EnTier.Repositories;
-using EnTier.UnitOfWork;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
@@ -16,52 +8,11 @@ namespace Microsoft.AspNetCore.Builder
     {
         public static IApplicationBuilder UseFixture<TFixture>(this IApplicationBuilder app)
         {
-            var serviceResolver = new ServiceProviderFixtureResolver(app.ApplicationServices);
-
-            FixtureManager.UseFixture<TFixture>(serviceResolver);
-
-            return app;
-        }
-        
-        public static IApplicationBuilder IntroduceDotnetResolverToEnTier(this IApplicationBuilder app)
-        {
-            var serviceProvider =app.ApplicationServices;
-
-            EnTierEssence.IntroduceDiResolver(new DotnetResolverFacade(serviceProvider));
-            
-            return app;
-        }
-
-        public static IApplicationBuilder UseRepository<TStorage, TId, TRepository>(this IApplicationBuilder app)
-            where TRepository : ICrudRepository<TStorage, TId> where TStorage : class, new()
-        {
-            EnTierEssence.RegisterCustomRepository<TStorage, TId, TRepository>();
-            
-            return app;
-        }
-
-        public static IApplicationBuilder UseLoggerForEnTier(this IApplicationBuilder app, ILogger logger)
-        {
-
-            EnTierEssence.SetLogger(logger);
-            
-            return app;
-        }
-
-        public static IApplicationBuilder UseRegisteredLoggerForEnTier(this IApplicationBuilder app)
-        {
-            ILogger logger = NullLogger.Instance;
-
-            try
+            if (app.ApplicationServices.GetService(typeof(EnTierEssence)) is EnTierEssence essence)
             {
-                logger = (ILogger) app.ApplicationServices.GetService(typeof(ILogger));
+                FixtureManager.UseFixture<TFixture>(essence);    
             }
-            catch (Exception e)
-            {
-            }
-
-            EnTierEssence.SetLogger(logger);
-
+            
             return app;
         }
     }

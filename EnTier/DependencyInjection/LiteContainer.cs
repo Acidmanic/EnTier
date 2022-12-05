@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Acidmanic.Utilities.Results;
 using EnTier.Prepopulation;
-using EnTier.Results;
 
 namespace EnTier.DependencyInjection
 {
