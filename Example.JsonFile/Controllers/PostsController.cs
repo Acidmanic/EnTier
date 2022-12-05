@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EnTier;
 using EnTier.Controllers;
 using EnTier.UnitOfWork;
 using ExampleJsonFile.Domain;
@@ -16,7 +17,7 @@ namespace ExampleJsonFile.Controllers
     [Route("[controller]")]
     public class PostsController : CrudControllerBase<PostDto,Post,PostStg,string>
     {
-        public PostsController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public PostsController(EnTierEssence essence) : base(essence)
         {
         }
     }

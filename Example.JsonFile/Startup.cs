@@ -20,6 +20,8 @@ namespace ExampleJsonFile
         {
             services.AddControllers();
 
+            services.AddEnTier();
+            
             services.AddJsonFileUnitOfWork();
         }
 
@@ -41,6 +43,8 @@ namespace ExampleJsonFile
             {
                 endpoints.MapControllers();
             });
+
+            app.ConfigureEnTierResolver();
         }
     }
 }
