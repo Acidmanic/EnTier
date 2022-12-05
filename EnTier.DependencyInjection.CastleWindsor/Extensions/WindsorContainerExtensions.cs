@@ -14,11 +14,27 @@ namespace Castle.Windsor
     public static class WindsorContainerExtensions
     {
 
-        public static IWindsorContainer IntroduceWindsorDiToEnTier(this IWindsorContainer container)
+        public static IWindsorContainer ConfigureEnTierResolver(this IWindsorContainer container)
         {
-            EnTierEssence.IntroduceDiResolver(new CastleWindsorResolverFacade(container));
+
+            var essence = GetEssence(container);
+            
+            essence.UseResolver(new CastleWindsorResolverFacade(container));
             
             return container;
+        }
+
+        private static EnTierEssence GetEssence(IWindsorContainer container)
+        {
+            var essence = container.Resolve(typeof(EnTierEssence)) as EnTierEssence;
+
+            if (essence == null)
+            {
+                throw new Exception(
+                    "You have to register EnTierEssence instance before configuring EnTier's Resolver.");
+            }
+
+            return essence;
         }
         
         public static IWindsorContainer AddJsonFileUnitOfWork(this IWindsorContainer container)
@@ -33,9 +49,9 @@ namespace Castle.Windsor
         
         public static IWindsorContainer UseFixtureWithWindsor<TFixture>(this IWindsorContainer container)
         {
-            var serviceResolver = new CastleWindsorFixtureResolver(container);
+            var essence = GetEssence(container);
             
-            var executer = new FixtureExecuter(serviceResolver);
+            var executer = new FixtureExecuter(essence);
 
             try
             {
@@ -43,7 +59,7 @@ namespace Castle.Windsor
             }
             catch (Exception e)
             {
-                EnTierEssence.Logger.LogError(e,"Error occured during execution of fixture: {FixtureTypeFullName}",typeof(TFixture).FullName);
+                essence.Logger.LogError(e,"Error occured during execution of fixture: {FixtureTypeFullName}",typeof(TFixture).FullName);
             }
 
             return container;
