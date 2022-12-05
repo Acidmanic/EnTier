@@ -11,7 +11,7 @@ namespace EnTier.DataAccess.EntityFramework
         private readonly DbContext _context;
         private readonly Func<Type, object> _getDbSetByType;
 
-        public EntityFrameworkUnitOfWork(DbContext context)
+        public EntityFrameworkUnitOfWork(EnTierEssence essence, DbContext context):base(essence)
         {
             _context = context;
 
@@ -34,24 +34,24 @@ namespace EnTier.DataAccess.EntityFramework
             return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet);
         }
 
-
-        protected override bool IsConstructorAcceptable(ConstructorInfo constructor)
-        {
-            return IsDbSetOnly(constructor.GetParameters());
-        }
-
-        protected override object ProvideConstructorParameter(Type parameterType)
-        {
-            var genericArguments = parameterType.GenericTypeArguments;
-
-            if (genericArguments == null || genericArguments.Length != 1)
-            {
-                throw new Exception("Custom repositories can only accept " +
-                                    "parameters of type DbSet<TStorage>");
-            }
-            
-            return _getDbSetByType(genericArguments[0]);
-        }
+        //
+        // protected override bool IsConstructorAcceptable(ConstructorInfo constructor)
+        // {
+        //     return IsDbSetOnly(constructor.GetParameters());
+        // }
+        //
+        // protected override object ProvideConstructorParameter(Type parameterType)
+        // {
+        //     var genericArguments = parameterType.GenericTypeArguments;
+        //
+        //     if (genericArguments == null || genericArguments.Length != 1)
+        //     {
+        //         throw new Exception("Custom repositories can only accept " +
+        //                             "parameters of type DbSet<TStorage>");
+        //     }
+        //     
+        //     return _getDbSetByType(genericArguments[0]);
+        // }
 
         private bool IsDbSetOnly(ParameterInfo[] parameters)
         {

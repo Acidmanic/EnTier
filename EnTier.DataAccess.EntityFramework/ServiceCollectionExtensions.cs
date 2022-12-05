@@ -8,6 +8,23 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
+
+
+        public static bool IsRegistered<TService>(this IServiceCollection services)
+        {
+            var serviceType = typeof(TService);
+            
+            for (int i = 0; i < services.Count; i++)
+            {
+                if (services[i].ServiceType == serviceType)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
         /// <summary>
         /// Registers a EntityFrameworkUnitOfWork object with given context as a singleton 
         /// </summary>
@@ -17,7 +34,13 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddEntityFrameworkUnitOfWork(this IServiceCollection services,
             DbContext context)
         {
-            return services.AddSingleton<IUnitOfWork>(new EntityFrameworkUnitOfWork(context));
+            if (!services.IsRegistered<DbContext>())
+            {
+                services.AddSingleton<DbContext>(context);
+                services.AddSingleton<IUnitOfWork,EntityFrameworkUnitOfWork>();
+            }
+
+            return services;
         }
         
         /// <summary>
@@ -29,7 +52,14 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddEntityFrameworkUnitOfWork(this IServiceCollection services,
             Func<DbContext> contextFactory)
         {
-            return services.AddTransient<IUnitOfWork>(sp => new EntityFrameworkUnitOfWork(contextFactory.Invoke()));
+            if (!services.IsRegistered<DbContext>())
+            {
+                services.AddTransient<DbContext>(sp => contextFactory());
+                
+                services.AddTransient<IUnitOfWork,EntityFrameworkUnitOfWork>();
+            }
+
+            return services;
         }
     }
 }
