@@ -23,6 +23,8 @@ namespace ServiceManipulationExample
         {
             services.AddControllers();
 
+            services.AddEnTier();
+            
             services.AddTransient<ICrudService<Post, long>, MyPostService>();
         }
 
@@ -40,12 +42,12 @@ namespace ServiceManipulationExample
 
             app.UseAuthorization();
 
-            app.IntroduceDotnetResolverToEnTier();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            app.ConfigureEnTierResolver();
         }
     }
 }

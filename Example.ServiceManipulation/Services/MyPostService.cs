@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using EnTier;
 using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.Services;
@@ -10,11 +11,7 @@ namespace ServiceManipulationExample.Services
 {
     public class MyPostService:CrudService<Post,Post,long,long>
     {
-        
-        public MyPostService() : base()
-        {
-        }
-
+    
 
         public override IEnumerable<Post> GetAll()
         {
@@ -41,6 +38,10 @@ namespace ServiceManipulationExample.Services
             p.Content = "[Manipulated in MYYY Service!!!] " + p.Content;
             
             return p;
+        }
+
+        public MyPostService(EnTierEssence essence) : base(essence)
+        {
         }
     }
 }

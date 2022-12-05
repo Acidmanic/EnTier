@@ -1,4 +1,5 @@
-﻿using EnTier.Controllers;
+﻿using EnTier;
+using EnTier.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using ServiceManipulationExample.Models;
 
@@ -8,8 +9,8 @@ namespace ServiceManipulationExample.Controllers
     [Route("[controller]")]
     public class PostsController : CrudControllerBase<Post,long>
     {
-
-        
-       
+        public PostsController(EnTierEssence essence) : base(essence)
+        {
+        }
     }
 }
