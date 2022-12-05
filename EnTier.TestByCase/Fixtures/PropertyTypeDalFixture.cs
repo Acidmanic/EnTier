@@ -18,6 +18,7 @@ namespace EnTier.TestByCase.Fixtures
             var inserted = repository.Add(FirstType);
 
             FirstType.Id = inserted.Id;
+
         }
     }
 }

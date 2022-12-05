@@ -6,7 +6,7 @@ namespace EnTier.TestByCase
     {
         static void Main(string[] args)
         {
-            new Tbc002AutoWrapTest().Main();
+            new Tbc001IdGeneratorInFixture().Main();
         }
     }
 }

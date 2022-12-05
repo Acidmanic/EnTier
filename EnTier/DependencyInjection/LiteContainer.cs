@@ -126,6 +126,11 @@ namespace EnTier.DependencyInjection
             return Register<T, T>();
         }
 
+        public LiteContainer Register<T>(object instance)
+        {
+            return Register<T>(() => instance);
+        }
+        
         public LiteContainer Register<T>(Func<object> factory)
         {
             var type = typeof(T);

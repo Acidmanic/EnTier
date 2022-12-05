@@ -1,7 +1,6 @@
 using System;
-using EnTier.Extensions;
+using EnTier.DependencyInjection;
 using EnTier.Fixture;
-using EnTier.Logging;
 using EnTier.TestByCase.Fixtures;
 using Microsoft.Extensions.Logging.LightWeight;
 
@@ -30,14 +29,14 @@ namespace EnTier.TestByCase
         
         public override void Main()
         {
+
+            var container = new LiteContainer();
             
-            new ConsoleLogger().UseLoggerForEnTier();
+            var essence = new EnTierEssence().UseResolver(container);
+
+            container.Register<EnTierEssence>(essence);
             
-            var resolver = new Resolver();
-            
-            FixtureManager.UseFixture<PropertyTypeDalFixture>(resolver);
-            
-            
+            FixtureManager.UseFixture<PropertyTypeDalFixture>(essence);
             
         }
     }
