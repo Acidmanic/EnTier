@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EnTier;
 using Example.AutoMapper.MapperProfiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,11 @@ namespace Example.AutoMapper
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            var essence = new EnTierEssence();
+
+            services.AddSingleton<EnTierEssence>(essence);
+            
             services.AddControllers();
 
             services.AddAutoMapper(config => config.AddProfile<ExampleProfile>());
@@ -52,6 +58,10 @@ namespace Example.AutoMapper
             {
                 endpoints.MapControllers();
             });
+
+            var essence = app.ApplicationServices.GetService(typeof(EnTierEssence)) as EnTierEssence;
+
+            essence?.UseResolver(t => app.ApplicationServices.GetService(t));
         }
     }
 }
