@@ -29,9 +29,7 @@ namespace Example.AutoMapper
         public void ConfigureServices(IServiceCollection services)
         {
 
-            var essence = new EnTierEssence();
-
-            services.AddSingleton<EnTierEssence>(essence);
+            services.AddEnTier();
             
             services.AddControllers();
 
@@ -59,9 +57,7 @@ namespace Example.AutoMapper
                 endpoints.MapControllers();
             });
 
-            var essence = app.ApplicationServices.GetService(typeof(EnTierEssence)) as EnTierEssence;
-
-            essence?.UseResolver(t => app.ApplicationServices.GetService(t));
+            app.ConfigureEnTierResolver();
         }
     }
 }

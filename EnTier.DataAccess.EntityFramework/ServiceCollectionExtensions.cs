@@ -10,20 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
 
 
-        public static bool IsRegistered<TService>(this IServiceCollection services)
-        {
-            var serviceType = typeof(TService);
-            
-            for (int i = 0; i < services.Count; i++)
-            {
-                if (services[i].ServiceType == serviceType)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        
         
         /// <summary>
         /// Registers a EntityFrameworkUnitOfWork object with given context as a singleton 
