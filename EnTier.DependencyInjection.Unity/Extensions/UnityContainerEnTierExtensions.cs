@@ -1,3 +1,4 @@
+using System;
 using EnTier;
 using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
@@ -9,12 +10,26 @@ namespace Unity
 {
     public static class UnityContainerEnTierExtensions
     {
+        
+        internal static EnTierEssence GetEssence(this IUnityContainer container)
+        {
+            
+            var essence = container.Resolve(typeof(EnTierEssence)) as EnTierEssence;
+
+            if (essence == null)
+            {
+                throw new Exception("You Should register EnTier Essence Object before being able to configure it.");
+            }
+
+            return essence;
+        }
 
         public static IUnityContainer IntroduceUnityDiToEnTier(this IUnityContainer container)
         {
-            
-            EnTierEssence.IntroduceDiResolver(new UnityResolverFacade(container));
-            
+            var essence = container.GetEssence();
+
+            essence.UseResolver(new UnityResolverFacade(container));
+
             return container;
         }
         
