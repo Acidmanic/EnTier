@@ -7,7 +7,9 @@ using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.Exceptions;
 using EnTier.Mapper;
 using EnTier.Regulation;
+using EnTier.Repositories;
 using EnTier.UnitOfWork;
+using EnTier.Utility;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services
@@ -175,6 +177,13 @@ namespace EnTier.Services
             }
 
             return success;
+        }
+
+
+        protected DisposableFetchRepositoryResult<TCustom, TStorage, TStorageId> FetchCustomRepository<TCustom>()
+            where TCustom : ICrudRepository<TStorage, TStorageId>
+        {
+            return new DisposableFetchRepositoryResult<TCustom, TStorage, TStorageId>(UnitOfWork, Logger);
         }
 
         public void SetLogger(ILogger logger)
