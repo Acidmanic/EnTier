@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTierDeprecated", "EnTierDeprecated\EnTierDeprecated.csproj", "{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier", "EnTier\EnTier.csproj", "{D38A9DB9-0D88-42B1-840E-BC06EE7EBB05}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.InMemorySingleLayerEntity", "Example.InMemorySingleLayerEntity\Example.InMemorySingleLayerEntity.csproj", "{07706C18-3956-4ADA-82D2-1E369B314F6B}"
@@ -63,18 +61,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Debug|x64.Build.0 = Debug|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Debug|x86.Build.0 = Debug|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Release|x64.ActiveCfg = Release|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Release|x64.Build.0 = Release|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Release|x86.ActiveCfg = Release|Any CPU
-		{F86AF83C-0174-406B-B7BC-B7573AAC5B0D}.Release|x86.Build.0 = Release|Any CPU
 		{D38A9DB9-0D88-42B1-840E-BC06EE7EBB05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D38A9DB9-0D88-42B1-840E-BC06EE7EBB05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D38A9DB9-0D88-42B1-840E-BC06EE7EBB05}.Debug|x64.ActiveCfg = Debug|Any CPU
