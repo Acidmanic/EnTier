@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Castle.MicroKernel.Registration;
 using EnTier;
 using EnTier.DataAccess.InMemory;
@@ -14,29 +15,49 @@ namespace Castle.Windsor
     public static class WindsorContainerExtensions
     {
 
-        public static IWindsorContainer AddEnTier(this IWindsorContainer container)
+        public static EnTierEssence AddEnTier(this IWindsorContainer container)
         {
 
             var essence = new EnTierEssence();
 
             container.Register(Component.For<EnTierEssence>().Instance(essence).LifestyleSingleton());
             
-            return container;
+            return essence;
+        }
+
+        public static bool IsRegistered<TService>(this IWindsorContainer container)
+        {
+            var type = typeof(TService);
+
+            return container.Kernel.HasComponent(type);
         }
         
         public static IWindsorContainer ConfigureEnTierResolver(this IWindsorContainer container)
         {
 
-            var essence = GetEssence(container);
+            var essence = GetRegisteredEnTierEssence(container);
             
             essence.UseResolver(new CastleWindsorResolverFacade(container));
             
             return container;
         }
 
-        private static EnTierEssence GetEssence(IWindsorContainer container)
+        public static TService GetService<TService>(this IWindsorContainer container)
         {
-            var essence = container.Resolve(typeof(EnTierEssence)) as EnTierEssence;
+            var type = typeof(TService);
+            
+            var serviceObject = container.Resolve(type);
+
+            if (serviceObject is TService service)
+            {
+                return service;
+            }
+
+            return default;
+        }
+        public static EnTierEssence GetRegisteredEnTierEssence(this IWindsorContainer container)
+        {
+            var essence = container.GetService<EnTierEssence>();
 
             if (essence == null)
             {
@@ -57,9 +78,9 @@ namespace Castle.Windsor
             return container.Register(Component.For<IUnitOfWork,InMemoryUnitOfWork>());
         }
         
-        public static IWindsorContainer UseFixtureWithWindsor<TFixture>(this IWindsorContainer container)
+        public static IWindsorContainer UseFixture<TFixture>(this IWindsorContainer container)
         {
-            var essence = GetEssence(container);
+            var essence = GetRegisteredEnTierEssence(container);
             
             var executer = new FixtureExecuter(essence);
 

@@ -37,5 +37,19 @@ namespace EnTier.Extensions
 
             return serviceProvider;
         }
+
+        public static T GetService<T>(this IServiceProvider serviceProvider)
+        {
+            var type = typeof(T);
+
+            var serviceObject = serviceProvider.GetService(type);
+
+            if (serviceObject is T service)
+            {
+                return service;
+            }
+
+            return default;
+        }
     }
 }

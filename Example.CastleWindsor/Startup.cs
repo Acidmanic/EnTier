@@ -17,7 +17,7 @@ namespace Example.CastleWindsor
     public class Startup
     {
         private static readonly WindsorContainer Container = new WindsorContainer();
-        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,17 +32,19 @@ namespace Example.CastleWindsor
             Container.AddFacility<AspNetCoreFacility>(f => f.CrossWiresInto(services));
             services.AddMvc();
             Container.Register(Component.For<IHttpContextAccessor>().ImplementedBy<HttpContextAccessor>());
-            services.AddWindsor(Container, 
+            services.AddWindsor(Container,
                 opts => opts.UseEntryAssembly(typeof(PostsController).Assembly), // <- Recommended
-                () => services.BuildServiceProvider(validateScopes:false)); // <- Optional
+                () => services.BuildServiceProvider(validateScopes: false)); // <- Optional
             // Introducing CastleWindsor to EnTier (needed for EnTier to work properly)
-            
-            Container.AddEnTier().ConfigureEnTierResolver();
-            
+
+            Container.AddEnTier();
+
+            Container.ConfigureEnTierResolver();
+
             // Adding a dependency
             Container.Register(Component.For<ITitleSuggestionService>().ImplementedBy<TitleSuggestionService>());
             // Running a fixture for prepopulating the db
-            Container.UseFixtureWithWindsor<WelcomePostFixture>();
+            Container.UseFixture<WelcomePostFixture>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,23 +52,17 @@ namespace Example.CastleWindsor
         {
             // Windsor setups...
             Container.GetFacility<AspNetCoreFacility>().RegistersMiddlewareInto(app);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
-            
+
             app.UseRouting();
 
-            app.UseEndpoints(builder =>
-            {
-                builder.MapControllers();
-            });
-
-            
+            app.UseEndpoints(builder => { builder.MapControllers(); });
         }
-  
     }
 }

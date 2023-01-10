@@ -1,4 +1,5 @@
 using System;
+using System.Security;
 using EnTier;
 using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
@@ -11,23 +12,46 @@ namespace Unity
 {
     public static class UnityContainerEnTierExtensions
     {
-        
-        internal static EnTierEssence GetEssence(this IUnityContainer container)
-        {
-            
-            var essence = container.Resolve(typeof(EnTierEssence)) as EnTierEssence;
 
-            if (essence == null)
+
+        public static bool IsRegistered<TService>(this IUnityContainer container)
+        {
+
+            var type = typeof(TService);
+
+            return container.IsRegistered(type);
+        }
+
+
+        public static TService GetService<TService>(this IUnityContainer container)
+        {
+            var type = typeof(TService);
+            
+            var serviceObject = container.Resolve(typeof(EnTierEssence));
+
+            if (serviceObject is TService service)
             {
-                throw new Exception("You Should register EnTier Essence Object before being able to configure it.");
+                return service;
             }
+
+            return default;
+        }
+        
+        public static EnTierEssence GetRegisteredEnTierEssence(this IUnityContainer container)
+        {
+            var essence = GetService<EnTierEssence>(container);
 
             return essence;
         }
 
         public static IUnityContainer ConfigureEnTierResolver(this IUnityContainer container)
         {
-            var essence = container.GetEssence();
+            var essence = container.GetRegisteredEnTierEssence();
+            
+            if (essence == null)
+            {
+                throw new Exception("You Should register EnTier Essence Object before being able to configure it.");
+            }
 
             essence.UseResolver(new UnityResolverFacade(container));
 
@@ -57,7 +81,12 @@ namespace Unity
 
         public static IUnityContainer UseFixture<TFixture>(this IUnityContainer container)
         {
-            var essence = container.GetEssence();
+            var essence = container.GetRegisteredEnTierEssence();
+            
+            if (essence == null)
+            {
+                throw new Exception("You Should register EnTier Essence Object before being able to configure it.");
+            }
             
             FixtureManager.UseFixture<TFixture>(essence);
 
