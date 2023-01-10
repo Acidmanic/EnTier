@@ -112,21 +112,21 @@ namespace EnTier.Services
         {
             if (_entityHasId && DomainIdLeaf.Evaluator.Read(value) is TDomainId id)
             {
-                return Update(id, value);
+                return UpdateById(id, value);
             }
 
             // Not Successful
             return null;
         }
 
-        public virtual TDomain Update(TDomainId id, TDomain value)
+        public virtual TDomain UpdateById(TDomainId id, TDomain value)
         {
             var storageId = Mapper.MapId<TStorageId>(id);
 
-            return Update(storageId, value);
+            return UpdateByStorageId(storageId, value);
         }
 
-        private TDomain Update(TStorageId id, TDomain value)
+        private TDomain UpdateByStorageId(TStorageId id, TDomain value)
         {
             Regulate(value);
 

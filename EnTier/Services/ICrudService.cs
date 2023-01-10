@@ -13,7 +13,7 @@ namespace EnTier.Services
 
         TEntity Update(TEntity value);
         
-        TEntity Update(TDomainId id,TEntity value);
+        TEntity UpdateById(TDomainId id,TEntity value);
 
         bool Remove(TEntity value);
 
