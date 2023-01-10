@@ -75,7 +75,7 @@ namespace EnTier.DependencyInjection
 
             for (int i = 0; i < types.Length; i++)
             {
-                var type = types[0];
+                var type = types[i];
 
                 var resolvedParameter = Resolve(type);
 
