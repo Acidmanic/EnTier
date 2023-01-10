@@ -133,7 +133,7 @@ namespace EnTier.Controllers
         }
 
         [HttpPut]
-        [Route("")]
+        [Route("{id}")]
         public virtual IActionResult Update(TTransferId id, TTransfer value)
         {
             return ErrorCheck(() =>
@@ -156,7 +156,7 @@ namespace EnTier.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("")]
         public virtual IActionResult Update(TTransfer value)
         {
             return ErrorCheck(() =>
