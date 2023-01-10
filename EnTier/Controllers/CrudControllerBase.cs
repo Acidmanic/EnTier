@@ -163,7 +163,7 @@ namespace EnTier.Controllers
             {
                 var transfer = OnUpdate(value);
 
-                return Ok(value);
+                return Ok(transfer);
             });
         }
 
