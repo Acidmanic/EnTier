@@ -13,7 +13,6 @@ namespace EnTier.Prepopulation
     {
         private static PrepopulationManager _instance = null;
         private static readonly object Locker = new object();
-        private static ILogger _logger = NullLogger.Instance;
 
         private PrepopulationManager()
         {
@@ -32,14 +31,11 @@ namespace EnTier.Prepopulation
             return _instance;
         }
 
-        public void SetLogger(ILogger logger)
-        {
-            _logger = logger;
-        }
-
-
         public void PerformPrepopulation(IServiceResolver resolver, List<Type> seedTypes)
         {
+
+            var logger = resolver.Resolve(typeof(ILogger)) as ILogger ?? NullLogger.Instance;
+            
             var seeds = new List<IPrepopulationSeed>();
 
             foreach (var seedType in seedTypes)
@@ -52,8 +48,8 @@ namespace EnTier.Prepopulation
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Could not create {SeedTypeFullName} because of an error.", seedType.FullName);
-                    _logger.LogDebug(
+                    logger.LogError(e, "Could not create {SeedTypeFullName} because of an error.", seedType.FullName);
+                    logger.LogDebug(
                         "It is probable, that you have missed registering your seed type {seedTypeName}," +
                         " or one of its dependencies on your DI.", seedType.Name);
                 }
@@ -69,13 +65,13 @@ namespace EnTier.Prepopulation
 
             foreach (var seed in seeds)
             {
-                _logger.LogDebug("Running {SeedTag}", seed.Tag);
+                logger.LogDebug("Running {SeedTag}", seed.Tag);
 
                 var result = seed.Seed();
 
                 var msgResult = (result.Success ? "Successfully" : "With failure.");
 
-                _logger.LogDebug("{SeedTag} has been run {MsgResult}", seed.Tag, msgResult);
+                logger.LogDebug("{SeedTag} has been run {MsgResult}", seed.Tag, msgResult);
             }
         }
 
