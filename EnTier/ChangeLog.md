@@ -96,3 +96,14 @@
 -----
   * Fixed the issues of un initialized essentials of services make outside of controller
   * Gives More control over auto-wrapping using attributes instead of boolean property
+
+2.7.0
+-----
+  * Resolving dependencies has been updated, So that everything is wrapped in an EnTierEssence object. Making multiple instances possible.
+  * Same helper extensions methods has been added to IServiceProvider and IApplicationBuilder
+  * Fixed the LiteContainer's issue with more than one parameter constructors.
+  * Fixed issue#7: Returning Domain instead of transfer @ CrudController.Update
+  * Fixed issue#9: CrudControllerBase, Update(Entity) Route
+  * Fixed issue#8: Ambiguous Generic overloads of CrudService.Update method
+  * Resolved issue#5: PrepopulationManager does not need to take a logger, but uses registered one instead
+  * [Breaking] Update Prepopulation. It will not create dependencies in runtime. but it uses attributes to mark each seed's dependencies
