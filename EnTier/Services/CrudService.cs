@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
+using Acidmanic.Utilities.Results;
 using EnTier.Exceptions;
 using EnTier.Mapper;
 using EnTier.Regulation;
@@ -27,9 +28,9 @@ namespace EnTier.Services
         protected AccessNode StorageIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TStorage, TStorageId>();
         protected AccessNode DomainIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TDomain, TDomainId>();
 
-
         private readonly bool _entityHasId;
 
+        private readonly bool _hasRegulator;
 
         /// <summary>
         /// Using this constructor EnTier will try to instantiate Mapper, UnitOfWork and Regulator.
@@ -41,7 +42,10 @@ namespace EnTier.Services
             UnitOfWork = essence.UnitOfWork;
             Mapper = essence.Mapper;
             Regulator = essence.Regulator<TDomain, TStorage>();
+            //Just in case!
+            Regulator = Regulator ?? new NullDataAccessRegulator<TDomain, TStorage>();
             Logger = essence.Logger;
+            _hasRegulator = !(Regulator is NullDataAccessRegulator);
         }
 
 
@@ -49,10 +53,13 @@ namespace EnTier.Services
         {
             var storages = UnitOfWork.GetCrudRepository<TStorage, TDomainId>().All();
 
-            var domains = Mapper.Map<IEnumerable<TDomain>>(storages);
+            var outgoingStorages = RegulateOutgoing(storages);
+
+            var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
 
             return domains;
         }
+
 
         public virtual TDomain GetById(TDomainId id)
         {
@@ -60,52 +67,36 @@ namespace EnTier.Services
 
             var storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().GetById(storageId);
 
-            if (storage == null)
+            var regulatedStorage = RegulateOutgoing(storage);
+
+            if (regulatedStorage == null)
             {
                 return null;
             }
 
-            var domain = Mapper.Map<TDomain>(storage);
+            var domain = Mapper.Map<TDomain>(regulatedStorage);
 
             return domain;
-        }
-
-        private TStorage Regulate(TDomain value)
-        {
-            TStorage regulatedStorage = default;
-
-            if (Regulator is NullDataAccessRegulator)
-            {
-                regulatedStorage = Mapper.Map<TStorage>(value);
-            }
-            else
-            {
-                var regulationResult = Regulator.Regulate(value);
-
-                if (regulationResult.Status != RegulationStatus.UnAcceptable)
-                {
-                    regulatedStorage = regulationResult.Storage;
-                }
-                else
-                {
-                    throw new UnAcceptableModelException();
-                }
-            }
-
-            return regulatedStorage;
         }
 
         public virtual TDomain Add(TDomain value)
         {
-            var storage = Regulate(value);
+            var regulated = RegulateIncoming(value);
 
-            storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
+            if (regulated)
+            {
+                var storage = Mapper.Map<TStorage>(regulated.Value);
 
-            UnitOfWork.Complete();
+                storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
 
-            var domain = Mapper.Map<TDomain>(storage);
+                UnitOfWork.Complete();
 
-            return domain;
+                var domain = Mapper.Map<TDomain>(storage);
+
+                return domain;
+            }
+
+            return default;
         }
 
         public virtual TDomain Update(TDomain value)
@@ -128,41 +119,59 @@ namespace EnTier.Services
 
         private TDomain UpdateByStorageId(TStorageId id, TDomain value)
         {
-            Regulate(value);
+            var regulated = RegulateIncoming(value);
 
-            var repo = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
-
-            Expression<Func<TStorage, bool>> selector = s =>
-                _entityHasId && (StorageIdLeaf.Evaluator.Read(s).Equals(id));
-
-            var found = repo.Find(selector).FirstOrDefault();
-
-            if (found != null)
+            if (regulated)
             {
-                var storageUpdate = Mapper.Map<TStorage>(value);
+                var repo = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
+                
+                Expression<Func<TStorage, bool>> selector = s =>
+                    _entityHasId && (StorageIdLeaf.Evaluator.Read(s).Equals(id));
+            
+                var found = repo.Find(selector).FirstOrDefault();
+                
+                if (found != null)
+                {
+                    var storageUpdate = Mapper.Map<TStorage>(regulated.Value);
 
-                repo.Set(storageUpdate);
+                    var updated = repo.Set(storageUpdate);
+                    
+                    UnitOfWork.Complete();
 
-                UnitOfWork.Complete();
+                    var outgoing = RegulateOutgoing(updated);
 
-                return value;
+                    if (outgoing != null)
+                    {
+                        var domain = Mapper.Map<TDomain>(outgoing);
+
+                        return domain;
+                    }
+                }
+                
             }
-
             return null;
         }
 
         public virtual bool Remove(TDomain value)
         {
-            var storage = Mapper.Map<TStorage>(value);
 
-            var success = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storage);
+            var regulated = RegulateIncoming(value);
 
-            if (success)
+            if (regulated)
             {
-                UnitOfWork.Complete();
+                var storage = Mapper.Map<TStorage>(regulated.Value);
+
+                var success = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().Remove(storage);
+
+                if (success)
+                {
+                    UnitOfWork.Complete();
+                }
+
+                return success;    
             }
 
-            return success;
+            return false;
         }
 
         public virtual bool RemoveById(TDomainId id)
@@ -189,6 +198,82 @@ namespace EnTier.Services
         public void SetLogger(ILogger logger)
         {
             Logger = logger;
+        }
+
+        private TStorage RegulateOutgoing(TStorage model)
+        {
+            if (_hasRegulator)
+            {
+                var result = Regulator.RegulateOutgoing(model);
+
+                OnRegulation(result);
+
+                return result.Model;
+            }
+
+            return model;
+        }
+
+        private Result<TDomain> RegulateIncoming(TDomain model)
+        {
+            if (_hasRegulator)
+            {
+                var result = Regulator.RegulateIncoming(model);
+
+                OnRegulation(result);
+
+                if (result.Status == RegulationStatus.Ok)
+                {
+                    return new Result<TDomain>().Succeed(result.Model);
+                }
+
+                return new Result<TDomain>().FailAndDefaultValue();
+            }
+
+            return new Result<TDomain>().Succeed(model);
+        }
+
+        private IEnumerable<TStorage> RegulateOutgoing(IEnumerable<TStorage> models)
+        {
+            if (_hasRegulator && models != null)
+            {
+                var regulatedModels = new List<TStorage>();
+
+                foreach (var model in models)
+                {
+                    var result = Regulator.RegulateOutgoing(model);
+
+                    OnRegulation(result);
+
+                    if (result.Status == RegulationStatus.Ok)
+                    {
+                        regulatedModels.Add(result.Model);
+                    }
+                }
+
+                return regulatedModels;
+            }
+
+            return models;
+        }
+
+        protected virtual void OnRegulation<TModel>(RegulationResult<TModel> result)
+        {
+            LogNoneOkRegulationResult(result);
+        }
+
+        protected void LogNoneOkRegulationResult<TModel>(RegulationResult<TModel> result)
+        {
+            if (result.Status == RegulationStatus.UnAcceptable)
+            {
+                Logger.LogCritical("Regulation has rejected the data of type {TModel}.", typeof(TModel).Name);
+            }
+
+            if (result.Status == RegulationStatus.Suspicious)
+            {
+                Logger.LogCritical("Suspicious data of type {TModel} has been detected in regulation.",
+                    typeof(TModel).Name);
+            }
         }
     }
 }

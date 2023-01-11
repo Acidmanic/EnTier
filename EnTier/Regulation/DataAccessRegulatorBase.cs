@@ -2,36 +2,36 @@ namespace EnTier.Regulation
 {
     public abstract class DataAccessRegulatorBase<TDomain,TStorage>:IDataAccessRegulator<TDomain,TStorage>
     {
-        public abstract RegulationResult<TDomain, TStorage> Regulate(TDomain model);
+        
 
-        protected RegulationResult<TDomain, TStorage> Reject(TDomain model)
+        protected RegulationResult<TModel> Reject<TModel>()
         {
-            return new RegulationResult<TDomain, TStorage>
+            return new RegulationResult<TModel>
             {
-                Model = model,
-                Storage = default,
+                Model = default,
                 Status = RegulationStatus.UnAcceptable
             };
         }
 
-        protected RegulationResult<TDomain, TStorage> Accept(TDomain model, TStorage storage = default)
+        protected RegulationResult<TModel> Accept<TModel>(TModel model)
         {
-            return new RegulationResult<TDomain, TStorage>
+            return new RegulationResult<TModel>
             {
                 Model = model,
-                Storage = storage,
                 Status = RegulationStatus.Ok
             };
         }
 
-        protected RegulationResult<TDomain, TStorage> ReportSuspicious(TDomain model, TStorage storage)
+        protected RegulationResult<TModel> Suspect<TModel>(TModel model)
         {
-            return new RegulationResult<TDomain, TStorage>
+            return new RegulationResult<TModel>
             {
                 Model = model,
-                Storage = storage,
                 Status = RegulationStatus.Suspicious
             };
         }
+
+        public abstract RegulationResult<TDomain> RegulateIncoming(TDomain model);
+        public abstract RegulationResult<TStorage> RegulateOutgoing(TStorage model);
     }
 }

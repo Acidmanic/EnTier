@@ -6,13 +6,21 @@ namespace EnTier.Regulation
 
     public class NullDataAccessRegulator<TDomain, TStorage> : NullDataAccessRegulator, IDataAccessRegulator<TDomain, TStorage>
     {
-        public RegulationResult<TDomain, TStorage> Regulate(TDomain model)
+        public RegulationResult<TDomain> RegulateIncoming(TDomain model)
         {
-            return new RegulationResult<TDomain, TStorage>
+            return new RegulationResult<TDomain>
             {
                 Model = model,
-                Status = RegulationStatus.Ok,
-                Storage = default
+                Status = RegulationStatus.Ok
+            };
+        }
+
+        public RegulationResult<TStorage> RegulateOutgoing(TStorage model)
+        {
+            return new RegulationResult<TStorage>
+            {
+                Model = model,
+                Status = RegulationStatus.Ok
             };
         }
     }

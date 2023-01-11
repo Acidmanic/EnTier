@@ -1,11 +1,10 @@
 namespace EnTier.Regulation
 {
-    public class RegulationResult<TDomain,TStorage>
+    public class RegulationResult<TModel>
     {
         public RegulationStatus Status { get; set; }
 
-        public TDomain Model { get; set; }
+        public TModel Model { get; set; }
         
-        public TStorage Storage { get; set; }
     }
 }
