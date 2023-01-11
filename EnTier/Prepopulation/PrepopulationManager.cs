@@ -6,6 +6,7 @@ using System.Xml.Schema;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using EnTier.Prepopulation.Attributes;
+using EnTier.Prepopulation.Extensions;
 using EnTier.Utility;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -38,8 +39,8 @@ namespace EnTier.Prepopulation
         public void PerformPrepopulation(IServiceResolver resolver, List<Type> seedTypes)
         {
             var logger = resolver.Resolve(typeof(ILogger)) as ILogger ?? NullLogger.Instance;
-            
-            var dependencyMap = GetDependencyMap(seedTypes,logger);
+
+            var dependencyMap = GetDependencyMap(seedTypes, logger);
 
             var orderedSeedTypes = new DependencyResolver<Type>().OrderByDependency(dependencyMap);
 
@@ -51,29 +52,24 @@ namespace EnTier.Prepopulation
 
                     if (seed != null)
                     {
-                        logger.LogDebug("Running {SeedTag}", seed.Tag);
+                        logger.LogDebug("Running {SeedName}", seedType.Name);
 
                         var result = seed.Seed();
 
                         var msgResult = (result.Success ? "Successfully" : "With failure.");
 
-                        logger.LogDebug("{SeedTag} has been run {MsgResult}", seed.Tag, msgResult);
+                        logger.LogDebug("{SeedName} has been run {MsgResult}", seedType.Name, msgResult);
                     }
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, "Could not create {SeedTypeFullName} because of an error.", seedType.FullName);
+                    logger.LogError(e, "Could not create {SeedTypeFullName} because of an error: {Exception}",
+                        seedType.FullName, e);
                     logger.LogDebug(
                         "It is probable, that you have missed registering your seed type {seedTypeName}," +
                         " or one of its dependencies on your DI.", seedType.Name);
                 }
             }
-        }
-
-
-        private bool IsASeedType(Type type)
-        {
-            return (!type.IsAbstract && !type.IsInterface) && TypeCheck.Implements<IPrepopulationSeed>(type);
         }
 
 
@@ -85,7 +81,7 @@ namespace EnTier.Prepopulation
             {
                 var types = assembly
                     .GetAvailableTypes()
-                    .Where((Func<Type, bool>)IsASeedType);
+                    .Where(PrepopulationSeedExtensions.IsASeedType);
 
                 seedTypes.AddRange(types);
             }
@@ -111,12 +107,11 @@ namespace EnTier.Prepopulation
                     {
                         var dependencies = new List<Type>();
 
-                        var referencedSeeds = seedType.GetCustomAttributes<DependsOnSeedAttribute>()
-                            .Select(att => att.DependeeType);
+                        var referencedSeeds = seedType.GetMarkedDependencies();
 
                         foreach (var referencedSeed in referencedSeeds)
                         {
-                            if (IsASeedType(referencedSeed) && !dependencies.Contains(referencedSeed))
+                            if (referencedSeed.IsASeedType() && !dependencies.Contains(referencedSeed))
                             {
                                 dependencies.Add(referencedSeed);
 
@@ -125,14 +120,14 @@ namespace EnTier.Prepopulation
                                     logger.LogWarning("Seed {MissedSeed} was not mentioned to be seeded but " +
                                                       "{Referencer} depends on it so it has been added to seeds.",
                                         referencedSeed.Name, seedType.Name);
-                                    
+
                                     missedDependencies.Add(referencedSeed);
                                 }
                             }
                         }
 
                         map.Add(seedType, dependencies);
-                        
+
                         searchList.Clear();
                         searchList.AddRange(missedDependencies);
                         allDetectedSeeds.AddRange(missedDependencies);

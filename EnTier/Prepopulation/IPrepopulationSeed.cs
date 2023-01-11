@@ -10,8 +10,5 @@ namespace EnTier.Prepopulation
 
         void Clear();
         
-        List<string> DependencySeedTags { get; }
-        
-        string Tag { get; }
     }
 }
