@@ -3,8 +3,6 @@ using System.Linq;
 
 namespace EnTier.Utility
 {
-    
-    
     /// <summary>
     /// This class takes a list of dependency map in the format of dictionary of lists, which pairs each object
     ///  with it's dependencies. It will return an ordered array of keys from list dependant to most dependant object. 
@@ -15,6 +13,28 @@ namespace EnTier.Utility
     {
         private class DependencyMap : Dictionary<T, List<T>>
         {
+            public override string ToString()
+            {
+                var view = "";
+
+                foreach (var item in this)
+                {
+                    view += item.Key.ToString() + ": ";
+
+                    var sep = "";
+
+                    foreach (var v in item.Value)
+                    {
+                        view += sep + v.ToString();
+
+                        sep = ",";
+                    }
+
+                    view += "\n";
+                }
+
+                return view;
+            }
         }
 
         public T[] OrderByDependency(Dictionary<T, List<T>> map)
@@ -23,14 +43,14 @@ namespace EnTier.Utility
 
             foreach (var item in map)
             {
-                convertedMap.Add(item.Key,item.Value);
+                convertedMap.Add(item.Key, item.Value);
             }
 
             var orderedList = OrderByDependency(convertedMap);
 
             return orderedList;
         }
-        
+
         private T[] OrderByDependency(DependencyMap map)
         {
             var fullMap = GetFullMap(map);
@@ -48,7 +68,7 @@ namespace EnTier.Utility
                     var key = keys[i];
 
                     var currentDependencies = map[key];
-                    
+
                     if (DependsOnRest(keys, i, currentDependencies))
                     {
                         sorted = false;
@@ -63,7 +83,7 @@ namespace EnTier.Utility
 
         private bool DependsOnRest(T[] keys, int index, List<T> currentDependencies)
         {
-            for (int i = index + 1; i < keys.Length ; i++)
+            for (int i = index + 1; i < keys.Length; i++)
             {
                 var key = keys[i];
 
@@ -84,10 +104,10 @@ namespace EnTier.Utility
             foreach (var key in markedMap.Keys)
             {
                 var allDependencies = new List<T>();
-                
-                FindFullDependencies(key,markedMap,allDependencies);
-                
-                fullMap.Add(key,allDependencies);
+
+                FindFullDependencies(key, markedMap, allDependencies);
+
+                fullMap.Add(key, allDependencies);
             }
 
             return fullMap;
@@ -97,12 +117,14 @@ namespace EnTier.Utility
         private void FindFullDependencies(T key, DependencyMap map, List<T> result)
         {
             var dependencies = map[key];
-            
+
             foreach (var dependency in dependencies)
             {
-                result.Add(dependency);
-                
-                FindFullDependencies(dependency,map,result);
+                if (!result.Contains(dependency))
+                {
+                    result.Add(dependency);
+                }
+                FindFullDependencies(dependency, map, result);
             }
         }
     }
