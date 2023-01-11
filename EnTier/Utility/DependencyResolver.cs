@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using EnTier.Exceptions;
 
 namespace EnTier.Utility
 {
@@ -105,7 +106,7 @@ namespace EnTier.Utility
             {
                 var allDependencies = new List<T>();
 
-                FindFullDependencies(key, markedMap, allDependencies);
+                FindFullDependencies(key, key, markedMap, allDependencies);
 
                 fullMap.Add(key, allDependencies);
             }
@@ -114,18 +115,40 @@ namespace EnTier.Utility
         }
 
 
-        private void FindFullDependencies(T key, DependencyMap map, List<T> result)
+        private void FindFullDependencies(T unrecursedKey, T key, DependencyMap map, List<T> result)
         {
             var dependencies = map[key];
 
             foreach (var dependency in dependencies)
             {
+                if (AreEqual(unrecursedKey, dependency))
+                {
+                    throw new DependencyLoopException(unrecursedKey.ToString());
+                }
+
                 if (!result.Contains(dependency))
                 {
                     result.Add(dependency);
                 }
-                FindFullDependencies(dependency, map, result);
+
+                FindFullDependencies(unrecursedKey, dependency, map, result);
             }
+        }
+
+
+        private bool AreEqual(T a, T b)
+        {
+            if (a == null && b == null)
+            {
+                return true;
+            }
+
+            if (a == null || b == null)
+            {
+                return false;
+            }
+
+            return a.Equals(b);
         }
     }
 }
