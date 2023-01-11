@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Schema;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
+using EnTier.Prepopulation.Attributes;
+using EnTier.Utility;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -31,20 +34,31 @@ namespace EnTier.Prepopulation
             return _instance;
         }
 
+
         public void PerformPrepopulation(IServiceResolver resolver, List<Type> seedTypes)
         {
-
             var logger = resolver.Resolve(typeof(ILogger)) as ILogger ?? NullLogger.Instance;
             
-            var seeds = new List<IPrepopulationSeed>();
+            var dependencyMap = GetDependencyMap(seedTypes,logger);
 
-            foreach (var seedType in seedTypes)
+            var orderedSeedTypes = new DependencyResolver<Type>().OrderByDependency(dependencyMap);
+
+            foreach (var seedType in orderedSeedTypes)
             {
-                IPrepopulationSeed seed = null;
-
                 try
                 {
-                    seed = (IPrepopulationSeed) resolver.Resolve(seedType);
+                    var seed = (IPrepopulationSeed)resolver.Resolve(seedType);
+
+                    if (seed != null)
+                    {
+                        logger.LogDebug("Running {SeedTag}", seed.Tag);
+
+                        var result = seed.Seed();
+
+                        var msgResult = (result.Success ? "Successfully" : "With failure.");
+
+                        logger.LogDebug("{SeedTag} has been run {MsgResult}", seed.Tag, msgResult);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -53,40 +67,25 @@ namespace EnTier.Prepopulation
                         "It is probable, that you have missed registering your seed type {seedTypeName}," +
                         " or one of its dependencies on your DI.", seedType.Name);
                 }
-
-
-                if (seed != null)
-                {
-                    seeds.Add(seed);
-                }
-            }
-
-            SortByDependencies(seeds);
-
-            foreach (var seed in seeds)
-            {
-                logger.LogDebug("Running {SeedTag}", seed.Tag);
-
-                var result = seed.Seed();
-
-                var msgResult = (result.Success ? "Successfully" : "With failure.");
-
-                logger.LogDebug("{SeedTag} has been run {MsgResult}", seed.Tag, msgResult);
             }
         }
 
+
+        private bool IsASeedType(Type type)
+        {
+            return (!type.IsAbstract && !type.IsInterface) && TypeCheck.Implements<IPrepopulationSeed>(type);
+        }
+
+
         public void PerformPrepopulation(IServiceResolver resolver, params Assembly[] assemblies)
         {
-            bool ValidSeedSelector(Type t) =>
-                (!t.IsAbstract && !t.IsInterface) && TypeCheck.Implements<IPrepopulationSeed>(t);
-
             var seedTypes = new List<Type>();
 
             foreach (var assembly in assemblies)
             {
                 var types = assembly
                     .GetAvailableTypes()
-                    .Where((Func<Type, bool>) ValidSeedSelector);
+                    .Where((Func<Type, bool>)IsASeedType);
 
                 seedTypes.AddRange(types);
             }
@@ -94,29 +93,54 @@ namespace EnTier.Prepopulation
             PerformPrepopulation(resolver, seedTypes);
         }
 
-        //TODO: check for infinite loop
-        private void SortByDependencies(List<IPrepopulationSeed> seeds)
+
+        private Dictionary<Type, List<Type>> GetDependencyMap(List<Type> seedTypes, ILogger logger)
         {
-            var dirty = true;
+            var map = new Dictionary<Type, List<Type>>();
 
-            while (dirty)
+            var searchList = new List<Type>(seedTypes);
+            var allDetectedSeeds = new List<Type>(seedTypes);
+
+            while (searchList.Count > 0)
             {
-                dirty = false;
+                var missedDependencies = new List<Type>();
 
-                for (int i = 0; i < seeds.Count - 1; i++)
+                foreach (var seedType in seedTypes)
                 {
-                    var current = seeds[i];
-                    var next = seeds[i + 1];
-
-                    if (current.DependencySeedTags.Contains(next.Tag))
+                    if (!map.ContainsKey(seedType))
                     {
-                        seeds[i] = next;
-                        seeds[i + 1] = current;
+                        var dependencies = new List<Type>();
 
-                        dirty = true;
+                        var referencedSeeds = seedType.GetCustomAttributes<DependsOnSeedAttribute>()
+                            .Select(att => att.DependeeType);
+
+                        foreach (var referencedSeed in referencedSeeds)
+                        {
+                            if (IsASeedType(referencedSeed) && !dependencies.Contains(referencedSeed))
+                            {
+                                dependencies.Add(referencedSeed);
+
+                                if (!allDetectedSeeds.Contains(referencedSeed))
+                                {
+                                    logger.LogWarning("Seed {MissedSeed} was not mentioned to be seeded but " +
+                                                      "{Referencer} depends on it so it has been added to seeds.",
+                                        referencedSeed.Name, seedType.Name);
+                                    
+                                    missedDependencies.Add(referencedSeed);
+                                }
+                            }
+                        }
+
+                        map.Add(seedType, dependencies);
+                        
+                        searchList.Clear();
+                        searchList.AddRange(missedDependencies);
+                        allDetectedSeeds.AddRange(missedDependencies);
                     }
                 }
             }
+
+            return map;
         }
     }
 }
