@@ -15,7 +15,7 @@ namespace ExampleRegulation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PostsController : CrudControllerBase<Post, string>
+    public class PostsController : CrudControllerBase<Post, long>
     {
         public PostsController(EnTierEssence essence) : base(essence)
         {
