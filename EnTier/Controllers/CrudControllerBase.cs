@@ -34,7 +34,7 @@ namespace EnTier.Controllers
         public CrudControllerBase(EnTierEssence essence)
         {
             _essence = essence;
-            
+
             Mapper = essence.Mapper;
             UnitOfWork = essence.UnitOfWork;
             Service = essence.ResolveOrDefault<ICrudService<TDomain, TDomainId>>(() =>
@@ -53,7 +53,7 @@ namespace EnTier.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }
         }
 
@@ -117,7 +117,7 @@ namespace EnTier.Controllers
             {
                 var transfer = OnCreateNew(value);
 
-                return StatusCode((int) HttpStatusCode.Created, transfer);
+                return StatusCode((int)HttpStatusCode.Created, transfer);
             });
         }
 
@@ -140,6 +140,11 @@ namespace EnTier.Controllers
             {
                 var transfer = OnUpdate(id, value);
 
+                if (transfer == null)
+                {
+                    return NotFound();
+                }
+
                 return Ok(transfer);
             });
         }
@@ -148,8 +153,8 @@ namespace EnTier.Controllers
         {
             var domain = Mapper.Map<TDomain>(value);
             var domainId = Mapper.Map<TDomainId>(id);
-            
-            domain = Service.UpdateById(domainId,domain);
+
+            domain = Service.UpdateById(domainId, domain);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
@@ -163,6 +168,11 @@ namespace EnTier.Controllers
             return ErrorCheck(() =>
             {
                 var transfer = OnUpdate(value);
+                
+                if (transfer == null)
+                {
+                    return NotFound();
+                }
 
                 return Ok(transfer);
             });
@@ -178,7 +188,7 @@ namespace EnTier.Controllers
 
             return transfer;
         }
-        
+
         [HttpDelete]
         [Route("{id}")]
         public virtual IActionResult DeleteById(TTransferId id)
@@ -253,7 +263,7 @@ namespace EnTier.Controllers
 
             var wrappedObject = wrapper.Wrap(data);
 
-            return StatusCode((int) status, wrappedObject);
+            return StatusCode((int)status, wrappedObject);
         }
     }
 }
