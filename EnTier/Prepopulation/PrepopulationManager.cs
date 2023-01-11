@@ -52,13 +52,19 @@ namespace EnTier.Prepopulation
 
                     if (seed != null)
                     {
-                        logger.LogDebug("Running {SeedName}", seedType.Name);
+                        logger.LogInformation("Running {SeedName}", seedType.Name);
 
                         var result = seed.Seed();
 
-                        var msgResult = (result.Success ? "Successfully" : "With failure.");
-
-                        logger.LogDebug("{SeedName} has been run {MsgResult}", seedType.Name, msgResult);
+                        if (result)
+                        {
+                            logger.LogInformation("{SeedName} has been run Successfully.", seedType.Name);    
+                        }
+                        else
+                        {
+                            logger.LogError("{SeedName} has been run With failure.", seedType.Name);
+                        }
+                        
                     }
                 }
                 catch (Exception e)
