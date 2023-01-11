@@ -11,6 +11,17 @@ namespace EnTier.Mapper
     {
         public TDestination Map<TDestination>(object src)
         {
+
+            if (src == null)
+            {
+                return default;
+            }
+
+            if (src is TDestination alreadyCasted)
+            {
+                return alreadyCasted;
+            }
+            
             if (TypeCenterService.Make().Implements<IEnumerable,TDestination>())
             {
                 var type = typeof(TDestination);

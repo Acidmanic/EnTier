@@ -101,24 +101,6 @@ namespace EnTier.Services
 
         public virtual TDomain Update(TDomain value)
         {
-            if (_entityHasId && DomainIdLeaf.Evaluator.Read(value) is TDomainId id)
-            {
-                return UpdateById(id, value);
-            }
-
-            // Not Successful
-            return null;
-        }
-
-        public virtual TDomain UpdateById(TDomainId id, TDomain value)
-        {
-            var storageId = Mapper.MapId<TStorageId>(id);
-
-            return UpdateByStorageId(storageId, value);
-        }
-
-        private TDomain UpdateByStorageId(TStorageId id, TDomain value)
-        {
             var regulated = RegulateIncoming(value);
 
             if (regulated)
@@ -130,7 +112,7 @@ namespace EnTier.Services
                 var updated = repo.Update(regulatedStorage);
 
                 UnitOfWork.Complete();
-                
+
                 if (updated != null)
                 {
                     var outgoing = RegulateOutgoing(updated);
@@ -143,12 +125,23 @@ namespace EnTier.Services
                     }
                 }
             }
+
             return null;
         }
 
+        public virtual TDomain UpdateById(TDomainId id, TDomain value)
+        {
+            if (_entityHasId)
+            {
+                DomainIdLeaf.Evaluator.Write(value, id);
+            }
+
+            return Update(value);
+        }
+
+
         public virtual bool Remove(TDomain value)
         {
-
             var regulated = RegulateIncoming(value);
 
             if (regulated)
@@ -162,7 +155,7 @@ namespace EnTier.Services
                     UnitOfWork.Complete();
                 }
 
-                return success;    
+                return success;
             }
 
             return false;

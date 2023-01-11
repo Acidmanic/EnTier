@@ -134,7 +134,7 @@ namespace EnTier.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public virtual IActionResult Update(TTransferId id, TTransfer value)
+        public virtual IActionResult UpdateById(TTransferId id, TTransfer value)
         {
             return ErrorCheck(() =>
             {
@@ -147,8 +147,9 @@ namespace EnTier.Controllers
         protected virtual TTransfer OnUpdate(TTransferId id, TTransfer value)
         {
             var domain = Mapper.Map<TDomain>(value);
-
-            domain = Service.Update(domain);
+            var domainId = Mapper.Map<TDomainId>(id);
+            
+            domain = Service.UpdateById(domainId,domain);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
@@ -177,7 +178,7 @@ namespace EnTier.Controllers
 
             return transfer;
         }
-
+        
         [HttpDelete]
         [Route("{id}")]
         public virtual IActionResult DeleteById(TTransferId id)
