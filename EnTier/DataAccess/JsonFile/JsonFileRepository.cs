@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Acidmanic.Utilities.Reflection;
+using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Repositories;
@@ -50,19 +51,26 @@ namespace EnTier.DataAccess.JsonFile
 
         public override TStorage Update(TStorage value)
         {
-            if (_idLeaf != null)
+            if (value != null)
             {
-                var id = (TId) _idLeaf.Evaluator.Read(value) ;
-
-                if (id != null)
+                if (_idLeaf != null)
                 {
-                    if (Remove(id))
+                    var id = (TId)_idLeaf.Evaluator.Read(value);
+
+                    if (id != null)
                     {
-                        return this.Add(value);
+                        var data = GetById(id);
+
+                        if (data != null)
+                        {
+                            value.CopyInto(data);
+
+                            return data;
+                        }
                     }
                 }
             }
-            
+
             return default;
         }
 

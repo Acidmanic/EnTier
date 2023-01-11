@@ -124,20 +124,15 @@ namespace EnTier.Services
             if (regulated)
             {
                 var repo = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
+
+                var regulatedStorage = Mapper.Map<TStorage>(regulated.Value);
+
+                var updated = repo.Update(regulatedStorage);
+
+                UnitOfWork.Complete();
                 
-                Expression<Func<TStorage, bool>> selector = s =>
-                    _entityHasId && (StorageIdLeaf.Evaluator.Read(s).Equals(id));
-            
-                var found = repo.Find(selector).FirstOrDefault();
-                
-                if (found != null)
+                if (updated != null)
                 {
-                    var storageUpdate = Mapper.Map<TStorage>(regulated.Value);
-
-                    var updated = repo.Set(storageUpdate);
-                    
-                    UnitOfWork.Complete();
-
                     var outgoing = RegulateOutgoing(updated);
 
                     if (outgoing != null)
@@ -147,7 +142,6 @@ namespace EnTier.Services
                         return domain;
                     }
                 }
-                
             }
             return null;
         }

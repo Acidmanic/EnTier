@@ -15,9 +15,9 @@ namespace EnTier.DataAccess.InMemory
         where TStorage : class, new()
     {
         private readonly List<TStorage> _data = new List<TStorage>();
-        private readonly  IdGenerator<TId> _idGenerator = new IdGenerator<TId>();
-        private readonly AccessNode _idLeaf =  TypeIdentity.FindIdentityLeaf<TStorage, TId>();
-        
+        private readonly IdGenerator<TId> _idGenerator = new IdGenerator<TId>();
+        private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
+
         public override IEnumerable<TStorage> All()
         {
             return _data;
@@ -31,19 +31,26 @@ namespace EnTier.DataAccess.InMemory
 
         public override TStorage Update(TStorage value)
         {
-            if (_idLeaf != null)
+            if (value != null)
             {
-                var id = (TId) _idLeaf.Evaluator.Read(value) ;
-
-                if (id != null)
+                if (_idLeaf != null)
                 {
-                    if (Remove(id))
+                    var id = (TId)_idLeaf.Evaluator.Read(value);
+
+                    if (id != null)
                     {
-                        return this.Add(value);
+                        var data = GetById(id);
+
+                        if (data != null)
+                        {
+                            value.CopyInto(data);
+
+                            return data;
+                        }
                     }
                 }
             }
-            
+
             return default;
         }
 
@@ -52,19 +59,19 @@ namespace EnTier.DataAccess.InMemory
             if (_idLeaf != null && _idLeaf.IsAutoValued)
             {
                 var id = _idGenerator.New();
-                
+
                 _idGenerator.Taken(id);
-                
-                _idLeaf.Evaluator.Write(value,id);
+
+                _idLeaf.Evaluator.Write(value, id);
             }
+
             _data.Add(value);
-            
+
             return value;
         }
 
         public override TStorage Set(TStorage value)
         {
-
             if (_idLeaf != null)
             {
                 var id = (TId)_idLeaf.Evaluator.Read(value);
@@ -73,11 +80,13 @@ namespace EnTier.DataAccess.InMemory
 
                 if (found != default)
                 {
-                    this.Remove(id);
+                    return Update(value);
                 }
+
+                return Add(value);
             }
 
-            return this.Add(value);
+            return default;
         }
 
         public override TStorage GetById(TId id)
