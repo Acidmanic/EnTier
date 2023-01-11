@@ -107,3 +107,6 @@
   * Fixed issue#8: Ambiguous Generic overloads of CrudService.Update method
   * Resolved issue#5: PrepopulationManager does not need to take a logger, but uses registered one instead
   * [Breaking] Update Prepopulation. It will not create dependencies in runtime. but it uses attributes to mark each seed's dependencies
+  * Fixed Update stack issues 
+  * Fixed invalid success response for unsuccessful update requests issue
+  * 
