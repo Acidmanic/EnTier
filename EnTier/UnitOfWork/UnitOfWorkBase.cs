@@ -1,3 +1,4 @@
+using EnTier.EventStreams;
 using EnTier.Repositories;
 using Microsoft.Extensions.Logging;
 
@@ -35,6 +36,8 @@ namespace EnTier.UnitOfWork
 
             return repository;
         }
+
+        public abstract IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>();
 
         protected abstract ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
             where TStorage : class, new();

@@ -1,6 +1,6 @@
 using System;
+using EnTier.EventStreams;
 using EnTier.Repositories;
-using Microsoft.Extensions.Logging;
 
 namespace EnTier.UnitOfWork
 {
@@ -8,6 +8,8 @@ namespace EnTier.UnitOfWork
     {
         ICrudRepository<TStorage, TId> GetCrudRepository<TStorage, TId>()
             where TStorage : class, new();
+
+        IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>();
 
         void Complete();
 
