@@ -2,11 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Results;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories;
 
 public interface IEventStreamRepository<TEvent, TEventId, TStreamId>
 {
+    public class StreamEvent
+    {
+        public TEvent Event { get; set; }
+        
+        public TStreamId StreamId { get; set; }
+        
+        public EventId EventId { get; set; }
+        
+    }
     /// <summary>
     /// Appends and event at the end of the event stream whom which streamId is pointing to.
     /// </summary>
@@ -41,12 +51,6 @@ public interface IEventStreamRepository<TEvent, TEventId, TStreamId>
     Task<IEnumerable<TEvent>> ReadStream(TStreamId streamId, TEventId baseEventId);
 
     /// <summary>
-    /// Reads all events belonging to all streams.
-    /// </summary>
-    /// <returns>A collection of all events from all streams grouped by streamIds.</returns>
-    Task<Dictionary<TStreamId, List<TEvent>>> ReadStreamsGrouped();
-
-    /// <summary>
     /// Reads limited number of events (specified by count parameter) belonging to the stream specified by streamId,
     /// which are appended after the event specified by baseEventId (<b>Excluding the baseEvent itself</b>). 
     /// </summary>
@@ -72,7 +76,7 @@ public interface IEventStreamRepository<TEvent, TEventId, TStreamId>
     /// <param name="process">After each read, this method will be called to process retrieved events.</param>
     /// <param name="chunkSize">Maximum number of events to be read in each step</param>
     /// <returns>A collection of (0 to 'count') events from the specified stream.</returns>
-    Task EnumerateStreamChunks(TStreamId streamId, Action<IEnumerable<TEvent>> process, long chunkSize = 50);
+    Task EnumerateStreamChunks(TStreamId streamId, Action<IEnumerable<StreamEvent>> process, long chunkSize = 50);
     /// <summary>
     /// Enumerates all events , reading a limited number of events (specified by chunkSize)
     /// each time until all events are read.
@@ -80,5 +84,5 @@ public interface IEventStreamRepository<TEvent, TEventId, TStreamId>
     /// <param name="process">After each read, this method will be called to process retrieved events.</param>
     /// <param name="chunkSize">Maximum number of events to be read in each step</param>
     /// <returns>A collection of (0 to 'count') events from the specified stream.</returns>
-    Task EnumerateChunks(Action<IEnumerable<TEvent>> process, long chunkSize = 50);
+    Task EnumerateChunks(Action<IEnumerable<StreamEvent>> process, long chunkSize = 50);
 }
