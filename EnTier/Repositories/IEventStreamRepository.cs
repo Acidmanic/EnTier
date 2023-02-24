@@ -2,21 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Results;
+using EnTier.Repositories.Models;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories;
 
 public interface IEventStreamRepository<TEvent, TEventId, TStreamId>
 {
-    public class StreamEvent
-    {
-        public TEvent Event { get; set; }
-        
-        public TStreamId StreamId { get; set; }
-        
-        public EventId EventId { get; set; }
-        
-    }
     /// <summary>
     /// Appends and event at the end of the event stream whom which streamId is pointing to.
     /// </summary>
@@ -76,7 +68,7 @@ public interface IEventStreamRepository<TEvent, TEventId, TStreamId>
     /// <param name="process">After each read, this method will be called to process retrieved events.</param>
     /// <param name="chunkSize">Maximum number of events to be read in each step</param>
     /// <returns>A collection of (0 to 'count') events from the specified stream.</returns>
-    Task EnumerateStreamChunks(TStreamId streamId, Action<IEnumerable<StreamEvent>> process, long chunkSize = 50);
+    Task EnumerateStreamChunks(TStreamId streamId, Action<IEnumerable<StreamEvent<TEvent,TEventId,TStreamId>>> process, long chunkSize = 50);
     /// <summary>
     /// Enumerates all events , reading a limited number of events (specified by chunkSize)
     /// each time until all events are read.
@@ -84,5 +76,5 @@ public interface IEventStreamRepository<TEvent, TEventId, TStreamId>
     /// <param name="process">After each read, this method will be called to process retrieved events.</param>
     /// <param name="chunkSize">Maximum number of events to be read in each step</param>
     /// <returns>A collection of (0 to 'count') events from the specified stream.</returns>
-    Task EnumerateChunks(Action<IEnumerable<StreamEvent>> process, long chunkSize = 50);
+    Task EnumerateChunks(Action<IEnumerable<StreamEvent<TEvent,TEventId,TStreamId>>> process, long chunkSize = 50);
 }
