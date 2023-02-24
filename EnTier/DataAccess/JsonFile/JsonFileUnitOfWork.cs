@@ -191,6 +191,11 @@ namespace EnTier.DataAccess.JsonFile
             }
         }
 
+        public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>()
+        {
+            return new JsonFileEventStreamRepository<TEvent, TEventId, TStreamId>();
+        }
+
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             var table = Table<TStorage>();
