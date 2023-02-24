@@ -1,5 +1,4 @@
 using System;
-using EnTier.EventStreams;
 using EnTier.Repositories;
 
 namespace EnTier.UnitOfWork

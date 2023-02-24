@@ -1,4 +1,3 @@
-using EnTier.EventStreams;
 using EnTier.Repositories;
 using Microsoft.Extensions.Logging;
 
