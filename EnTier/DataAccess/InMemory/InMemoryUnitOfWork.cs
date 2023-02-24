@@ -10,6 +10,11 @@ namespace EnTier.DataAccess.InMemory
     {
         private static readonly Dictionary<string, object> Repositories = new Dictionary<string, object>();
 
+        public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>()
+        {
+            return new InMemoryEventStreamRepository<TEvent, TEventId, TStreamId>();
+        }
+
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             string key = GetKey<TStorage, TId>();

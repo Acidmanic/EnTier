@@ -9,7 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b01" />
+        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b03" />
 
         <PackageReference Include="Meadow.Framework" Version="1.2.4-b02" />
     </ItemGroup>
