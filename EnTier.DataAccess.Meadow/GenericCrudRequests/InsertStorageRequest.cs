@@ -1,5 +1,5 @@
 using Acidmanic.Utilities.Reflection.FieldInclusion;
-using Meadow.Reflection.Conventions;
+using Meadow.Contracts;
 
 namespace EnTier.DataAccess.Meadow.GenericCrudRequests
 {
@@ -16,13 +16,14 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
             }
         }
 
-        protected override string PickProcedureName(NameConvention nameConvention)
-        {
-            return nameConvention.InsertProcedureName;
-        }
 
         public InsertStorageRequest() : base(typeof(TStorage))
         {
+        }
+
+        protected override string PickProcedureName(NameConvention nameConvention)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

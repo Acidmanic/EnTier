@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,7 +12,7 @@
     <ItemGroup>
         <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b03" />
 
-        <PackageReference Include="Meadow.Framework" Version="1.2.4-b02" />
+        <PackageReference Include="Meadow.Framework" Version="1.2.4-b05" />
     </ItemGroup>
 
     <PropertyGroup>

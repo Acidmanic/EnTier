@@ -128,7 +128,7 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
         TEventId baseEventId,
         long count);
 
-    protected abstract Task<IEnumerable<ObjectEntry<TEventId, TStreamId>>> ReadEntryChunk(TEventId? baseEventId,
+    protected abstract Task<IEnumerable<ObjectEntry<TEventId, TStreamId>>> ReadEntryChunk(TEventId baseEventId,
         long count);
 
 

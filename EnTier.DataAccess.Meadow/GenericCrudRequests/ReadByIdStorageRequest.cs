@@ -1,4 +1,5 @@
-using Meadow.Reflection.Conventions;
+
+using Meadow.Contracts;
 
 namespace EnTier.DataAccess.Meadow.GenericCrudRequests
 {

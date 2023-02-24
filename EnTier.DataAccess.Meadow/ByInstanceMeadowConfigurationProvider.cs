@@ -1,5 +1,5 @@
 using Meadow.Configuration;
-using Meadow.Scaffolding.Contracts;
+using Meadow.Contracts;
 
 namespace EnTier.DataAccess.Meadow
 {

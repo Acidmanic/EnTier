@@ -8,6 +8,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>ExampleEntityFramework</RootNamespace>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
 

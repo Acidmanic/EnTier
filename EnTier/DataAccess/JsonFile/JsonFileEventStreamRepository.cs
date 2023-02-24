@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Acidmanic.Utilities.Reflection;
-using EnTier.DependencyInjection;
 using EnTier.Repositories;
 using EnTier.Repositories.Models;
 using EnTier.Utility;

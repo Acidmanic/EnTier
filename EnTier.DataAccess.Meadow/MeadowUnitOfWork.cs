@@ -1,7 +1,7 @@
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
 using Meadow.Configuration;
-using Meadow.Scaffolding.Contracts;
+using Meadow.Contracts;
 
 namespace EnTier.DataAccess.Meadow
 {
@@ -19,7 +19,12 @@ namespace EnTier.DataAccess.Meadow
         }
 
         private IMeadowConfigurationProvider ConfigurationProvider { get; }
-        
+
+        public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>()
+        {
+            return new MeadowEventStreamRepository<TEvent, TEventId, TStreamId>(ConfigurationProvider);
+        }
+
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             return new MeadowCrudRepository<TStorage, TId>(ConfigurationProvider.GetConfigurations());

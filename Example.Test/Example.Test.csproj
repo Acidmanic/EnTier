@@ -6,6 +6,8 @@
     <IsPackable>false</IsPackable>
 
     <RootNamespace>Example.UnitTest</RootNamespace>
+
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
