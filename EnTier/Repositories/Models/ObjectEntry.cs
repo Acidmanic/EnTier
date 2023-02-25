@@ -18,9 +18,9 @@ public class ObjectEntry<TEventId,TStreamId>
 
     [AutoValuedMember]
     [UniqueMember]
-    public TEventId? EventId { get; set; }
+    public virtual TEventId EventId { get; set; }
 
-    public TStreamId? StreamId { get; set; }
+    public TStreamId StreamId { get; set; }
 
     public string TypeName { get; set; }
 
