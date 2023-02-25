@@ -1,7 +1,6 @@
 using System.IO;
-using System.Net;
 using Meadow.Configuration;
-using Meadow.Scaffolding.Contracts;
+using Meadow.Contracts;
 
 namespace Example.Meadow
 {
