@@ -88,7 +88,7 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
             {
                 var type = ev.GetType();
 
-                var typeName = type.FullName ?? type.Name;
+                var typeName =type.AssemblyQualifiedName ??  type.FullName ?? type.Name;
 
                 var serializedValue = SerialiseValue(ev);
 

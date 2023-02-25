@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExampleEntityFramework.Migrations
 {
     [DbContext(typeof(ExampleContext))]
-    [Migration("20230225090614_AddEventStreamTableForPosts")]
+    [Migration("20230225131904_AddEventStreamTableForPosts")]
     partial class AddEventStreamTableForPosts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,11 +19,8 @@ namespace ExampleEntityFramework.Migrations
 
             modelBuilder.Entity("EnTier.DataAccess.EntityFramework.EfObjectEntry<long, long>", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
                     b.Property<long>("EventId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SerializedValue")
@@ -35,7 +32,7 @@ namespace ExampleEntityFramework.Migrations
                     b.Property<string>("TypeName")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("EventId");
 
                     b.ToTable("PostsEvents");
                 });

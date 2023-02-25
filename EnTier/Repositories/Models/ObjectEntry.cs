@@ -4,7 +4,7 @@ namespace EnTier.Repositories.Models;
 
 public class ObjectEntry<TEventId,TStreamId>
 {
-    public ObjectEntry(TEventId? eventId, TStreamId? streamId, string typeName, string serializedValue)
+    public ObjectEntry(TEventId eventId, TStreamId streamId, string typeName, string serializedValue)
     {
         EventId = eventId;
         StreamId = streamId;
