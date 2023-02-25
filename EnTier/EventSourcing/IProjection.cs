@@ -17,6 +17,11 @@ public interface IProjection<TEntity, TEvent, TStreamId>
     public void Apply(TEvent @event);
 
     public TStreamId StreamId { get; }
+    
+    /// <summary>
+    /// This property holds all events in history of the aggregate from beginning.
+    /// </summary>
+    public List<TEvent> Events { get; }
 }
 
 public static class ProjectionExtensions

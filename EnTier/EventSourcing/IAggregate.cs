@@ -22,10 +22,6 @@ public interface IAggregate<TAggregateRoot,TEvent,TStreamId>:IProjection<TAggreg
     /// This property would hold any event produced by aggregate class and can be stored (appended) to event stream.
     /// </summary>
     public List<TEvent> Updates { get; }
-    /// <summary>
-    /// This property holds all events in history of the aggregate from beginning.
-    /// </summary>
-    public List<TEvent> Events { get; }
     
 }
 
