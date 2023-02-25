@@ -1,7 +1,13 @@
 using System.Collections.Generic;
 
 namespace EnTier.EventSourcing;
-
+/// <summary>
+/// Implementing this interface would create a Projection class which represents a specific aspect/state
+/// for a stream of events. 
+/// </summary>
+/// <typeparam name="TEntity">Tht type of the state object which is going to be projected with Projection class.</typeparam>
+/// <typeparam name="TEvent">The type of events that this Projection class would process.</typeparam>
+/// <typeparam name="TStreamId">The type of stream identifier.</typeparam>
 public interface IProjection<TEntity, TEvent, TStreamId>
 {
     void Initialize(TStreamId streamId, IEnumerable<TEvent> events);
