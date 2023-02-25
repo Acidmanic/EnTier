@@ -19,15 +19,11 @@ internal class RepositoryProfile
 
     public Type RepositoryType { get; set; }
 
-    public Type EventType { get; set; }
-
     public ConstructorInfo Constructor { get; set; }
 }
 
 internal class EfEventStreamRepositoryFactory
 {
-
-
     private static readonly object Lock = new object();
     private static EfEventStreamRepositoryFactory _instance = null;
 
@@ -47,9 +43,8 @@ internal class EfEventStreamRepositoryFactory
             }
         }
     }
-    
-    
-    
+
+
     private readonly List<RepositoryProfile> _repositoryProfiles;
 
     private EfEventStreamRepositoryFactory()
@@ -73,6 +68,11 @@ internal class EfEventStreamRepositoryFactory
 
     private Result<RepositoryProfile> IsAnEsRepository(Type type)
     {
+        if (type == null || type.IsAbstract || type.IsInterface)
+        {
+            return new Result<RepositoryProfile>().FailAndDefaultValue();
+        }
+
         var abstractEventStream = typeof(IEventStreamRepository<,,>);
 
         var interfaces = type.GetInterfaces();
@@ -96,7 +96,6 @@ internal class EfEventStreamRepositoryFactory
                             return new Result<RepositoryProfile>(true, new RepositoryProfile
                             {
                                 RepositoryType = type,
-                                EventType = parameters[0],
                                 EventIdType = parameters[1],
                                 StreamIdType = parameters[2],
                                 Constructor = constructor
@@ -120,7 +119,7 @@ internal class EfEventStreamRepositoryFactory
         {
             var parameterType = parameters[0].ParameterType;
 
-            return TypeCheck.IsSpecificOf(abstractDbSetType, parameterType);
+            return TypeCheck.IsSpecificOf(parameterType, abstractDbSetType);
         }
 
         return false;
@@ -129,14 +128,13 @@ internal class EfEventStreamRepositoryFactory
     public IEventStreamRepository<TEvent, TEventId, TStreamId> Make<TEvent, TEventId, TStreamId>
         (DbSet<EfObjectEntry<TEventId, TStreamId>> dbSet)
     {
-
         var matchedProfile = _repositoryProfiles
             .Where(RepositoryMatches<TEvent, TEventId, TStreamId>)
-            .FirstOrDefault(p => IsInstantiatableBy(p,dbSet));
+            .FirstOrDefault(p => IsInstantiatableBy(p, dbSet));
 
         if (matchedProfile != null)
         {
-            var repository = Instantiate<TEvent,TEventId,TStreamId>(matchedProfile.Constructor,dbSet);
+            var repository = Instantiate<TEvent, TEventId, TStreamId>(matchedProfile, dbSet);
 
             if (repository != null)
             {
@@ -147,28 +145,36 @@ internal class EfEventStreamRepositoryFactory
         return NullEfEventStreamRepository<TEvent, TEventId, TStreamId>.Instance;
     }
 
-    private IEventStreamRepository<TEvent,TEventId,TStreamId> Instantiate<TEvent, TEventId, TStreamId>
-        (ConstructorInfo constructor, DbSet<EfObjectEntry<TEventId,TStreamId>> dbSet)
+    private IEventStreamRepository<TEvent, TEventId, TStreamId> Instantiate<TEvent, TEventId, TStreamId>
+        (RepositoryProfile profile, DbSet<EfObjectEntry<TEventId, TStreamId>> dbSet)
     {
+        var genericType = profile.RepositoryType.GetGenericTypeDefinition();
 
-        try
-        {
-            var instantiated = constructor.Invoke(new object[] { dbSet });
+        var concreteType = genericType.MakeGenericType(typeof(TEvent));
 
-            return instantiated as IEventStreamRepository<TEvent, TEventId, TStreamId>;
-        }
-        catch (Exception e)
+        var constructor = concreteType.GetConstructors().FirstOrDefault(IsCorrectDbSetArgumentConstructor);
+
+        if (constructor != null)
         {
+            try
+            {
+                var instantiated = constructor.Invoke(new object[] { dbSet });
+
+                return instantiated as IEventStreamRepository<TEvent, TEventId, TStreamId>;
+            }
+            catch (Exception e)
+            {
+            } 
         }
+        
         return null;
     }
 
 
     private bool RepositoryMatches<TEvent, TEventId, TStreamId>(RepositoryProfile profile)
     {
-        return profile.EventType == typeof(TEventId) &&
-               profile.StreamIdType == typeof(TStreamId) &&
-               profile.EventType == typeof(TEvent);
+        return profile.EventIdType == typeof(TEventId) &&
+               profile.StreamIdType == typeof(TStreamId);
     }
 
     private bool IsInstantiatableBy<TEventId, TStreamId>
@@ -178,6 +184,7 @@ internal class EfEventStreamRepositoryFactory
         {
             return false;
         }
+
         var parameterType = profile.Constructor.GetParameters()[0].ParameterType;
 
         return parameterType.IsInstanceOfType(dbSet);
