@@ -109,4 +109,4 @@
   * [Breaking] Update Prepopulation. It will not create dependencies in runtime. but it uses attributes to mark each seed's dependencies
   * Fixed Update stack issues 
   * Fixed invalid success response for unsuccessful update requests issue
-  * 
+  * Entity-framework adapter's multiple tracking issue is fixed. 
