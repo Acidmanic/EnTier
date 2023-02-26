@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services;
 
-public class EventSourcedService<TAggregateRoot, TEvent, TEventId, TStreamId>
+public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
 {
     protected IAggregateBuilder AggregateBuilderBuilder { get; }
 

@@ -9,6 +9,11 @@ using EnTier.EventSourcing.Models;
 
 namespace EnTier.EventSourcing
 {
+    /// <summary>
+    /// This class profiles all methods in an aggregate class, and provides indexing for these methods so they can be
+    /// dynamically listed and invoked.
+    /// </summary>
+    /// <typeparam name="TAggregate">Type of aggregate class to be indexed</typeparam>
     public class AggregateIndex<TAggregate> : AggregateIndex
     {
         public AggregateIndex() : base(typeof(TAggregate))
