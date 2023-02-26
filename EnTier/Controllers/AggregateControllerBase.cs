@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EnTier.Controllers
 {
-    public abstract class AggregateController<TAggregateRoot, TEvent, TStreamId, TEventId> : ControllerBase
+    public abstract class AggregateControllerBase<TAggregateRoot, TEvent, TStreamId, TEventId> : ControllerBase
     {
         protected Type AggregateType { get; }
         protected AggregateIndex AggregateIndex { get; }
@@ -22,7 +22,7 @@ namespace EnTier.Controllers
             <TAggregateRoot, TEvent, TStreamId, TEventId> Service { get; }
         
         
-        public AggregateController(EnTierEssence essence)
+        public AggregateControllerBase(EnTierEssence essence)
         {
             AggregateBuilder = new AggregateBuilder(t => null);
             AggregateType = AggregateBuilder.FindAggregateType<TAggregateRoot, TEvent, TStreamId>();

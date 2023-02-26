@@ -9,9 +9,9 @@ namespace Example.EventSourcing.EntityFramework.Controllers
     
     [ApiController]
     [Route("posting")]
-    public class PostingAggregateController : AggregateController<Post,IPostEvent,long,long>
+    public class PostingAggregateControllerBase : AggregateControllerBase<Post,IPostEvent,long,long>
     {
-        public PostingAggregateController(EnTierEssence essence) : base(essence)
+        public PostingAggregateControllerBase(EnTierEssence essence) : base(essence)
         {
         }
 
