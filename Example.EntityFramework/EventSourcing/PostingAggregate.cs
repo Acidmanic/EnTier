@@ -1,5 +1,6 @@
 using System;
 using EnTier.EventSourcing;
+using EnTier.EventSourcing.Attributes;
 using EnTier.Utility;
 using ExampleEntityFramework.DomainModels;
 
@@ -60,6 +61,7 @@ public class PostingAggregate:AggregateBase<Post,IPostEvent,long>
         });
     }
 
+    [NoStreamIdApi]
     public void CreatePost(string title, string content)
     {
         if (string.IsNullOrWhiteSpace(title))

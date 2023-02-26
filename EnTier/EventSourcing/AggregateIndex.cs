@@ -60,11 +60,11 @@ namespace EnTier.EventSourcing
         }
 
 
-        public Result<MethodProfile> FindProfile(string name)
+        public Result<MethodProfile> FindProfile(string name,bool byStreamId)
         {
             foreach (var item in MethodProfiles)
             {
-                if (item.Key == name.ToLower())
+                if (item.Key == name.ToLower() && item.Value.NeedsStreamId==byStreamId)
                 {
                     return new Result<MethodProfile>(true, item.Value);
                 }
@@ -98,11 +98,11 @@ namespace EnTier.EventSourcing
             {
                 return HttpMethod.Put;
             }
-            
+
             return HttpMethod.Post;
         }
-        
-        
+
+
         private MethodProfile CreateProfile(MethodInfo method)
         {
             var methodName = method.Name;
@@ -121,7 +121,6 @@ namespace EnTier.EventSourcing
                 HttpMethod = GetHttpMethod(method),
                 NeedsStreamId = method.GetCustomAttribute<NoStreamIdApi>() == null
             };
-
 
             var parameters = method.GetParameters();
 

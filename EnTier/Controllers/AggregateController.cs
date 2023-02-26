@@ -7,6 +7,7 @@ using EnTier.EventSourcing;
 using EnTier.Extensions;
 using EnTier.Services;
 using EnTier.TransferModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnTier.Controllers
@@ -14,14 +15,13 @@ namespace EnTier.Controllers
     public abstract class AggregateController<TAggregateRoot, TEvent, TStreamId, TEventId> : ControllerBase
     {
         protected Type AggregateType { get; }
-        protected  AggregateIndex AggregateIndex { get; }
-        protected  AggregateBuilder AggregateBuilder { get; }
+        protected AggregateIndex AggregateIndex { get; }
+        protected AggregateBuilder AggregateBuilder { get; }
 
-        protected  EventSourcedService
+        protected EventSourcedService
             <TAggregateRoot, TEvent, TStreamId, TEventId> Service { get; }
         
         
-
         public AggregateController(EnTierEssence essence)
         {
             AggregateBuilder = new AggregateBuilder(t => null);
@@ -47,25 +47,42 @@ namespace EnTier.Controllers
             });
         }
 
-        [HttpPost]
-        [Route("{streamId}/{_?}")]
-        public async Task<IActionResult> Index(TStreamId streamId)
+
+        private async Task<Result<IAggregate<TAggregateRoot, TEvent, TStreamId>>> ProvideAggregate
+            (TStreamId streamId, bool byStreamId)
+        {
+            if (byStreamId)
+            {
+                return await Service.GetAggregateAsync(streamId);
+            }
+
+            var newAggregate = AggregateBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
+
+            return new Result<IAggregate<TAggregateRoot, TEvent, TStreamId>>(true, newAggregate);
+        }
+
+        private async Task<IActionResult> HandleRequest(HttpContext context, TStreamId streamId, bool byStreamId)
         {
             var foundMethodName = HttpContext.Request.ReadLastPathSegment();
 
             if (foundMethodName)
             {
-                var foundAggregate = await Service.GetAggregateAsync(streamId);
+                var foundProfile = AggregateIndex.FindProfile(foundMethodName.Value, byStreamId);
 
-
-                if (foundAggregate)
+                if (foundProfile)
                 {
-                    var aggregate = foundAggregate.Value;
-                    
-                    var foundProfile = AggregateIndex.FindProfile(foundMethodName.Value);
-                    
-                    if (foundProfile)
+
+                    if (context.Request.Method.ToLower() != foundProfile.Value.HttpMethod.Method.ToLower())
                     {
+                        return StatusCode(405, "This http method is not allowed on this endpoint");
+                    }
+                    
+                    var foundAggregate = await ProvideAggregate(streamId, byStreamId);
+
+                    if (foundAggregate)
+                    {
+                        var aggregate = foundAggregate.Value;
+
                         var result = await HttpContext.Request.ExecuteMethod(aggregate,
                             foundProfile.Value.Method,
                             foundProfile.Value.ModelType);
@@ -87,11 +104,24 @@ namespace EnTier.Controllers
                         }
 
                         return BadRequest();
-                    }    
+                    }
                 }
             }
 
             return NotFound();
+        }
+
+
+        [Route("{_?}")]
+        public Task<IActionResult> Index()
+        {
+            return HandleRequest(HttpContext, default, false);
+        }
+
+        [Route("{streamId}/{_?}")]
+        public Task<IActionResult> Index(TStreamId streamId)
+        {
+            return HandleRequest(HttpContext, streamId, true);
         }
 
         [HttpGet]
