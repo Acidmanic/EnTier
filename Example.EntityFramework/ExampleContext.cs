@@ -9,8 +9,6 @@ namespace ExampleEntityFramework
     {
         public DbSet<PostStg> Posts { get; set; }
         
-        public DbSet<EfObjectEntry<long,long>> PostsEvents { get; set; }
-        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=Example.db");

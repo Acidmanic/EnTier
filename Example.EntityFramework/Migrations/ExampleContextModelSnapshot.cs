@@ -15,26 +15,6 @@ namespace ExampleEntityFramework.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("EnTier.DataAccess.EntityFramework.EfObjectEntry<long, long>", b =>
-                {
-                    b.Property<long>("EventId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SerializedValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("StreamId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("TypeName")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("EventId");
-
-                    b.ToTable("PostsEvents");
-                });
-
             modelBuilder.Entity("ExampleEntityFramework.StoragesModels.PostStg", b =>
                 {
                     b.Property<long>("Id")
