@@ -1,6 +1,6 @@
-namespace ExampleEntityFramework.EventStream;
+namespace ExampleEntityFramework.EventSourcing;
 
-public class ChangePostTitleEvent:IPostEvent
+public class CreatePostEvent:IPostEvent
 {
     public long PostId { get; set; }
     
@@ -9,4 +9,6 @@ public class ChangePostTitleEvent:IPostEvent
     public string Name { get; set; } = "ChangePostTitle";
     
     public string Title { get; set; }
+    
+    public string Content { get; set; }
 }

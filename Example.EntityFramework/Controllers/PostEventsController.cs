@@ -5,7 +5,7 @@ using EnTier;
 using EnTier.Controllers;
 using EnTier.UnitOfWork;
 using ExampleEntityFramework.DomainModels;
-using ExampleEntityFramework.EventStream;
+using ExampleEntityFramework.EventSourcing;
 using ExampleEntityFramework.StoragesModels;
 using ExampleEntityFramework.TransferModels;
 using Microsoft.AspNetCore.Mvc;

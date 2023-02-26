@@ -12,5 +12,7 @@ namespace ExampleEntityFramework.DomainModels
         
         public string Content { get; set; }
         
+        public long LastModified { get; set; }
+        
     }
 }

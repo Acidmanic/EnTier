@@ -1,4 +1,4 @@
-namespace ExampleEntityFramework.EventStream;
+namespace ExampleEntityFramework.EventSourcing;
 
 public class ChangePostContentEvent:IPostEvent
 {
