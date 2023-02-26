@@ -1,13 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
 using Acidmanic.Utilities.Reflection.Attributes;
 
-namespace ExampleEntityFramework.StoragesModels
+namespace Example.EventSourcing.EntityFramework.DomainModels
 {
-    public class PostStg
+    public class Post
     {
-        
-        public long PostStgId { get; set; }
         [AutoValuedMember]
         [UniqueMember]
         public long Id { get; set; }
@@ -15,6 +11,8 @@ namespace ExampleEntityFramework.StoragesModels
         public string Title { get; set; }
         
         public string Content { get; set; }
+        
+        public long LastModified { get; set; }
         
     }
 }

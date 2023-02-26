@@ -1,6 +1,6 @@
 using System;
 
-namespace ExampleEntityFramework.EventSourcing;
+namespace Example.EventSourcing.EntityFramework.EventSourcing;
 
 public class PostinException:Exception
 {

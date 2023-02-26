@@ -1,12 +1,11 @@
 ﻿using EnTier;
 using EnTier.Controllers;
-using EnTier.UnitOfWork;
-using ExampleEntityFramework.DomainModels;
-using ExampleEntityFramework.StoragesModels;
-using ExampleEntityFramework.TransferModels;
+using Example.EventSourcing.EntityFramework.DomainModels;
+using Example.EventSourcing.EntityFramework.StoragesModels;
+using Example.EventSourcing.EntityFramework.TransferModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ExampleEntityFramework.Controllers
+namespace Example.EventSourcing.EntityFramework.Controllers
 {
     [ApiController]
     [Route("[controller]")]

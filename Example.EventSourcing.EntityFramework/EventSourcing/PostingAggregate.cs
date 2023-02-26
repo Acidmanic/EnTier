@@ -2,9 +2,9 @@ using System;
 using EnTier.EventSourcing;
 using EnTier.EventSourcing.Attributes;
 using EnTier.Utility;
-using ExampleEntityFramework.DomainModels;
+using Example.EventSourcing.EntityFramework.DomainModels;
 
-namespace ExampleEntityFramework.EventSourcing;
+namespace Example.EventSourcing.EntityFramework.EventSourcing;
 
 public class PostingAggregate:AggregateBase<Post,IPostEvent,long>
 {

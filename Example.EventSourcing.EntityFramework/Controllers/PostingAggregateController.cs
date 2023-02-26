@@ -1,10 +1,10 @@
 ﻿using EnTier;
 using EnTier.Controllers;
-using ExampleEntityFramework.DomainModels;
-using ExampleEntityFramework.EventSourcing;
+using Example.EventSourcing.EntityFramework.DomainModels;
+using Example.EventSourcing.EntityFramework.EventSourcing;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ExampleEntityFramework.Controllers
+namespace Example.EventSourcing.EntityFramework.Controllers
 {
     
     [ApiController]

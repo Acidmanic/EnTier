@@ -1,9 +1,8 @@
-using System.Data.Common;
 using EnTier.DataAccess.EntityFramework;
-using ExampleEntityFramework.StoragesModels;
+using Example.EventSourcing.EntityFramework.StoragesModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExampleEntityFramework
+namespace Example.EventSourcing.EntityFramework
 {
     public class ExampleContext:DbContext
     {

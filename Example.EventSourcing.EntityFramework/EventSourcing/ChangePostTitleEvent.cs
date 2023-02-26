@@ -1,6 +1,6 @@
-namespace ExampleEntityFramework.EventSourcing;
+namespace Example.EventSourcing.EntityFramework.EventSourcing;
 
-public class CreatePostEvent:IPostEvent
+public class ChangePostTitleEvent:IPostEvent
 {
     public long PostId { get; set; }
     
@@ -9,6 +9,4 @@ public class CreatePostEvent:IPostEvent
     public string Name { get; set; } = "ChangePostTitle";
     
     public string Title { get; set; }
-    
-    public string Content { get; set; }
 }

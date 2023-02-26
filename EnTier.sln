@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.JsonFile", "Example
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier.DataAccess.EntityFramework", "EnTier.DataAccess.EntityFramework\EnTier.DataAccess.EntityFramework.csproj", "{19B024D4-7230-4AE6-839A-DC54568B070D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.EntityFramework", "Example.EntityFramework\Example.EntityFramework.csproj", "{3BD327EE-0214-4FA1-976A-BDBC7302975C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.EventSourcing.EntityFramework", "Example.EventSourcing.EntityFramework\Example.EventSourcing.EntityFramework.csproj", "{3BD327EE-0214-4FA1-976A-BDBC7302975C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Test", "Example.Test\Example.Test.csproj", "{B9AF7246-B805-4931-B4BD-29D7DDE29FA8}"
 EndProject

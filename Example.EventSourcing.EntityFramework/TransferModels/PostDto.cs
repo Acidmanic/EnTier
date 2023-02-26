@@ -1,6 +1,6 @@
 using Acidmanic.Utilities.Reflection.Attributes;
 
-namespace ExampleEntityFramework.TransferModels
+namespace Example.EventSourcing.EntityFramework.TransferModels
 {
     public class PostDto
     {

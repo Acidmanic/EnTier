@@ -1,4 +1,4 @@
-namespace ExampleEntityFramework.TransferModels;
+namespace Example.EventSourcing.EntityFramework.TransferModels;
 
 public class UpdateDto
 {

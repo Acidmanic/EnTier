@@ -1,9 +1,11 @@
 using Acidmanic.Utilities.Reflection.Attributes;
 
-namespace ExampleEntityFramework.DomainModels
+namespace Example.EventSourcing.EntityFramework.StoragesModels
 {
-    public class Post
+    public class PostStg
     {
+        
+        public long PostStgId { get; set; }
         [AutoValuedMember]
         [UniqueMember]
         public long Id { get; set; }
@@ -11,8 +13,6 @@ namespace ExampleEntityFramework.DomainModels
         public string Title { get; set; }
         
         public string Content { get; set; }
-        
-        public long LastModified { get; set; }
         
     }
 }
