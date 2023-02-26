@@ -18,13 +18,13 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static IServiceCollection AddEntityFrameworkUnitOfWork(this IServiceCollection services,
-            DbContext context)
+        public static IServiceCollection AddEntityFrameworkUnitOfWork<TDbContext>(this IServiceCollection services)
+        where TDbContext :DbContext
         {
             if (!services.IsRegistered<DbContext>())
             {
-                services.AddSingleton<DbContext>(context);
-                services.AddSingleton<IUnitOfWork,EntityFrameworkUnitOfWork>();
+                services.AddTransient<DbContext,TDbContext>();
+                services.AddTransient<IUnitOfWork,EntityFrameworkUnitOfWork>();
             }
 
             return services;
