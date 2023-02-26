@@ -14,5 +14,7 @@ namespace ExampleEntityFramework.Controllers
         public PostingAggregateController(EnTierEssence essence) : base(essence)
         {
         }
+
+        protected override bool ReflectExceptions => true;
     }
 }
