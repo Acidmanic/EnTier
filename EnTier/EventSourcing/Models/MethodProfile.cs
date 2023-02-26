@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Reflection;
 
 namespace EnTier.EventSourcing.Models
@@ -10,6 +11,10 @@ namespace EnTier.EventSourcing.Models
         public Type ModelType { get; set; }
         
         public string Name { get; set; }
+        
+        public HttpMethod HttpMethod { get; set; }
+        
+        public bool NeedsStreamId { get; set; }
         
     }
 }

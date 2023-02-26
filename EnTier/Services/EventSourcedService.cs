@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.Results;
 using EnTier.EventSourcing;
 using EnTier.Extensions;
 using EnTier.UnitOfWork;
@@ -29,12 +31,21 @@ public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
         
     }
     
-    public IAggregate<TAggregateRoot, TEvent, TStreamId> GetAggregate(TStreamId id)
+    public Result<IAggregate<TAggregateRoot, TEvent, TStreamId>> GetAggregate(TStreamId id)
     {
         return GetAggregateAsync(id).Result;
     }
 
-    public async Task<IAggregate<TAggregateRoot, TEvent, TStreamId>> GetAggregateAsync(TStreamId id)
+
+    public IAggregate<TAggregateRoot, TEvent, TStreamId> CreateAggregateInstance()
+    {
+        var aggregate = AggregateBuilderBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
+
+        return aggregate;
+    }
+    
+    
+    public async Task<Result<IAggregate<TAggregateRoot, TEvent, TStreamId>>> GetAggregateAsync(TStreamId id)
     {
         var aggregate = AggregateBuilderBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
 
@@ -42,11 +53,18 @@ public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
         
         var events = await repository.ReadStream(id);
 
-        aggregate.Initialize(id, events);
+        var eventsArray = events as TEvent[] ?? events.ToArray();
+        
+        if (eventsArray.Length==0)
+        {
+            return new Result<IAggregate<TAggregateRoot, TEvent, TStreamId>>().FailAndDefaultValue();
+        }
+        
+        aggregate.Initialize(id, eventsArray);
 
         UnitOfWork.Complete();
-        
-        return aggregate;
+
+        return new Result<IAggregate<TAggregateRoot, TEvent, TStreamId>>(true, aggregate);
     }
 
     public void Save(IAggregate<TAggregateRoot, TEvent, TStreamId> aggregate)

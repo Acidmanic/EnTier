@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using Acidmanic.Utilities.NamingConventions;
 using Acidmanic.Utilities.Reflection.Dynamics;
 using Acidmanic.Utilities.Results;
+using EnTier.EventSourcing.Attributes;
 using EnTier.EventSourcing.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace EnTier.EventSourcing
 {
@@ -30,7 +34,7 @@ namespace EnTier.EventSourcing
         public Result<ConventionDescriptor> ModerateMethodNames { get; set; } =
             new Result<ConventionDescriptor>(true, ConventionDescriptor.Standard.Kebab);
 
-        
+
         public AggregateIndex(Type type)
         {
             var methods = type.GetMethods()
@@ -69,9 +73,38 @@ namespace EnTier.EventSourcing
             return new Result<MethodProfile>().FailAndDefaultValue();
         }
 
+
+        private bool IsHidden(MethodInfo method)
+        {
+            return method.GetCustomAttribute<ApiInvisibleAttribute>() != null;
+        }
+
+
+        private HttpMethod GetHttpMethod(MethodInfo method)
+        {
+            var httpMethodAttribute = method.GetCustomAttribute<HttpMethodAttribute>();
+
+            if (httpMethodAttribute is HttpGetAttribute)
+            {
+                return HttpMethod.Get;
+            }
+
+            if (httpMethodAttribute is HttpDeleteAttribute)
+            {
+                return HttpMethod.Delete;
+            }
+
+            if (httpMethodAttribute is HttpPutAttribute)
+            {
+                return HttpMethod.Put;
+            }
+            
+            return HttpMethod.Post;
+        }
+        
+        
         private MethodProfile CreateProfile(MethodInfo method)
         {
-
             var methodName = method.Name;
 
             if (ModerateMethodNames)
@@ -80,12 +113,15 @@ namespace EnTier.EventSourcing
 
                 methodName = namingConvention.Convert(methodName, ModerateMethodNames);
             }
-            
+
             var profile = new MethodProfile
             {
                 Method = method,
-                Name = methodName
+                Name = methodName,
+                HttpMethod = GetHttpMethod(method),
+                NeedsStreamId = method.GetCustomAttribute<NoStreamIdApi>() == null
             };
+
 
             var parameters = method.GetParameters();
 

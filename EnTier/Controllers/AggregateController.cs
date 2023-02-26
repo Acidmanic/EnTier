@@ -55,33 +55,39 @@ namespace EnTier.Controllers
 
             if (foundMethodName)
             {
-                var aggregate = await Service.GetAggregateAsync(streamId);
+                var foundAggregate = await Service.GetAggregateAsync(streamId);
 
-                var foundProfile = AggregateIndex.FindProfile(foundMethodName.Value);
 
-                if (foundProfile)
+                if (foundAggregate)
                 {
-                    var result = await HttpContext.Request.ExecuteMethod(aggregate,
-                        foundProfile.Value.Method,
-                        foundProfile.Value.ModelType);
-
-                    if (result.Successful)
+                    var aggregate = foundAggregate.Value;
+                    
+                    var foundProfile = AggregateIndex.FindProfile(foundMethodName.Value);
+                    
+                    if (foundProfile)
                     {
-                        await Service.SaveAsync(aggregate);
+                        var result = await HttpContext.Request.ExecuteMethod(aggregate,
+                            foundProfile.Value.Method,
+                            foundProfile.Value.ModelType);
 
-                        return Ok(aggregate.CurrentState);
-                    }
-
-                    if (ReflectExceptions)
-                    {
-                        return BadRequest(new
+                        if (result.Successful)
                         {
-                            exceptionMessage = result.Exception.Message,
-                            exceptionName = result.Exception.GetType().Name,
-                        });
-                    }
+                            await Service.SaveAsync(aggregate);
 
-                    return BadRequest();
+                            return Ok(aggregate.CurrentState);
+                        }
+
+                        if (ReflectExceptions)
+                        {
+                            return BadRequest(new
+                            {
+                                exceptionMessage = result.Exception.Message,
+                                exceptionName = result.Exception.GetType().Name,
+                            });
+                        }
+
+                        return BadRequest();
+                    }    
                 }
             }
 
