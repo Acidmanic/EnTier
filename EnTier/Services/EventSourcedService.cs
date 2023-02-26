@@ -2,23 +2,33 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EnTier.EventSourcing;
 using EnTier.Extensions;
-using EnTier.Repositories;
+using EnTier.UnitOfWork;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services;
 
 public class EventSourcedService<TAggregateRoot, TEvent, TEventId, TStreamId>
 {
     protected IAggregateBuilder AggregateBuilderBuilder { get; }
-    protected IEventStreamRepository<TEvent, TEventId, TStreamId> EventStreamRepository { get; }
 
-    public EventSourcedService(IAggregateBuilder aggregateBuilder,
-        IEventStreamRepository<TEvent, TEventId, TStreamId> eventStreamRepository)
+    protected ILogger Logger { get; private set; }
+    
+
+    protected IUnitOfWork UnitOfWork { get; private set; }
+    
+    public EventSourcedService(EnTierEssence essence)
     {
-        AggregateBuilderBuilder = aggregateBuilder;
+       
+        UnitOfWork = essence.UnitOfWork;
+        
+        Logger = essence.Logger;
 
-        EventStreamRepository = eventStreamRepository;
+        object DefaultAggregateBuilderFactor() => new AggregateBuilder(essence.Resolver.Resolve);
+
+        AggregateBuilderBuilder = essence.ResolveOrDefault<IAggregateBuilder>(DefaultAggregateBuilderFactor, false);
+        
     }
-
+    
     public IAggregate<TAggregateRoot, TEvent, TStreamId> GetAggregate(TStreamId id)
     {
         return GetAggregateAsync(id).Result;
@@ -28,10 +38,14 @@ public class EventSourcedService<TAggregateRoot, TEvent, TEventId, TStreamId>
     {
         var aggregate = AggregateBuilderBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
 
-        var events = await EventStreamRepository.ReadStream(id);
+        var repository = UnitOfWork.GetStreamRepository<TEvent,TEventId, TStreamId>();
+        
+        var events = await repository.ReadStream(id);
 
         aggregate.Initialize(id, events);
 
+        UnitOfWork.Complete();
+        
         return aggregate;
     }
 
@@ -42,10 +56,14 @@ public class EventSourcedService<TAggregateRoot, TEvent, TEventId, TStreamId>
 
     public async Task SaveAsync(IAggregate<TAggregateRoot, TEvent, TStreamId> aggregate)
     {
+        var repository = UnitOfWork.GetStreamRepository<TEvent,TEventId, TStreamId>();
+        
         foreach (var @event in aggregate.Updates)
         {
-            await EventStreamRepository.Append(@event, aggregate.StreamId);
+            await repository.Append(@event, aggregate.StreamId);
         }
+        
+        UnitOfWork.Complete();
     }
 
 
@@ -56,7 +74,9 @@ public class EventSourcedService<TAggregateRoot, TEvent, TEventId, TStreamId>
 
     public async Task<List<IAggregate<TAggregateRoot, TEvent, TStreamId>>> GetAllAsync()
     {
-        var eventsByStreamId = await EventStreamRepository.ReadStreamsGrouped();
+        var repository = UnitOfWork.GetStreamRepository<TEvent,TEventId, TStreamId>();
+        
+        var eventsByStreamId = await repository.ReadStreamsGrouped();
 
         var aggregates = new List<IAggregate<TAggregateRoot, TEvent, TStreamId>>();
 
@@ -69,6 +89,8 @@ public class EventSourcedService<TAggregateRoot, TEvent, TEventId, TStreamId>
             aggregates.Add(aggregate);
         }
 
+        UnitOfWork.Complete();
+        
         return aggregates;
     }
 }

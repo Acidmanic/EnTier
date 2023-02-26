@@ -47,7 +47,12 @@ namespace EnTier
         
         internal T ResolveOrDefault<T>(Func<object> defaultFactory, bool shootError = false) where T : class
         {
-            var resolved = Resolver.TryResolve<T>();
+            return ResolveOrDefault(typeof(T), defaultFactory, shootError) as T;
+        }
+        
+        internal object ResolveOrDefault(Type type, Func<object> defaultFactory, bool shootError = false) 
+        {
+            var resolved = Resolver.TryResolve(type);
 
             if (resolved)
             {
@@ -56,14 +61,14 @@ namespace EnTier
 
             if (shootError)
             {
-                Logger.LogError("You must register your implementation of choice for {TypeName}.", typeof(T).Name);
+                Logger.LogError("You must register your implementation of choice for {TypeName}.", type.Name);
                 if (resolved.Secondary != null)
                 {
                     Logger.LogError(resolved.Secondary, "Exception: {Exception}", resolved.Secondary);
                 }
             }
 
-            return defaultFactory() as T;
+            return defaultFactory();
         }
 
 
