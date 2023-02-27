@@ -16,7 +16,7 @@ namespace EnTier.Controllers
     {
         protected Type AggregateType { get; }
         protected AggregateIndex AggregateIndex { get; }
-        protected AggregateBuilder AggregateBuilder { get; }
+        protected IAggregateBuilder AggregateBuilder { get; }
 
         protected EventSourcedService
             <TAggregateRoot, TEvent, TStreamId, TEventId> Service { get; }
@@ -24,8 +24,10 @@ namespace EnTier.Controllers
         
         public AggregateControllerBase(EnTierEssence essence)
         {
-            AggregateBuilder = new AggregateBuilder(t => null);
+            AggregateBuilder = essence.AggregateBuilder;
+            
             AggregateType = AggregateBuilder.FindAggregateType<TAggregateRoot, TEvent, TStreamId>();
+            
             AggregateIndex = new AggregateIndex(AggregateType)
             {
                 ModerateMethodNames = ModerateUriNames

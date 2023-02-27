@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Security;
 using EnTier;
 using EnTier.DataAccess.InMemory;
@@ -68,9 +69,9 @@ namespace Unity
             return container.RegisterSingleton<IUnitOfWork, InMemoryUnitOfWork>();
         }
         
-        public static EnTierEssence AddEnTier(this IUnityContainer container)
+        public static EnTierEssence AddEnTier(this IUnityContainer container, params Assembly[] additionalAssemblies)
         {
-            var essence = new EnTierEssence();
+            var essence = new EnTierEssence(additionalAssemblies);
             
             container.RegisterInstance(essence);
             

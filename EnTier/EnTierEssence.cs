@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using EnTier.DataAccess.InMemory;
 using EnTier.DependencyInjection;
+using EnTier.EventSourcing;
 using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.UnitOfWork;
@@ -17,13 +20,34 @@ namespace EnTier
         internal EnTierResolver Resolver { get; private set; }
         internal ILogger Logger { get; private set; }
 
-        public EnTierEssence()
+        internal List<Assembly> AvailableAssemblies { get; private set; } = new List<Assembly>();
+
+        public EnTierEssence(params Assembly[] additionalAssemblies)
         {
             Logger = new ConsoleLogger();
 
             Resolver = new NullEnTierResolver();
+            
+            AddAssembly(Assembly.GetCallingAssembly());
+            AddAssembly(Assembly.GetEntryAssembly());
+            AddAssembly(Assembly.GetExecutingAssembly());
+            
+            foreach (var assembly in additionalAssemblies)
+            {
+                AddAssembly(assembly);
+            }
         }
 
+        private void AddAssembly(Assembly assembly)
+        {
+            if (assembly != null)
+            {
+                if (!AvailableAssemblies.Contains(assembly))
+                {
+                    AvailableAssemblies.Add(assembly);
+                }
+            }
+        }
 
         public EnTierEssence UseResolver(IResolverFacade resolver)
         {
@@ -81,5 +105,8 @@ namespace EnTier
             return ResolveOrDefault<IDataAccessRegulator<TDomain, TStorage>>
                 (new NullDataAccessRegulator<TDomain, TStorage>());
         }
+
+        internal IAggregateBuilder AggregateBuilder => ResolveOrDefault<IAggregateBuilder>
+            (new AggregateBuilder(Resolver.Resolve,AvailableAssemblies.ToArray()));
     }
 }

@@ -1,3 +1,4 @@
+using System.Reflection;
 using EnTier;
 using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
@@ -8,11 +9,10 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-
         public static bool IsRegistered<TService>(this IServiceCollection services)
         {
             var serviceType = typeof(TService);
-            
+
             for (int i = 0; i < services.Count; i++)
             {
                 if (services[i].ServiceType == serviceType)
@@ -23,32 +23,34 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return false;
         }
-        
-        public static EnTierEssence AddEnTier(this IServiceCollection services)
+
+        public static EnTierEssence AddEnTier(this IServiceCollection services, params Assembly[] additionalAssemblies)
         {
-            var essence = new EnTierEssence();
+            var essence = new EnTierEssence(additionalAssemblies);
 
             services.AddSingleton<EnTierEssence>(essence);
 
             return essence;
         }
-        
+
         public static IServiceCollection AddJsonFileUnitOfWork(this IServiceCollection services)
         {
             if (!services.IsRegistered<EnTierEssence>())
             {
                 services.AddEnTier();
             }
-            return services.AddSingleton<IUnitOfWork,JsonFileUnitOfWork>();
+
+            return services.AddSingleton<IUnitOfWork, JsonFileUnitOfWork>();
         }
-        
+
         public static IServiceCollection AddInMemoryUnitOfWork(this IServiceCollection services)
         {
             if (!services.IsRegistered<EnTierEssence>())
             {
                 services.AddEnTier();
             }
-            return services.AddSingleton<IUnitOfWork,InMemoryUnitOfWork>();
+
+            return services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
         }
     }
 }

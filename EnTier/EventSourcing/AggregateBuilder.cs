@@ -22,21 +22,7 @@ public class AggregateBuilder : IAggregateBuilder
         _resolver = resolver;
 
         _assemblies.AddRange(assemblies);
-
-        AddAss(Assembly.GetCallingAssembly());
-        AddAss(Assembly.GetEntryAssembly());
-        AddAss(Assembly.GetExecutingAssembly());
-    }
-
-    private void AddAss(Assembly? assembly)
-    {
-        if (assembly != null)
-        {
-            if (!_assemblies.Contains(assembly))
-            {
-                _assemblies.Add(assembly);
-            }
-        }
+   
     }
 
     private bool Implements<T>(Type type)
@@ -57,7 +43,7 @@ public class AggregateBuilder : IAggregateBuilder
     }
 
 
-    public Type? FindAggregateType<TAggregateRoot, TEvent, TStreamId>()
+    public Type FindAggregateType<TAggregateRoot, TEvent, TStreamId>()
     {
         return LoadTypes<TAggregateRoot, TEvent, TStreamId>().FirstOrDefault();
     }
@@ -65,7 +51,7 @@ public class AggregateBuilder : IAggregateBuilder
     private List<Type> LoadTypes<TAggregateRoot, TEvent, TStreamId>()
     {
         var types = new List<Type>();
-
+        
         foreach (var assembly in _assemblies)
         {
             var adding = assembly.GetAvailableTypes()

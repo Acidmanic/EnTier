@@ -11,7 +11,7 @@ namespace EnTier.Services;
 
 public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
 {
-    protected IAggregateBuilder AggregateBuilderBuilder { get; }
+    protected IAggregateBuilder AggregateBuilder { get; }
 
     protected ILogger Logger { get; private set; }
     
@@ -25,10 +25,8 @@ public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
         
         Logger = essence.Logger;
 
-        object DefaultAggregateBuilderFactory() => new AggregateBuilder(essence.Resolver.Resolve);
+        AggregateBuilder = essence.AggregateBuilder;
 
-        AggregateBuilderBuilder = essence.ResolveOrDefault<IAggregateBuilder>(DefaultAggregateBuilderFactory, false);
-        
     }
     
     public Result<IAggregate<TAggregateRoot, TEvent, TStreamId>> GetAggregate(TStreamId id)
@@ -39,7 +37,7 @@ public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
 
     public IAggregate<TAggregateRoot, TEvent, TStreamId> CreateAggregateInstance()
     {
-        var aggregate = AggregateBuilderBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
+        var aggregate = AggregateBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
 
         return aggregate;
     }
@@ -47,7 +45,7 @@ public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
     
     public async Task<Result<IAggregate<TAggregateRoot, TEvent, TStreamId>>> GetAggregateAsync(TStreamId id)
     {
-        var aggregate = AggregateBuilderBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
+        var aggregate = AggregateBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
 
         var repository = UnitOfWork.GetStreamRepository<TEvent,TEventId, TStreamId>();
         
@@ -100,7 +98,7 @@ public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
 
         foreach (var item in eventsByStreamId)
         {
-            var aggregate = AggregateBuilderBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
+            var aggregate = AggregateBuilder.Build<TAggregateRoot, TEvent, TStreamId>();
 
             aggregate.Initialize(item.Key, item.Value);
 

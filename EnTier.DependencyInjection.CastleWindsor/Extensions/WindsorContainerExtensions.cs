@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using Castle.MicroKernel.Registration;
 using EnTier;
 using EnTier.DataAccess.InMemory;
@@ -15,10 +16,10 @@ namespace Castle.Windsor
     public static class WindsorContainerExtensions
     {
 
-        public static EnTierEssence AddEnTier(this IWindsorContainer container)
+        public static EnTierEssence AddEnTier(this IWindsorContainer container, params Assembly[] additionalAssemblies)
         {
 
-            var essence = new EnTierEssence();
+            var essence = new EnTierEssence(additionalAssemblies);
 
             container.Register(Component.For<EnTierEssence>().Instance(essence).LifestyleSingleton());
             
