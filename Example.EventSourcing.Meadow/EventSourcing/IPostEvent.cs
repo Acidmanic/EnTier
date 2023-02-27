@@ -1,6 +1,8 @@
+using Meadow.Scaffolding.Attributes;
+
 namespace Example.EventSourcing.Meadow.EventSourcing;
 
-
+[EventStreamPreferences(typeof(long),typeof(long),256,1024)]
 public interface IPostEvent
 {
     
