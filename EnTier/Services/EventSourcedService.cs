@@ -25,9 +25,9 @@ public class EventSourcedService<TAggregateRoot, TEvent,TStreamId, TEventId>
         
         Logger = essence.Logger;
 
-        object DefaultAggregateBuilderFactor() => new AggregateBuilder(essence.Resolver.Resolve);
+        object DefaultAggregateBuilderFactory() => new AggregateBuilder(essence.Resolver.Resolve);
 
-        AggregateBuilderBuilder = essence.ResolveOrDefault<IAggregateBuilder>(DefaultAggregateBuilderFactor, false);
+        AggregateBuilderBuilder = essence.ResolveOrDefault<IAggregateBuilder>(DefaultAggregateBuilderFactory, false);
         
     }
     
