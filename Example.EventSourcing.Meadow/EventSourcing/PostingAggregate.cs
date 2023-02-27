@@ -1,3 +1,4 @@
+using System;
 using EnTier.EventSourcing;
 using EnTier.EventSourcing.Attributes;
 using EnTier.Utility;
