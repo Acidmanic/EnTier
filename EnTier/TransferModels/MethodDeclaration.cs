@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EnTier.EventSourcing.Models;
-using OrderState.Api.TransferModels;
 
 namespace EnTier.TransferModels;
 

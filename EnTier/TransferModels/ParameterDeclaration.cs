@@ -1,4 +1,4 @@
-namespace OrderState.Api.TransferModels;
+namespace EnTier.TransferModels;
 
 public class ParameterDeclaration
 {
