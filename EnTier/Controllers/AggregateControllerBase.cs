@@ -9,6 +9,7 @@ using EnTier.Services;
 using EnTier.TransferModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.Controllers
 {
@@ -17,6 +18,8 @@ namespace EnTier.Controllers
         protected Type AggregateType { get; }
         protected AggregateIndex AggregateIndex { get; }
         protected IAggregateBuilder AggregateBuilder { get; }
+        
+        protected ILogger Logger { get; }
 
         protected EventSourcedService
             <TAggregateRoot, TEvent, TStreamId, TEventId> Service { get; }
@@ -24,9 +27,20 @@ namespace EnTier.Controllers
         
         public AggregateControllerBase(EnTierEssence essence)
         {
+
+            Logger = essence.Logger;
+            
             AggregateBuilder = essence.AggregateBuilder;
             
             AggregateType = AggregateBuilder.FindAggregateType<TAggregateRoot, TEvent, TStreamId>();
+
+            if (AggregateType == null)
+            {
+                Logger.LogError("No implemented Aggregate has been found for AggregateRoot: {AggregateRoot} and " +
+                                "Event: {Event}, StreamId type of {StreamId} and EventId type of {EventId}",
+                    typeof(TEvent).Name,typeof(TAggregateRoot).Name,
+                    typeof(TStreamId).Name,typeof(TEventId).Name);
+            }
             
             AggregateIndex = new AggregateIndex(AggregateType)
             {
