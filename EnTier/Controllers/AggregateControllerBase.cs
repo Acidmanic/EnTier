@@ -38,7 +38,7 @@ namespace EnTier.Controllers
             {
                 Logger.LogError("No implemented Aggregate has been found for AggregateRoot: {AggregateRoot} and " +
                                 "Event: {Event}, StreamId type of {StreamId} and EventId type of {EventId}",
-                    typeof(TEvent).Name,typeof(TAggregateRoot).Name,
+                    typeof(TAggregateRoot).Name,typeof(TEvent).Name,
                     typeof(TStreamId).Name,typeof(TEventId).Name);
             }
             
