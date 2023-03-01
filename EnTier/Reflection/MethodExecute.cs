@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
+using Acidmanic.Utilities.Reflection;
+using Acidmanic.Utilities.Results;
 using EnTier.Extensions;
 
 namespace EnTier.Reflection;
@@ -53,22 +56,61 @@ public class MethodExecute
         return executionResult;
     }
 
+
+    private MethodEvaluation GetMethodStatus(MethodInfo method)
+    {
+        var evaluation = new MethodEvaluation();
+
+        var methodReturnType = method.ReturnType;
+
+        evaluation.SyncReturnType = methodReturnType;
+
+        evaluation.IsAsyncFunction = TypeCheck.IsSpecificOf(methodReturnType, typeof(Task<>));
+
+        evaluation.IsAsyncVoid = !evaluation.IsAsyncFunction && TypeCheck.Extends(typeof(Task), methodReturnType);
+
+        evaluation.IsSyncVoid = methodReturnType == typeof(void);
+
+        if (evaluation.IsAsyncFunction)
+        {
+            evaluation.AsyncReturnType = methodReturnType.GetGenericArguments()[0];
+
+            evaluation.ResultProperty = methodReturnType.GetProperty("Result");
+        }
+
+        return evaluation;
+    }
+
+
     public MethodExecutionResult Execute(MethodInfo method, object owner, object[] parameterValues)
     {
-        var doesReturnValue = method.ReturnType == typeof(void);
+        var evaluation = GetMethodStatus(method);
 
         try
         {
+            object returnedValue = method.Invoke(owner, parameterValues);
 
-            var returnValue = method.Invoke(owner, parameterValues);
-            
+            if (evaluation.IsAsync)
+            {
+                if (evaluation.IsAsyncFunction)
+                {
+                    returnedValue = evaluation.ResultProperty.GetValue(returnedValue);
+                }
+                else if (returnedValue is Task task)
+                {
+                    task.Wait();
+
+                    returnedValue = null;
+                }
+            }
+
             return new MethodExecutionResult
             {
                 Exception = null,
                 Successful = true,
-                ReturnsValue = doesReturnValue,
-                ReturnType = method.ReturnType,
-                ReturnValue = returnValue
+                ReturnsValue = evaluation.IsFunction,
+                ReturnType = evaluation.OverAllReturnValue,
+                ReturnValue = returnedValue
             };
         }
         catch (Exception e)
@@ -77,8 +119,8 @@ public class MethodExecute
             {
                 Exception = e.InnerMostException(),
                 Successful = false,
-                ReturnsValue = doesReturnValue,
-                ReturnType = method.ReturnType,
+                ReturnsValue = evaluation.IsFunction,
+                ReturnType = evaluation.OverAllReturnValue,
                 ReturnValue = null
             };
         }
