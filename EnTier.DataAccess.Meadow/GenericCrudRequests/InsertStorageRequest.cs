@@ -23,7 +23,7 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
 
         protected override string PickProcedureName(NameConvention nameConvention)
         {
-            throw new System.NotImplementedException();
+            return nameConvention.InsertProcedureName;
         }
     }
 }
