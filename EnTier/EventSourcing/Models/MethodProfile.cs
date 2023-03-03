@@ -15,6 +15,20 @@ namespace EnTier.EventSourcing.Models
         public HttpMethod HttpMethod { get; set; }
         
         public bool NeedsStreamId { get; set; }
+
+        public bool ReturnsAggregateRoot { get; set; }
+        
+        public bool ReturnsMethodResult { get; set; }
+
+
+
+        public bool ReturnsAggregateRootOnly => ReturnsAggregateRoot && !ReturnsMethodResult;
+        
+        public bool ReturnsMethodResultOnly => !ReturnsAggregateRoot && ReturnsMethodResult;
+        
+        public bool ReturnsBoth => ReturnsAggregateRoot && ReturnsMethodResult;
+        
+        public bool ReturnsNothing => ReturnsAggregateRoot && ReturnsMethodResult;
         
     }
 }

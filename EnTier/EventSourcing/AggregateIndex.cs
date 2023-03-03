@@ -114,12 +114,17 @@ namespace EnTier.EventSourcing
                 methodName = namingConvention.Convert(methodName, ModerateMethodNames);
             }
 
+            var apiResponseAttribute = method.GetCustomAttribute<ApiResponseAttribute>()
+                ?? new ApiResponseAttribute(true,false);
+            
             var profile = new MethodProfile
             {
                 Method = method,
                 Name = methodName,
                 HttpMethod = GetHttpMethod(method),
-                NeedsStreamId = method.GetCustomAttribute<NoStreamIdApi>() == null
+                NeedsStreamId = method.GetCustomAttribute<NoStreamIdApi>() == null,
+                ReturnsAggregateRoot = apiResponseAttribute.AggregateRoot,
+                ReturnsMethodResult = apiResponseAttribute.AggregateRoot
             };
 
             var parameters = method.GetParameters();

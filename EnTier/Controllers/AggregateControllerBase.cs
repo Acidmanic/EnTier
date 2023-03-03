@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Acidmanic.Utilities.NamingConventions;
 using Acidmanic.Utilities.Results;
 using EnTier.EventSourcing;
+using EnTier.EventSourcing.Models;
 using EnTier.Extensions;
+using EnTier.Reflection;
 using EnTier.Services;
 using EnTier.TransferModels;
 using Microsoft.AspNetCore.Http;
@@ -107,7 +109,9 @@ namespace EnTier.Controllers
                         {
                             await Service.SaveAsync(aggregate);
 
-                            return Ok(aggregate.CurrentState);
+                            var model = AssembleModel(aggregate.CurrentState, result, foundProfile.Value);
+
+                            return model == null ? Ok() : Ok(model);
                         }
 
                         if (ReflectExceptions)
@@ -125,6 +129,34 @@ namespace EnTier.Controllers
             }
 
             return NotFound();
+        }
+
+        private object AssembleModel(TAggregateRoot aggregateRoot, MethodExecutionResult result, MethodProfile profile)
+        {
+            if (profile.ReturnsBoth)
+            {
+                if (result.ReturnsValue)
+                {
+                    return new {
+                        Result = result.ReturnValue,
+                        State = aggregateRoot
+                    };
+                }
+
+                return aggregateRoot;
+            }
+
+            if (profile.ReturnsAggregateRootOnly)
+            {
+                return aggregateRoot;
+            }
+
+            if (profile.ReturnsMethodResultOnly && result.ReturnsValue)
+            {
+                return result.ReturnValue;
+            }
+
+            return null;
         }
 
 
