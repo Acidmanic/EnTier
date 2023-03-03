@@ -142,7 +142,7 @@ namespace EnTier.Controllers
 
         [HttpGet]
         [Route("all-items")]
-        public IActionResult GetAll()
+        public virtual IActionResult GetAll()
         {
             var all = Service.GetAll()
                 .Select(a => a.CurrentState);
