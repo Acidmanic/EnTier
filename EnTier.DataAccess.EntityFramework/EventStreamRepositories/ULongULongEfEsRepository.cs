@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 
-internal class ULongULongEfEsRepository<TEvent>:EntityFrameworkEventStreamRepositoryBase<TEvent,ulong,ulong>
+internal class ULongULongEfEsRepository<TEvent> : EntityFrameworkEventStreamRepositoryBase<TEvent, ulong, ulong>
 {
-    public ULongULongEfEsRepository(DbSet<EfObjectEntry<ulong, ulong>> dbSet) : base(dbSet)
+    public ULongULongEfEsRepository(DbSet<EfObjectEntry<ulong, ulong>> dbSet, EnTierEssence essence) : base(dbSet,
+        essence)
     {
     }
 
@@ -15,7 +16,8 @@ internal class ULongULongEfEsRepository<TEvent>:EntityFrameworkEventStreamReposi
         return entry => entry.StreamId == streamId;
     }
 
-    protected override Expression<Func<EfObjectEntry<ulong, ulong>, bool>> EventIdLargerThanExpression(ulong baseEventId)
+    protected override Expression<Func<EfObjectEntry<ulong, ulong>, bool>> EventIdLargerThanExpression(
+        ulong baseEventId)
     {
         return entry => entry.EventId > baseEventId;
     }

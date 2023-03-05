@@ -11,7 +11,7 @@ namespace EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 
 internal abstract class EntityFrameworkEventStreamRepositoryBase<TEvent,TEventId,TStreamId>:EventStreamRepositoryBase<TEvent,TEventId,TStreamId>
 {
-    public EntityFrameworkEventStreamRepositoryBase(DbSet<EfObjectEntry<TEventId, TStreamId>> dbSet)
+    public EntityFrameworkEventStreamRepositoryBase(DbSet<EfObjectEntry<TEventId, TStreamId>> dbSet,EnTierEssence essence)
     {
         DbSet = dbSet;
     }

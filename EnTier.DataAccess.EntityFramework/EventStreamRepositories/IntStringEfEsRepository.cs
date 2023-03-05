@@ -6,7 +6,7 @@ namespace EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 
 internal class IntStringEfEsRepository<TEvent>:EntityFrameworkEventStreamRepositoryBase<TEvent,int,string>
 {
-    public IntStringEfEsRepository(DbSet<EfObjectEntry<int, string>> dbSet) : base(dbSet)
+    public IntStringEfEsRepository(DbSet<EfObjectEntry<int, string>> dbSet,EnTierEssence essence) : base(dbSet,essence)
     {
     }
 

@@ -33,7 +33,7 @@ namespace EnTier.DataAccess.EntityFramework
         {
             var dbSet = _context.Set<EfObjectEntry<TEventId, TStreamId>>();
 
-            var repository = EfEventStreamRepositoryFactory.Instance.Make<TEvent, TEventId, TStreamId>(dbSet);
+            var repository = EfEventStreamRepositoryFactory.Instance.Make<TEvent, TEventId, TStreamId>(dbSet, Essence);
 
             if (repository is NullEfEventStreamRepository)
             {

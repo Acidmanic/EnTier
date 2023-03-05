@@ -6,7 +6,7 @@ namespace EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 
 internal class LongLongEfEsRepository<TEvent>:EntityFrameworkEventStreamRepositoryBase<TEvent,long,long>
 {
-    public LongLongEfEsRepository(DbSet<EfObjectEntry<long, long>> dbSet) : base(dbSet)
+    public LongLongEfEsRepository(DbSet<EfObjectEntry<long, long>> dbSet,EnTierEssence essence) : base(dbSet,essence)
     {
     }
 

@@ -115,18 +115,21 @@ internal class EfEventStreamRepositoryFactory
 
         var abstractDbSetType = typeof(DbSet<>);
 
-        if (parameters.Length == 1)
+        if (parameters.Length == 2)
         {
-            var parameterType = parameters[0].ParameterType;
+            if (parameters[1].ParameterType == typeof(EnTierEssence))
+            {
+                var parameterType = parameters[0].ParameterType;
 
-            return TypeCheck.IsSpecificOf(parameterType, abstractDbSetType);
+                return TypeCheck.IsSpecificOf(parameterType, abstractDbSetType);
+            }
         }
 
         return false;
     }
 
     public IEventStreamRepository<TEvent, TEventId, TStreamId> Make<TEvent, TEventId, TStreamId>
-        (DbSet<EfObjectEntry<TEventId, TStreamId>> dbSet)
+        (DbSet<EfObjectEntry<TEventId, TStreamId>> dbSet,EnTierEssence essence)
     {
         var matchedProfile = _repositoryProfiles
             .Where(RepositoryMatches<TEvent, TEventId, TStreamId>)
@@ -134,7 +137,7 @@ internal class EfEventStreamRepositoryFactory
 
         if (matchedProfile != null)
         {
-            var repository = Instantiate<TEvent, TEventId, TStreamId>(matchedProfile, dbSet);
+            var repository = Instantiate<TEvent, TEventId, TStreamId>(matchedProfile, dbSet,essence);
 
             if (repository != null)
             {
@@ -146,7 +149,7 @@ internal class EfEventStreamRepositoryFactory
     }
 
     private IEventStreamRepository<TEvent, TEventId, TStreamId> Instantiate<TEvent, TEventId, TStreamId>
-        (RepositoryProfile profile, DbSet<EfObjectEntry<TEventId, TStreamId>> dbSet)
+        (RepositoryProfile profile, DbSet<EfObjectEntry<TEventId, TStreamId>> dbSet, EnTierEssence essence)
     {
         var genericType = profile.RepositoryType.GetGenericTypeDefinition();
 
@@ -158,15 +161,15 @@ internal class EfEventStreamRepositoryFactory
         {
             try
             {
-                var instantiated = constructor.Invoke(new object[] { dbSet });
+                var instantiated = constructor.Invoke(new object[] { dbSet, essence });
 
                 return instantiated as IEventStreamRepository<TEvent, TEventId, TStreamId>;
             }
             catch (Exception e)
             {
-            } 
+            }
         }
-        
+
         return null;
     }
 

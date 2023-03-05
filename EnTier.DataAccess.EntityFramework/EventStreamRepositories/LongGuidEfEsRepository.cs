@@ -6,7 +6,7 @@ namespace EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 
 internal class LongGuidEfEsRepository<TEvent>:EntityFrameworkEventStreamRepositoryBase<TEvent,long,Guid>
 {
-    public LongGuidEfEsRepository(DbSet<EfObjectEntry<long, Guid>> dbSet) : base(dbSet)
+    public LongGuidEfEsRepository(DbSet<EfObjectEntry<long, Guid>> dbSet,EnTierEssence essence) : base(dbSet,essence)
     {
     }
 
