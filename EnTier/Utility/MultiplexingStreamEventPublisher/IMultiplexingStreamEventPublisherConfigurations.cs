@@ -12,4 +12,8 @@ public interface IMultiplexingStreamEventPublisherConfigurations
     IMultiplexingStreamEventPublisherConfigurations Add(Func<IStreamEventPublisherAdapter> publisherFactory);
 
     IMultiplexingStreamEventPublisherConfigurations Add(IStreamEventPublisherAdapter adapter);
+
+    IMultiplexingStreamEventPublisherConfigurations Add<TPublisher>() where TPublisher : IStreamEventPublisherAdapter;
+
+    IMultiplexingStreamEventPublisherConfigurations Add(Type type);
 }

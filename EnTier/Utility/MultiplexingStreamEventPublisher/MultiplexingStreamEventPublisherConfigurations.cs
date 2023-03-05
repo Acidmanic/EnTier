@@ -40,6 +40,20 @@ internal class MultiplexingStreamEventPublisherConfigurations : IMultiplexingStr
         return this;
     }
 
+    public IMultiplexingStreamEventPublisherConfigurations Add<TPublisher>() where TPublisher : IStreamEventPublisherAdapter
+    {
+        _publisher.Add<TPublisher>();
+
+        return this;
+    }
+
+    public IMultiplexingStreamEventPublisherConfigurations Add(Type type)
+    {
+        _publisher.Add(type);
+
+        return this;
+    }
+
     internal class NullMultiplexingStreamEventPublisherConfigurations : IMultiplexingStreamEventPublisherConfigurations
     {
         public IMultiplexingStreamEventPublisherConfigurations Add(Func<Action<object, object, object>> publisherFactory)
@@ -58,6 +72,16 @@ internal class MultiplexingStreamEventPublisherConfigurations : IMultiplexingStr
         }
 
         public IMultiplexingStreamEventPublisherConfigurations Add(IStreamEventPublisherAdapter adapter)
+        {
+            return this;
+        }
+
+        public IMultiplexingStreamEventPublisherConfigurations Add<TPublisher>()  where TPublisher : IStreamEventPublisherAdapter
+        {
+            return this;
+        }
+
+        public IMultiplexingStreamEventPublisherConfigurations Add(Type type)
         {
             return this;
         }
