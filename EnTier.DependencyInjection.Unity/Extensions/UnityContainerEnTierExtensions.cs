@@ -11,6 +11,7 @@ using EnTier.UnitOfWork;
 using EnTier.Utility.MultiplexingStreamEventPublisher;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.LightWeight;
+using Unity.Lifetime;
 
 // ReSharper disable once CheckNamespace
 namespace Unity
@@ -95,7 +96,8 @@ namespace Unity
 
         public static IUnityContainer AddMultiplexingStreamEventPublisher(this IUnityContainer container)
         {
-            container.RegisterInstance<IStreamEventPublisherAdapter>(new MultiplexingStreamEventPublisher());
+            container.RegisterType<IStreamEventPublisherAdapter,MultiplexingStreamEventPublisher>
+                (new SingletonLifetimeManager());
 
             return container;
         }

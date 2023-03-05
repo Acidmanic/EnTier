@@ -105,8 +105,9 @@ namespace Castle.Windsor
         public static IWindsorContainer AddMultiplexingStreamEventPublisher(this IWindsorContainer container)
         {
             
-            container.Register(Component.For<IStreamEventPublisherAdapter>()
-                .Instance(new MultiplexingStreamEventPublisher()).LifestyleSingleton());
+            container.Register(
+                Component.For<IStreamEventPublisherAdapter,MultiplexingStreamEventPublisher>()
+                .LifestyleSingleton());
 
             return container;
         }
