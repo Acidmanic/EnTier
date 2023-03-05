@@ -5,7 +5,7 @@ namespace EnTier.EventSourcing;
 /// Implementing this interface would create a Projection class which represents a specific aspect/state
 /// for a stream of events. 
 /// </summary>
-/// <typeparam name="TEntity">Tht type of the state object which is going to be projected with Projection class.</typeparam>
+/// <typeparam name="TEntity">The type of the state object which is going to be projected with Projection class.</typeparam>
 /// <typeparam name="TEvent">The type of events that this Projection class would process.</typeparam>
 /// <typeparam name="TStreamId">The type of stream identifier.</typeparam>
 public interface IProjection<TEntity, TEvent, TStreamId>
@@ -35,7 +35,7 @@ public static class ProjectionExtensions
     /// The unique identifier of the stream that this projection is supposed to
     /// represent it's state.
     /// </param>
-    /// <typeparam name="TEntity">Tht type of the state object which is going to be projected with Projection class.</typeparam>
+    /// <typeparam name="TEntity">The type of the state object which is going to be projected with Projection class.</typeparam>
     /// <typeparam name="TEvent">The type of events that this Projection class would process.</typeparam>
     /// <typeparam name="TStreamId">The type of stream identifier.</typeparam>
     public static void Initialize<TEntity, TEvent, TStreamId>(this IProjection<TEntity, TEvent, TStreamId> projection,

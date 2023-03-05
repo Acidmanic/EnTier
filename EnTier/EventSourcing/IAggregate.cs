@@ -14,15 +14,12 @@ namespace EnTier.EventSourcing;
 /// </typeparam>
 /// <typeparam name="TEvent">The type of events that this aggregate class would process.</typeparam>
 /// <typeparam name="TStreamId">The type of stream identifier.</typeparam>
-public interface IAggregate<TAggregateRoot,TEvent,TStreamId>:IProjection<TAggregateRoot,TEvent,TStreamId>
+public interface IAggregate<TAggregateRoot, TEvent, TStreamId> : IProjection<TAggregateRoot, TEvent, TStreamId>
 {
-    
-    
     /// <summary>
     /// This property would hold any event produced by aggregate class and can be stored (appended) to event stream.
     /// </summary>
     public List<TEvent> Updates { get; }
-    
 }
 
 public static class AggregateExtensions
@@ -36,12 +33,26 @@ public static class AggregateExtensions
     /// The unique identifier of the stream that this projection is supposed to
     /// represent it's state.
     /// </param>
-    /// <typeparam name="TEntity">Tht type of the state object which is going to be projected with Projection class.</typeparam>
+    /// <typeparam name="TAggregateRoot">The Aggregate root's type.</typeparam>
     /// <typeparam name="TEvent">The type of events that this Projection class would process.</typeparam>
     /// <typeparam name="TStreamId">The type of stream identifier.</typeparam>
-    public static void Initialize<TEntity, TEvent, TStreamId>(this IAggregate<TEntity, TEvent, TStreamId> aggregate,
+    public static void Initialize<TAggregateRoot, TEvent, TStreamId>(
+        this IAggregate<TAggregateRoot, TEvent, TStreamId> aggregate,
         TStreamId streamId)
     {
         aggregate.Initialize(streamId, new List<TEvent>());
+    }
+
+    /// <summary>
+    /// Checks if the aggregate is just instantiated and is absolutely in the t=0 moment of it's history. 
+    /// </summary>
+    /// <param name="aggregate">The Aggregate object</param>
+    /// <typeparam name="TAggregateRoot">The Aggregate root's type.</typeparam>
+    /// <typeparam name="TEvent">The type of events that this Projection class would process.</typeparam>
+    /// <typeparam name="TStreamId">The type of stream identifier.</typeparam>
+    public static bool IsPristine<TAggregateRoot, TEvent, TStreamId>(
+        this IAggregate<TAggregateRoot, TEvent, TStreamId> aggregate)
+    {
+        return aggregate.Events.Count == 0 && aggregate.Updates.Count == 0;
     }
 }

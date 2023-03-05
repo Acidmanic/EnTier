@@ -27,11 +27,11 @@ namespace EnTier
             Logger = new ConsoleLogger();
 
             Resolver = new NullEnTierResolver();
-            
+
             AddAssembly(Assembly.GetCallingAssembly());
             AddAssembly(Assembly.GetEntryAssembly());
             AddAssembly(Assembly.GetExecutingAssembly());
-            
+
             foreach (var assembly in additionalAssemblies)
             {
                 AddAssembly(assembly);
@@ -54,7 +54,7 @@ namespace EnTier
             Resolver = new EnTierResolver(resolver);
 
             Logger = ResolveOrDefault<ILogger>(new ConsoleLogger());
-            
+
             return this;
         }
 
@@ -68,13 +68,13 @@ namespace EnTier
         {
             return ResolveOrDefault<T>(() => defaultValue, shootError);
         }
-        
+
         internal T ResolveOrDefault<T>(Func<object> defaultFactory, bool shootError = false) where T : class
         {
             return ResolveOrDefault(typeof(T), defaultFactory, shootError) as T;
         }
-        
-        internal object ResolveOrDefault(Type type, Func<object> defaultFactory, bool shootError = false) 
+
+        internal object ResolveOrDefault(Type type, Func<object> defaultFactory, bool shootError = false)
         {
             var resolved = Resolver.TryResolve(type);
 
@@ -95,18 +95,17 @@ namespace EnTier
             return defaultFactory();
         }
 
-
         internal IUnitOfWork UnitOfWork => ResolveOrDefault<IUnitOfWork>(new InMemoryUnitOfWork(this));
-        
+
         internal IMapper Mapper => ResolveOrDefault<IMapper>(new EntierBuiltinMapper());
-        
-        internal IDataAccessRegulator<TDomain, TStorage>  Regulator<TDomain, TStorage>()
+
+        internal IDataAccessRegulator<TDomain, TStorage> Regulator<TDomain, TStorage>()
         {
             return ResolveOrDefault<IDataAccessRegulator<TDomain, TStorage>>
                 (new NullDataAccessRegulator<TDomain, TStorage>());
         }
 
         internal IAggregateBuilder AggregateBuilder => ResolveOrDefault<IAggregateBuilder>
-            (new AggregateBuilder(Resolver.Resolve,AvailableAssemblies.ToArray()));
+            (new AggregateBuilder(Resolver.Resolve, Logger, AvailableAssemblies.ToArray()));
     }
 }
