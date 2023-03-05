@@ -96,7 +96,7 @@ namespace Unity
 
         public static IUnityContainer AddMultiplexingStreamEventPublisher(this IUnityContainer container)
         {
-            container.RegisterType<IStreamEventPublisherAdapter,MultiplexingStreamEventPublisher>
+            container.RegisterType<IStreamEventPublisherAdapter, MultiplexingStreamEventPublisher>
                 (new SingletonLifetimeManager());
 
             return container;
@@ -105,7 +105,7 @@ namespace Unity
         public static IUnityContainer ConfigureMultiplexingStreamEventPublishers(this IUnityContainer container,
             Action<IMultiplexingStreamEventPublisherConfigurations> configurationExpression)
         {
-            var publisher = container.GetService<IMultiplexingStreamEventPublisherConfigurations>();
+            var publisher = container.GetService<IStreamEventPublisherAdapter>();
 
             if (publisher is MultiplexingStreamEventPublisher multiplexingStreamEventPublisher)
             {
