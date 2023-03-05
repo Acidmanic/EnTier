@@ -12,15 +12,20 @@ namespace EnTier.Repositories;
 public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
     IEventStreamRepository<TEvent, TEventId, TStreamId>
 {
-    private readonly Action<TEvent, TEventId> _eventPublisher;
+    private readonly Action<TEvent, TEventId, TStreamId> _eventPublisher;
 
-    protected EventStreamRepositoryBase() : this((e, i) => { })
+    protected EventStreamRepositoryBase() : this((e, i, s) => { })
     {
     }
 
-    protected EventStreamRepositoryBase(Action<TEvent, TEventId> eventPublisher)
+    protected EventStreamRepositoryBase(Action<TEvent, TEventId, TStreamId> eventPublisher)
     {
         _eventPublisher = eventPublisher;
+    }
+    
+    protected EventStreamRepositoryBase(EnTierEssence essence)
+    {
+        _eventPublisher = (e,i,s) =>  essence.StreamEventPublisherAdapter.Publish(e,i,s);
     }
 
     private string SerialiseValue(TEvent value)
@@ -88,7 +93,7 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
             {
                 var type = ev.GetType();
 
-                var typeName =type.AssemblyQualifiedName ??  type.FullName ?? type.Name;
+                var typeName = type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
 
                 var serializedValue = SerialiseValue(ev);
 
@@ -96,7 +101,7 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
 
                 var eventId = AppendEntry(entry);
 
-                TryPublish(ev, eventId);
+                TryPublish(ev, eventId, streamId);
 
                 return new Result<TEventId>(true, eventId);
             }
@@ -108,11 +113,11 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
     }
 
 
-    private void TryPublish(TEvent @event, TEventId eventId)
+    private void TryPublish(TEvent @event, TEventId eventId, TStreamId streamId)
     {
         try
         {
-            _eventPublisher(@event, eventId);
+            _eventPublisher(@event, eventId, streamId);
         }
         catch (Exception e)
         {

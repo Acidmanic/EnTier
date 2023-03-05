@@ -19,6 +19,27 @@ public class
 
     public JsonFileEventStreamRepository()
     {
+        _currentStreamDirectoryPath = GetCurrentStreamDirectoryPath();
+
+        _idGenerator = new UniqueIdGenerator<TEventId>(_currentStreamDirectoryPath);
+    }
+
+    public JsonFileEventStreamRepository(Action<TEvent, TEventId, TStreamId> eventPublisher) : base(eventPublisher)
+    {
+        _currentStreamDirectoryPath = GetCurrentStreamDirectoryPath();
+
+        _idGenerator = new UniqueIdGenerator<TEventId>(_currentStreamDirectoryPath);
+    }
+
+    public JsonFileEventStreamRepository(EnTierEssence essence) : base(essence)
+    {
+        _currentStreamDirectoryPath = GetCurrentStreamDirectoryPath();
+
+        _idGenerator = new UniqueIdGenerator<TEventId>(_currentStreamDirectoryPath);
+    }
+
+    private string GetCurrentStreamDirectoryPath()
+    {
         var eventStreamsDatabaseDirectoryPath = Path.Join(SpecialPaths.GetExecutionDirectory(), "EventStreamsDatabase");
 
         if (!Directory.Exists(eventStreamsDatabaseDirectoryPath))
@@ -28,14 +49,13 @@ public class
 
         var name = GetNameKey();
 
-        _currentStreamDirectoryPath = Path.Join(eventStreamsDatabaseDirectoryPath, name);
+        var path  = Path.Join(eventStreamsDatabaseDirectoryPath, name);
 
-        if (!Directory.Exists(_currentStreamDirectoryPath))
+        if (!Directory.Exists(path))
         {
-            Directory.CreateDirectory(_currentStreamDirectoryPath);
+            Directory.CreateDirectory(path);
         }
-
-        _idGenerator = new UniqueIdGenerator<TEventId>(_currentStreamDirectoryPath);
+        return path;
     }
 
 

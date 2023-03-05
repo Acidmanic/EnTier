@@ -12,7 +12,7 @@ namespace EnTier.DataAccess.InMemory
 
         public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>()
         {
-            return new InMemoryEventStreamRepository<TEvent, TEventId, TStreamId>();
+            return new InMemoryEventStreamRepository<TEvent, TEventId, TStreamId>(Essence);
         }
 
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()

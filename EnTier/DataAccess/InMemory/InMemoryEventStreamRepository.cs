@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,8 +16,20 @@ public class InMemoryEventStreamRepository<TEvent, TEventId, TStreamId>
      private static readonly List<ObjectEntry<TEventId, TStreamId>> Entries =  new List<ObjectEntry<TEventId, TStreamId>>();
 
      private static readonly IdGenerator<TEventId> IdGenerator = new IdGenerator<TEventId>();
-     
-     
+
+     public InMemoryEventStreamRepository()
+     {
+     }
+
+     public InMemoryEventStreamRepository(Action<TEvent, TEventId, TStreamId> eventPublisher) : base(eventPublisher)
+     {
+     }
+
+     public InMemoryEventStreamRepository(EnTierEssence essence) : base(essence)
+     {
+     }
+
+
      protected override TEventId AppendEntry(ObjectEntry<TEventId, TStreamId> entry)
      {
           var id = IdGenerator.New();

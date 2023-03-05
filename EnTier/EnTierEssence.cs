@@ -107,5 +107,8 @@ namespace EnTier
 
         internal IAggregateBuilder AggregateBuilder => ResolveOrDefault<IAggregateBuilder>
             (new AggregateBuilder(Resolver.Resolve, Logger, AvailableAssemblies.ToArray()));
+
+        internal IStreamEventPublisherAdapter StreamEventPublisherAdapter => ResolveOrDefault
+            <IStreamEventPublisherAdapter>(() => new NullPublisherAdapter(), false);
     }
 }
