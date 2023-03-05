@@ -1,7 +1,10 @@
+using System;
 using EnTier;
 using EnTier.DependencyInjection;
 using EnTier.Exceptions;
+using EnTier.Extensions;
 using EnTier.Fixture;
+using EnTier.Utility.MultiplexingStreamEventPublisher;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
@@ -40,6 +43,15 @@ namespace Microsoft.AspNetCore.Builder
             var essence = app.GetRegisteredEnTierEssence();
 
             essence.UseResolver(new DotnetResolverFacade(app.ApplicationServices));
+
+            return app;
+        }
+        
+        public static IApplicationBuilder ConfigureMultiplexingStreamEventPublishers(this IApplicationBuilder app,
+            Action<IMultiplexingStreamEventPublisherConfigurations> configurationExpression)
+        {
+
+            app.ApplicationServices.ConfigureMultiplexingStreamEventPublishers(configurationExpression);
 
             return app;
         }

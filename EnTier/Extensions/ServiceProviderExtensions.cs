@@ -2,6 +2,9 @@ using System;
 using EnTier.DependencyInjection;
 using EnTier.Exceptions;
 using EnTier.Fixture;
+using EnTier.Utility.MultiplexingStreamEventPublisher;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.LightWeight;
 
 namespace EnTier.Extensions
 {
@@ -50,6 +53,28 @@ namespace EnTier.Extensions
             }
 
             return default;
+        }
+
+        public static IServiceProvider ConfigureMultiplexingStreamEventPublishers(this IServiceProvider serviceProvider,
+            Action<IMultiplexingStreamEventPublisherConfigurations> configurationExpression)
+        {
+
+            var publisher = serviceProvider.GetService<IMultiplexingStreamEventPublisherConfigurations>();
+
+            if (publisher is MultiplexingStreamEventPublisher multiplexingStreamEventPublisher)
+            {
+                configurationExpression(
+                    new MultiplexingStreamEventPublisherConfigurations(multiplexingStreamEventPublisher));
+            }
+            else
+            {
+                var logger = serviceProvider.GetService<ILogger>() ?? new ConsoleLogger();
+                
+                logger.LogError("In order to configure and use MultiplexingStreamEventPublisher in your project," +
+                                "you have to first register it in your di-container.");
+            }
+
+            return serviceProvider;
         }
     }
 }

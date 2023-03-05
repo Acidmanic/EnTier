@@ -2,7 +2,10 @@ using System.Reflection;
 using EnTier;
 using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
+using EnTier.EventSourcing;
 using EnTier.UnitOfWork;
+using EnTier.Utility;
+using EnTier.Utility.MultiplexingStreamEventPublisher;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -51,6 +54,13 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             return services.AddSingleton<IUnitOfWork, InMemoryUnitOfWork>();
+        }
+
+        public static IServiceCollection AddMultiplexingStreamEventPublisher(this IServiceCollection services)
+        {
+            services.AddSingleton<IStreamEventPublisherAdapter, MultiplexingStreamEventPublisher>();
+
+            return services;
         }
     }
 }

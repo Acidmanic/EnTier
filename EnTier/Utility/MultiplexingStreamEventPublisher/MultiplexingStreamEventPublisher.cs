@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EnTier.EventSourcing;
 
-namespace EnTier.Utility;
+namespace EnTier.Utility.MultiplexingStreamEventPublisher;
 /// <summary>
 /// This class helps multiplexing publication of events from a single source. Since this implements the
 /// <code>IStreamPublisherAdapter</code> interface, it can be registered in Di and be automatically detected by
