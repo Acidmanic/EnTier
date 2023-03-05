@@ -70,7 +70,7 @@ public class MultiplexingStreamEventPublisher : IStreamEventPublisherAdapter
 
     public void Add(Type publisherType)
     {
-        Func<Action<object, object, object>> factory = () =>
+        Action<object, object, object> Factory()
         {
             var publisher = _essence.ResolveOrDefault(publisherType, () => null);
 
@@ -79,12 +79,9 @@ public class MultiplexingStreamEventPublisher : IStreamEventPublisherAdapter
                 return adapter.Publish;
             }
 
-            return (o, o1, arg3) =>
-            {
-                _essence.Logger.LogError("MultiplexingStreamEventPublisher was not able to instantiate " +
-                                         "{TypeName}. Please make sure this class is registered in your di",
-                    publisherType.FullName);
-            };
-        };
+            return (o, o1, arg3) => { _essence.Logger.LogError("MultiplexingStreamEventPublisher was not able to instantiate " + "{TypeName}. Please make sure this class is registered in your di", publisherType.FullName); };
+        }
+
+        Add(Factory);
     }
 }
