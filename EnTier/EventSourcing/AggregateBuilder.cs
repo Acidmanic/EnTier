@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
+using EnTier.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.EventSourcing;
 
@@ -16,10 +18,14 @@ public class AggregateBuilder : IAggregateBuilder
     private readonly Func<Type, object> _resolver;
 
     private readonly List<Assembly> _assemblies = new List<Assembly>();
+    
+    private ILogger Logger { get;  }
 
-    public AggregateBuilder(Func<Type, object> resolver, params Assembly[] assemblies)
+    public AggregateBuilder(Func<Type, object> resolver, ILogger logger, params Assembly[] assemblies)
     {
         _resolver = resolver;
+
+        Logger = logger;
 
         _assemblies.AddRange(assemblies);
    
@@ -78,14 +84,22 @@ public class AggregateBuilder : IAggregateBuilder
                 return aggregateResolved;
             }
 
-            instance = new ObjectInstantiator().BlindInstantiate(type);
-
-            if (instance is IAggregate<TAggregateRoot, TEvent, TStreamId> aggregateInstantiated)
+            if (type.IsNewable())
             {
-                return aggregateInstantiated;
+                instance = new ObjectInstantiator().BlindInstantiate(type);
+
+                if (instance is IAggregate<TAggregateRoot, TEvent, TStreamId> aggregateInstantiated)
+                {
+                    return aggregateInstantiated;
+                }    
+            }
+            else
+            {
+                Logger.LogError("Un-Registered Dependant Aggregate\nIf Your aggregate implementation has constructor injected dependencies, " +
+                                "you need to register the implementation in your Di, which is introduced to " +
+                                "AggregateBuilder class using 'Func<Type,object> resolver' constructor argument.");
             }
         }
-
         return new NullAggregate<TAggregateRoot, TEvent, TStreamId>();
     }
 }
