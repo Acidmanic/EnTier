@@ -1,5 +1,6 @@
 using System;
 using EnTier.DependencyInjection;
+using EnTier.EventSourcing;
 using EnTier.Exceptions;
 using EnTier.Fixture;
 using EnTier.Utility.MultiplexingStreamEventPublisher;
@@ -59,7 +60,7 @@ namespace EnTier.Extensions
             Action<IMultiplexingStreamEventPublisherConfigurations> configurationExpression)
         {
 
-            var publisher = serviceProvider.GetService<IMultiplexingStreamEventPublisherConfigurations>();
+            var publisher = serviceProvider.GetService<IStreamEventPublisherAdapter>();
 
             if (publisher is MultiplexingStreamEventPublisher multiplexingStreamEventPublisher)
             {

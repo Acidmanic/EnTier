@@ -20,7 +20,7 @@
         <!-- NuGet -->
         <Id>EnTier</Id>
         <PackageId>EnTier</PackageId>
-        <Version>2.7.0-b20</Version>
+        <Version>2.7.0-b21</Version>
         <Authors>Mani Moayedi</Authors>
         <Company>Acidmanic</Company>
         <PackageIcon>graphics/EnTier.png</PackageIcon>
