@@ -6,9 +6,13 @@ using EnTier;
 using EnTier.DataAccess.InMemory;
 using EnTier.DataAccess.JsonFile;
 using EnTier.DependencyInjection.CastleWindsor;
+using EnTier.EventSourcing;
 using EnTier.Fixture;
 using EnTier.UnitOfWork;
+using EnTier.Utility.MultiplexingStreamEventPublisher;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.LightWeight;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 // ReSharper disable once CheckNamespace
 namespace Castle.Windsor
@@ -92,6 +96,38 @@ namespace Castle.Windsor
             catch (Exception e)
             {
                 essence.Logger.LogError(e,"Error occured during execution of fixture: {FixtureTypeFullName}",typeof(TFixture).FullName);
+            }
+
+            return container;
+        }
+        
+        
+        public static IWindsorContainer AddMultiplexingStreamEventPublisher(this IWindsorContainer container)
+        {
+            
+            container.Register(Component.For<IStreamEventPublisherAdapter>()
+                .Instance(new MultiplexingStreamEventPublisher()).LifestyleSingleton());
+
+            return container;
+        }
+        
+        public static IWindsorContainer ConfigureMultiplexingStreamEventPublishers(this IWindsorContainer container,
+            Action<IMultiplexingStreamEventPublisherConfigurations> configurationExpression)
+        {
+
+            var publisher = container.GetService<IMultiplexingStreamEventPublisherConfigurations>();
+
+            if (publisher is MultiplexingStreamEventPublisher multiplexingStreamEventPublisher)
+            {
+                configurationExpression(
+                    new MultiplexingStreamEventPublisherConfigurations(multiplexingStreamEventPublisher));
+            }
+            else
+            {
+                var logger = container.GetService<ILogger>() ?? new ConsoleLogger();
+                
+                logger.LogError("In order to configure and use MultiplexingStreamEventPublisher in your project," +
+                                "you have to first register it in your di-container.");
             }
 
             return container;
