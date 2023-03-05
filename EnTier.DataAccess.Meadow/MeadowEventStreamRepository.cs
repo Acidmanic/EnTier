@@ -15,7 +15,7 @@ namespace EnTier.DataAccess.Meadow
         
         private readonly IMeadowConfigurationProvider _configurationProvider;
 
-        public MeadowEventStreamRepository(IMeadowConfigurationProvider configurationProvider)
+        public MeadowEventStreamRepository(IMeadowConfigurationProvider configurationProvider,EnTierEssence essence):base(essence)
         {
             _configurationProvider = configurationProvider;
         }
