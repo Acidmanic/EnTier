@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Acidmanic.Utilities;
 using Acidmanic.Utilities.Results;
+using EnTier.Repositories.Attributes;
 using EnTier.Repositories.Models;
 using Newtonsoft.Json;
 
@@ -14,6 +17,10 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
 {
     private readonly Action<TEvent, TEventId, TStreamId> _eventPublisher;
 
+    private readonly Func<string, string> _stringPacker;
+    private readonly Func<string, string> _stringUnPacker;
+
+
     protected EventStreamRepositoryBase() : this((e, i, s) => { })
     {
     }
@@ -21,24 +28,23 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
     protected EventStreamRepositoryBase(Action<TEvent, TEventId, TStreamId> eventPublisher)
     {
         _eventPublisher = eventPublisher;
+
+        _stringPacker = GetPackingFunction(true);
+        _stringUnPacker = GetPackingFunction(false);
     }
-    
+
     protected EventStreamRepositoryBase(EnTierEssence essence)
     {
-        _eventPublisher = (e,i,s) =>  essence.StreamEventPublisherAdapter.Publish(e,i,s);
+        _eventPublisher = (e, i, s) => essence.StreamEventPublisherAdapter.Publish(e, i, s);
+        _stringPacker = GetPackingFunction(true);
+        _stringUnPacker = GetPackingFunction(false);
     }
 
     private string SerialiseValue(TEvent value)
     {
         string json = JsonConvert.SerializeObject(value);
 
-        byte[] jsonData = Encoding.Unicode.GetBytes(json);
-
-        string serialized = Convert.ToBase64String(jsonData)
-            .Replace(" ", "")
-            .Replace("\t", "")
-            .Replace("\r", "")
-            .Replace("\n", "");
+        var serialized = _stringPacker(json);
 
         return serialized;
     }
@@ -47,14 +53,12 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
     {
         try
         {
-            var jsonData = Convert.FromBase64String(serialised);
-
-            var json = Encoding.Unicode.GetString(jsonData);
-
             var type = Type.GetType(typeName);
 
             if (type != null)
             {
+                var json = _stringUnPacker(serialised);
+                
                 var objectValue = JsonConvert.DeserializeObject(json, type);
 
                 if (objectValue is TEvent tValue)
@@ -68,6 +72,48 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
         }
 
         return default;
+    }
+
+
+    private Func<string, string> Base64Conversion(bool toBase64)
+    {
+        if (toBase64)
+        {
+            return value =>
+            {
+                byte[] data = Encoding.Unicode.GetBytes(value);
+
+                return Convert.ToBase64String(data)
+                    .Replace(" ", "")
+                    .Replace("\t", "")
+                    .Replace("\r", "")
+                    .Replace("\n", "");
+            };
+        }
+
+        return value =>
+        {
+            var data = Convert.FromBase64String(value);
+
+            return Encoding.Unicode.GetString(data);
+        };
+    }
+
+
+    private Func<string, string> GetPackingFunction(bool packer)
+    {
+        var eventType = typeof(TEvent);
+
+        var eventStreamAttribute = eventType.GetCustomAttribute<EventStreamRecordCompressionAttribute>();
+
+        if (eventStreamAttribute != null)
+        {
+            return packer
+                ? s => s.CompressAsync(eventStreamAttribute.Compression, eventStreamAttribute.CompressionLevel).Result
+                : s => s.DecompressAsync(eventStreamAttribute.Compression).Result;
+        }
+
+        return Base64Conversion(packer);
     }
 
     protected abstract TEventId AppendEntry(ObjectEntry<TEventId, TStreamId> entry);
