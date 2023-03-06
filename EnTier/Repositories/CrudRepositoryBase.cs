@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
+using EnTier.Extensions;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
 using Microsoft.Extensions.Logging;
@@ -106,7 +107,9 @@ namespace EnTier.Repositories
             {
                 var propertyType = property.PropertyType;
 
-                if (TypeCheck.IsEffectivelyPrimitive(propertyType) || authorizer.IsAllowed(propertyType))
+                if (property.IsTreatAsLeaf() ||
+                    TypeCheck.IsEffectivelyPrimitive(propertyType) ||
+                    authorizer.IsAllowed(propertyType))
                 {
                     var value = property.GetValue(entity);
 

@@ -36,7 +36,7 @@ namespace EnTier.Repositories.Attributes
                     _keeping.AddRange(keeper.TypesList);
                 }
 
-                if (attribute is StripPropertyAttribute stripper) // No, Not like that!
+                if (attribute is StripPropertyAttribute stripper) // No, Not Exactly That kind!
                 {
                     _stripping.AddRange(stripper.TypesList);
                 }
