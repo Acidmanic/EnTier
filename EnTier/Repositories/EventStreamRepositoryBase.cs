@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -58,7 +59,7 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
             if (type != null)
             {
                 var json = _stringUnPacker(serialised);
-                
+
                 var objectValue = JsonConvert.DeserializeObject(json, type);
 
                 if (objectValue is TEvent tValue)
@@ -104,13 +105,23 @@ public abstract class EventStreamRepositoryBase<TEvent, TEventId, TStreamId> :
     {
         var eventType = typeof(TEvent);
 
+        // defaults
+        var compression = Compressions.GZip;
+        var level = CompressionLevel.Fastest;
+        // allowing user to change default behavior
         var eventStreamAttribute = eventType.GetCustomAttribute<EventStreamRecordCompressionAttribute>();
 
         if (eventStreamAttribute != null)
         {
+            compression = eventStreamAttribute.Compression;
+            level = eventStreamAttribute.CompressionLevel;
+        }
+
+        if (compression is Compressions.Brotli or Compressions.GZip)
+        {
             return packer
-                ? s => s.CompressAsync(eventStreamAttribute.Compression, eventStreamAttribute.CompressionLevel).Result
-                : s => s.DecompressAsync(eventStreamAttribute.Compression).Result;
+                ? s => s.CompressAsync(compression, level).Result
+                : s => s.DecompressAsync(compression).Result;
         }
 
         return Base64Conversion(packer);
