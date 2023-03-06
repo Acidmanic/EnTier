@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Meadow.Framework" Version="1.2.4-b06" />
-    <PackageReference Include="Meadow.SqlServer" Version="1.3.0-b02" />
+    <PackageReference Include="Meadow.Framework" Version="1.2.4-b07" />
+    <PackageReference Include="Meadow.SqlServer" Version="1.3.0-b03" />
   </ItemGroup>
 
   <ItemGroup>
