@@ -28,7 +28,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/Acidmanic/EnTier/tree/master/EnTier.DataAccess.EntityFramework</PackageProjectUrl>
     <Title>AutoMapper For EnTier</Title>
-
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,6 +43,11 @@
       <PackagePath>LICENSE.txt</PackagePath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="../Readme.md">
+      <Pack>true</Pack>
+      <PackagePath>/</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   
 </Project>

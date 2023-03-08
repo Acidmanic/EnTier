@@ -31,7 +31,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/Acidmanic/EnTier</PackageProjectUrl>
         <Title>EnTier EZ N-Tier!</Title>
-
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -46,6 +46,12 @@
             <PackagePath>LICENSE.txt</PackagePath>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <Content Include="../Readme.md">
+            <Pack>true</Pack>
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        
     </ItemGroup>
 
 </Project>

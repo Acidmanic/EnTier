@@ -30,7 +30,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/Acidmanic/EnTier/tree/master/EnTier.DataAccess.Meadow</PackageProjectUrl>
         <Title>Meadow Adapter For EnTier</Title>
-
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
 
@@ -46,6 +46,11 @@
             <PackagePath>LICENSE.txt</PackagePath>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <Content Include="../Readme.md">
+            <Pack>true</Pack>
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     
 </Project>
