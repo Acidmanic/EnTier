@@ -1,9 +1,11 @@
+using EnTier.EventStore.WebView;
 using Meadow;
 using Meadow.Contracts;
 using Meadow.Extensions;
 using Meadow.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,8 +26,9 @@ namespace Example.EventSourcing.Meadow
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
+            services.AddControllers().PartManager.ApplicationParts
+                .Add(new AssemblyPart(typeof(EventStoreController).Assembly));
+            
             services.AddEnTier();
             
             services.AddEnTier();
@@ -60,14 +63,17 @@ namespace Example.EventSourcing.Meadow
 
             engine.UseSqlServer();
 
-            if (engine.DatabaseExists())
-            {
-                engine.DropDatabase();
-            }
+            // if (engine.DatabaseExists())
+            // {
+            //     engine.DropDatabase();
+            // }
 
-            engine.CreateDatabase();
+            engine.CreateIfNotExist();
 
             engine.BuildUpDatabase();
+
+
+            GetType().Assembly.Scan();
         }
     }
 }

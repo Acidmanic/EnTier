@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EnTier.DataAccess.Meadow\EnTier.DataAccess.Meadow.csproj" />
+    <ProjectReference Include="..\EnTier.EventStore.WebView\EnTier.EventStore.WebView.csproj" />
     <ProjectReference Include="..\EnTier\EnTier.csproj" />
   </ItemGroup>
 
