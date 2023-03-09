@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.EntityFramework", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.EventSourcing.Meadow", "Example.EventSourcing.Meadow\Example.EventSourcing.Meadow.csproj", "{69432B12-4CB0-4552-B993-8A7D0BFF3E1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier.EventStore.WebView", "EnTier.EventStore.WebView\EnTier.EventStore.WebView.csproj", "{471250C9-E7F9-4460-A228-19521E500346}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -333,5 +335,17 @@ Global
 		{69432B12-4CB0-4552-B993-8A7D0BFF3E1C}.Release|x64.Build.0 = Release|Any CPU
 		{69432B12-4CB0-4552-B993-8A7D0BFF3E1C}.Release|x86.ActiveCfg = Release|Any CPU
 		{69432B12-4CB0-4552-B993-8A7D0BFF3E1C}.Release|x86.Build.0 = Release|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Debug|x64.Build.0 = Debug|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Debug|x86.Build.0 = Debug|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Release|x64.ActiveCfg = Release|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Release|x64.Build.0 = Release|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Release|x86.ActiveCfg = Release|Any CPU
+		{471250C9-E7F9-4460-A228-19521E500346}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

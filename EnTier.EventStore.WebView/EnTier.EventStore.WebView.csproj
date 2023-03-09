@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  
+  <ItemGroup>
+    <PackageReference Include="Acidmanic.Utilities" Version="1.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+
+    <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b06" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <ProjectReference Include="..\EnTier\EnTier.csproj" />
+  </ItemGroup>
+  
+</Project>
