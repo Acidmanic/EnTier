@@ -3,6 +3,8 @@ using EnTier.Repositories;
 
 namespace EnTier.UnitOfWork
 {
+
+   
     public interface IUnitOfWork: IDisposable
     {
         ICrudRepository<TStorage, TId> GetCrudRepository<TStorage, TId>()
