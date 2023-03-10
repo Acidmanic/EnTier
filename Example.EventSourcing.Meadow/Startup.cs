@@ -31,7 +31,6 @@ namespace Example.EventSourcing.Meadow
             
             services.AddEnTier();
             
-            services.AddEnTier();
             services.AddMeadowUnitOfWork<MeadowConfigurationProvider>();
 
             services.AddTransient<ILogger>(sp => new ConsoleLogger().Shorten().EnableAll());

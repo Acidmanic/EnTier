@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using EnTier.EventStore.WebView.ContentProviders;
 using EnTier.Reflection;
 using EnTier.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
@@ -45,8 +46,24 @@ namespace EnTier.EventStore.WebView
                 await response.Body.WriteAsync(jsonData);
 
             }
-        } 
-        
+        }
+
+
+        [Route("/{*:path}")]
+        public IActionResult Index(string path)
+        {
+
+            var contentRoot = Path.Join(this.GetAssemblyDirectory(), "wwwroot");
+            
+            var contentProvider = new StaticFileContentProvider(contentRoot,"")
+                .AddDefaultDocument("index.html");
+
+            contentProvider.AppendChainAfter(new InMemoryIndexPageContentProvider());
+
+
+            return new ContentProviderActionResult(contentProvider);
+            
+        }
        
         [HttpGet]
         [Route("stream/{streamName}")]
@@ -116,23 +133,5 @@ namespace EnTier.EventStore.WebView
                 });
             return Ok(streams);
         }
-
-
-        // [HttpGet]
-        // public IActionResult GetAll(string streamName)
-        // {
-        //     var profile = TypeRepository.Instance.ProfileByStreamName(streamName);
-        //
-        //     if (!profile)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     var repository = EventStreamRepository.Create(_unitOfWork, profile);
-        //
-        //     var allEvents = repository.ReadStream();
-        //
-        //     return Ok(allEvents);
-        // }
     }
 }

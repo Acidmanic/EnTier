@@ -7,8 +7,9 @@
   
   <ItemGroup>
     <PackageReference Include="Acidmanic.Utilities" Version="1.0.6" />
+    
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
-
+    
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 
     <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b06" />
@@ -19,4 +20,13 @@
     <ProjectReference Include="..\EnTier\EnTier.csproj" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Content Include="web-view/dist/web-view/**/*">
+      
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+      <Link>wwwroot\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
 </Project>
