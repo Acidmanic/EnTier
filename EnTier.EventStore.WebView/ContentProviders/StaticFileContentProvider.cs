@@ -74,7 +74,7 @@ namespace EnTier.EventStore.WebView.ContentProviders
 
                 await context.Response.Body.WriteAsync(content);
                 
-                await context.Response.Body.FlushAsync();
+                //await context.Response.Body.FlushAsync();
 
                 return;
             }
