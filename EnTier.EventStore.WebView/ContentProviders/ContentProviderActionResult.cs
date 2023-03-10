@@ -12,9 +12,9 @@ namespace EnTier.EventStore.WebView.ContentProviders
             _contentProvider = contentProvider;
         }
 
-        public Task ExecuteResultAsync(ActionContext context)
+        public async Task ExecuteResultAsync(ActionContext context)
         {
-            return Task.Run(() => { _contentProvider.Provide(context.HttpContext); });
+            await  _contentProvider.Provide(context.HttpContext);
         }
     }
 }
