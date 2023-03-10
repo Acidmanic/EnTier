@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {AggregateModel} from "../../../models/aggregate.model";
+import {EventStoreService} from "../../../services/event-store-service";
 
 @Component({
   selector: 'aggregates',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AggregatesComponent implements OnInit {
 
-  constructor() { }
+
+  aggregates:AggregateModel[]=[];
+
+
+  constructor(private svcEventStore:EventStoreService) { }
 
   ngOnInit(): void {
+
+    this.svcEventStore.getAllAggregates().subscribe({
+      next: aggs=>this.aggregates=aggs
+    });
   }
 
 }
