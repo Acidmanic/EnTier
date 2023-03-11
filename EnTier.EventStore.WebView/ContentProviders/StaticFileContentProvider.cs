@@ -2,12 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.Reflection.Extensions;
+using Acidmanic.Utilities.SourceResource;
 using Microsoft.AspNetCore.Http;
 
 namespace EnTier.EventStore.WebView.ContentProviders
 {
     internal class StaticFileContentProvider : IContentProvider
     {
+        private static object _locker = new object();
+        private static bool _filesExtracted = false;
+        
+        
         private readonly string _contentRootDirectory;
         private readonly string _uriPrefix;
         private IContentProvider _next = null;
@@ -18,8 +24,22 @@ namespace EnTier.EventStore.WebView.ContentProviders
         {
             _contentRootDirectory = contentRootDirectory;
             _uriPrefix = uriPrefix;
+            CheckExtraction();
         }
 
+
+        private void CheckExtraction()
+        {
+            lock (_locker)
+            {
+                if (!_filesExtracted)
+                {
+                    _filesExtracted = true;
+                    
+                    new SourceDataBuilder().ExtractIntoDirectory(_contentRootDirectory,GetType().Assembly);
+                }
+            }
+        }
 
         public IContentProvider AppendChainAfter(IContentProvider next)
         {

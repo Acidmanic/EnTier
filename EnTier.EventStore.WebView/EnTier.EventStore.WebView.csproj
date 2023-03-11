@@ -13,6 +13,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 
     <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b06" />
+
+    <PackageReference Include="SourceResource" Version="1.0.1-b02" />
   </ItemGroup>
 
   
@@ -20,13 +22,44 @@
     <ProjectReference Include="..\EnTier\EnTier.csproj" />
   </ItemGroup>
   
+  <PropertyGroup>
+    <!-- NuGet -->
+    <Id>EnTier.EventStore.WebView</Id>
+    <PackageId>EnTier.EventStore.WebView</PackageId>
+    <Version>1.0.0-b12</Version>
+    <Authors>Mani Moayedi</Authors>
+    <Company>Acidmanic</Company>
+    <PackageIcon>graphics/EnTier.png</PackageIcon>
+    <Description>Web based event-browser for EnTier event-srouced applications</Description>
+    <Summary>Web based event-browser for EnTier event-srouced applications</Summary>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/Acidmanic/EnTier</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/Acidmanic/EnTier</PackageProjectUrl>
+    <Title>Entier's EventStore WebView</Title>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Content Include="web-view/dist/web-view/**/*">
-      
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-      <Link>wwwroot\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+    <!-- NuGet -->
+    <None Include="../graphics/EnTier.png">
       <Pack>true</Pack>
+      <PackagePath>graphics/EnTier.png</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="../LICENSE.txt">
+      <Pack>true</Pack>
+      <PackagePath>LICENSE.txt</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="../Readme.md">
+      <Pack>true</Pack>
+      <PackagePath>/</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  
+  
+  
+  
 </Project>
