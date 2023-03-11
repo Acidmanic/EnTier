@@ -6,7 +6,7 @@ namespace EnTier.EventStore.WebView
     {
 
 
-        public static Assembly Scan(this Assembly assembly)
+        public static Assembly ScanForAggregates(this Assembly assembly)
         {
             TypeRepository.Instance.Scan(assembly);
 

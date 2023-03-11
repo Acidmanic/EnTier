@@ -72,7 +72,7 @@ namespace Example.EventSourcing.Meadow
             engine.BuildUpDatabase();
 
 
-            GetType().Assembly.Scan();
+            GetType().Assembly.ScanForAggregates();
         }
     }
 }
