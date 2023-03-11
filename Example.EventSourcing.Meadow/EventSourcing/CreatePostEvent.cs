@@ -6,7 +6,7 @@ public class CreatePostEvent:IPostEvent
     
     public long Timestamp { get; set; } 
 
-    public string Name { get; set; } = "ChangePostTitle";
+    public string Name { get; set; } = "Create Post";
     
     public string Title { get; set; }
     

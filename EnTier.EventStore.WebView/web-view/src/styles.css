@@ -1,1 +1,77 @@
 /* You can add global styles to this file, and also import other style files */
+
+a , a:hover, a:active , a:visited{
+  color: #e3e8e9;
+  text-decoration: none;
+}
+
+
+img.nav-logo{
+  border: 1px solid #83a581;
+  border-radius: 256px;
+  position: relative;
+  height: 60px;
+  width: 60px;
+  padding: 3px;
+}
+
+
+h1.nav-title{
+  display: inline;
+  padding: 10px 5px 0;
+}
+
+
+img.footer-icon{
+  border-radius: 64px;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+}
+
+
+*.card-aggregate{
+  background-color: #5bc3980d;
+  color: #e3ebe3;
+  border: 1px solid #0a0c0ba6;
+}
+
+
+hr.breadcrumb-border{
+  opacity: 0.1;
+}
+
+*.table-events tr{
+  cursor: pointer;
+}
+
+
+*.card-json{
+  background-color: #dbdfdd14;
+  border: 1px solid #727272a6;
+}
+
+*.card-json, *.card-json > .ngx-json-viewer {
+  font-family: consolas,sans-serif,monospace!important;
+  font-size: 14px;
+}
+
+
+
+.segment-key {
+  color: #f9f9f9 !important;
+}
+.segment-type-boolean > .segment-main > .segment-value {
+  color: lightskyblue !important;
+}
+.segment-type-string > .segment-main > .segment-value {
+  color: #a0ffbd94 !important;
+}
+.segment-type-number > .segment-main > .segment-value {
+  color: #eddc86 !important;
+}
+
+
+.footer-eswebview{
+
+}

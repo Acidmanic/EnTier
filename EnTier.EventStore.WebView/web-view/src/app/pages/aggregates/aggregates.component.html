@@ -1,12 +1,17 @@
 
-<h1>Aggregates</h1>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active"><a href="#">Aggregates</a></li>
+  </ol>
+</nav>
 
+<hr class="breadcrumb-border">
 
 <div class="container">
 
   <div class="row">
     <a *ngFor="let ag of aggregates" [routerLink]="['events',ag.streamName]">
-      <aggregate-view class="col-3 card card-body"
+      <aggregate-view class="col-6 card card-body card-aggregate"
                       [aggregate]="ag">
       </aggregate-view>
     </a>
