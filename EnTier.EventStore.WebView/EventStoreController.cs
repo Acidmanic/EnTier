@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.Reflection.Extensions;
 using EnTier.EventStore.WebView.ContentProviders;
 using EnTier.Reflection;
 using EnTier.UnitOfWork;
@@ -31,7 +32,19 @@ namespace EnTier.EventStore.WebView
 
             public OkEventsResult(IEnumerable<EventWrap> events)
             {
-                _events = events;
+                var evs = new List<EventWrap>(events as EventWrap[] ?? events.ToArray());
+
+                evs.Sort(delegate(EventWrap a, EventWrap b)
+                    {
+                        if (a.EventId is string sa && b.EventId is string sb)
+                        {
+                            return string.CompareOrdinal(sb, sa);
+                        }
+
+                        return (int)(b.EventId.AsNumber() - a.EventId.AsNumber());
+                    }
+                );
+                _events = evs;
             }
 
             public async Task ExecuteResultAsync(ActionContext context)
@@ -39,8 +52,8 @@ namespace EnTier.EventStore.WebView
                 var wrapperObject = new { Events = _events };
 
                 var response = context.HttpContext.Response;
-                
-                
+
+
                 DefaultContractResolver contractResolver = new DefaultContractResolver
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
@@ -55,7 +68,6 @@ namespace EnTier.EventStore.WebView
                 var jsonData = Encoding.Default.GetBytes(json);
 
                 await response.Body.WriteAsync(jsonData);
-
             }
         }
 
@@ -63,19 +75,17 @@ namespace EnTier.EventStore.WebView
         [Route("/{*:path}")]
         public IActionResult Index(string path)
         {
-
             var contentRoot = Path.Join(this.GetAssemblyDirectory(), "wwwroot");
-            
-            var contentProvider = new StaticFileContentProvider(contentRoot,"")
+
+            var contentProvider = new StaticFileContentProvider(contentRoot, "")
                 .AddDefaultDocument("index.html");
 
             contentProvider.AppendChainAfter(new InMemoryIndexPageContentProvider());
 
 
             return new ContentProviderActionResult(contentProvider);
-            
         }
-       
+
         [HttpGet]
         [Route("stream/{streamName}")]
         public IActionResult GetAllStreams(
@@ -140,12 +150,12 @@ namespace EnTier.EventStore.WebView
                     EventType = p.EventType.FullName,
                     StreamIdType = p.StreamIdType.FullName,
                     EventIdType = p.EventIdType.FullName,
-                    TotalEvents = EventStreamRepository.Create(_unitOfWork,p).Count()
+                    TotalEvents = EventStreamRepository.Create(_unitOfWork, p).Count()
                 });
             return Ok(streams);
         }
-        
-        
+
+
         [HttpDelete]
         [Route("cache")]
         public IActionResult DeleteCache()
@@ -155,13 +165,13 @@ namespace EnTier.EventStore.WebView
             foreach (var profile in profiles)
             {
                 var cache = new EventCacheHeader(profile.EventType, profile.EventIdType, profile.StreamIdType);
-                
+
                 cache.Delete();
             }
-            
+
             return Ok();
         }
-        
+
         [HttpGet]
         [Route("stream-by-name/{name}")]
         public IActionResult GetStreamById(string name)
@@ -169,22 +179,23 @@ namespace EnTier.EventStore.WebView
             var profiles = TypeRepository.Instance.Profiles;
 
             var aggreagate = profiles
-                .Where(p => p.EventType.Name.ToLower()==name.ToLower())
+                .Where(p => p.EventType.Name.ToLower() == name.ToLower())
                 .Select(
-                p => new
-                {
-                    StreamName = p.EventType.Name,
-                    AggregateType = p.AggregateType.FullName,
-                    AggregateRootType = p.AggregateRootType.FullName,
-                    EventType = p.EventType.FullName,
-                    StreamIdType = p.StreamIdType.FullName,
-                    EventIdType = p.EventIdType.FullName,
-                    TotalEvents = EventStreamRepository.Create(_unitOfWork,p).Count()
-                }).FirstOrDefault();
+                    p => new
+                    {
+                        StreamName = p.EventType.Name,
+                        AggregateType = p.AggregateType.FullName,
+                        AggregateRootType = p.AggregateRootType.FullName,
+                        EventType = p.EventType.FullName,
+                        StreamIdType = p.StreamIdType.FullName,
+                        EventIdType = p.EventIdType.FullName,
+                        TotalEvents = EventStreamRepository.Create(_unitOfWork, p).Count()
+                    }).FirstOrDefault();
             if (aggreagate == null)
             {
                 return NotFound();
             }
+
             return Ok(aggreagate);
         }
     }
