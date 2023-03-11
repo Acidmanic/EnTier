@@ -1,9 +1,11 @@
-namespace EnTier.EventSourcing;
-
-internal class NullPublisherAdapter:IStreamEventPublisherAdapter
+namespace EnTier.EventSourcing
 {
-    public void Publish(object @event, object streamId, object eventId)
+
+    internal class NullPublisherAdapter : IStreamEventPublisherAdapter
     {
-        // Meeh!
+        public void Publish(object @event, object streamId, object eventId)
+        {
+            // Meeh!
+        }
     }
 }

@@ -1,20 +1,22 @@
 using System;
 
-namespace EnTier.Extensions;
-
-public static class ExceptionExtensions
+namespace EnTier.Extensions
 {
 
-
-    public static Exception InnerMostException(this Exception exception)
+    public static class ExceptionExtensions
     {
-        var current = exception;
-        
-        while (current.InnerException!=null)
-        {
-            current = current.InnerException;
-        }
 
-        return current;
+
+        public static Exception InnerMostException(this Exception exception)
+        {
+            var current = exception;
+
+            while (current.InnerException != null)
+            {
+                current = current.InnerException;
+            }
+
+            return current;
+        }
     }
 }

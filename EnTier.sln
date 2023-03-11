@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Readme.nuget.md = Readme.nuget.md
 		.publishes = .publishes
 		.gitignore = .gitignore
+		global.json = global.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entier.Test.Unit", "Entier.Test.Unit\Entier.Test.Unit.csproj", "{C28F5C58-D87E-43B9-9B89-B293B55E673A}"
@@ -57,6 +58,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.EventSourcing.Meadow", "Example.EventSourcing.Meadow\Example.EventSourcing.Meadow.csproj", "{69432B12-4CB0-4552-B993-8A7D0BFF3E1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTier.EventStore.WebView", "EnTier.EventStore.WebView\EnTier.EventStore.WebView.csproj", "{471250C9-E7F9-4460-A228-19521E500346}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.WebView.DoubleAggregate", "Example.WebView.DoubleAggregate\Example.WebView.DoubleAggregate.csproj", "{648857DF-B373-48B1-B98A-4096EA99CE5D}"
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
@@ -347,5 +350,17 @@ Global
 		{471250C9-E7F9-4460-A228-19521E500346}.Release|x64.Build.0 = Release|Any CPU
 		{471250C9-E7F9-4460-A228-19521E500346}.Release|x86.ActiveCfg = Release|Any CPU
 		{471250C9-E7F9-4460-A228-19521E500346}.Release|x86.Build.0 = Release|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Debug|x64.Build.0 = Debug|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Debug|x86.Build.0 = Debug|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Release|x64.ActiveCfg = Release|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Release|x64.Build.0 = Release|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Release|x86.ActiveCfg = Release|Any CPU
+		{648857DF-B373-48B1-B98A-4096EA99CE5D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -7,99 +7,100 @@ using Acidmanic.Utilities.Reflection.Extensions;
 using EnTier.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace EnTier.EventSourcing;
-
-/// <summary>
-/// Aggregates contain business logic, so they might need to consume business services so they should be able to use
-/// constructor injections. 
-/// </summary>
-public class AggregateBuilder : IAggregateBuilder
+namespace EnTier.EventSourcing
 {
-    private readonly Func<Type, object> _resolver;
-
-    private readonly List<Assembly> _assemblies = new List<Assembly>();
-    
-    private ILogger Logger { get;  }
-
-    public AggregateBuilder(Func<Type, object> resolver, ILogger logger, params Assembly[] assemblies)
+    /// <summary>
+    /// Aggregates contain business logic, so they might need to consume business services so they should be able to use
+    /// constructor injections. 
+    /// </summary>
+    public class AggregateBuilder : IAggregateBuilder
     {
-        _resolver = resolver;
+        private readonly Func<Type, object> _resolver;
 
-        Logger = logger;
+        private readonly List<Assembly> _assemblies = new List<Assembly>();
 
-        _assemblies.AddRange(assemblies);
-   
-    }
+        private ILogger Logger { get; }
 
-    private bool Implements<T>(Type type)
-    {
-        var interfaces = type.GetInterfaces();
-
-        var abstraction = typeof(T);
-
-        foreach (var @interface in interfaces)
+        public AggregateBuilder(Func<Type, object> resolver, ILogger logger, params Assembly[] assemblies)
         {
-            if (@interface == abstraction)
-            {
-                return true;
-            }
+            _resolver = resolver;
+
+            Logger = logger;
+
+            _assemblies.AddRange(assemblies);
         }
 
-        return false;
-    }
-
-
-    public Type FindAggregateType<TAggregateRoot, TEvent, TStreamId>()
-    {
-        return LoadTypes<TAggregateRoot, TEvent, TStreamId>().FirstOrDefault();
-    }
-    
-    private List<Type> LoadTypes<TAggregateRoot, TEvent, TStreamId>()
-    {
-        var types = new List<Type>();
-        
-        foreach (var assembly in _assemblies)
+        private bool Implements<T>(Type type)
         {
-            var adding = assembly.GetAvailableTypes()
-                .Where(Implements<IAggregate<TAggregateRoot, TEvent, TStreamId>>);
+            var interfaces = type.GetInterfaces();
 
-            types.AddRange(adding);
-        }
+            var abstraction = typeof(T);
 
-        return types;
-    }
-    
-    
-    public IAggregate<TAggregateRoot, TEvent, TStreamId> Build<TAggregateRoot, TEvent, TStreamId>()
-    {
-
-        var types = LoadTypes<TAggregateRoot, TEvent, TStreamId>();
-
-        foreach (var type in types)
-        {
-            var instance = _resolver.Invoke(type);
-            // If Registered
-            if (instance is IAggregate<TAggregateRoot, TEvent, TStreamId> aggregateResolved)
+            foreach (var @interface in interfaces)
             {
-                return aggregateResolved;
-            }
-
-            if (type.IsNewable())
-            {
-                instance = new ObjectInstantiator().BlindInstantiate(type);
-
-                if (instance is IAggregate<TAggregateRoot, TEvent, TStreamId> aggregateInstantiated)
+                if (@interface == abstraction)
                 {
-                    return aggregateInstantiated;
-                }    
+                    return true;
+                }
             }
-            else
-            {
-                Logger.LogError("Un-Registered Dependant Aggregate\nIf Your aggregate implementation has constructor injected dependencies, " +
-                                "you need to register the implementation in your Di, which is introduced to " +
-                                "AggregateBuilder class using 'Func<Type,object> resolver' constructor argument.");
-            }
+
+            return false;
         }
-        return new NullAggregate<TAggregateRoot, TEvent, TStreamId>();
+
+
+        public Type FindAggregateType<TAggregateRoot, TEvent, TStreamId>()
+        {
+            return LoadTypes<TAggregateRoot, TEvent, TStreamId>().FirstOrDefault();
+        }
+
+        private List<Type> LoadTypes<TAggregateRoot, TEvent, TStreamId>()
+        {
+            var types = new List<Type>();
+
+            foreach (var assembly in _assemblies)
+            {
+                var adding = assembly.GetAvailableTypes()
+                    .Where(Implements<IAggregate<TAggregateRoot, TEvent, TStreamId>>);
+
+                types.AddRange(adding);
+            }
+
+            return types;
+        }
+
+
+        public IAggregate<TAggregateRoot, TEvent, TStreamId> Build<TAggregateRoot, TEvent, TStreamId>()
+        {
+            var types = LoadTypes<TAggregateRoot, TEvent, TStreamId>();
+
+            foreach (var type in types)
+            {
+                var instance = _resolver.Invoke(type);
+                // If Registered
+                if (instance is IAggregate<TAggregateRoot, TEvent, TStreamId> aggregateResolved)
+                {
+                    return aggregateResolved;
+                }
+
+                if (type.IsNewable())
+                {
+                    instance = new ObjectInstantiator().BlindInstantiate(type);
+
+                    if (instance is IAggregate<TAggregateRoot, TEvent, TStreamId> aggregateInstantiated)
+                    {
+                        return aggregateInstantiated;
+                    }
+                }
+                else
+                {
+                    Logger.LogError(
+                        "Un-Registered Dependant Aggregate\nIf Your aggregate implementation has constructor injected dependencies, " +
+                        "you need to register the implementation in your Di, which is introduced to " +
+                        "AggregateBuilder class using 'Func<Type,object> resolver' constructor argument.");
+                }
+            }
+
+            return new NullAggregate<TAggregateRoot, TEvent, TStreamId>();
+        }
     }
 }

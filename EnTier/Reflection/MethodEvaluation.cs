@@ -1,26 +1,28 @@
 using System;
 using System.Reflection;
 
-namespace EnTier.Reflection;
-
-public class MethodEvaluation
+namespace EnTier.Reflection
 {
-    public bool IsSyncVoid { get; set; }
 
-    public bool IsAsyncVoid { get; set; }
+    public class MethodEvaluation
+    {
+        public bool IsSyncVoid { get; set; }
 
-    public bool IsAsyncFunction { get; set; }
+        public bool IsAsyncVoid { get; set; }
 
-    public bool IsAsync => IsAsyncFunction || IsAsyncVoid;
+        public bool IsAsyncFunction { get; set; }
 
-    public bool IsSyncFunction => !IsAsync && !IsSyncVoid;
+        public bool IsAsync => IsAsyncFunction || IsAsyncVoid;
 
-    public Type SyncReturnType { get; set; }
+        public bool IsSyncFunction => !IsAsync && !IsSyncVoid;
 
-    public Type AsyncReturnType { get; set; }
+        public Type SyncReturnType { get; set; }
 
-    public bool IsFunction => IsAsyncFunction || IsSyncFunction;
+        public Type AsyncReturnType { get; set; }
 
-    public Type OverAllReturnValue => IsAsync ? AsyncReturnType : SyncReturnType;
-    public PropertyInfo ResultProperty { get; set; }
+        public bool IsFunction => IsAsyncFunction || IsSyncFunction;
+
+        public Type OverAllReturnValue => IsAsync ? AsyncReturnType : SyncReturnType;
+        public PropertyInfo ResultProperty { get; set; }
+    }
 }

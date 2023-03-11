@@ -20,30 +20,29 @@ namespace EnTier.Controllers
         protected Type AggregateType { get; }
         protected AggregateIndex AggregateIndex { get; }
         protected IAggregateBuilder AggregateBuilder { get; }
-        
+
         protected ILogger Logger { get; }
 
         protected EventSourcedService
             <TAggregateRoot, TEvent, TStreamId, TEventId> Service { get; }
-        
-        
+
+
         public AggregateControllerBase(EnTierEssence essence)
         {
-
             Logger = essence.Logger;
-            
+
             AggregateBuilder = essence.AggregateBuilder;
-            
+
             AggregateType = AggregateBuilder.FindAggregateType<TAggregateRoot, TEvent, TStreamId>();
 
             if (AggregateType == null)
             {
                 Logger.LogError("No implemented Aggregate has been found for AggregateRoot: {AggregateRoot} and " +
                                 "Event: {Event}, StreamId type of {StreamId} and EventId type of {EventId}",
-                    typeof(TAggregateRoot).Name,typeof(TEvent).Name,
-                    typeof(TStreamId).Name,typeof(TEventId).Name);
+                    typeof(TAggregateRoot).Name, typeof(TEvent).Name,
+                    typeof(TStreamId).Name, typeof(TEventId).Name);
             }
-            
+
             AggregateIndex = new AggregateIndex(AggregateType)
             {
                 ModerateMethodNames = ModerateUriNames
@@ -89,12 +88,11 @@ namespace EnTier.Controllers
 
                 if (foundProfile)
                 {
-
                     if (context.Request.Method.ToLower() != foundProfile.Value.HttpMethod.Method.ToLower())
                     {
                         return StatusCode(405, "This http method is not allowed on this endpoint");
                     }
-                    
+
                     var foundAggregate = await ProvideAggregate(streamId, byStreamId);
 
                     if (foundAggregate)
@@ -111,7 +109,7 @@ namespace EnTier.Controllers
 
                             var model = AssembleModel(aggregate.CurrentState, result, foundProfile.Value);
 
-                            return model == null ? Ok() : Ok(model);
+                            return model == null ? (IActionResult)Ok() : Ok(model);
                         }
 
                         if (ReflectExceptions)
@@ -137,7 +135,8 @@ namespace EnTier.Controllers
             {
                 if (result.ReturnsValue)
                 {
-                    return new {
+                    return new
+                    {
                         Result = result.ReturnValue,
                         State = aggregateRoot
                     };

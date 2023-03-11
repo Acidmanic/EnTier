@@ -2,17 +2,19 @@ using System;
 using System.IO.Compression;
 using Acidmanic.Utilities;
 
-namespace EnTier.Repositories.Attributes;
-
-public class EventStreamRecordCompressionAttribute:Attribute
+namespace EnTier.Repositories.Attributes
 {
-    public EventStreamRecordCompressionAttribute(Compressions compression, CompressionLevel compressionLevel = CompressionLevel.Fastest)
+    public class EventStreamRecordCompressionAttribute : Attribute
     {
-        Compression = compression;
-        CompressionLevel = compressionLevel;
-    }
+        public EventStreamRecordCompressionAttribute(Compressions compression,
+            CompressionLevel compressionLevel = CompressionLevel.Fastest)
+        {
+            Compression = compression;
+            CompressionLevel = compressionLevel;
+        }
 
-    public Compressions Compression { get; }
-    
-    public CompressionLevel CompressionLevel { get; }
+        public Compressions Compression { get; }
+
+        public CompressionLevel CompressionLevel { get; }
+    }
 }

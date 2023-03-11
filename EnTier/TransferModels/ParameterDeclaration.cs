@@ -1,8 +1,9 @@
-namespace EnTier.TransferModels;
-
-public class ParameterDeclaration
+namespace EnTier.TransferModels
 {
-    public string Name { get; set; }
+    public class ParameterDeclaration
+    {
+        public string Name { get; set; }
 
-    public string Type { get; set; }
+        public string Type { get; set; }
+    }
 }

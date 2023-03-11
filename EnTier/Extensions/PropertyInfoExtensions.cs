@@ -1,14 +1,16 @@
 using System.Reflection;
 using Acidmanic.Utilities.Reflection.Attributes;
 
-namespace EnTier.Extensions;
-
-public static class PropertyInfoExtensions
+namespace EnTier.Extensions
 {
 
-
-    public static bool IsTreatAsLeaf(this PropertyInfo property)
+    public static class PropertyInfoExtensions
     {
-        return property.GetCustomAttribute<TreatAsLeafAttribute>() != null;
+
+
+        public static bool IsTreatAsLeaf(this PropertyInfo property)
+        {
+            return property.GetCustomAttribute<TreatAsLeafAttribute>() != null;
+        }
     }
 }
