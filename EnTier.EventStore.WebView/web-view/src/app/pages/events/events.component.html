@@ -62,9 +62,7 @@
     </div>
 
 
-    <div *ngIf="selectedEvent" class="col-4">
-
-      <br><br><br><br>
+    <div *ngIf="selectedEvent" class="col-4 d-flex align-items-center">
 
       <ngx-json-viewer class="card card-body card-json" [json]="selectedEvent.event"></ngx-json-viewer>
 
