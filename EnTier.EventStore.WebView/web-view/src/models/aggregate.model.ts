@@ -6,5 +6,5 @@ export class AggregateModel {
   eventType: string = '';
   streamIdType: string = '';
   eventIdType: string = '';
-  totalEvents: string = '';
+  totalEvents: number = 0;
 }

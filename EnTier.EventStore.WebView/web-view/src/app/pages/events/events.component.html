@@ -1,0 +1,49 @@
+<div class="container">
+
+  <div class="row">
+
+
+    <div class="{{tableColumns()}}">
+
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Event Id</th>
+          <th scope="col">Stream Id</th>
+          <th scope="col">Preview</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let event of events" (click)="selectedEvent=event">
+          <th scope="row">{{ event.eventId }}</th>
+          <td>
+            {{ event.streamId }}
+          </td>
+          <td>{{preview(event.event)}}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="d-flex justify-content-between p-2">
+        <ngb-pagination
+          [collectionSize]="aggregate.totalEvents"
+          [(page)]="page"
+          [pageSize]="pageSize"
+          (pageChange)="fetchItemsOfCurrentPage()"
+        >
+        </ngb-pagination>
+
+      </div>
+
+    </div>
+
+
+    <div *ngIf="selectedEvent" class="col-4">
+      <br><br><br><br>
+      {{selectedEventJson()}}
+
+    </div>
+
+  </div>
+</div>

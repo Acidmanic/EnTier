@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AggregateModel} from "../../../models/aggregate.model";
 import {EventStoreService} from "../../../services/event-store-service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'aggregates',
@@ -20,6 +21,10 @@ export class AggregatesComponent implements OnInit {
     this.svcEventStore.getAllAggregates().subscribe({
       next: aggs=>this.aggregates=aggs
     });
+  }
+
+  aggregateClicked(aggregate:AggregateModel){
+
   }
 
 }

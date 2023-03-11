@@ -9,6 +9,7 @@ using EnTier.Reflection;
 using EnTier.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace EnTier.EventStore.WebView
 {
@@ -39,7 +40,17 @@ namespace EnTier.EventStore.WebView
 
                 var response = context.HttpContext.Response;
                 
-                var json = JsonConvert.SerializeObject(wrapperObject);
+                
+                DefaultContractResolver contractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+
+                string json = JsonConvert.SerializeObject(wrapperObject, new JsonSerializerSettings
+                {
+                    ContractResolver = contractResolver,
+                    Formatting = Formatting.Indented
+                });
 
                 var jsonData = Encoding.Default.GetBytes(json);
 
@@ -132,6 +143,32 @@ namespace EnTier.EventStore.WebView
                     TotalEvents = EventStreamRepository.Create(_unitOfWork,p).Count()
                 });
             return Ok(streams);
+        }
+        
+        [HttpGet]
+        [Route("stream-by-name/{name}")]
+        public IActionResult GetStreamById(string name)
+        {
+            var profiles = TypeRepository.Instance.Profiles;
+
+            var aggreagate = profiles
+                .Where(p => p.EventType.Name.ToLower()==name.ToLower())
+                .Select(
+                p => new
+                {
+                    StreamName = p.EventType.Name,
+                    AggregateType = p.AggregateType.FullName,
+                    AggregateRootType = p.AggregateRootType.FullName,
+                    EventType = p.EventType.FullName,
+                    StreamIdType = p.StreamIdType.FullName,
+                    EventIdType = p.EventIdType.FullName,
+                    TotalEvents = EventStreamRepository.Create(_unitOfWork,p).Count()
+                }).FirstOrDefault();
+            if (aggreagate == null)
+            {
+                return NotFound();
+            }
+            return Ok(aggreagate);
         }
     }
 }

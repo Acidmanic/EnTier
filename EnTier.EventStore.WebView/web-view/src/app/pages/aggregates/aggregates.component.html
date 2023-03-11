@@ -5,7 +5,11 @@
 <div class="container">
 
   <div class="row">
-    <aggregate-view class="col-3 card card-body" *ngFor="let ag of aggregates" [aggregate]="ag"></aggregate-view>
+    <a *ngFor="let ag of aggregates" [routerLink]="['events',ag.streamName]">
+      <aggregate-view class="col-3 card card-body"
+                      [aggregate]="ag">
+      </aggregate-view>
+    </a>
   </div>
 
 
