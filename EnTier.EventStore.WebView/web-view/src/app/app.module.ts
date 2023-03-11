@@ -7,6 +7,7 @@ import { AggregateViewComponent } from './pages/aggregates/aggregate-view/aggreg
 import {HttpClientModule} from "@angular/common/http";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EventsComponent } from './pages/events/events.component';
+import {NgxJsonViewerModule} from "ngx-json-viewer-scrolling";
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { EventsComponent } from './pages/events/events.component';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    NgxJsonViewerModule,
     NgbModule
   ],
   providers: [],

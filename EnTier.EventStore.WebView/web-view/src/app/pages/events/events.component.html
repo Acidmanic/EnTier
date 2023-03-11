@@ -15,7 +15,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let event of events" (click)="selectedEvent=event">
+        <tr *ngFor="let event of events" (click)="selectedEvent=event"
+            class="{{(selectedEvent && event.eventId==selectedEvent.eventId)?'bg-info':''}}">
+
           <th scope="row">{{ event.eventId }}</th>
           <td>
             {{ event.streamId }}
@@ -40,10 +42,17 @@
 
 
     <div *ngIf="selectedEvent" class="col-4">
+
       <br><br><br><br>
-      {{selectedEventJson()}}
+
+      <ngx-json-viewer [json]="selectedEvent.event"></ngx-json-viewer>
 
     </div>
 
   </div>
+</div>
+
+
+<div style="top: 0;bottom: 0;width:90%;height: 90%;position: absolute;z-index: -1"
+  (click)="selectedEvent=null">
 </div>
