@@ -65,5 +65,13 @@ namespace EnTier.EventStore.WebView
                 }
             }
         }
+
+        public void Delete()
+        {
+            if (File.Exists(FilePath))
+            {
+                File.Delete(FilePath);
+            }
+        }
     }
 }

@@ -145,6 +145,23 @@ namespace EnTier.EventStore.WebView
             return Ok(streams);
         }
         
+        
+        [HttpDelete]
+        [Route("cache")]
+        public IActionResult DeleteCache()
+        {
+            var profiles = TypeRepository.Instance.Profiles;
+
+            foreach (var profile in profiles)
+            {
+                var cache = new EventCacheHeader(profile.EventType, profile.EventIdType, profile.StreamIdType);
+                
+                cache.Delete();
+            }
+            
+            return Ok();
+        }
+        
         [HttpGet]
         [Route("stream-by-name/{name}")]
         public IActionResult GetStreamById(string name)

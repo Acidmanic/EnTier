@@ -8,6 +8,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EventsComponent } from './pages/events/events.component';
 import {NgxJsonViewerModule} from "ngx-json-viewer-scrolling";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {NgxJsonViewerModule} from "ngx-json-viewer-scrolling";
     HttpClientModule,
     AppRoutingModule,
     NgxJsonViewerModule,
+    ReactiveFormsModule,
     NgbModule
   ],
   providers: [],
