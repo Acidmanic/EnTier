@@ -54,6 +54,8 @@ namespace Example.WebView.DoubleAggregate
             });
 
             GetType().Assembly.ScanForAggregates();
+
+            app.ConfigureEnTierResolver();
         }
     }
 }
