@@ -25,7 +25,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
 
   page: number = 1;
-  pageSize: number = 50;
+  pageSize: number = 25;
   totalEvents: number = 0;
 
   filterStreamId: string | null = null;

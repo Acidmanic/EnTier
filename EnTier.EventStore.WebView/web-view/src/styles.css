@@ -116,7 +116,7 @@ a.page-link, a.page-link.active {
 }
 
 *.active>.page-link, *.page-link.active {
-  background-color: rgba(37, 57, 72, 0.48);
+  background-color: #2e516a7a;
   border: 1px solid #485454e0;
 }
 
