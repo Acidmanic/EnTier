@@ -13,7 +13,7 @@ namespace EnTier.Utility
 
         public UniqueIdGenerator(string directoryPath)
         {
-            _filePath = Path.Join(directoryPath, "last.id");
+            _filePath = Path.Join(directoryPath, $"last.{typeof(TId).Name}.id");
         }
 
         public UniqueIdGenerator() : this(SpecialPaths.GetExecutionDirectory())

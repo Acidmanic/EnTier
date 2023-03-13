@@ -60,9 +60,11 @@ namespace Example.WebView.DoubleAggregate
 
             app.ConfigureEnTierResolver();
             
-            // new JsonFileUnitOfWork(app.GetService<EnTierEssence>()).ClearAllData();
-            //
-            // new HumanSeedGrowing(app.ApplicationServices).GrowHumans(5, 15).Wait();
+            new JsonFileUnitOfWork(app.GetService<EnTierEssence>()).ClearAllData();
+            
+            new HumanSeedGrowing(app.ApplicationServices).GrowHumans(5, 15).Wait();
+            
+            new CatSeedGrowing(app.ApplicationServices).GrowHumans(5, 15).Wait();
         }
     }
 }

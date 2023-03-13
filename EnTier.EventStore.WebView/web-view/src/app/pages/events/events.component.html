@@ -24,7 +24,7 @@
         <img (click)="filterValue=''"
              class="btn-table"
              [ngbTooltip]="'Clear Filter'"
-             src="assets/nofilter.svg"  alt="Clear Filters" >
+             src="assets/nofilter.svg" alt="Clear Filters">
       </div>
     </form>
   </div>
@@ -50,26 +50,26 @@
             <img (click)="toClipboard(event.eventId)"
                  class="btn-table"
                  [ngbTooltip]="'Copy To Clipboard'"
-                 src="assets/copy.svg"  alt="Copy To Clipboard" >
+                 src="assets/copy.svg" alt="Copy To Clipboard">
             {{ event.eventId }}
           </th>
-          <td >
+          <td>
             <img (click)="toClipboard(event.streamId)"
                  class="btn-table"
                  [ngbTooltip]="'Copy To Clipboard'"
-                 src="assets/copy.svg"  alt="Copy To Clipboard" >
+                 src="assets/copy.svg" alt="Copy To Clipboard">
             <img (click)="filterValue=event.streamId"
                  class="btn-table"
                  [ngbTooltip]="'Filter Events By This Id'"
-                 src="assets/filter.svg"  alt="Filter By Id" >
+                 src="assets/filter.svg" alt="Filter By Id">
             {{ event.streamId }}
-          </td>
-          <td>
-            {{event.eventConcreteTypeName}}
           </td>
           <td style="cursor: pointer;"
               [ngbTooltip]="'View Event'"
-              (click)="eventRowClicked(content,event)">{{preview(event.event)}}</td>
+              (click)="eventRowClicked(content,event)">
+            {{event.eventConcreteTypeName}}
+          </td>
+          <td>{{preview(event.event)}}</td>
         </tr>
         </tbody>
       </table>
@@ -88,7 +88,7 @@
     </div>
 
 
-    <ng-template  #content let-modal>
+    <ng-template #content let-modal>
       <div class="modal-header">
         <div class="modal-title w-100">
           <b class="d-flex justify-content-center">{{aggregate.streamName}}</b>

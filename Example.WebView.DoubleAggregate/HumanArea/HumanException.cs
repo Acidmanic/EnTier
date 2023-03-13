@@ -4,7 +4,7 @@ namespace Example.WebView.DoubleAggregate.HumanArea
 {
     public class HumanException : Exception
     {
-        public HumanException(HumanArea.Human human, string message = "") : base(ProcessMessage(human, message))
+        public HumanException(Human human, string message = "") : base(ProcessMessage(human, message))
         {
         }
 
@@ -12,7 +12,7 @@ namespace Example.WebView.DoubleAggregate.HumanArea
         {
         }
 
-        private static string ProcessMessage(HumanArea.Human human, string message)
+        private static string ProcessMessage(Human human, string message)
         {
             return $"Problem Occured Processing Tasks For Human: {human.Name} with Id:{human.Id}\n" +
                    message;
