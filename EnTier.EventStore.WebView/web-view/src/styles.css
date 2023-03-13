@@ -99,3 +99,16 @@ ngb-modal-window.d-block.dark-modal.modal.fade.show {
 
 /*  backdrop-filter: blur(10px);*/
 /*}*/
+
+btn-table:hover {
+  background: #607d8b7a;
+  border-radius: 5px;
+}
+
+.btn-table{
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  padding: 1px;
+  margin-right: 5px;
+}

@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Directive, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EventWrapModel} from "../../../models/event-wrap.model";
 import {AggregateModel} from "../../../models/aggregate.model";
 import {EventStoreService} from "../../../services/event-store-service";
@@ -6,6 +6,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Observable, Observer, Subscription} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 
 
 @Component({
@@ -27,6 +28,8 @@ export class EventsComponent implements OnInit, OnDestroy {
   filterStreamId: string | null = null;
 
   filter = new FormControl('', {nonNullable: true});
+
+  filterValue:string='';
 
   private subscription: Subscription = new Subscription();
 
@@ -70,6 +73,12 @@ export class EventsComponent implements OnInit, OnDestroy {
       },
       complete: () =>{}
     });
+
+  }
+
+  toClipboard(id:string){
+
+    navigator.clipboard.writeText(id).finally(() => console.log("copied to clipboard"));
 
   }
 

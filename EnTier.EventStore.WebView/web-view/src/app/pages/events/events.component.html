@@ -13,11 +13,18 @@
 
   <div class="row">
     <form>
-      <div class="mb-3 row">
+      <div class="mb-3 row   d-flex align-items-center">
         <label for="table-filtering-search" class="col-xs-3 col-sm-auto col-form-label">Filter By StreamId:</label>
-        <div class="col-xs-3 col-sm-auto">
-          <input id="table-filtering-search" class="form-control text-secondary bg-dark" type="text" [formControl]="filter"/>
+        <div class="col-8">
+          <input id="table-filtering-search" class="form-control text-secondary bg-dark" type="text"
+                 [formControl]="filter"
+                 [(ngModel)]="filterValue"
+          />
         </div>
+        <img (click)="filterValue=''"
+             class="btn-table"
+             [ngbTooltip]="'Clear Filter'"
+             src="assets/nofilter.svg"  alt="Clear Filters" >
       </div>
     </form>
   </div>
@@ -35,14 +42,28 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let event of events" (click)="eventRowClicked(content,event)"
+        <tr *ngFor="let event of events"
             class="{{(selectedEvent && event.eventId==selectedEvent.eventId)?'bg-info':''}}">
 
-          <th scope="row">{{ event.eventId }}</th>
-          <td>
+          <th scope="row" (click)="toClipboard(event.eventId)">
+            <img (click)="toClipboard(event.eventId)"
+                 class="btn-table"
+                 [ngbTooltip]="'Copy To Clipboard'"
+                 src="assets/copy.svg"  alt="Copy To Clipboard" >
+            {{ event.eventId }}
+          </th>
+          <td >
+            <img (click)="toClipboard(event.streamId)"
+                 class="btn-table"
+                 [ngbTooltip]="'Copy To Clipboard'"
+                 src="assets/copy.svg"  alt="Copy To Clipboard" >
+            <img (click)="filterValue=event.streamId"
+                 class="btn-table"
+                 [ngbTooltip]="'Filter Events By This Id'"
+                 src="assets/filter.svg"  alt="Filter By Id" >
             {{ event.streamId }}
           </td>
-          <td>{{preview(event.event)}}</td>
+          <td (click)="eventRowClicked(content,event)">{{preview(event.event)}}</td>
         </tr>
         </tbody>
       </table>
