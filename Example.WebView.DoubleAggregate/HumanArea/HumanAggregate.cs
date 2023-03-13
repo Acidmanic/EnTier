@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using EnTier.EventSourcing;
 using EnTier.EventSourcing.Attributes;
-using Example.WebView.DoubleAggregate.Human.Events;
+using Example.WebView.DoubleAggregate.HumanArea.Events;
 
-namespace Example.WebView.DoubleAggregate.Human
+namespace Example.WebView.DoubleAggregate.HumanArea
 {
-    public class HumanAggregate:AggregateBase<Human,IHumanEvent,Guid>
+    public class HumanAggregate:AggregateBase<HumanArea.Human,IHumanEvent,Guid>
     {
         protected override void ManipulateState(IHumanEvent e)
         {

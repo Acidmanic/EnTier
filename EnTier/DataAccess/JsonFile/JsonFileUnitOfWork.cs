@@ -175,6 +175,12 @@ namespace EnTier.DataAccess.JsonFile
         }
 
 
+        public void ClearAllData()
+        {
+            Clear(_dataDirectory);
+        }
+        
+
         private void Clear(string directory)
         {
             var files = Directory.EnumerateFiles(directory);

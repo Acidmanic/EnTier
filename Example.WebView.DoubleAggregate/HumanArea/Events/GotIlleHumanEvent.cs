@@ -1,6 +1,6 @@
 using System;
 
-namespace Example.WebView.DoubleAggregate.Human.Events
+namespace Example.WebView.DoubleAggregate.HumanArea.Events
 {
     public class GotIlleHumanEvent:IHumanEvent
     {

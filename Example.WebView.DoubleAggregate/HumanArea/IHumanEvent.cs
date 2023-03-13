@@ -1,7 +1,6 @@
 using System;
-using Microsoft.VisualBasic;
 
-namespace Example.WebView.DoubleAggregate.Human
+namespace Example.WebView.DoubleAggregate.HumanArea
 {
     
     public interface IHumanEvent

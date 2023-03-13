@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection.Extensions;
+using EnTier;
+using EnTier.DataAccess.JsonFile;
 using EnTier.EventStore.WebView;
+using Example.WebView.DoubleAggregate.SeedGrowing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -56,6 +59,10 @@ namespace Example.WebView.DoubleAggregate
             GetType().Assembly.ScanForAggregates();
 
             app.ConfigureEnTierResolver();
+            
+            // new JsonFileUnitOfWork(app.GetService<EnTierEssence>()).ClearAllData();
+            //
+            // new HumanSeedGrowing(app.ApplicationServices).GrowHumans(5, 15).Wait();
         }
     }
 }

@@ -5,6 +5,8 @@ import {EventStoreService} from "../../../services/event-store-service";
 import {ActivatedRoute} from "@angular/router";
 import {Observable, Observer, Subscription} from "rxjs";
 import {FormControl} from "@angular/forms";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ModalBlur} from "../../../services/modal-blur";
 
 
 @Component({
@@ -18,7 +20,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   aggregate: AggregateModel = new AggregateModel();
   events: EventWrapModel[] = [];
 
-  selectedEvent: EventWrapModel | null = null;
+  selectedEvent: EventWrapModel = new EventWrapModel();
 
 
   page: number = 1;
@@ -30,7 +32,9 @@ export class EventsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   constructor(private svcEventStore: EventStoreService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private modalService: NgbModal,
+              private svcBlur:ModalBlur) {
   }
 
 
@@ -113,6 +117,21 @@ export class EventsComponent implements OnInit, OnDestroy {
     return "No Event has been selected";
   }
 
+
+  eventRowClicked(content:any, event:EventWrapModel){
+
+    this.selectedEvent = event;
+
+    this.svcBlur.blur();
+
+    this.modalService.open(content, {
+      backdropClass: 'json-modal-backdrop',
+      modalDialogClass: 'json-modal-dark',
+      windowClass: 'dark-modal',
+      centered: true
+    }).result.finally(() => this.svcBlur.clear());
+
+  }
 
   preview(event: any) {
 

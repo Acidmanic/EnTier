@@ -36,74 +36,6 @@ namespace EnTier.EventStore.WebView
         }
 
 
-        // public List<object> ReadStream()
-        // {
-        //     var method = _repositoryType.GetMethods().FirstOrDefault
-        //         (m => m.Name == "ReadStream" && m.GetParameters().Length == 0);
-        //
-        //     var exe = new MethodExecute();
-        //
-        //     var result = exe.Execute(method, _repository, new object[] { });
-        //
-        //     if (result.Successful)
-        //     {
-        //         return List(result.ReturnValue);
-        //     }
-        //
-        //     return new List<object>();
-        // }
-        //
-        // public List<object> ReadStream(object streamId)
-        // {
-        //     var method = _repositoryType.GetMethods().FirstOrDefault
-        //         (m => m.Name == "ReadStream" && m.GetParameters().Length == 1);
-        //
-        //     var exe = new MethodExecute();
-        //
-        //     var result = exe.Execute(method, _repository, new[] { streamId });
-        //
-        //     if (result.Successful)
-        //     {
-        //         return List(result.ReturnValue);
-        //     }
-        //
-        //     return new List<object>();
-        // }
-        //
-        // public List<object> ReadStreamChunk(object streamId, object baseEventId, long count)
-        // {
-        //     var method = _repositoryType.GetMethods().FirstOrDefault
-        //         (m => m.Name == "ReadStreamChunk" && m.GetParameters().Length == 3);
-        //
-        //     var exe = new MethodExecute();
-        //
-        //     var result = exe.Execute(method, _repository,
-        //         new[] { streamId, baseEventId, count });
-        //
-        //     if (result.Successful)
-        //     {
-        //         return List(result.ReturnValue);
-        //     }
-        //
-        //     return new List<object>();
-        // }
-
-        //
-        // private List<object> List(object value)
-        // {
-        //     var list = new List<object>();
-        //
-        //     if (value is IEnumerable enumerable)
-        //     {
-        //         foreach (var item in enumerable)
-        //         {
-        //             list.Add(item);
-        //         }
-        //     }
-        //
-        //     return list;
-        // }
-
         private static Action<IEnumerable<StreamEvent<TEvent, TEventId, TStreamId>>> CastPickerAction<TEvent, TEventId,
             TStreamId>(
             Action<IEnumerable<StreamEvent<object, object, object>>> picker)
@@ -138,49 +70,7 @@ namespace EnTier.EventStore.WebView
 
             return action;
         }
-        //
-        // public List<EventWrap> EnumerateAll(long chunkSize = 50)
-        // {
-        //     var result = new List<EventWrap>();
-        //
-        //     EnumerateAction("EnumerateStreamChunks", 3,
-        //         chunk => result.AddRange(chunk),
-        //         chunkSize, new Result<object>().FailAndDefaultValue());
-        //
-        //     return result;
-        // }
-        //
-        // public List<EventWrap> EnumerateStream(object streamId, object baseEventId, long chunkSize = 50)
-        // {
-        //     var result = new List<EventWrap>();
-        //
-        //     EnumerateAction("EnumerateStreamChunks", 3,
-        //         chunk =>
-        //         {
-        //             foreach (var eventWrap in chunk)
-        //             {
-        //             }
-        //
-        //             result.AddRange(chunk)
-        //         },
-        //         chunkSize, new Result<object>(true, streamId));
-        //
-        //     return result;
-        // }
-        //
-        //
-        // public List<EventWrap> EnumerateStream(object streamId, long chunkSize = 50)
-        // {
-        //     var result = new List<EventWrap>();
-        //
-        //     EnumerateAction("EnumerateStreamChunks", 3,
-        //         chunk => result.AddRange(chunk),
-        //         chunkSize, new Result<object>(true, streamId));
-        //
-        //     return result;
-        // }
-
-
+        
         public EventCacheHeader Header()
         {
             var header = new EventCacheHeader(_eventType, _eventIdType, _streamIdType);

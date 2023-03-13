@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Acidmanic.Utilities.Reflection.Attributes;
 
-namespace Example.WebView.DoubleAggregate.Human
+namespace Example.WebView.DoubleAggregate.HumanArea
 {
     public class Human
     {
+        [AutoValuedMember]
+        [UniqueMember]
         public Guid Id { get; set; }
         
         public string Name { get; set; }
