@@ -5,11 +5,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using EnTier.EventSourcing;
 using EnTier.EventSourcing.Attributes;
-using EnTier.EventSourcing.Models;
 using EnTier.Extensions;
 using EnTier.Reflection;
 using EnTier.UnitOfWork;
-using Example.WebView.DoubleAggregate.HumanArea;
 
 namespace Example.WebView.DoubleAggregate.SeedGrowing
 {

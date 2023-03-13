@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.Reflection;
+using Acidmanic.Utilities.Reflection.Extensions;
+using EnTier.Exceptions;
 using EnTier.Repositories;
 using EnTier.Repositories.Models;
 using EnTier.Utility;
@@ -21,6 +24,14 @@ namespace EnTier.DataAccess.JsonFile
 
         public JsonFileEventStreamRepository()
         {
+
+            if (!TypeCheck.IsNumerical<TEventId>())
+            {
+                throw new InvalidEventIdTypeException<TEventId>
+                    ($"{typeof(TEventId).FullName} is not valid for Json Event Stream. " +
+                     $"Please Use a numeric type like long, int, etc.");
+            }
+            
             _currentStreamDirectoryPath = GetCurrentStreamDirectoryPath();
 
             _idGenerator = new UniqueIdGenerator<TEventId>(_currentStreamDirectoryPath);
@@ -106,7 +117,7 @@ namespace EnTier.DataAccess.JsonFile
         }
 
 
-        private List<ObjectEntry<TEventId, TStreamId>> ReadStream(string filePath)
+        private List<ObjectEntry<TEventId, TStreamId>> ReadStream(string filePath,bool botherToSort = true)
         {
             List<ObjectEntry<TEventId, TStreamId>> list = null;
 
@@ -128,9 +139,43 @@ namespace EnTier.DataAccess.JsonFile
                 list = new List<ObjectEntry<TEventId, TStreamId>>();
             }
 
+            if (botherToSort)
+            {
+                list.Sort(new ObjectEntryComparer());   
+            }
+
             return list;
         }
 
+        private class ObjectEntryComparer : Comparer<ObjectEntry<TEventId, TStreamId>>
+        {
+            public override int Compare(ObjectEntry<TEventId, TStreamId> x, ObjectEntry<TEventId, TStreamId> y)
+            {
+                if (x == null && y == null)
+                {
+                    return 0;
+                }
+
+                if (x == null)
+                {
+                    return -1;
+                }
+
+                if (y == null)
+                {
+                    return 1;
+                }
+                var numX = x.EventId.AsNumber();
+                var numY = y.EventId.AsNumber();
+                
+                if (Math.Abs(numX - numY) < 0.00000000000000000000000000000000000000001)
+                {
+                    return 0;
+                }
+
+                return numX < numY ? -1 : 1;
+            }
+        }
 
         private List<ObjectEntry<TEventId, TStreamId>> ReadAllEntriesSync()
         {
@@ -140,14 +185,16 @@ namespace EnTier.DataAccess.JsonFile
 
             foreach (var file in files)
             {
-                var stream = ReadStream(file.FullName);
+                var stream = ReadStream(file.FullName,false);
 
                 if (stream != null)
                 {
                     entries.AddRange(stream);
                 }
             }
-
+            
+            entries.Sort(new ObjectEntryComparer());
+            
             return entries;
         }
 
