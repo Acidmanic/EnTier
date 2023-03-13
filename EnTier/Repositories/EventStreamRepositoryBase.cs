@@ -230,7 +230,8 @@ namespace EnTier.Repositories
                     {
                         Event = ev.Value,
                         EventId = entry.EventId,
-                        StreamId = entry.StreamId
+                        StreamId = entry.StreamId,
+                        EventConcreteType = ev.Value.GetType()
                     });
                 }
             }

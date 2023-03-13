@@ -38,6 +38,7 @@
         <tr>
           <th scope="col">Event Id</th>
           <th scope="col">Stream Id</th>
+          <th scope="col">Event Name</th>
           <th scope="col">Preview</th>
         </tr>
         </thead>
@@ -62,6 +63,9 @@
                  [ngbTooltip]="'Filter Events By This Id'"
                  src="assets/filter.svg"  alt="Filter By Id" >
             {{ event.streamId }}
+          </td>
+          <td>
+            {{event.eventConcreteTypeName}}
           </td>
           <td style="cursor: pointer;"
               [ngbTooltip]="'View Event'"

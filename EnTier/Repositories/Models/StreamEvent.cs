@@ -1,3 +1,5 @@
+using System;
+
 namespace EnTier.Repositories.Models
 {
     public class StreamEvent<TEvent, TEventId, TStreamId>
@@ -7,5 +9,7 @@ namespace EnTier.Repositories.Models
         public TStreamId StreamId { get; set; }
 
         public TEventId EventId { get; set; }
+        
+        public Type EventConcreteType { get; set; }
     }
 }

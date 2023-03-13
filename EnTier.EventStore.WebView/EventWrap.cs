@@ -7,5 +7,7 @@ namespace EnTier.EventStore.WebView
         public object StreamId { get; set; }
         
         public object Event { get; set; }
+        
+        public string EventConcreteTypeName { get; set; }
     }
 }

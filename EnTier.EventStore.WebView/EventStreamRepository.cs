@@ -50,7 +50,8 @@ namespace EnTier.EventStore.WebView
                     {
                         Event = streamEvent.Event,
                         EventId = streamEvent.EventId,
-                        StreamId = streamEvent.StreamId
+                        StreamId = streamEvent.StreamId,
+                        EventConcreteType = streamEvent.EventConcreteType
                     });
                 }
 
@@ -139,7 +140,8 @@ namespace EnTier.EventStore.WebView
                     {
                         Event = streamEvent.Event,
                         EventId = streamEvent.EventId,
-                        StreamId = streamEvent.StreamId
+                        StreamId = streamEvent.StreamId,
+                        EventConcreteTypeName = streamEvent.EventConcreteType.Name
                     });
                 }
 

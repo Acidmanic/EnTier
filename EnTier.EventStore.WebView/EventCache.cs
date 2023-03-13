@@ -70,7 +70,8 @@ namespace EnTier.EventStore.WebView
             {
                 Event = ParseOrCastTo(e.Event, EventType) ?? e.Event,
                 EventId = ParseOrCastTo(e.EventId, EventIdType) ?? e.EventId,
-                StreamId = ParseOrCastTo(e.StreamId, StreamIdType) ?? e.StreamId
+                StreamId = ParseOrCastTo(e.StreamId, StreamIdType) ?? e.StreamId,
+                EventConcreteTypeName = e.EventConcreteTypeName
             };
         }
 
