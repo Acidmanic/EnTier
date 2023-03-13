@@ -42,13 +42,13 @@ namespace Example.WebView.DoubleAggregate.SeedGrowing
         }
 
 
-        protected int[] Randex(int count)
+        protected int[] Randex(int count,int maxClude)
         {
             int[] randomIndex = new int[count];
 
             for (int i = 0; i < count; i++)
             {
-                randomIndex[i] = Random.Next(0, count);
+                randomIndex[i] = Random.Next(0, maxClude);
             }
 
             return randomIndex;
@@ -66,12 +66,8 @@ namespace Example.WebView.DoubleAggregate.SeedGrowing
 
         protected string Gibber(int count)
         {
-            if (count > Words.Length)
-            {
-                count = Words.Length;
-            }
-
-            var randex = Randex(count);
+            
+            var randex = Randex(count,Words.Length);
 
             var words = randex.Select(i => Words[i]);
 
