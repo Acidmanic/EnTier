@@ -21,10 +21,12 @@
                  [(ngModel)]="filterValue"
           />
         </div>
-        <img (click)="filterValue=''"
-             class="btn-table"
-             [ngbTooltip]="'Clear Filter'"
-             src="assets/nofilter.svg" alt="Clear Filters">
+        <div style="display: contents">
+          <img (click)="filterValue=''"
+               class="btn-table"
+               [ngbTooltip]="'Clear Filter'"
+               src="assets/nofilter.svg" alt="Clear Filters">
+        </div>
       </div>
     </form>
   </div>
@@ -64,12 +66,14 @@
                  src="assets/filter.svg" alt="Filter By Id">
             {{ event.streamId }}
           </td>
-          <td style="cursor: pointer;"
-              [ngbTooltip]="'View Event'"
-              (click)="eventRowClicked(content,event)">
-            {{event.eventConcreteTypeName}}
+          <td style="cursor: pointer;" (click)="eventRowClicked(content,event)">
+
+            <span [ngbTooltip]="'View Event'" >
+              {{event.eventConcreteTypeName}}
+            </span>
+
           </td>
-          <td>{{preview(event.event)}}</td>
+          <td class="td-preview">{{preview(event.event)}}</td>
         </tr>
         </tbody>
       </table>
