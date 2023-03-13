@@ -6,6 +6,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Observable, Observer, Subscription} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {EventPageModel} from "../../../models/event-page.model";
 
 
 
@@ -25,6 +26,8 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   page: number = 1;
   pageSize: number = 50;
+  totalEvents: number = 0;
+
   filterStreamId: string | null = null;
 
   filter = new FormControl('', {nonNullable: true});
@@ -51,6 +54,9 @@ export class EventsComponent implements OnInit, OnDestroy {
             next: value => {
 
               this.aggregate = value;
+
+              this.totalEvents = value.totalEvents;
+
               this.fetchItemsOfCurrentPage();
             },
             error: err => {
@@ -85,11 +91,12 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   fetchItemsOfCurrentPage() {
 
-    let observer: Observer<{ events: EventWrapModel[] }> = {
-      next: evs => {
-        console.log('events:', evs);
-        this.events = evs.events;
-        console.log('events:', this.events);
+    let observer: Observer<EventPageModel> = {
+      next: eventsPage => {
+
+        this.events = eventsPage.events;
+
+        this.totalEvents = eventsPage.totalCount;
       },
       error: err => {
       },

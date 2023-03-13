@@ -4,6 +4,7 @@ import {AggregateModel} from "../models/aggregate.model";
 import {environment} from "../environments/environment";
 import {Injectable} from "@angular/core";
 import {EventWrapModel} from "../models/event-wrap.model";
+import {EventPageModel} from "../models/event-page.model";
 
 
 @Injectable({providedIn: 'root'})
@@ -52,15 +53,15 @@ export class EventStoreService {
   }
 
 
-  public getEventsPaginated(aggregateName: string, page: number, pageSize: number): Observable<{ events: EventWrapModel[] }> {
+  public getEventsPaginated(aggregateName: string, page: number, pageSize: number): Observable<EventPageModel> {
 
-    let handler = new Subject<{ events: EventWrapModel[] }>();
+    let handler = new Subject<EventPageModel>();
 
     let from = (page - 1) * pageSize;
 
     let url = this.baseUrl + 'event-store/stream/' + aggregateName + '?from=' + from + '&count=' + pageSize;
 
-    this.http.get<{ events: EventWrapModel[] }>(url).subscribe({
+    this.http.get<EventPageModel>(url).subscribe({
       next: aggs => handler.next(aggs),
       error: err => {
       },
@@ -71,16 +72,17 @@ export class EventStoreService {
     return handler;
   }
 
-  public getEventsByStreamIdPaginated(aggregateName: string, streamId: string, page: number, pageSize: number): Observable<{ events: EventWrapModel[] }> {
+  public getEventsByStreamIdPaginated(aggregateName: string, streamId: string, page: number, pageSize: number):
+    Observable<EventPageModel> {
 
-    let handler = new Subject<{ events: EventWrapModel[] }>();
+    let handler = new Subject<EventPageModel>();
 
     let from = (page - 1) * pageSize;
 
     let url = this.baseUrl + 'event-store/stream/' + aggregateName +
       '/' + streamId + '?from=' + from + '&count=' + pageSize;
 
-    this.http.get<{ events: EventWrapModel[] }>(url).subscribe({
+    this.http.get<EventPageModel>(url).subscribe({
       next: aggs => handler.next(aggs),
       error: err => {
       },

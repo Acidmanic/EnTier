@@ -76,7 +76,7 @@
 
       <div class="d-flex justify-content-between p-2">
         <ngb-pagination
-          [collectionSize]="aggregate.totalEvents"
+          [collectionSize]="totalEvents"
           [(page)]="page"
           [pageSize]="pageSize"
           (pageChange)="fetchItemsOfCurrentPage()"
