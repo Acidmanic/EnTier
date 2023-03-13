@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EnTier.EventSourcing;
 using EnTier.Repositories;
 
 namespace EnTier.Extensions
 {
-
     public static class EventRepositoryExtensions
     {
         /// <summary>
@@ -30,6 +30,17 @@ namespace EnTier.Extensions
             });
 
             return groupedStreams;
+        }
+
+
+        public static async Task SaveAggregateUpdates<TAggregateRoot, TEvent, TEventId, TStreamId>
+        (this IEventStreamRepository<TEvent, TEventId, TStreamId> repository,
+            IAggregate<TAggregateRoot, TEvent, TStreamId> aggregate)
+        {
+            foreach (var @event in aggregate.Updates)
+            {
+                await repository.Append(@event, aggregate.StreamId);
+            }
         }
     }
 }

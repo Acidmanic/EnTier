@@ -77,12 +77,11 @@ namespace Example.WebView.DoubleAggregate.SeedGrowing
 
         protected abstract IAggregate<TAggregateRoot, TEvent, TStreamId> SetupAggregate();
         
-        public Task GrowHumans(int numberOfHumans, int numberOfActions)
+        public async Task GrowHumans(int numberOfHumans, int numberOfActions)
         {
             var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
         
             var repository = unitOfWork.GetStreamRepository<TEvent,TEventId,TStreamId>();
-        
         
             for (int number = 0; number < numberOfHumans; number++)
             {
@@ -92,15 +91,11 @@ namespace Example.WebView.DoubleAggregate.SeedGrowing
                 {
                     DoOneRandomSheet(hAggregate);
                 }
-        
-                async void Save(TEvent ev) => await repository.Append(ev, hAggregate.StreamId);
-        
-                hAggregate.Updates.ForEach(Save);
+
+                await repository.SaveAggregateUpdates(hAggregate);
             }
             
             unitOfWork.Complete();
-        
-            return Task.CompletedTask;
         }
 
 
