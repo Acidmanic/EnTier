@@ -6,6 +6,7 @@ using Acidmanic.Utilities.Results;
 using EnTier.Reflection;
 using EnTier.Repositories.Models;
 using EnTier.UnitOfWork;
+using Newtonsoft.Json.Serialization;
 
 namespace EnTier.EventStore.WebView
 {
@@ -71,62 +72,71 @@ namespace EnTier.EventStore.WebView
 
             return action;
         }
-        
-        public EventCacheHeader Header()
-        {
-            var header = new EventCacheHeader(_eventType, _eventIdType, _streamIdType);
-            header.Load();
-
-            return header;
-        }
-
-        
 
         public long Count()
         {
-            return CacheCheck().Count;
+            return ReadAll().Count();
         }
-        
+
         public IEnumerable<EventWrap> ReadAll()
         {
-            CacheCheck();
+            var events = ReadEvents(new Result<object>().FailAndDefaultValue(), 0, int.MaxValue);
 
-            var cache = InstantiateEventCache();
-
-            return cache.Events;
+            return events;
         }
 
         public IEnumerable<EventWrap> ReadAll(int from, int count)
         {
-            CacheCheck();
+            var events = ReadEvents(new Result<object>().FailAndDefaultValue(), from, count);
 
-            var cache = InstantiateEventCache();
-
-            count = (int)Math.Min(count, cache.Count);
-
-            return cache.Events.Skip(from).Take(count);
+            return events;
         }
-        
+
         public IEnumerable<EventWrap> ReadAll(object streamId)
         {
-            CacheCheck();
+            var events = ReadEvents(new Result<object>(true, streamId), 0, int.MaxValue);
 
-            var cache = InstantiateEventCache();
-
-            return cache.Events.Where(e => e.StreamId.Equals(streamId));
+            return events;
         }
 
         public IEnumerable<EventWrap> ReadAll(object streamId, int from, int count)
         {
-            CacheCheck();
+            var events = ReadEvents(new Result<object>(true, streamId), from, count);
 
-            var cache = InstantiateEventCache();
-
-            count = (int)Math.Min(count, cache.Count);
-
-            return cache.Events.Where(e => streamId.Equals(e.StreamId)).Skip(from).Take(count);
+            return events;
         }
-        
+
+
+        private List<EventWrap> ReadEvents(Result<object> streamId, int skip, int count)
+        {
+            var events = new List<EventWrap>();
+
+            var methodName = streamId.Success ? "EnumerateStreamChunks" : "EnumerateChunks";
+            var parameterCount = streamId.Success ? 3 : 2;
+
+            var skept = 0;
+
+            EnumerateAction(methodName, parameterCount,
+                chunk =>
+                {
+                    foreach (var eventWrap in chunk)
+                    {
+                        if (skept < skip)
+                        {
+                            skept++;
+                        }
+                        else if (events.Count < count)
+                        {
+                            events.Add(eventWrap);
+                        }
+                    }
+                }, 256, streamId
+            );
+
+            return events;
+        }
+
+
         private void EnumerateAction(string methodName, int methodParametersCount,
             Action<List<EventWrap>> onEventChunk, long chunkSize, Result<object> streamId)
         {
@@ -160,57 +170,6 @@ namespace EnTier.EventStore.WebView
                 : new[] { genericAction, chunkSize };
 
             exe.Execute(method, _repository, parameters);
-        }
-
-        private EventCache InstantiateEventCache()
-        {
-            var cache = new EventCache(_eventType, _eventIdType, _streamIdType);
-            
-            cache.Load();
-            
-            return cache;
-        }
-
-        public EventCacheHeader CacheCheck()
-        {
-            var  header = new EventCacheHeader(_eventType, _eventIdType, _streamIdType);
-            
-            header.Load();
-            
-            var existingEventHasBeenPassed = header.LastEventId == null;
-
-            var unSeenEvents = new List<EventWrap>();
-            
-            EnumerateAction("EnumerateChunks", 2, chunk =>
-            {
-                foreach (var item in chunk)
-                {
-                    var eventId = item.EventId;
-
-                    if (existingEventHasBeenPassed)
-                    {
-                        unSeenEvents.Add(item);
-                    }
-
-                    existingEventHasBeenPassed = header.LastEventId == null ||
-                                                 (eventId != null && eventId.Equals(header.LastEventId));
-                }
-            }, 256, new Result<object>().FailAndDefaultValue());
-
-            if (unSeenEvents.Count > 0)
-            {
-                var cache = InstantiateEventCache();
-                
-                unSeenEvents.ForEach( e => cache.Add(e));
-                
-                cache.Save();
-
-                header = new EventCacheHeader(_eventType, _eventIdType, _streamIdType);
-                
-                header.Load();
-            }
-            
-            return header;
         }
     }
 }
