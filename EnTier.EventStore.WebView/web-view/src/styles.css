@@ -108,3 +108,19 @@ btn-table:hover {
   padding: 1px;
   margin-right: 5px;
 }
+
+
+a.page-link, a.page-link.active {
+  background-color: #293b447a;
+  border: 1px solid #5960606e;
+}
+
+*.active>.page-link, *.page-link.active {
+  background-color: rgba(37, 57, 72, 0.48);
+  border: 1px solid #485454e0;
+}
+
+*.disabled>.page-link, *.page-link.disabled {
+  background-color: #3e3e3e94;
+  border: 1px solid #5960606e;
+}
