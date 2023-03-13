@@ -22,9 +22,10 @@ namespace EnTier.DataAccess.JsonFile
 
         private readonly UniqueIdGenerator<TEventId> _idGenerator;
 
-        public JsonFileEventStreamRepository()
+        private readonly string _baseDirectory;
+        
+        public JsonFileEventStreamRepository(string baseDirectory)
         {
-
             if (!TypeCheck.IsNumerical<TEventId>())
             {
                 throw new InvalidEventIdTypeException<TEventId>
@@ -32,20 +33,41 @@ namespace EnTier.DataAccess.JsonFile
                      $"Please Use a numeric type like long, int, etc.");
             }
             
+            _baseDirectory = baseDirectory;
+            
             _currentStreamDirectoryPath = GetCurrentStreamDirectoryPath();
 
             _idGenerator = new UniqueIdGenerator<TEventId>(_currentStreamDirectoryPath);
         }
 
-        public JsonFileEventStreamRepository(Action<TEvent, TEventId, TStreamId> eventPublisher) : base(eventPublisher)
+        public JsonFileEventStreamRepository(Action<TEvent, TEventId, TStreamId> eventPublisher, string baseDirectory) : base(eventPublisher)
         {
+            
+            if (!TypeCheck.IsNumerical<TEventId>())
+            {
+                throw new InvalidEventIdTypeException<TEventId>
+                ($"{typeof(TEventId).FullName} is not valid for Json Event Stream. " +
+                 $"Please Use a numeric type like long, int, etc.");
+            }
+            
+            _baseDirectory = baseDirectory;
+            
             _currentStreamDirectoryPath = GetCurrentStreamDirectoryPath();
 
             _idGenerator = new UniqueIdGenerator<TEventId>(_currentStreamDirectoryPath);
         }
 
-        public JsonFileEventStreamRepository(EnTierEssence essence) : base(essence)
+        public JsonFileEventStreamRepository(EnTierEssence essence, string baseDirectory) : base(essence)
         {
+            if (!TypeCheck.IsNumerical<TEventId>())
+            {
+                throw new InvalidEventIdTypeException<TEventId>
+                ($"{typeof(TEventId).FullName} is not valid for Json Event Stream. " +
+                 $"Please Use a numeric type like long, int, etc.");
+            }
+            
+            _baseDirectory = baseDirectory;
+            
             _currentStreamDirectoryPath = GetCurrentStreamDirectoryPath();
 
             _idGenerator = new UniqueIdGenerator<TEventId>(_currentStreamDirectoryPath);
@@ -54,7 +76,7 @@ namespace EnTier.DataAccess.JsonFile
         private string GetCurrentStreamDirectoryPath()
         {
             var eventStreamsDatabaseDirectoryPath =
-                Path.Join(SpecialPaths.GetExecutionDirectory(), "EventStreamsDatabase");
+                Path.Join(_baseDirectory, "EventStreams");
 
             if (!Directory.Exists(eventStreamsDatabaseDirectoryPath))
             {

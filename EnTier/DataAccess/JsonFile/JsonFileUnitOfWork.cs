@@ -25,20 +25,20 @@ namespace EnTier.DataAccess.JsonFile
 
         private const int IndexFirstTable = 2;
 
-
-        public long GenerateId<T>()
-        {
-            var key = typeof(T).FullName;
-
-            if (!_ids.ContainsKey(key))
-            {
-                _ids.Add(key, 0);
-            }
-
-            _ids[key] += 1;
-
-            return _ids[key];
-        }
+        //
+        // public long GenerateId<T>()
+        // {
+        //     var key = typeof(T).FullName;
+        //
+        //     if (!_ids.ContainsKey(key))
+        //     {
+        //         _ids.Add(key, 0);
+        //     }
+        //
+        //     _ids[key] += 1;
+        //
+        //     return _ids[key];
+        // }
         
         public JsonFileUnitOfWork(EnTierEssence essence) : base(essence)
         {
@@ -177,7 +177,12 @@ namespace EnTier.DataAccess.JsonFile
 
         public void ClearAllData()
         {
-            Clear(_dataDirectory);
+            if (Directory.Exists(_dataDirectory))
+            {
+                Directory.Delete(_dataDirectory,true);
+            }
+
+            Directory.CreateDirectory(_dataDirectory);
         }
         
 
@@ -199,7 +204,7 @@ namespace EnTier.DataAccess.JsonFile
 
         public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>()
         {
-            return new JsonFileEventStreamRepository<TEvent, TEventId, TStreamId>(Essence);
+            return new JsonFileEventStreamRepository<TEvent, TEventId, TStreamId>(Essence,_dataDirectory);
         }
 
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
