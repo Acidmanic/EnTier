@@ -63,7 +63,9 @@
                  src="assets/filter.svg"  alt="Filter By Id" >
             {{ event.streamId }}
           </td>
-          <td (click)="eventRowClicked(content,event)">{{preview(event.event)}}</td>
+          <td style="cursor: pointer;"
+              [ngbTooltip]="'View Event'"
+              (click)="eventRowClicked(content,event)">{{preview(event.event)}}</td>
         </tr>
         </tbody>
       </table>

@@ -41,11 +41,6 @@ hr.breadcrumb-border{
   opacity: 0.1;
 }
 
-*.table-events tr{
-  cursor: pointer;
-}
-
-
 *.card-json{
   background-color: #dbdfdd14;
   border: 1px solid #727272a6;
