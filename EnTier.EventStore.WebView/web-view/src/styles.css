@@ -79,16 +79,23 @@ hr.breadcrumb-border{
 
 
 ngb-modal-backdrop.json-modal-backdrop.modal-backdrop.fade.show {
-  background-color: #000000;
+  background-color: #0f111694;
+
 }
 
+ngb-modal-window.d-block.dark-modal.modal.fade.show {
+  backdrop-filter: blur(1px);
+}
 
 .json-modal-dark .modal-content{
 
-  background-color: #1a1e1de6;
+  background-color: #1e1f22e6;
+  border-color: #51525866;
 
 }
 
-.blur-as-f:not(modal-content) {
-  text-shadow: rgb(255 255 255) 0px 0px 2px, rgb(255 255 255) 0px 0px 20px, rgb(195 195 195) 0px 0px 400px, rgb(177 177 177) 0px 0px 40px, rgb(165 165 165) 0px 0px 50px, rgb(66 66 66) 0px 0px 60px, rgb(0 0 0) 0px 0px 70px;
-}
+/*.blur-as-f:not(modal-content) {*/
+/*  !*text-shadow: rgb(255 255 255) 0px 0px 2px, rgb(255 255 255) 0px 0px 20px, rgb(195 195 195) 0px 0px 400px, rgb(177 177 177) 0px 0px 40px, rgb(165 165 165) 0px 0px 50px, rgb(66 66 66) 0px 0px 60px, rgb(0 0 0) 0px 0px 70px;*!*/
+
+/*  backdrop-filter: blur(10px);*/
+/*}*/

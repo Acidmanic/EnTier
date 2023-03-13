@@ -6,7 +6,6 @@ import {ActivatedRoute} from "@angular/router";
 import {Observable, Observer, Subscription} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ModalBlur} from "../../../services/modal-blur";
 
 
 @Component({
@@ -33,8 +32,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   constructor(private svcEventStore: EventStoreService,
               private route: ActivatedRoute,
-              private modalService: NgbModal,
-              private svcBlur:ModalBlur) {
+              private modalService: NgbModal) {
   }
 
 
@@ -122,14 +120,12 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     this.selectedEvent = event;
 
-    this.svcBlur.blur();
-
     this.modalService.open(content, {
       backdropClass: 'json-modal-backdrop',
       modalDialogClass: 'json-modal-dark',
       windowClass: 'dark-modal',
       centered: true
-    }).result.finally(() => this.svcBlur.clear());
+    });
 
   }
 

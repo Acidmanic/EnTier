@@ -61,16 +61,13 @@
     </div>
 
 
-<!--    <div *ngIf="selectedEvent" class="col-4 d-flex align-items-center">-->
-
-
-
-<!--    </div>-->
-
-
     <ng-template  #content let-modal>
       <div class="modal-header">
-        <h4 class="modal-title">{{aggregate.streamName}}: {{selectedEvent.streamId}} - Event: {{selectedEvent.eventId}}</h4>
+        <div class="modal-title w-100">
+          <b class="d-flex justify-content-center">{{aggregate.streamName}}</b>
+          <h6 class="d-flex justify-content-center">{{selectedEvent.streamId}}</h6>
+          <h6 class="d-flex justify-content-center">Event: {{selectedEvent.eventId}}</h6>
+        </div>
       </div>
       <div class="modal-body">
         <ngx-json-viewer class="card card-body card-json" [json]="selectedEvent.event"></ngx-json-viewer>

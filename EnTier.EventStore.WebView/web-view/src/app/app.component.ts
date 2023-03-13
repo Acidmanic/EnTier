@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {ModalBlur} from "../services/modal-blur";
 
 @Component({
   selector: 'app-root',
@@ -7,12 +6,9 @@ import {ModalBlur} from "../services/modal-blur";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'web-view';
+  title = 'Es-Wv';
 
-  blurCss:string='';
+  constructor() {
 
-  constructor(private svcBlur:ModalBlur) {
-
-    svcBlur.blurChange.subscribe(css => this.blurCss=css);
   }
 }

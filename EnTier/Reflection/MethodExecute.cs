@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
@@ -8,9 +9,92 @@ using EnTier.Extensions;
 
 namespace EnTier.Reflection
 {
-
     public class MethodExecute
     {
+        public MethodExecutionResult ExecuteStatic(Type type, string methodName, params object[] parameters)
+        {
+            var values = parameters.Where(p => p != null).ToArray();
+            
+            var types = values.Select(p => p.GetType()).ToArray();
+            
+            var method = type.GetMethods()
+                .FirstOrDefault(m => m.IsStatic && MatchByParameterTypes(m, types));
+
+            if (method != null)
+            {
+                var result = Execute(method, (object) null,values);
+
+                return result;
+            }
+
+            return new MethodExecutionResult()
+            {
+                Exception = new Exception($"Method {methodName} has not been found in type: {type.Name}."),
+                Successful = false,
+                ReturnsValue = false,
+                ReturnType = typeof(object),
+                ReturnValue = null
+            };
+            
+        }
+
+        public MethodExecutionResult ExecuteStatic(Type type, string methodName,
+            Dictionary<string, string> parameters)
+        {
+            var method = type.GetMethods()
+                .FirstOrDefault(m => m.IsStatic && MatchByParameterNames(m, parameters.Keys));
+
+            if (method != null)
+            {
+                var mergedData = new Dictionary<string, object>();
+
+                PutDataInto(mergedData, parameters, method);
+
+                var result = Execute(null, method, mergedData);
+
+                return result;
+            }
+
+            return new MethodExecutionResult()
+            {
+                Exception = new Exception($"Method {methodName} has not been found in type: {type.Name}."),
+                Successful = false,
+                ReturnsValue = false,
+                ReturnType = typeof(object),
+                ReturnValue = null
+            };
+        }
+
+        public MethodExecutionResult Execute(object owner, string methodName, Dictionary<string, string> parameters)
+        {
+            if (owner != null)
+            {
+                var type = owner.GetType();
+
+                var method = type.GetMethods().FirstOrDefault(m => MatchByParameterNames(m, parameters.Keys));
+
+                if (method != null)
+                {
+                    var mergedData = new Dictionary<string, object>();
+
+                    PutDataInto(mergedData, parameters, method);
+
+                    var result = Execute(owner, method, mergedData);
+
+                    return result;
+                }
+            }
+
+            return new MethodExecutionResult()
+            {
+                Exception = new Exception($"Method {methodName} has not been found in object: {owner}."),
+                Successful = false,
+                ReturnsValue = false,
+                ReturnType = typeof(object),
+                ReturnValue = null
+            };
+        }
+
         public MethodExecutionResult Execute(object owner, MethodInfo method,
             object dataByObject,
             params Dictionary<string, string>[] dataByDictionary)
@@ -68,7 +152,7 @@ namespace EnTier.Reflection
 
             evaluation.IsAsyncFunction = TypeCheck.IsSpecificOf(methodReturnType, typeof(Task<>));
 
-            evaluation.IsAsyncVoid = !evaluation.IsAsyncFunction && TypeCheck.Extends(typeof(Task), methodReturnType);
+            evaluation.IsAsyncVoid = !evaluation.IsAsyncFunction && Extends(typeof(Task), methodReturnType);
 
             evaluation.IsSyncVoid = methodReturnType == typeof(void);
 
@@ -80,6 +164,23 @@ namespace EnTier.Reflection
             }
 
             return evaluation;
+        }
+
+        private bool Extends(Type baseType, Type derived)
+        {
+            var b = derived;
+
+            while (b!=null)
+            {
+                if (b == baseType)
+                {
+                    return true;
+                }
+
+                b = b.BaseType;
+            }
+
+            return false;
         }
 
 
@@ -255,6 +356,32 @@ namespace EnTier.Reflection
             }
 
             return parametersByName;
+        }
+
+        private bool MatchByParameterNames(MethodInfo method, ICollection<string> parameterNames)
+        {
+            var parameters = method.GetParameters();
+
+            if (parameters.Length == parameterNames.Count)
+            {
+                var names = parameterNames.Select(n => n.ToLower()).ToList();
+
+                return parameters.All(p => names.Contains(p.Name.ToLower()));
+            }
+
+            return false;
+        }
+
+        private bool MatchByParameterTypes(MethodInfo method, ICollection<Type> parameterTypes)
+        {
+            var parameters = method.GetParameters();
+
+            if (parameters.Length == parameterTypes.Count)
+            {
+                return parameters.All(p => parameterTypes.Any(t => p.ParameterType == t));
+            }
+
+            return false;
         }
     }
 }
