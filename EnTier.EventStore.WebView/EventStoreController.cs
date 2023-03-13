@@ -26,52 +26,6 @@ namespace EnTier.EventStore.WebView
         }
 
 
-        private class OkEventsResult : IActionResult
-        {
-            private readonly IEnumerable<EventWrap> _events;
-
-            public OkEventsResult(IEnumerable<EventWrap> events)
-            {
-                var evs = new List<EventWrap>(events as EventWrap[] ?? events.ToArray());
-
-                evs.Sort(delegate(EventWrap a, EventWrap b)
-                    {
-                        if (a.EventId is string sa && b.EventId is string sb)
-                        {
-                            return string.CompareOrdinal(sb, sa);
-                        }
-
-                        return (int)(b.EventId.AsNumber() - a.EventId.AsNumber());
-                    }
-                );
-                _events = evs;
-            }
-
-            public async Task ExecuteResultAsync(ActionContext context)
-            {
-                var wrapperObject = new { Events = _events };
-
-                var response = context.HttpContext.Response;
-
-
-                DefaultContractResolver contractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                };
-
-                string json = JsonConvert.SerializeObject(wrapperObject, new JsonSerializerSettings
-                {
-                    ContractResolver = contractResolver,
-                    Formatting = Formatting.Indented
-                });
-
-                var jsonData = Encoding.Default.GetBytes(json);
-
-                await response.Body.WriteAsync(jsonData);
-            }
-        }
-
-
         [Route("/{*:path}")]
         public IActionResult Index(string path)
         {
@@ -104,7 +58,7 @@ namespace EnTier.EventStore.WebView
 
             var events = repository.ReadAll(from, count);
 
-            return new OkEventsResult(events);
+            return Ok(events);
         }
 
         [HttpGet]
@@ -131,7 +85,7 @@ namespace EnTier.EventStore.WebView
 
             var events = repository.ReadAll(streamIdValue, from, count);
 
-            return new OkEventsResult(events);
+            return Ok(events);
         }
 
 

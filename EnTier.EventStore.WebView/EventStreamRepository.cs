@@ -75,31 +75,33 @@ namespace EnTier.EventStore.WebView
 
         public long Count()
         {
-            return ReadAll().Count();
+            return ReadEvents(new Result<object>().FailAndDefaultValue(), 
+                    0, int.MaxValue, true)
+                .TotalCount;
         }
 
-        public IEnumerable<EventWrap> ReadAll()
+        public ResultPage ReadAll()
         {
             var events = ReadEvents(new Result<object>().FailAndDefaultValue(), 0, int.MaxValue);
 
             return events;
         }
 
-        public IEnumerable<EventWrap> ReadAll(int from, int count)
+        public ResultPage ReadAll(int from, int count)
         {
             var events = ReadEvents(new Result<object>().FailAndDefaultValue(), from, count);
 
             return events;
         }
 
-        public IEnumerable<EventWrap> ReadAll(object streamId)
+        public ResultPage ReadAll(object streamId)
         {
             var events = ReadEvents(new Result<object>(true, streamId), 0, int.MaxValue);
 
             return events;
         }
 
-        public IEnumerable<EventWrap> ReadAll(object streamId, int from, int count)
+        public ResultPage ReadAll(object streamId, int from, int count)
         {
             var events = ReadEvents(new Result<object>(true, streamId), from, count);
 
@@ -107,55 +109,65 @@ namespace EnTier.EventStore.WebView
         }
 
 
-        private List<EventWrap> ReadEvents(Result<object> streamId, int skip, int count)
+        private ResultPage ReadEvents(Result<object> streamId, int skip, int count, bool countOnly = false)
         {
-            var events = new List<EventWrap>();
+            var resultPage = new ResultPage();
 
             var methodName = streamId.Success ? "EnumerateStreamChunks" : "EnumerateChunks";
             var parameterCount = streamId.Success ? 3 : 2;
 
             var skept = 0;
 
-            EnumerateAction(methodName, parameterCount,
+            EnumerateChunksAction(methodName, parameterCount,
                 chunk =>
                 {
-                    foreach (var eventWrap in chunk)
+                    resultPage.TotalCount += chunk.TotalCount;
+                    
+                    if (!countOnly)
                     {
-                        if (skept < skip)
+                        foreach (var eventWrap in chunk.Events)
                         {
-                            skept++;
-                        }
-                        else if (events.Count < count)
-                        {
-                            events.Add(eventWrap);
+                            if (skept < skip)
+                            {
+                                skept++;
+                            }
+                            else if (resultPage.Events.Count < count)
+                            {
+                                resultPage.Events.Add(eventWrap);
+                            }
                         }
                     }
-                }, 256, streamId
+                }, 256, streamId, countOnly
             );
 
-            return events;
+            return resultPage;
         }
 
 
-        private void EnumerateAction(string methodName, int methodParametersCount,
-            Action<List<EventWrap>> onEventChunk, long chunkSize, Result<object> streamId)
+        private void EnumerateChunksAction(string methodName, int methodParametersCount,
+            Action<ResultPage> onEventChunk, long chunkSize, Result<object> streamId, bool countOnly = false)
         {
             void Action(IEnumerable<StreamEvent<object, object, object>> chunk)
             {
-                var list = new List<EventWrap>();
+                var pageChunk = new ResultPage();
 
                 foreach (var streamEvent in chunk)
                 {
-                    list.Add(new EventWrap
+                    pageChunk.TotalCount++;
+
+                    if (!countOnly)
                     {
-                        Event = streamEvent.Event,
-                        EventId = streamEvent.EventId,
-                        StreamId = streamEvent.StreamId,
-                        EventConcreteTypeName = streamEvent.EventConcreteType.Name
-                    });
+                        pageChunk.Events.Add(new EventWrap
+                        {
+                            Event = streamEvent.Event,
+                            EventId = streamEvent.EventId,
+                            StreamId = streamEvent.StreamId,
+                            EventConcreteTypeName = streamEvent.EventConcreteType.Name
+                        });
+                    }
                 }
 
-                onEventChunk(list);
+                onEventChunk(pageChunk);
             }
 
             var genericAction = CreateGenericPickerAction(Action);
