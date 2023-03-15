@@ -21,7 +21,7 @@ namespace EnTier.DataAccess.EntityFramework
 
         public override IEnumerable<TStorage> All()
         {
-            return DbSet;
+            return DbSet.ToList();
         }
 
         protected override TStorage Insert(TStorage value)

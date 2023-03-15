@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Acidmanic.Utilities.Reflection;
-using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.ObjectTree.FieldAddressing;
-using EnTier.Utility;
-using Meadow.Reflection.Conventions;
+using Meadow.Contracts;
 using Meadow.Requests;
 
 namespace EnTier.DataAccess.Meadow.GenericCrudRequests

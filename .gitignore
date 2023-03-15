@@ -6,3 +6,6 @@ obj/
 .idea/
 Example.db
 EnTier.sln.DotSettings.user
+**/bin
+**/obj
+**/build

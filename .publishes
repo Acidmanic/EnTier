@@ -1,0 +1,6 @@
+EnTier
+EnTier.DataAccess.EntityFramework
+EnTier.DataAccess.Meadow
+EnTier.AutoMapper
+EnTier.DependencyInjection.CastleWindsor
+EnTier.DependencyInjection.Unity

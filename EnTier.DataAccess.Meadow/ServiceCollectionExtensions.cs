@@ -1,11 +1,7 @@
-using System;
-using System.Runtime.CompilerServices;
 using EnTier.DataAccess.Meadow;
 using EnTier.UnitOfWork;
-using Litbid.DataAccess.Meadow;
-using Litbid.DataAccess.Meadow.EnTier.DataAccess.Meadow;
 using Meadow.Configuration;
-using Meadow.Scaffolding.Contracts;
+using Meadow.Contracts;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection

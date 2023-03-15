@@ -3,23 +3,24 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Acidmanic.MSLogging.LightWeight" Version="1.0.1" />
-        <PackageReference Include="Acidmanic.Utilities" Version="1.0.2" />
+        <PackageReference Include="Acidmanic.Utilities" Version="1.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
 
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 
-        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b01" />
+        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b06" />
     </ItemGroup>
 
     <PropertyGroup>
         <!-- NuGet -->
         <Id>EnTier</Id>
         <PackageId>EnTier</PackageId>
-        <Version>2.7.0-b05</Version>
+        <Version>2.7.0-b28</Version>
         <Authors>Mani Moayedi</Authors>
         <Company>Acidmanic</Company>
         <PackageIcon>graphics/EnTier.png</PackageIcon>
@@ -30,7 +31,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/Acidmanic/EnTier</PackageProjectUrl>
         <Title>EnTier EZ N-Tier!</Title>
-
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -45,6 +46,12 @@
             <PackagePath>LICENSE.txt</PackagePath>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <Content Include="../Readme.md">
+            <Pack>true</Pack>
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        
     </ItemGroup>
 
 </Project>

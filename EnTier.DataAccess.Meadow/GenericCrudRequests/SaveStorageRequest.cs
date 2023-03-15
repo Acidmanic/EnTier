@@ -1,11 +1,10 @@
-using Meadow.Reflection.Conventions;
+using Meadow.Contracts;
 
 namespace EnTier.DataAccess.Meadow.GenericCrudRequests
 {
     public class SaveStorageRequest<TStorage> : StorageRequest<TStorage, TStorage>
         where TStorage : class, new()
     {
-       
         protected override string PickProcedureName(NameConvention nameConvention)
         {
             return nameConvention.SaveProcedureName;

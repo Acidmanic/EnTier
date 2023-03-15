@@ -1,8 +1,9 @@
 using System;
-using System.Reflection;
+using EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.DataAccess.EntityFramework
 {
@@ -11,7 +12,7 @@ namespace EnTier.DataAccess.EntityFramework
         private readonly DbContext _context;
         private readonly Func<Type, object> _getDbSetByType;
 
-        public EntityFrameworkUnitOfWork(EnTierEssence essence, DbContext context):base(essence)
+        public EntityFrameworkUnitOfWork(EnTierEssence essence, DbContext context) : base(essence)
         {
             _context = context;
 
@@ -21,12 +22,34 @@ namespace EnTier.DataAccess.EntityFramework
 
             _getDbSetByType = entityType =>
             {
-                var method = getDbSetMethod?.MakeGenericMethod(new Type[] { entityType});
+                var method = getDbSetMethod?.MakeGenericMethod(new Type[] { entityType });
 
                 return method?.Invoke(_context, new object[] { });
             };
         }
-        
+
+        public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId,
+            TStreamId>()
+        {
+            var dbSet = _context.Set<EfObjectEntry<TEventId, TStreamId>>();
+
+            var repository = EfEventStreamRepositoryFactory.Instance.Make<TEvent, TEventId, TStreamId>(dbSet, Essence);
+
+            if (repository is NullEfEventStreamRepository)
+            {
+                Logger.LogError(
+                    "EntityFrameworkUnitOfWork was not able to instantiate a proper EventStreamRepository " +
+                    "for Event Type: {EventType}, EventId Type: {EventId} and StreamId Type: {StreamId}. " +
+                    "Please consider that:" +
+                    "\nEventId type can only be int | long | ulong." +
+                    "\nStreamId type can only be int | long | ulong | string | guid." +
+                    "\nYour DbContext must provide DbSet<EfObjectEntry<TEventId,TStreamId>>",
+                    typeof(TEvent).Name, typeof(TEventId).Name, typeof(TStreamId).Name);
+            }
+
+            return repository;
+        }
+
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             var dbSet = _context.Set<TStorage>();
@@ -34,56 +57,6 @@ namespace EnTier.DataAccess.EntityFramework
             return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet);
         }
 
-        //
-        // protected override bool IsConstructorAcceptable(ConstructorInfo constructor)
-        // {
-        //     return IsDbSetOnly(constructor.GetParameters());
-        // }
-        //
-        // protected override object ProvideConstructorParameter(Type parameterType)
-        // {
-        //     var genericArguments = parameterType.GenericTypeArguments;
-        //
-        //     if (genericArguments == null || genericArguments.Length != 1)
-        //     {
-        //         throw new Exception("Custom repositories can only accept " +
-        //                             "parameters of type DbSet<TStorage>");
-        //     }
-        //     
-        //     return _getDbSetByType(genericArguments[0]);
-        // }
-
-        private bool IsDbSetOnly(ParameterInfo[] parameters)
-        {
-            var dbSetType = typeof(DbSet<>);
-
-            foreach (var parameter in parameters)
-            {
-                var type = parameter.ParameterType;
-
-                if (!ExtendsGeneric(type,dbSetType))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private bool ExtendsGeneric(Type type, Type genericParent)
-        {
-            Type current = type;
-
-            while (current != null)
-            {
-                if (current.GetGenericTypeDefinition() == genericParent)
-                {
-                    return true;
-                }
-
-                current = current.BaseType;
-            }
-            return false;
-        }
 
         public override void Complete()
         {

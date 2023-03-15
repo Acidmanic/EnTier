@@ -26,17 +26,31 @@ namespace EnTier.Utility
                 {
                     var frameAttributes = frame.GetMethod().GetCustomAttributes(true);
 
-                    foreach (var frameAttribute in frameAttributes)
-                    {
-                        if (frameAttribute is T attribute)
-                        {
-                            attributes.Add(attribute);
-                        }
-                    }
+                    var classAttributes = frame.GetMethod().DeclaringType?.GetCustomAttributes(true);
+
+                    Select(frameAttributes, attributes);
+                    
+                    Select(classAttributes, attributes);
+
                 }
             }
             
             return attributes;
+        }
+
+        private void Select<T>(object[] foundObjects, List<T> attributes) where T : Attribute
+        {
+            if (foundObjects == null)
+            {
+                return;
+            }
+            foreach (var frameAttribute in foundObjects)
+            {
+                if (frameAttribute is T attribute)
+                {
+                    attributes.Add(attribute);
+                }
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Data.Common;
+using EnTier.DataAccess.EntityFramework;
 using ExampleEntityFramework.StoragesModels;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,0 +1,126 @@
+/* You can add global styles to this file, and also import other style files */
+
+a , a:hover, a:active , a:visited{
+  color: #e3e8e9;
+  text-decoration: none;
+}
+
+
+img.nav-logo{
+  border: 1px solid #83a581;
+  border-radius: 256px;
+  position: relative;
+  height: 60px;
+  width: 60px;
+  padding: 3px;
+}
+
+
+h1.nav-title{
+  display: inline;
+  padding: 10px 5px 0;
+}
+
+
+img.footer-icon{
+  border-radius: 64px;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+}
+
+*.card-aggregate{
+  background-color: #5bc3980d;
+  color: #e3ebe3;
+  border: 1px solid #0a0c0ba6;
+  margin-bottom: 2px;
+}
+
+
+hr.breadcrumb-border{
+  opacity: 0.1;
+}
+
+*.card-json{
+  background-color: #dbdfdd14;
+  border: 1px solid #727272a6;
+}
+
+*.card-json, *.card-json > .ngx-json-viewer {
+  font-family: consolas,sans-serif,monospace!important;
+  font-size: 14px;
+}
+
+.table.table-events {
+  font-size: 0.9em;
+}
+
+td.td-preview{
+  font-size: 0.9em;
+}
+
+.segment-key {
+  color: #f9f9f9 !important;
+}
+.segment-type-boolean > .segment-main > .segment-value {
+  color: lightskyblue !important;
+}
+.segment-type-string > .segment-main > .segment-value {
+  color: #a0ffbd94 !important;
+}
+.segment-type-number > .segment-main > .segment-value {
+  color: #eddc86 !important;
+}
+
+
+.footer-eswebview{
+
+}
+
+
+
+ngb-modal-backdrop.json-modal-backdrop.modal-backdrop.fade.show {
+  background-color: #0f111694;
+
+}
+
+ngb-modal-window.d-block.dark-modal.modal.fade.show {
+  backdrop-filter: blur(1px);
+}
+
+.json-modal-dark .modal-content{
+
+  background-color: #1e1f22e6;
+  border-color: #51525866;
+
+}
+
+
+btn-table:hover {
+  background: #607d8b7a;
+  border-radius: 5px;
+}
+
+.btn-table{
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  padding: 1px;
+  margin-right: 5px;
+}
+
+
+a.page-link, a.page-link.active {
+  background-color: #293b447a;
+  border: 1px solid #5960606e;
+}
+
+*.active>.page-link, *.page-link.active {
+  background-color: #2e516a7a;
+  border: 1px solid #485454e0;
+}
+
+*.disabled>.page-link, *.page-link.disabled {
+  background-color: #3e3e3e94;
+  border: 1px solid #5960606e;
+}
