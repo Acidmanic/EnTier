@@ -26,7 +26,7 @@
     <!-- NuGet -->
     <Id>EnTier.EventStore.WebView</Id>
     <PackageId>EnTier.EventStore.WebView</PackageId>
-    <Version>1.0.0-b14</Version>
+    <Version>1.0.0-b15</Version>
     <Authors>Mani Moayedi</Authors>
     <Company>Acidmanic</Company>
     <PackageIcon>graphics/EnTier.png</PackageIcon>
