@@ -159,12 +159,25 @@ namespace EnTier.Controllers
         }
 
 
+        [HttpGet]
+        [HttpPost]
+        [HttpDelete]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPut]
+        [HttpPatch]
         [Route("{_?}")]
         public Task<IActionResult> Index()
         {
             return HandleRequest(HttpContext, default, false);
         }
-
+        [HttpGet]
+        [HttpPost]
+        [HttpDelete]
+        [HttpHead]
+        [HttpOptions]
+        [HttpPut]
+        [HttpPatch]
         [Route("{streamId}/{_?}")]
         public Task<IActionResult> Index(TStreamId streamId)
         {
