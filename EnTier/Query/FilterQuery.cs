@@ -4,11 +4,11 @@ using EnTier.Extensions;
 
 namespace EnTier.Query
 {
-    public class SearchQuery
+    public class FilterQuery
     {
-        private readonly Dictionary<string, EvaluationItem> _itemsByKey = new Dictionary<string, EvaluationItem>();
+        private readonly Dictionary<string, FilterItem> _itemsByKey = new Dictionary<string, FilterItem>();
 
-        public void Add(EvaluationItem item)
+        public void Add(FilterItem item)
         {
             var key = item.Key?.ToLower();
             
@@ -20,7 +20,7 @@ namespace EnTier.Query
             _itemsByKey.Clear();
         }
 
-        public EvaluationItem this[string key]
+        public FilterItem this[string key]
         {
             get
             {
@@ -30,9 +30,9 @@ namespace EnTier.Query
             }
         }
 
-        public List<EvaluationItem> Items()
+        public List<FilterItem> Items()
         {
-            var list = new List<EvaluationItem>();
+            var list = new List<FilterItem>();
             
             list.AddRange(_itemsByKey.Values);
 

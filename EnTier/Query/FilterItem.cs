@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
-using EnTier.Extensions;
 
 namespace EnTier.Query
 {
-    public class EvaluationItem
+    public class FilterItem
     {
-        private static readonly string[] OutOfHashStrings = { ":"};
+        private static readonly string[] OutOfHashStrings = { ":" };
         public string Key { get; set; }
 
         public string Maximum { get; set; }
 
         public string Minimum { get; set; }
+
+        public Type ValueType { get; set; } = typeof(string);
 
         public List<string> EqualValues { get; set; } = new List<string>();
 
@@ -19,15 +20,15 @@ namespace EnTier.Query
 
         internal string ToColumnSeparatedString()
         {
-            var hash = ClearForHash(Key) +":";
+            var hash = ClearForHash(Key) + ":";
 
             hash += ((int)EvaluationMethod).ToString() + ":";
-            
-            hash += ClearForHash(Maximum) +":";
-            hash += ClearForHash(Minimum) +":";
+            hash += ValueType.FullName + ":";
+            hash += ClearForHash(Maximum) + ":";
+            hash += ClearForHash(Minimum) + ":";
 
             var eq = "";
-            var sep ="";
+            var sep = "";
 
             foreach (var value in EqualValues)
             {
@@ -35,7 +36,7 @@ namespace EnTier.Query
                 sep = ":";
             }
 
-            hash += eq ;
+            hash += eq;
 
             return hash;
         }
@@ -43,7 +44,7 @@ namespace EnTier.Query
         private string ClearForHash(string value)
         {
             value = value?.ToLower() ?? "";
-            
+
             return value;
         }
     }

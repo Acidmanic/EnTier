@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Entier.Test.Unit
 {
-    public class SearchQueryTests
+    public class FilterQueryTests
     {
         [Fact]
         public void SimilarSQueriesMustProduceSameHashes()
@@ -49,89 +49,98 @@ namespace Entier.Test.Unit
         }
 
 
-        private SearchQuery CreateQuery1()
+        private FilterQuery CreateQuery1()
         {
-            var query = new SearchQuery();
+            var query = new FilterQuery();
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Name",
                 EqualValues = new List<string> { "Mani", "Mona", "Mina", "Farshid" },
-                EvaluationMethod = EvaluationMethods.Equal
+                EvaluationMethod = EvaluationMethods.Equal,
+                ValueType = typeof(string)
             });
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Age",
                 Maximum = "100",
                 Minimum = "0",
-                EvaluationMethod = EvaluationMethods.BetweenValues
+                EvaluationMethod = EvaluationMethods.BetweenValues,
+                ValueType = typeof(int)
             });
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Height",
                 Minimum = "150",
-                EvaluationMethod = EvaluationMethods.LargerThan
+                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueType = typeof(int)
             });
 
             return query;
         }
 
-        private SearchQuery CreateQuery1OrderAltered()
+        private FilterQuery CreateQuery1OrderAltered()
         {
-            var query = new SearchQuery();
+            var query = new FilterQuery();
 
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Age",
                 Maximum = "100",
                 Minimum = "0",
-                EvaluationMethod = EvaluationMethods.BetweenValues
+                EvaluationMethod = EvaluationMethods.BetweenValues,
+                ValueType = typeof(int)
             });
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Height",
                 Minimum = "150",
-                EvaluationMethod = EvaluationMethods.LargerThan
+                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueType = typeof(int)
             });
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Name",
                 EqualValues = new List<string> { "Mani", "Mona", "Mina", "Farshid" },
-                EvaluationMethod = EvaluationMethods.Equal
+                EvaluationMethod = EvaluationMethods.Equal,
+                ValueType = typeof(string)
             });
 
 
             return query;
         }
 
-        private SearchQuery CreateQuery2()
+        private FilterQuery CreateQuery2()
         {
-            var query = new SearchQuery();
+            var query = new FilterQuery();
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Brand",
                 EqualValues = new List<string> { "Nokia", "Samsung", "Sony" },
-                EvaluationMethod = EvaluationMethods.Equal
+                EvaluationMethod = EvaluationMethods.Equal,
+                ValueType = typeof(string)
             });
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Rate",
                 Minimum = "2.5",
-                EvaluationMethod = EvaluationMethods.LargerThan
+                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueType = typeof(double)
             });
 
-            query.Add(new EvaluationItem
+            query.Add(new FilterItem
             {
                 Key = "Battery",
                 Minimum = "1500",
-                EvaluationMethod = EvaluationMethods.LargerThan
+                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueType = typeof(int)
             });
 
             return query;
