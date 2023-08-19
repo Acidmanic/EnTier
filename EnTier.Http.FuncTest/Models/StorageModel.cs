@@ -1,15 +1,16 @@
+using Acidmanic.Utilities.Reflection.Attributes;
+using EnTier.Query.Attributes;
+
 namespace EnTier.Http.FuncTest.Models
 {
     public class StorageModel
     {
-        public string Name { get; set; }
+        [UniqueMember] [AutoValuedMember] public long Id { get; set; }
 
-        public int Age { get; set; }
-
-        public int Weight { get; set; }
-
-        public string Surname { get; set; }
-
-        public int Height { get; set; }
+        [FilterField] public string Name { get; set; }
+        [FilterField] public int Age { get; set; }
+        [FilterField] public int Weight { get; set; }
+        [FilterField] public string Surname { get; set; }
+        [FilterField] public int Height { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Results;
 using EnTier.Query;
+using EnTier.Query.Attributes;
 using Microsoft.AspNetCore.Http;
 
 namespace EnTier.Extensions
@@ -19,7 +21,8 @@ namespace EnTier.Extensions
         {
             var evaluator = new ObjectEvaluator(storageModelType);
 
-            var leaves = evaluator.RootNode.GetDirectLeaves();
+            var leaves = evaluator.RootNode.GetDirectLeaves()
+                .Where(l => IsFilterField(l));
 
             var query = new FilterQuery();
 
@@ -48,6 +51,19 @@ namespace EnTier.Extensions
             }
 
             return query;
+        }
+
+        private static bool IsFilterField(AccessNode leaf)
+        {
+            foreach (var attribute in leaf.PropertyAttributes)
+            {
+                if (attribute is FilterFieldAttribute)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static void ApplyQueryItemOnFilterItem(FilterItem item, string queryValue)
