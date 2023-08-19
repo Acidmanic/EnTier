@@ -73,7 +73,7 @@ namespace EnTier.Extensions
                 if (segments.Length > 1)
                 {
                     item.Minimum = segments[0];
-                    item.Minimum = segments[1];
+                    item.Maximum = segments[1];
                     item.EvaluationMethod = EvaluationMethods.BetweenValues;
                     return;
                 }
