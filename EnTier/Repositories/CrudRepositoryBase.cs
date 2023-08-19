@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using EnTier.Extensions;
+using EnTier.Query;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ namespace EnTier.Repositories
         where TStorage : class, new()
     {
         public abstract IEnumerable<TStorage> All();
-        
+
         public abstract TStorage Update(TStorage value);
 
         protected abstract TStorage Insert(TStorage value);
@@ -25,21 +26,43 @@ namespace EnTier.Repositories
         public abstract bool Remove(TStorage value);
         public abstract bool Remove(TId id);
         public abstract Task<IEnumerable<TStorage>> AllAsync();
-        
+
         public abstract Task<TStorage> UpdateAsync(TStorage value);
-        
+
         protected abstract Task<TStorage> InsertAsync(TStorage value);
         public abstract Task<TStorage> SetAsync(TStorage value);
         public abstract Task<TStorage> GetByIdAsync(TId id);
         public abstract Task<IEnumerable<TStorage>> FindAsync(Expression<Func<TStorage, bool>> predicate);
         public abstract Task<bool> RemoveAsync(TStorage value);
         public abstract Task<bool> RemoveAsync(TId id);
+
         public void SetLogger(ILogger logger)
         {
             Logger = logger;
         }
 
-        protected ILogger Logger { get;private set; } = NullLogger.Instance;
+        public abstract Task RemoveExpiredFilterResultsAsync();
+
+        public void RemoveExpiredFilterResults()
+        {
+            RemoveExpiredFilterResultsAsync().Wait();
+        }
+
+        public abstract Task PerformFilterIfNeededAsync(FilterQuery filterQuery);
+
+        public void PerformFilterIfNeeded(FilterQuery filterQuery)
+        {
+            PerformFilterIfNeededAsync(filterQuery).Wait();
+        }
+
+        public abstract Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash);
+
+        public IEnumerable<TStorage> ReadChunk(int offset, int size, string hash)
+        {
+            return ReadChunkAsync(offset, size, hash).Result;
+        }
+
+        protected ILogger Logger { get; private set; } = NullLogger.Instance;
 
         public virtual TStorage Add(TStorage value)
         {
@@ -54,7 +77,7 @@ namespace EnTier.Repositories
 
             return this.InsertAsync(stripped);
         }
-        
+
 
         /// <summary>
         /// This method, takes an entity, and returns a clone with only primitive members copied.

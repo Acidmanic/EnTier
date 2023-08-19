@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using EnTier.Query;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories
@@ -14,6 +15,11 @@ namespace EnTier.Repositories
         /// Provides all existing instances of Entity
         /// </summary>
         IEnumerable<TStorage> All();
+
+        /// <summary>
+        /// Finds an existing entity by its Id
+        /// </summary>
+        TStorage GetById(TId id);
 
         /// <summary>
         /// Adds new instance of Entity
@@ -30,11 +36,6 @@ namespace EnTier.Repositories
         /// will be updated, Otherwise, the new value will be added. 
         /// </summary>
         TStorage Set(TStorage value);
-
-        /// <summary>
-        /// Finds an existing entity by its Id
-        /// </summary>
-        TStorage GetById(TId id);
 
         /// <summary>
         /// Performs a search inside the existing entities.
@@ -99,5 +100,53 @@ namespace EnTier.Repositories
         /// </summary>
         /// <param name="logger"></param>
         void SetLogger(ILogger logger);
+
+// Filter Support
+
+        /// <summary>
+        /// This Method will clear expired FilterResult data from data source.
+        /// </summary>
+        Task RemoveExpiredFilterResultsAsync();
+
+        /// <summary>
+        /// This Method will clear expired FilterResult data from data source.
+        /// </summary>
+        void RemoveExpiredFilterResults();
+
+        /// <summary>
+        /// This method, Checks if given filter is not performed. If so, then
+        /// it will perform the given filter and store the result into FilterResult data source
+        /// </summary>
+        /// <returns></returns>
+        Task PerformFilterIfNeededAsync(FilterQuery filterQuery);
+        /// <summary>
+        /// This method, Checks if given filter is not performed. If so, then
+        /// it will perform the given filter and store the result into FilterResult data source
+        /// </summary>
+        /// <returns></returns>
+        void PerformFilterIfNeeded(FilterQuery filterQuery);
+
+        /// <summary>
+        /// This method will read a chunk of storage data by skipping 'offset' items and picking 'size' items.
+        /// This method uses the FilterResults data so For this method to work, it's necessary that the filter
+        /// already has been performed. 
+        /// </summary>
+        /// <param name="offset">Number if results to be skipped</param>
+        /// <param name="size">Maximum number of results to be read</param>
+        /// <param name="hash">The hash of filter-query which whom it's results are being read.</param>
+        /// <returns>The asked chunk of results, if found any.</returns>
+        Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash);
+        /// <summary>
+        /// This method will read a chunk of storage data by skipping 'offset' items and picking 'size' items.
+        /// This method uses the FilterResults data so For this method to work, it's necessary that the filter
+        /// already has been performed. 
+        /// </summary>
+        /// <param name="offset">Number if results to be skipped</param>
+        /// <param name="size">Maximum number of results to be read</param>
+        /// <param name="hash">The hash of filter-query which whom it's results are being read.</param>
+        /// <returns>The asked chunk of results, if found any.</returns>
+        IEnumerable<TStorage> ReadChunk(int offset, int size, string hash);
+        
+        
     }
 }
