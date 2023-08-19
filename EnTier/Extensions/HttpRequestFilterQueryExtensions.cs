@@ -26,6 +26,8 @@ namespace EnTier.Extensions
 
             var query = new FilterQuery();
 
+            query.FilterName = storageModelType.FullName;
+
             var requestQueries = request.Query;
 
             foreach (var leaf in leaves)

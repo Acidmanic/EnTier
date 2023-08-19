@@ -19,9 +19,9 @@ namespace EnTier.Http.FuncTest.Controllers
 
 
 
-        private class Shit
+        private class FilterQueryDto
         {
-            public class ShitItem
+            public class FilterItemDto
             {
                 public string Name { get; set; }
                 
@@ -35,7 +35,7 @@ namespace EnTier.Http.FuncTest.Controllers
                 
                 public string TypeName { get; set; }
 
-                public ShitItem(FilterItem f)
+                public FilterItemDto(FilterItem f)
                 {
                     Name = f.Key;
                     Max = f.Maximum;
@@ -45,14 +45,20 @@ namespace EnTier.Http.FuncTest.Controllers
                     TypeName = f.ValueType.FullName;
                 }
             }
-            public List<ShitItem> Filters { get; set; } 
+            public List<FilterItemDto> Filters { get; set; } 
 
             public string Hash { get; set; }
-            public Shit( FilterQuery q)
+            
+            public string FilterName { get; set; }
+            
+            
+            public FilterQueryDto( FilterQuery q)
             {
-                Filters = q.Items().Select(i => new ShitItem(i)).ToList();
+                Filters = q.Items().Select(i => new FilterItemDto(i)).ToList();
 
                 Hash = q.Hash();
+
+                FilterName = q.FilterName;
             }
         }
         
@@ -63,9 +69,17 @@ namespace EnTier.Http.FuncTest.Controllers
         {
             var query = HttpContext.GetFilter<StorageModel>();
 
-            var shit = new Shit(query);
+            var queryDto = new FilterQueryDto(query);
             
-            return Ok(shit);
+            var fakeQuery = HttpContext.GetFilter<FakeStorageModel>();
+            
+            var fakeQueryDto = new FilterQueryDto(fakeQuery);
+            
+            return Ok(new
+            {
+                Original=queryDto,
+                Fake=fakeQueryDto
+            });
         }
     }
 }

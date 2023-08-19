@@ -47,6 +47,21 @@ namespace Entier.Test.Unit
 
             Assert.NotEqual(hash1, hash2);
         }
+        
+        
+        [Fact]
+        public void SimilarQueriesWithDifferentNamesMustProduceDifferentHashes()
+        {
+            var sq1 = CreateQuery1();
+            sq1.FilterName = "ManiFilter";
+            var sq2 = CreateQuery1();
+            sq1.FilterName = "MonaFilter";
+            var hash1 = sq1.Hash();
+
+            var hash2 = sq2.Hash();
+
+            Assert.NotEqual(hash1, hash2);
+        }
 
 
         private FilterQuery CreateQuery1()
