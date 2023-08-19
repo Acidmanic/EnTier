@@ -54,4 +54,8 @@
         
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Query\Exceptions" />
+    </ItemGroup>
+
 </Project>
