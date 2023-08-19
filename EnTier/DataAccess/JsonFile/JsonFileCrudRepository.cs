@@ -9,6 +9,7 @@ using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Query;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
+using EnTier.Repositories.Models;
 using EnTier.Utility;
 
 namespace EnTier.DataAccess.JsonFile
@@ -20,8 +21,9 @@ namespace EnTier.DataAccess.JsonFile
         private readonly List<TStorage> _data;
         private readonly IdGenerator<TId> _idGenerator = new IdGenerator<TId>();
         private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
+        private readonly List<FilterResult> _filterResults;
 
-        public JsonFileRepository(List<TStorage> data)
+        public JsonFileRepository(List<TStorage> data, List<FilterResult> filterResults)
         {
             foreach (var storage in data)
             {
@@ -29,6 +31,7 @@ namespace EnTier.DataAccess.JsonFile
             }
 
             _data = data;
+            _filterResults = filterResults;
         }
 
         public override IEnumerable<TStorage> All()
@@ -45,7 +48,6 @@ namespace EnTier.DataAccess.JsonFile
             _idGenerator.Taken(id);
         }
 
-        
 
         [KeepAllProperties()]
         public override TStorage Add(TStorage value)
@@ -83,15 +85,16 @@ namespace EnTier.DataAccess.JsonFile
             if (_idLeaf != null && _idLeaf.IsAutoValued)
             {
                 var id = _idGenerator.New();
-                
+
                 _idGenerator.Taken(id);
-                
-                _idLeaf.Evaluator.Write(value,id);
-                
+
+                _idLeaf.Evaluator.Write(value, id);
+
                 _index.Add(id, value);
             }
+
             _data.Add(value);
-            
+
             return value;
         }
 
@@ -99,13 +102,14 @@ namespace EnTier.DataAccess.JsonFile
         {
             if (_idLeaf != null)
             {
-                var id = (TId) _idLeaf.Evaluator.Read(value) ;
+                var id = (TId)_idLeaf.Evaluator.Read(value);
 
                 if (id != null)
                 {
                     Remove(id);
                 }
             }
+
             return this.Add(value);
         }
 
@@ -160,20 +164,22 @@ namespace EnTier.DataAccess.JsonFile
 
             return false;
         }
-        
+
         public override Task RemoveExpiredFilterResultsAsync()
         {
-            throw new NotImplementedException();
+            return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync(_filterResults);
         }
 
         public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
         {
-            throw new NotImplementedException();
+            return ObjectListRepositoryFilteringHelper
+                .PerformFilterIfNeededAsync(_filterResults, _idLeaf, _data, filterQuery);
         }
 
         public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
         {
-            throw new NotImplementedException();
+            return ObjectListRepositoryFilteringHelper
+                .ReadChunkAsync(_filterResults, _idLeaf, _data, offset, size, hash);
         }
     }
 }

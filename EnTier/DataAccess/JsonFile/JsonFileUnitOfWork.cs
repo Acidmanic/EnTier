@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using EnTier.Repositories;
+using EnTier.Repositories.Models;
 using EnTier.UnitOfWork;
 using Newtonsoft.Json;
 
@@ -25,21 +27,7 @@ namespace EnTier.DataAccess.JsonFile
 
         private const int IndexFirstTable = 2;
 
-        //
-        // public long GenerateId<T>()
-        // {
-        //     var key = typeof(T).FullName;
-        //
-        //     if (!_ids.ContainsKey(key))
-        //     {
-        //         _ids.Add(key, 0);
-        //     }
-        //
-        //     _ids[key] += 1;
-        //
-        //     return _ids[key];
-        // }
-        
+
         public JsonFileUnitOfWork(EnTierEssence essence) : base(essence)
         {
             var executionDirectory =
@@ -66,7 +54,7 @@ namespace EnTier.DataAccess.JsonFile
             }
             else
             {
-                table = (List<T>) _data[type];
+                table = (List<T>)_data[type];
             }
 
             return table;
@@ -179,12 +167,12 @@ namespace EnTier.DataAccess.JsonFile
         {
             if (Directory.Exists(_dataDirectory))
             {
-                Directory.Delete(_dataDirectory,true);
+                Directory.Delete(_dataDirectory, true);
             }
 
             Directory.CreateDirectory(_dataDirectory);
         }
-        
+
 
         private void Clear(string directory)
         {
@@ -202,16 +190,19 @@ namespace EnTier.DataAccess.JsonFile
             }
         }
 
-        public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>()
+        public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId,
+            TStreamId>()
         {
-            return new JsonFileEventStreamRepository<TEvent, TEventId, TStreamId>(Essence,_dataDirectory);
+            return new JsonFileEventStreamRepository<TEvent, TEventId, TStreamId>(Essence, _dataDirectory);
         }
 
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             var table = Table<TStorage>();
 
-            return new JsonFileRepository<TStorage, TId>(table);
+            var filterResults = Table<FilterResult>();
+
+            return new JsonFileRepository<TStorage, TId>(table,filterResults);
         }
 
         public override void Complete()
@@ -221,7 +212,6 @@ namespace EnTier.DataAccess.JsonFile
 
         public override void Dispose()
         {
-            
         }
     }
 }
