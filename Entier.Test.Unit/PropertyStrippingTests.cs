@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using EnTier.Query;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
@@ -68,6 +70,22 @@ namespace Entier.Test.Unit
             }
 
             public override bool Remove(long id)
+            {
+                throw new NotImplementedException();
+            }
+
+            //TODO:
+            public override Task RemoveExpiredFilterResultsAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override Task<IEnumerable<Model>> ReadChunkAsync(int offset, int size, string hash)
             {
                 throw new NotImplementedException();
             }

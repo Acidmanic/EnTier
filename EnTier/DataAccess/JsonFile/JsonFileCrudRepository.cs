@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
+using EnTier.Query;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
@@ -42,6 +44,8 @@ namespace EnTier.DataAccess.JsonFile
 
             _idGenerator.Taken(id);
         }
+
+        
 
         [KeepAllProperties()]
         public override TStorage Add(TStorage value)
@@ -155,6 +159,21 @@ namespace EnTier.DataAccess.JsonFile
             }
 
             return false;
+        }
+        
+        public override Task RemoveExpiredFilterResultsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Entier.Test.Unit
 {
-    public class FilterQueryTests
+    public class FilterQueryHashingTests
     {
         [Fact]
         public void SimilarSQueriesMustProduceSameHashes()

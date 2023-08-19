@@ -113,9 +113,9 @@ namespace EnTier.Query.ObjectMatching
         
         private int CompareAsNumbers(object value, string bound)
         {
-            var doubleValue = (double)value;
+            var doubleValue = double.Parse(value.ToString());
 
-            var doubleBound = Double.Parse(bound);
+            var doubleBound = double.Parse(bound);
 
             var diff =  doubleValue - doubleBound;
 
@@ -159,13 +159,13 @@ namespace EnTier.Query.ObjectMatching
                 {
                     foreach (var bound in filterQuery.EqualValues)
                     {
-                        if (Compare(value, bound, filterQuery.ValueType) != 0)
+                        if (Compare(value, bound, filterQuery.ValueType) == 0)
                         {
-                            return false;
+                            return true;
                         }
                     }
 
-                    return true;
+                    return false;
                 }
                     
             }
