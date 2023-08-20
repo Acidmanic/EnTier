@@ -74,6 +74,9 @@ namespace EnTier.Services
 
             await repository.PerformFilterIfNeededAsync(filterQuery);
             
+            
+            UnitOfWork.Complete();
+            
             var storages = await repository.ReadChunkAsync(offset,size,filterQuery.Hash());
 
             var outgoingStorages = RegulateOutgoing(storages);

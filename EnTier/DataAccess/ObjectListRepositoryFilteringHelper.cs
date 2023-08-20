@@ -36,7 +36,7 @@ namespace EnTier.DataAccess
         {
             var hash = filterQuery.Hash();
 
-            var anyResult = filterResults.Any(f => f.Id == hash);
+            var anyResult = filterResults.Any(f => f.FilterHash == hash);
 
             if (!anyResult && idLeaf != null && TypeCheck.IsNumerical(idLeaf.Type))
             {
@@ -61,7 +61,7 @@ namespace EnTier.DataAccess
 
             foreach (var result in filterResults)
             {
-                if (result.Id == hash)
+                if (result.FilterHash == hash)
                 {
                     if (skipped < offset)
                     {

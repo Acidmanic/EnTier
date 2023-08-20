@@ -28,7 +28,7 @@ namespace EnTier.Query.ObjectMatching
                 filterResults.Add(
                     new FilterResult
                     {
-                        Id = hash,
+                        FilterHash = hash,
                         ResultId = (long)_idLeaf.Evaluator.Read(result),
                         ExpirationTimeStamp = timestamp
                     });

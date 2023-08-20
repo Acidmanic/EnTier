@@ -1,4 +1,5 @@
-﻿using EnTier;
+﻿using System.Collections.Generic;
+using EnTier;
 using EnTier.Controllers;
 using EnTier.UnitOfWork;
 using ExampleEntityFramework.DomainModels;
@@ -14,6 +15,11 @@ namespace ExampleEntityFramework.Controllers
     {
         public PostsController(EnTierEssence essence) : base(essence)
         {
+        }
+
+        protected override IEnumerable<PostDto> OnGetAll()
+        {
+            return base.OnGetAll();
         }
     }
 }

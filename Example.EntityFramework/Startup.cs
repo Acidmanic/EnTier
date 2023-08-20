@@ -56,6 +56,8 @@ namespace ExampleEntityFramework
             var context = app.GetService<DbContext>();
 
             context.Database.EnsureCreated();
+
+            app.UseFixture<PostsSeedFixture>();
         }
     }
 }

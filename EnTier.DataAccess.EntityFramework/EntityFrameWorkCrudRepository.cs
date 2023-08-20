@@ -119,7 +119,7 @@ namespace EnTier.DataAccess.EntityFramework
             {
                 var hash = filterQuery.Hash();
 
-                var anyResults = FilterResults.Count(r => r.Id == hash);
+                var anyResults = FilterResults.Count(r => r.FilterHash == hash);
 
                 if (anyResults < 1)
                 {
@@ -144,7 +144,7 @@ namespace EnTier.DataAccess.EntityFramework
                     {
                         var filterResult = new FilterResult
                         {
-                            Id = hash,
+                            FilterHash = hash,
                             ResultId = (long)idLeaf.Evaluator.Read(storage),
                             ExpirationTimeStamp = expirationTime
                         };
@@ -167,12 +167,14 @@ namespace EnTier.DataAccess.EntityFramework
 
                 var lambda = Expression.Lambda<Func<TStorage, long>>(property, parameter);
 
-                var readResult = DbSet.LeftJoin(
+                var readResult = DbSet.Join(
                         FilterResults, 
                         lambda, 
                         f => f.ResultId,
-                        (storage,filter) => storage)
-                    .Skip(offset).Take(size).ToList();
+                        (storage, filter) => new {storage,filter } )
+                    .Where(s => s.filter.FilterHash==hash)
+                    .Skip(offset).Take(size).ToList()
+                    .Select(s => s.storage);
 
                 return readResult;
             });

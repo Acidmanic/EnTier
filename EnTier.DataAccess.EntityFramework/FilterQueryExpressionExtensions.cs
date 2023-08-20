@@ -185,7 +185,7 @@ public static class FilterQueryExpressionExtensions
 
         foreach (var property in properties)
         {
-            if (property.Name.ToLower() == key)
+            if (property.Name.ToLower() == normalizedKey)
             {
                 return new Result<PropertyInfo>(true, property);
             }
