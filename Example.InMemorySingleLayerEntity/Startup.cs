@@ -50,6 +50,8 @@ namespace ExampleInMemorySingleLayerEntity
             });
 
             app.ConfigureEnTierResolver();
+
+            app.UseFixture<ProductsSeedFixture>();
         }
     }
 }

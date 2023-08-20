@@ -74,7 +74,14 @@ namespace EnTier.Controllers
 
         protected virtual IEnumerable<TTransfer> OnGetAll()
         {
-            var allDomainObjects = Service.GetAll();
+            var filter = HttpContext.GetFilter<TStorage>();
+
+            var pagination = HttpContext.GetPagination();
+
+            var allDomainObjects = Service.GetAllAsync(
+                pagination.Offset,
+                pagination.Size,
+                filter).Result;
 
             var allTransferObjects = Mapper.Map<List<TTransfer>>(allDomainObjects);
 
@@ -168,7 +175,7 @@ namespace EnTier.Controllers
             return ErrorCheck(() =>
             {
                 var transfer = OnUpdate(value);
-                
+
                 if (transfer == null)
                 {
                     return NotFound();

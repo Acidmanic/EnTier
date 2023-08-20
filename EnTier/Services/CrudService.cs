@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Results;
 using EnTier.Exceptions;
 using EnTier.Mapper;
+using EnTier.Query;
 using EnTier.Regulation;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
@@ -51,7 +53,36 @@ namespace EnTier.Services
 
         public virtual IEnumerable<TDomain> GetAll()
         {
-            var storages = UnitOfWork.GetCrudRepository<TStorage, TDomainId>().All();
+            // var storages = UnitOfWork.GetCrudRepository<TStorage, TDomainId>().All();
+            //
+            // var outgoingStorages = RegulateOutgoing(storages);
+            //
+            // var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
+            //
+            // return domains;
+
+            return GetAllAsync().Result;
+        }
+        
+        public virtual Task<IEnumerable<TDomain>> GetAllAsync()
+        {
+            return GetAllAsync(0,int.MaxValue);
+        }
+
+        public virtual Task<IEnumerable<TDomain>> GetAllAsync(int offset, int size)
+        {
+            return GetAllAsync(offset, size, new FilterQuery());
+        }
+        
+        public virtual async  Task<IEnumerable<TDomain>> GetAllAsync(int offset,int size,FilterQuery filterQuery)
+        {
+            var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
+
+            await repository.RemoveExpiredFilterResultsAsync();
+
+            await repository.PerformFilterIfNeededAsync(filterQuery);
+            
+            var storages = await repository.ReadChunkAsync(offset,size,filterQuery.Hash());
 
             var outgoingStorages = RegulateOutgoing(storages);
 
@@ -59,7 +90,6 @@ namespace EnTier.Services
 
             return domains;
         }
-
 
         public virtual TDomain GetById(TDomainId id)
         {

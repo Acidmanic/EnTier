@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using EnTier.Query;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services
@@ -6,6 +8,12 @@ namespace EnTier.Services
     public interface ICrudService<TEntity, in TDomainId> where TEntity : class, new()
     {
         IEnumerable<TEntity> GetAll();
+
+        Task<IEnumerable<TEntity>> GetAllAsync(int offset, int size, FilterQuery filterQuery);
+
+        Task<IEnumerable<TEntity>> GetAllAsync(int offset, int size);
+
+        Task<IEnumerable<TEntity>> GetAllAsync();
 
         TEntity GetById(TDomainId id);
 

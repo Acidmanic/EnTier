@@ -32,7 +32,7 @@ namespace EnTier.Extensions
 
             foreach (var leaf in leaves)
             {
-                var foundKey = FindKey(requestQueries, leaf.Name);
+                var foundKey = requestQueries.FindKey(leaf.Name);
 
                 if (foundKey)
                 {
@@ -99,22 +99,6 @@ namespace EnTier.Extensions
 
             item.EqualValues.Add(queryValue);
             item.EvaluationMethod = EvaluationMethods.Equal;
-        }
-
-
-        private static Result<string> FindKey(IQueryCollection queries, string keyToFind)
-        {
-            keyToFind = keyToFind.ToLower();
-
-            foreach (var key in queries.Keys)
-            {
-                if (key.ToLower() == keyToFind)
-                {
-                    return new Result<string>(true, key);
-                }
-            }
-
-            return new Result<string>().FailAndDefaultValue();
         }
     }
 }
