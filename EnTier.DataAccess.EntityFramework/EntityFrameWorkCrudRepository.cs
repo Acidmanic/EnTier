@@ -2,10 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
+using EnTier.Extensions;
+using EnTier.Query;
 using EnTier.Repositories;
+using EnTier.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace EnTier.DataAccess.EntityFramework
 {
@@ -13,10 +18,12 @@ namespace EnTier.DataAccess.EntityFramework
         where TStorage : class, new()
     {
         protected DbSet<TStorage> DbSet { get; }
+        protected DbSet<FilterResult> FilterResults { get; }
 
-        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet)
+        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet, DbSet<FilterResult> filterResults)
         {
             DbSet = dbSet;
+            FilterResults = filterResults;
         }
 
         public override IEnumerable<TStorage> All()
@@ -53,7 +60,7 @@ namespace EnTier.DataAccess.EntityFramework
 
                     if (found != null)
                     {
-                        value.CopyInto(found,idLeaf.GetFullName());
+                        value.CopyInto(found, idLeaf.GetFullName());
 
                         return DbSet.Update(found).Entity;
                     }
@@ -92,6 +99,83 @@ namespace EnTier.DataAccess.EntityFramework
             }
 
             return false;
+        }
+
+        public override Task RemoveExpiredFilterResultsAsync()
+        {
+            return Task.Run(() =>
+            {
+                var now = DateTime.Now.Ticks;
+
+                var expired = FilterResults.Where(r => r.ExpirationTimeStamp <= now);
+
+                FilterResults.RemoveRange(expired);
+            });
+        }
+
+        public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        {
+            return Task.Run(() =>
+            {
+                var hash = filterQuery.Hash();
+
+                var anyResults = FilterResults.Count(r => r.Id == hash);
+
+                if (anyResults < 1)
+                {
+                    var expressions = filterQuery.ToExpression<TStorage>();
+
+                    var queryable = DbSet.AsQueryable();
+
+                    foreach (var expression in expressions)
+                    {
+                        queryable = queryable.Where(expression);
+                    }
+
+                    var filterResults = queryable.ToList();
+
+                    var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
+
+                    var expirationTime =
+                        DateTime.Now.Ticks +
+                        typeof(TStorage).GetFilterResultExpirationTimeSpan().Ticks;
+
+                    foreach (var storage in filterResults)
+                    {
+                        var filterResult = new FilterResult
+                        {
+                            Id = hash,
+                            ResultId = (long)idLeaf.Evaluator.Read(storage),
+                            ExpirationTimeStamp = expirationTime
+                        };
+
+                        FilterResults.Add(filterResult);
+                    }
+                }
+            });
+        }
+
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
+        {
+            return Task.Run<IEnumerable<TStorage>>(() =>
+            {
+                var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
+                // a=>
+                ParameterExpression parameter = Expression.Parameter(typeof(TStorage), "a");
+                //a=>a.id
+                MemberExpression property = Expression.Property(parameter, idLeaf.Name);
+
+                var lambda = Expression.Lambda<Func<TStorage, long>>(property, parameter);
+
+                var readResult = DbSet.LeftJoin(
+                        FilterResults, 
+                        lambda, 
+                        f => f.ResultId,
+                        (storage,filter) => storage)
+                    .Skip(offset).Take(size).ToList();
+
+                return readResult;
+            });
         }
     }
 }

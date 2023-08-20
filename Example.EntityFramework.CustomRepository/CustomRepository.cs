@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using EnTier.DataAccess.EntityFramework;
+using EnTier.Repositories.Models;
 using ExampleEntityFramework.StoragesModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +8,7 @@ namespace ExampleEntityFramework
 {
     public class DummyRepository:EntityFrameWorkCrudRepository<PostStg,long>
     {
-        public DummyRepository(DbSet<PostStg> dbSet) : base(dbSet)
+        public DummyRepository(DbSet<PostStg> dbSet,DbSet<FilterResult> filterResults) : base(dbSet,filterResults)
         {
         }
 

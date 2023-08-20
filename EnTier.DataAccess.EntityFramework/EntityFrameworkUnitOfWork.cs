@@ -1,6 +1,7 @@
 using System;
 using EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 using EnTier.Repositories;
+using EnTier.Repositories.Models;
 using EnTier.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -53,8 +54,9 @@ namespace EnTier.DataAccess.EntityFramework
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             var dbSet = _context.Set<TStorage>();
+            var filterResultSet = _context.Set<FilterResult>();
 
-            return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet);
+            return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet,filterResultSet);
         }
 
 

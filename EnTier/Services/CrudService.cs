@@ -53,14 +53,6 @@ namespace EnTier.Services
 
         public virtual IEnumerable<TDomain> GetAll()
         {
-            // var storages = UnitOfWork.GetCrudRepository<TStorage, TDomainId>().All();
-            //
-            // var outgoingStorages = RegulateOutgoing(storages);
-            //
-            // var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
-            //
-            // return domains;
-
             return GetAllAsync().Result;
         }
         
