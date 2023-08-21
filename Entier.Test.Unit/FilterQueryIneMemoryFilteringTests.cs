@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Attributes;
-using EnTier.Query;
-using EnTier.Query.Attributes;
-using EnTier.Query.ObjectMatching;
+using EnTier.Filtering;
+using EnTier.Filtering.Attributes;
+using EnTier.Filtering.Utilities;
 using Xunit;
 
 namespace Entier.Test.Unit

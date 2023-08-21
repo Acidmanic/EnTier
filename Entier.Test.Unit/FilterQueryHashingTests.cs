@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using EnTier.Query;
+using EnTier.Filtering;
 using Xunit;
 
 namespace Entier.Test.Unit

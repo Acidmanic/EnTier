@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EnTier.Query;
+using EnTier.Filtering;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services

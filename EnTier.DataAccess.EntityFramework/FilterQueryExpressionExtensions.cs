@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Acidmanic.Utilities.Results;
-using EnTier.Query;
+using EnTier.Filtering;
 
 namespace EnTier.DataAccess.EntityFramework;
 

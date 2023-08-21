@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EnTier.Query
+namespace EnTier.Filtering
 {
     public class FilterItem
     {

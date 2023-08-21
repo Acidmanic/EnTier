@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using EnTier.Query.Attributes;
+using EnTier.Filtering.Attributes;
 
-namespace EnTier.Query.Extensions
+namespace EnTier.Filtering.Extensions
 {
     public static class TypeFilterQueryExtensions
     {

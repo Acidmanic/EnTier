@@ -1,6 +1,6 @@
 using Acidmanic.Utilities.Reflection.Attributes;
 
-namespace EnTier.Query.Models
+namespace EnTier.Filtering.Models
 {
     public class FilterResult
     {

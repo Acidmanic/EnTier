@@ -1,5 +1,5 @@
 using System;
-using EnTier.Query;
+using EnTier.Filtering;
 using Microsoft.AspNetCore.Http;
 
 namespace EnTier.Extensions

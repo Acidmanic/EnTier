@@ -1,4 +1,4 @@
-using EnTier.Query.Models;
+using EnTier.Filtering.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Models;
 using ExampleEntityFramework.StoragesModels;

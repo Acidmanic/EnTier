@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using EnTier.Query;
+using EnTier.Filtering;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories

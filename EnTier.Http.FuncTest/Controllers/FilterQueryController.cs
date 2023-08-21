@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EnTier.Extensions;
+using EnTier.Filtering;
 using EnTier.Http.FuncTest.Models;
-using EnTier.Query;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnTier.Http.FuncTest.Controllers

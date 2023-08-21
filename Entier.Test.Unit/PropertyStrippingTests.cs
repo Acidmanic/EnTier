@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using EnTier.Query;
+using EnTier.Filtering;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;

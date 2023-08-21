@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using EnTier.Query.Models;
+using EnTier.Filtering.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Models;
 using EnTier.UnitOfWork;

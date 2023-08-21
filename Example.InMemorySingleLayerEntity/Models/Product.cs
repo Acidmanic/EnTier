@@ -1,5 +1,5 @@
 using Acidmanic.Utilities.Reflection.Attributes;
-using EnTier.Query.Attributes;
+using EnTier.Filtering.Attributes;
 
 namespace ExampleInMemorySingleLayerEntity.Models
 {

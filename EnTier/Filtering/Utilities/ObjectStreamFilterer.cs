@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
-using EnTier.Extensions;
-using EnTier.Query.Extensions;
-using EnTier.Query.Models;
+using EnTier.Filtering.Extensions;
+using EnTier.Filtering.Models;
 
-namespace EnTier.Query.ObjectMatching
+namespace EnTier.Filtering.Utilities
 {
     public class ObjectStreamFilterer<TStorage>
     {

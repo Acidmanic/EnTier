@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using EnTier.DataAccess.Meadow.GenericCrudRequests;
-using EnTier.Query;
+using EnTier.Filtering;
 using EnTier.Repositories;
 using Meadow;
 using Meadow.Configuration;

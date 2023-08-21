@@ -1,6 +1,6 @@
 using System.Data.Common;
 using EnTier.DataAccess.EntityFramework;
-using EnTier.Query.Models;
+using EnTier.Filtering.Models;
 using EnTier.Repositories.Models;
 using ExampleEntityFramework.StoragesModels;
 using Microsoft.EntityFrameworkCore;

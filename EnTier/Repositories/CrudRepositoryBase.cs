@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using EnTier.Extensions;
-using EnTier.Query;
+using EnTier.Filtering;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
 using Microsoft.Extensions.Logging;

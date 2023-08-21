@@ -1,4 +1,4 @@
-namespace EnTier.Query
+namespace EnTier.Filtering
 {
     public enum ValueComparison
     {

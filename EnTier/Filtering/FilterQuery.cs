@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
-using EnTier.Extensions;
+using EnTier.Filtering.Extensions;
 
-namespace EnTier.Query
+namespace EnTier.Filtering
 {
     public class FilterQuery
     {

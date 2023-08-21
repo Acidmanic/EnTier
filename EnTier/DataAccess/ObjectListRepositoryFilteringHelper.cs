@@ -4,15 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
-using EnTier.DataAccess.InMemory;
-using EnTier.Query;
-using EnTier.Query.Models;
-using EnTier.Query.ObjectMatching;
-using EnTier.Repositories.Models;
+using EnTier.Filtering;
+using EnTier.Filtering.Models;
+using EnTier.Filtering.Utilities;
 
 namespace EnTier.DataAccess
 {
-    internal class ObjectListRepositoryFilteringHelper
+    internal static class ObjectListRepositoryFilteringHelper
     {
         public static Task RemoveExpiredFilterResultsAsync(List<FilterResult> filterResults)
         {

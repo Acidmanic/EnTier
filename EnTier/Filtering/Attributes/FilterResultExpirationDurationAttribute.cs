@@ -1,6 +1,6 @@
 using System;
 
-namespace EnTier.Query.Attributes
+namespace EnTier.Filtering.Attributes
 {
     public class FilterResultExpirationDurationAttribute:Attribute
     {

@@ -1,6 +1,6 @@
 using System;
 using EnTier.DataAccess.EntityFramework.EventStreamRepositories;
-using EnTier.Query.Models;
+using EnTier.Filtering.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Models;
 using EnTier.UnitOfWork;
