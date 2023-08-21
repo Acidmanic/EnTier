@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
-using EnTier.Filtering;
-using EnTier.Filtering.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
-using EnTier.Repositories.Models;
 using EnTier.Utility;
 
 namespace EnTier.DataAccess.JsonFile

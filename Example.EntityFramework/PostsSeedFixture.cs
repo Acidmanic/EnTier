@@ -1,6 +1,5 @@
-using EnTier.Filtering.Models;
+using Acidmanic.Utilities.Filtering.Models;
 using EnTier.Repositories;
-using EnTier.Repositories.Models;
 using ExampleEntityFramework.StoragesModels;
 
 namespace ExampleEntityFramework;

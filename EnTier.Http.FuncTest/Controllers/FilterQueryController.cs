@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Acidmanic.Utilities.Filtering;
 using EnTier.Extensions;
-using EnTier.Filtering;
 using EnTier.Http.FuncTest.Models;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using EnTier.Filtering;
+using Acidmanic.Utilities.Filtering;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories

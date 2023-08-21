@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using EnTier.Filtering.Models;
+using Acidmanic.Utilities.Filtering.Models;
 using EnTier.Repositories;
-using EnTier.Repositories.Models;
 using EnTier.UnitOfWork;
 using Newtonsoft.Json;
 

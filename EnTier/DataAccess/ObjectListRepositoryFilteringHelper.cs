@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
+using Acidmanic.Utilities.Filtering.Utilities;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
-using EnTier.Filtering;
-using EnTier.Filtering.Models;
-using EnTier.Filtering.Utilities;
 
 namespace EnTier.DataAccess
 {

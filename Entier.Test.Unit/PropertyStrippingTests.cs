@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using EnTier.Filtering;
+using Acidmanic.Utilities.Filtering;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Xunit;
 
 namespace Entier.Test.Unit

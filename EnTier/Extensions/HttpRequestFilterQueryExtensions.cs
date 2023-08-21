@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
+using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Attributes;
 using Acidmanic.Utilities.Reflection.ObjectTree;
-using Acidmanic.Utilities.Results;
-using EnTier.Filtering;
-using EnTier.Filtering.Attributes;
 using Microsoft.AspNetCore.Http;
 
 namespace EnTier.Extensions

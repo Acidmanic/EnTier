@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
-using EnTier.Filtering;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
@@ -156,37 +156,12 @@ namespace EnTier.DataAccess.InMemory
 
         public override Task RemoveExpiredFilterResultsAsync()
         {
-            // var now = DateTime.Now.Ticks;
-            //
-            // var expireds = InMemorySharedChannel.FilterResults
-            //     .Where(f => f.ExpirationTimeStamp <= now);
-            //
-            // foreach (var filterResult in expireds)
-            // {
-            //     InMemorySharedChannel.FilterResults.Remove(filterResult);
-            // }
-
-            // return Task.CompletedTask;
             return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync(InMemorySharedChannel
                 .FilterResults);
         }
 
         public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
         {
-            // var hash = filterQuery.Hash();
-            //
-            // var anyResult = InMemorySharedChannel.FilterResults
-            //     .Any(f => f.Id == hash);
-            //
-            // if (!anyResult && _idLeaf != null && TypeCheck.IsNumerical(_idLeaf.Type))
-            // {
-            //     var filterResults = new InMemoryFilterer<TStorage>().PerformFilter(_data, filterQuery);
-            //
-            //     InMemorySharedChannel.FilterResults.AddRange(filterResults);
-            // }
-            //
-            // return Task.CompletedTask;
-
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(InMemorySharedChannel.FilterResults,
                     _idLeaf, _data, filterQuery);
@@ -195,34 +170,6 @@ namespace EnTier.DataAccess.InMemory
 
         public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
         {
-            // var values = new List<TStorage>();
-            //
-            // var skipped = 0;
-            //
-            // foreach (var result in InMemorySharedChannel.FilterResults)
-            // {
-            //     if (result.Id == hash)
-            //     {
-            //         if (skipped < offset)
-            //         {
-            //             skipped++;
-            //         }
-            //         else
-            //         {
-            //             if (values.Count >= size)
-            //             {
-            //                 break;
-            //             }
-            //
-            //             var value = GetById((TId)(object)result.ResultId);
-            //
-            //             values.Add(value);
-            //         }
-            //     }
-            // }
-            //
-            // return Task.FromResult((IEnumerable<TStorage>)values);
-
             return ObjectListRepositoryFilteringHelper
                 .ReadChunkAsync(InMemorySharedChannel.FilterResults,
                     _idLeaf, _data, offset, size, hash);

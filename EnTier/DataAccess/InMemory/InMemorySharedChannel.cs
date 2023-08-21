@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using EnTier.Filtering.Models;
-using EnTier.Repositories.Models;
+using Acidmanic.Utilities.Filtering.Models;
 
 namespace EnTier.DataAccess.InMemory
 {

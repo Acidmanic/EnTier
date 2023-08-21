@@ -1,7 +1,4 @@
-using System.Data.Common;
-using EnTier.DataAccess.EntityFramework;
-using EnTier.Filtering.Models;
-using EnTier.Repositories.Models;
+using Acidmanic.Utilities.Filtering.Models;
 using ExampleEntityFramework.StoragesModels;
 using Microsoft.EntityFrameworkCore;
 

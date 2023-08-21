@@ -1,5 +1,5 @@
 using System;
-using EnTier.Filtering;
+using Acidmanic.Utilities.Filtering;
 using Microsoft.AspNetCore.Http;
 
 namespace EnTier.Extensions

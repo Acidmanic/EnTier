@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Extensions;
+using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
-using EnTier.Extensions;
-using EnTier.Filtering;
-using EnTier.Filtering.Extensions;
-using EnTier.Filtering.Models;
 using EnTier.Repositories;
-using EnTier.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace EnTier.DataAccess.EntityFramework
 {

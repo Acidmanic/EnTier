@@ -1,8 +1,7 @@
 using System;
+using Acidmanic.Utilities.Filtering.Models;
 using EnTier.DataAccess.EntityFramework.EventStreamRepositories;
-using EnTier.Filtering.Models;
 using EnTier.Repositories;
-using EnTier.Repositories.Models;
 using EnTier.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

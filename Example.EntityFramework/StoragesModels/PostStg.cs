@@ -1,7 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
+using Acidmanic.Utilities.Filtering.Attributes;
 using Acidmanic.Utilities.Reflection.Attributes;
-using EnTier.Filtering.Attributes;
 
 namespace ExampleEntityFramework.StoragesModels
 {
