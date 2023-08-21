@@ -73,14 +73,14 @@ namespace EnTier.Extensions
             if (queryValue.StartsWith("<"))
             {
                 item.Maximum = queryValue.Substring(1, queryValue.Length - 1);
-                item.EvaluationMethod = EvaluationMethods.SmallerThan;
+                item.ValueComparison = ValueComparison.SmallerThan;
                 return;
             }
 
             if (queryValue.StartsWith(">"))
             {
                 item.Minimum = queryValue.Substring(1, queryValue.Length - 1);
-                item.EvaluationMethod = EvaluationMethods.LargerThan;
+                item.ValueComparison = ValueComparison.LargerThan;
                 return;
             }
 
@@ -92,13 +92,13 @@ namespace EnTier.Extensions
                 {
                     item.Minimum = segments[0];
                     item.Maximum = segments[1];
-                    item.EvaluationMethod = EvaluationMethods.BetweenValues;
+                    item.ValueComparison = ValueComparison.BetweenValues;
                     return;
                 }
             }
 
             item.EqualValues.Add(queryValue);
-            item.EvaluationMethod = EvaluationMethods.Equal;
+            item.ValueComparison = ValueComparison.Equal;
         }
     }
 }

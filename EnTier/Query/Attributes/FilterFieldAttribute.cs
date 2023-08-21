@@ -4,17 +4,17 @@ namespace EnTier.Query.Attributes
 {
     public class FilterFieldAttribute:Attribute
     {
-        public FilterFieldAttribute(EvaluationMethods method)
+        public FilterFieldAttribute(ValueComparison method)
         {
             Method = method;
         }
 
-        public FilterFieldAttribute():this(EvaluationMethods.Equal)
+        public FilterFieldAttribute():this(ValueComparison.Equal)
         {
             
         }
         
-        public EvaluationMethods Method { get; private set; }
+        public ValueComparison Method { get; private set; }
         
         
     }

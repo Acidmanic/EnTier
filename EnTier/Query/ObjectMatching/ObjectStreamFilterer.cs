@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.Extensions;
-using EnTier.Repositories.Models;
+using EnTier.Query.Extensions;
+using EnTier.Query.Models;
 
 namespace EnTier.Query.ObjectMatching
 {
-    public class InMemoryFilterer<TStorage>
+    public class ObjectStreamFilterer<TStorage>
     {
         private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
 
@@ -146,16 +147,16 @@ namespace EnTier.Query.ObjectMatching
 
         private bool Matches(object value, FilterItem filterQuery)
         {
-            switch (filterQuery.EvaluationMethod)
+            switch (filterQuery.ValueComparison)
             {
-                case EvaluationMethods.SmallerThan:
+                case ValueComparison.SmallerThan:
                     return Compare(value, filterQuery.Maximum, filterQuery.ValueType) <= 0;
-                case EvaluationMethods.LargerThan:
+                case ValueComparison.LargerThan:
                     return Compare(value, filterQuery.Minimum, filterQuery.ValueType) >= 0;
-                case EvaluationMethods.BetweenValues:
+                case ValueComparison.BetweenValues:
                     return Compare(value, filterQuery.Maximum, filterQuery.ValueType) <= 0 &&
                            Compare(value, filterQuery.Minimum, filterQuery.ValueType) >= 0;
-                case EvaluationMethods.Equal:
+                case ValueComparison.Equal:
                 {
                     foreach (var bound in filterQuery.EqualValues)
                     {

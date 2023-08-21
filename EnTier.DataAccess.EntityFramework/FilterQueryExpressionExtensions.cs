@@ -58,27 +58,27 @@ public static class FilterQueryExpressionExtensions
 
     private static BinaryExpression CreateBinaryExpression(MemberExpression leftOperand, FilterItem filterItem)
     {
-        switch (filterItem.EvaluationMethod)
+        switch (filterItem.ValueComparison)
         {
-            case EvaluationMethods.SmallerThan:
+            case ValueComparison.SmallerThan:
 
                 var maximum = filterItem.ReadValue(f => f.Maximum);
                 
                 return Expression.LessThanOrEqual(leftOperand, Expression.Constant(maximum));
-            case EvaluationMethods.LargerThan:
+            case ValueComparison.LargerThan:
                 
                 var minimum = filterItem.ReadValue(f => f.Minimum);
                 
                 return Expression.GreaterThanOrEqual(leftOperand, Expression.Constant(minimum));
             
-            case EvaluationMethods.BetweenValues:
+            case ValueComparison.BetweenValues:
                 var max = filterItem.ReadValue(f => f.Maximum);
                 var min = filterItem.ReadValue(f => f.Minimum);
 
                 return Expression.Add(
                     Expression.GreaterThanOrEqual(leftOperand,Expression.Constant(min)),
                     Expression.LessThanOrEqual(leftOperand,Expression.Constant(max)));
-            case EvaluationMethods.Equal:
+            case ValueComparison.Equal:
                 // False Binary Expression
                 BinaryExpression exp = Expression.Equal(Expression.Constant(false),Expression.Constant(true));
 

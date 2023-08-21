@@ -72,7 +72,7 @@ namespace Entier.Test.Unit
             {
                 Key = "Name",
                 EqualValues = new List<string> { "Mani", "Mona", "Mina", "Farshid" },
-                EvaluationMethod = EvaluationMethods.Equal,
+                ValueComparison = ValueComparison.Equal,
                 ValueType = typeof(string)
             });
 
@@ -81,7 +81,7 @@ namespace Entier.Test.Unit
                 Key = "Age",
                 Maximum = "100",
                 Minimum = "0",
-                EvaluationMethod = EvaluationMethods.BetweenValues,
+                ValueComparison = ValueComparison.BetweenValues,
                 ValueType = typeof(int)
             });
 
@@ -89,7 +89,7 @@ namespace Entier.Test.Unit
             {
                 Key = "Height",
                 Minimum = "150",
-                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueComparison = ValueComparison.LargerThan,
                 ValueType = typeof(int)
             });
 
@@ -106,7 +106,7 @@ namespace Entier.Test.Unit
                 Key = "Age",
                 Maximum = "100",
                 Minimum = "0",
-                EvaluationMethod = EvaluationMethods.BetweenValues,
+                ValueComparison = ValueComparison.BetweenValues,
                 ValueType = typeof(int)
             });
 
@@ -114,7 +114,7 @@ namespace Entier.Test.Unit
             {
                 Key = "Height",
                 Minimum = "150",
-                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueComparison = ValueComparison.LargerThan,
                 ValueType = typeof(int)
             });
 
@@ -122,7 +122,7 @@ namespace Entier.Test.Unit
             {
                 Key = "Name",
                 EqualValues = new List<string> { "Mani", "Mona", "Mina", "Farshid" },
-                EvaluationMethod = EvaluationMethods.Equal,
+                ValueComparison = ValueComparison.Equal,
                 ValueType = typeof(string)
             });
 
@@ -138,7 +138,7 @@ namespace Entier.Test.Unit
             {
                 Key = "Brand",
                 EqualValues = new List<string> { "Nokia", "Samsung", "Sony" },
-                EvaluationMethod = EvaluationMethods.Equal,
+                ValueComparison = ValueComparison.Equal,
                 ValueType = typeof(string)
             });
 
@@ -146,7 +146,7 @@ namespace Entier.Test.Unit
             {
                 Key = "Rate",
                 Minimum = "2.5",
-                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueComparison = ValueComparison.LargerThan,
                 ValueType = typeof(double)
             });
 
@@ -154,7 +154,7 @@ namespace Entier.Test.Unit
             {
                 Key = "Battery",
                 Minimum = "1500",
-                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueComparison = ValueComparison.LargerThan,
                 ValueType = typeof(int)
             });
 

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using EnTier.Query.Attributes;
 
-namespace EnTier.Extensions
+namespace EnTier.Query.Extensions
 {
     public static class TypeFilterQueryExtensions
     {
@@ -14,7 +14,7 @@ namespace EnTier.Extensions
         private static readonly long DayMilliseconds = 24 * HourMilliseconds;
         
         
-        public static long GetFilterResultExpirationDuration(this Type type)
+        public static long GetFilterResultExpirationDurationMilliseconds(this Type type)
         {
             var attribute = type.GetCustomAttributes<FilterResultExpirationDurationAttribute>()
                 .FirstOrDefault();
@@ -30,7 +30,7 @@ namespace EnTier.Extensions
         
         public static TimeSpan GetFilterResultExpirationTimeSpan(this Type type)
         {
-            var totalMilliseconds = GetFilterResultExpirationDuration(type);
+            var totalMilliseconds = GetFilterResultExpirationDurationMilliseconds(type);
 
             int days = (int)(totalMilliseconds / DayMilliseconds);
 

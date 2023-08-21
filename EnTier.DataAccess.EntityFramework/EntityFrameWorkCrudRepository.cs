@@ -7,6 +7,8 @@ using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using EnTier.Extensions;
 using EnTier.Query;
+using EnTier.Query.Extensions;
+using EnTier.Query.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Models;
 using Microsoft.EntityFrameworkCore;

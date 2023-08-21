@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Reflection;
 using EnTier.DataAccess.Meadow.GenericCrudRequests;
+using EnTier.Query;
 using EnTier.Repositories;
 using Meadow;
 using Meadow.Configuration;
@@ -279,6 +280,22 @@ namespace EnTier.DataAccess.Meadow
             }
 
             return default;
+        }
+        
+        
+        public override Task RemoveExpiredFilterResultsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -6,6 +6,7 @@ using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.DataAccess.InMemory;
 using EnTier.Query;
+using EnTier.Query.Models;
 using EnTier.Query.ObjectMatching;
 using EnTier.Repositories.Models;
 
@@ -40,7 +41,7 @@ namespace EnTier.DataAccess
 
             if (!anyResult && idLeaf != null && TypeCheck.IsNumerical(idLeaf.Type))
             {
-                var filteringResults = new InMemoryFilterer<TStorage>()
+                var filteringResults = new ObjectStreamFilterer<TStorage>()
                     .PerformFilter(data, filterQuery);
 
                 filterResults.AddRange(filteringResults);

@@ -25,7 +25,7 @@ namespace EnTier.Http.FuncTest.Controllers
             {
                 public string Name { get; set; }
                 
-                public EvaluationMethods Method { get; set; }
+                public ValueComparison Method { get; set; }
                 
                 public string Max { get; set; }
                 
@@ -40,7 +40,7 @@ namespace EnTier.Http.FuncTest.Controllers
                     Name = f.Key;
                     Max = f.Maximum;
                     Min = f.Minimum;
-                    Method = f.EvaluationMethod;
+                    Method = f.ValueComparison;
                     Values = f.EqualValues?.ToArray() ?? new string[] { };
                     TypeName = f.ValueType.FullName;
                 }

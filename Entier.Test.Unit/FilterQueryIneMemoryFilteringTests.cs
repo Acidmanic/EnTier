@@ -81,7 +81,7 @@ namespace Entier.Test.Unit
                 Key = key,
                 Maximum = max,
                 Minimum = min,
-                EvaluationMethod = EvaluationMethods.BetweenValues,
+                ValueComparison = ValueComparison.BetweenValues,
                 ValueType = typeof(TProperty)
             });
 
@@ -100,7 +100,7 @@ namespace Entier.Test.Unit
             {
                 Key = key,
                 Minimum = min,
-                EvaluationMethod = EvaluationMethods.LargerThan,
+                ValueComparison = ValueComparison.LargerThan,
                 ValueType = typeof(TProperty)
             });
 
@@ -119,7 +119,7 @@ namespace Entier.Test.Unit
             {
                 Key = key,
                 Maximum = max,
-                EvaluationMethod = EvaluationMethods.SmallerThan,
+                ValueComparison = ValueComparison.SmallerThan,
                 ValueType = typeof(TProperty)
             });
 
@@ -138,7 +138,7 @@ namespace Entier.Test.Unit
             filter.Add(new FilterItem
             {
                 Key = key,
-                EvaluationMethod = EvaluationMethods.Equal,
+                ValueComparison = ValueComparison.Equal,
                 EqualValues = new List<string>(values),
                 ValueType = typeof(TProperty)
             });
@@ -153,7 +153,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateBetweenNumeralFilterQuery( r=>r.Age,"40","50");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -171,7 +171,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateBetweenNumeralFilterQuery(r=>r.Age,"10","80");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -186,7 +186,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateLargerThanFilterQuery( m=>m.Age, "45");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -204,7 +204,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateSmallerThanFilterQuery( m=> m.Age,"45");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -222,7 +222,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateEqualFilterQuery( m => m.Age,"41");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -239,7 +239,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateEqualFilterQuery( m => m.Age,"41","37");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -258,7 +258,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateEqualFilterQuery( m => m.Name,"Mona","Mina");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -277,7 +277,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateEqualFilterQuery( m => m.Surname,"Moayedi");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -298,7 +298,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateLargerThanFilterQuery( m => m.Name,"M");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -319,7 +319,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateSmallerThanFilterQuery( m => m.Name,"G");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             
@@ -336,7 +336,7 @@ namespace Entier.Test.Unit
 
             var filter = CreateBetweenNumeralFilterQuery( m => m.Name,"Maaa","Mjjj");
 
-            var sut = new InMemoryFilterer<StorageModel>();
+            var sut = new ObjectStreamFilterer<StorageModel>();
 
             var result = sut.PerformFilter(data, filter);
             

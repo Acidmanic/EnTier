@@ -7,6 +7,7 @@ using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
 using EnTier.Query;
+using EnTier.Query.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using EnTier.Repositories.Models;

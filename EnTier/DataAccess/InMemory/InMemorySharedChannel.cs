@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using EnTier.Query.Models;
 using EnTier.Repositories.Models;
 
 namespace EnTier.DataAccess.InMemory

@@ -16,13 +16,13 @@ namespace EnTier.Query
 
         public List<string> EqualValues { get; set; } = new List<string>();
 
-        public EvaluationMethods EvaluationMethod { get; set; }
+        public ValueComparison ValueComparison { get; set; }
 
         internal string ToColumnSeparatedString()
         {
             var hash = ClearForHash(Key) + ":";
 
-            hash += ((int)EvaluationMethod).ToString() + ":";
+            hash += ((int)ValueComparison).ToString() + ":";
             hash += ValueType.FullName + ":";
             hash += ClearForHash(Maximum) + ":";
             hash += ClearForHash(Minimum) + ":";

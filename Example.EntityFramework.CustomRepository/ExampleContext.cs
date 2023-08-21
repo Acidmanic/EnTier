@@ -1,4 +1,5 @@
 using System.Data.Common;
+using EnTier.Query.Models;
 using EnTier.Repositories.Models;
 using ExampleEntityFramework.StoragesModels;
 using Microsoft.EntityFrameworkCore;

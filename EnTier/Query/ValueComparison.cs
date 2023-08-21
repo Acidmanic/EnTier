@@ -1,6 +1,6 @@
 namespace EnTier.Query
 {
-    public enum EvaluationMethods
+    public enum ValueComparison
     {
         Equal=0,
         LargerThan=1,
