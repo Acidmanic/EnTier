@@ -49,18 +49,18 @@ namespace EnTier.Repositories
             RemoveExpiredFilterResultsAsync().Wait();
         }
 
-        public abstract Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery);
+        public abstract Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,string searchId =null);
 
-        public IEnumerable<FilterResult> PerformFilterIfNeeded(FilterQuery filterQuery)
+        public IEnumerable<FilterResult> PerformFilterIfNeeded(FilterQuery filterQuery,string searchId =null)
         {
             return PerformFilterIfNeededAsync(filterQuery).Result;
         }
 
-        public abstract Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash);
+        public abstract Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId);
 
-        public IEnumerable<TStorage> ReadChunk(int offset, int size, string hash)
+        public IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId)
         {
-            return ReadChunkAsync(offset, size, hash).Result;
+            return ReadChunkAsync(offset, size, searchId).Result;
         }
 
         protected ILogger Logger { get; private set; } = NullLogger.Instance;

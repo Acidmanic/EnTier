@@ -10,6 +10,8 @@ public class Chunk<TEntity>
     
     public long Offset { get; set; }
     
+    public string SearchId { get; set; }
+    
     public IEnumerable<TEntity> Items { get; set; }
     
     public static Chunk<TDst> From<TSrc, TDst>(Chunk<TSrc> chunk,IEnumerable<TDst> items)
@@ -19,7 +21,8 @@ public class Chunk<TEntity>
             Items = items,
             Offset = chunk.Offset,
             Size = chunk.Size,
-            TotalCount = chunk.TotalCount
+            TotalCount = chunk.TotalCount,
+            SearchId = chunk.SearchId
         };
     }
 }

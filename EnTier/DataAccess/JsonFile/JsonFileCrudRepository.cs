@@ -170,16 +170,17 @@ namespace EnTier.DataAccess.JsonFile
             return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync(_filterResults);
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,
+            string searchId = null)
         {
             return ObjectListRepositoryFilteringHelper
-                .PerformFilterIfNeededAsync(_filterResults, _idLeaf, _data, filterQuery);
+                .PerformFilterIfNeededAsync(_filterResults, _idLeaf, _data, filterQuery, searchId);
         }
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId)
         {
             return ObjectListRepositoryFilteringHelper
-                .ReadChunkAsync(_filterResults, _idLeaf, _data, offset, size, hash);
+                .ReadChunkAsync(_filterResults, _idLeaf, _data, offset, size, searchId);
         }
     }
 }

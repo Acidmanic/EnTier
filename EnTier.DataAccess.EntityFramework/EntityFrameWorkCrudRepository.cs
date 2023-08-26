@@ -112,13 +112,14 @@ namespace EnTier.DataAccess.EntityFramework
             });
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,
+            string searchId = null)
         {
+            searchId ??= Guid.NewGuid().ToString("N");
+
             return Task.Run<IEnumerable<FilterResult>>(() =>
             {
-                var hash = filterQuery.Hash();
-
-                var anyResults = FilterResults.Count(r => r.FilterHash == hash);
+                var anyResults = FilterResults.Count(r => r.SearchId == searchId);
 
                 if (anyResults < 1)
                 {
@@ -143,7 +144,7 @@ namespace EnTier.DataAccess.EntityFramework
                     {
                         var filterResult = new FilterResult
                         {
-                            FilterHash = hash,
+                            SearchId = searchId,
                             ResultId = (long)idLeaf.Evaluator.Read(storage),
                             ExpirationTimeStamp = expirationTime
                         };
@@ -158,7 +159,7 @@ namespace EnTier.DataAccess.EntityFramework
             });
         }
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId)
         {
             return Task.Run<IEnumerable<TStorage>>(() =>
             {
@@ -171,11 +172,11 @@ namespace EnTier.DataAccess.EntityFramework
                 var lambda = Expression.Lambda<Func<TStorage, long>>(property, parameter);
 
                 var readResult = DbSet.Join(
-                        FilterResults, 
-                        lambda, 
+                        FilterResults,
+                        lambda,
                         f => f.ResultId,
-                        (storage, filter) => new {storage,filter } )
-                    .Where(s => s.filter.FilterHash==hash)
+                        (storage, filter) => new { storage, filter })
+                    .Where(s => s.filter.SearchId == searchId)
                     .Skip(offset).Take(size).ToList()
                     .Select(s => s.storage);
 

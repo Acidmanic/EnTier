@@ -161,19 +161,20 @@ namespace EnTier.DataAccess.InMemory
                 .FilterResults);
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,
+            string searchId = null)
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(InMemorySharedChannel.FilterResults,
-                    _idLeaf, _data, filterQuery);
+                    _idLeaf, _data, filterQuery, searchId);
         }
 
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId)
         {
             return ObjectListRepositoryFilteringHelper
                 .ReadChunkAsync(InMemorySharedChannel.FilterResults,
-                    _idLeaf, _data, offset, size, hash);
+                    _idLeaf, _data, offset, size, searchId);
         }
     }
 }

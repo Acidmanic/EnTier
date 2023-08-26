@@ -31,16 +31,17 @@ namespace EnTier.DataAccess
             List<FilterResult> filterResults,
             AccessNode idLeaf,
             IEnumerable<TStorage> data,
-            FilterQuery filterQuery)
+            FilterQuery filterQuery,
+            string searchId = null)
         {
-            var hash = filterQuery.Hash();
+            searchId ??= Guid.NewGuid().ToString("N");
 
-            var anyResult = filterResults.Any(f => f.FilterHash == hash);
+            var anyResult = filterResults.Any(f => f.SearchId == searchId);
 
             if (!anyResult && idLeaf != null && TypeCheck.IsNumerical(idLeaf.Type))
             {
                 var filteringResults = new ObjectStreamFilterer<TStorage>()
-                    .PerformFilter(data, filterQuery);
+                    .PerformFilter(data, filterQuery,searchId);
 
                 filterResults.AddRange(filteringResults);
             }
@@ -52,7 +53,7 @@ namespace EnTier.DataAccess
             List<FilterResult> filterResults,
             AccessNode idLeaf,
             IEnumerable<TStorage> data,
-            int offset, int size, string hash)
+            int offset, int size, string searchId)
         {
             var values = new List<TStorage>();
 
@@ -60,7 +61,7 @@ namespace EnTier.DataAccess
 
             foreach (var result in filterResults)
             {
-                if (result.FilterHash == hash)
+                if (result.SearchId == searchId)
                 {
                     if (skipped < offset)
                     {

@@ -118,13 +118,14 @@ namespace EnTier.Repositories
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery);
+        Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery, string searchId = null);
+
         /// <summary>
         /// This method, Checks if given filter is not performed. If so, then
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        IEnumerable<FilterResult> PerformFilterIfNeeded(FilterQuery filterQuery);
+        IEnumerable<FilterResult> PerformFilterIfNeeded(FilterQuery filterQuery, string searchId = null);
 
         /// <summary>
         /// This method will read a chunk of storage data by skipping 'offset' items and picking 'size' items.
@@ -133,9 +134,10 @@ namespace EnTier.Repositories
         /// </summary>
         /// <param name="offset">Number if results to be skipped</param>
         /// <param name="size">Maximum number of results to be read</param>
-        /// <param name="hash">The hash of filter-query which whom it's results are being read.</param>
+        /// <param name="searchId">The hash of filter-query which whom it's results are being read.</param>
         /// <returns>The asked chunk of results, if found any.</returns>
-        Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash);
+        Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId);
+
         /// <summary>
         /// This method will read a chunk of storage data by skipping 'offset' items and picking 'size' items.
         /// This method uses the FilterResults data so For this method to work, it's necessary that the filter
@@ -143,10 +145,8 @@ namespace EnTier.Repositories
         /// </summary>
         /// <param name="offset">Number if results to be skipped</param>
         /// <param name="size">Maximum number of results to be read</param>
-        /// <param name="hash">The hash of filter-query which whom it's results are being read.</param>
+        /// <param name="searchId">The hash of filter-query which whom it's results are being read.</param>
         /// <returns>The asked chunk of results, if found any.</returns>
-        IEnumerable<TStorage> ReadChunk(int offset, int size, string hash);
-        
-        
+        IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId);
     }
 }

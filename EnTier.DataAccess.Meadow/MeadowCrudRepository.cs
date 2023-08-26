@@ -297,9 +297,9 @@ namespace EnTier.DataAccess.Meadow
             ErrorCheck(response);
         }
 
-        public override async Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        public override async Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,string searchId = null)
         {
-            var request = new PerformFilterIfNeededRequest<TStorage>(filterQuery);
+            var request = new PerformFilterIfNeededRequest<TStorage>(filterQuery,searchId);
 
             var engine = GetEngine();
 
@@ -310,9 +310,9 @@ namespace EnTier.DataAccess.Meadow
             return request.FromStorage;
         }
 
-        public override async Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
+        public override async Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId)
         {
-            var request = new ReadChunkRequest<TStorage>(hash, offset, size);
+            var request = new ReadChunkRequest<TStorage>(searchId, offset, size);
 
             var engine = GetEngine();
 

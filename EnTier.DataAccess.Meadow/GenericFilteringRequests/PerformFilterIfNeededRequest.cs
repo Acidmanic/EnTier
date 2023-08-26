@@ -1,24 +1,30 @@
 using System;
+using Acidmanic.Utilities.DataTypes;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Extensions;
 using Acidmanic.Utilities.Filtering.Models;
 using EnTier.DataAccess.Meadow.GenericFilteringRequests.Models;
 using Meadow.Contracts;
+using Meadow.Extensions;
 using Meadow.Requests;
 
 namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
 {
     public sealed class PerformFilterIfNeededRequest<TStorage> : MeadowRequest<FilterShell, FilterResult>
     {
-        public PerformFilterIfNeededRequest(FilterQuery filterQuery) : base(true)
+        public PerformFilterIfNeededRequest(FilterQuery filterQuery,string searchId = null) : base(true)
         {
+            searchId ??= Guid.NewGuid().SearchId();
+            
             RegisterTranslationTask(t =>
             {
                 ToStorage = new FilterShell
                 {
-                    FilterHash = filterQuery.Hash(),
+                    SearchId = searchId,
                     FilterExpression = t.TranslateFilterQueryToWhereClause(filterQuery),
-                    ExpirationTimeStamp = DateTime.Now.Ticks + typeof(TStorage).GetFilterResultExpirationTimeSpan().Ticks
+                    ExpirationTimeStamp = TimeStamp.Now.TotalMilliSeconds  + 
+                                          ((TimeStamp)typeof(TStorage).GetFilterResultExpirationTimeSpan())
+                                          .TotalMilliSeconds
                 };
             });
         }

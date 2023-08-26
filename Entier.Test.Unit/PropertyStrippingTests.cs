@@ -80,12 +80,12 @@ namespace Entier.Test.Unit
                 throw new NotImplementedException();
             }
 
-            public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
+            public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,string searchId = null)
             {
                 throw new NotImplementedException();
             }
 
-            public override Task<IEnumerable<Model>> ReadChunkAsync(int offset, int size, string hash)
+            public override Task<IEnumerable<Model>> ReadChunkAsync(int offset, int size, string searchId)
             {
                 throw new NotImplementedException();
             }

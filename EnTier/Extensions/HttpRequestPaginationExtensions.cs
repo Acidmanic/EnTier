@@ -15,6 +15,13 @@ namespace EnTier.Extensions
 
             var foundIndex = queries.ReadIntByKey("pageIndex");
 
+            string searchId = null;
+
+            if (queries.ContainsKey("searchId"))
+            {
+                searchId = queries["searchId"].Last();
+            }
+            
             if (foundIndex)
             {
                 var foundSize = queries.ReadIntByKey("pageSize");
@@ -24,7 +31,8 @@ namespace EnTier.Extensions
                     return new PaginationQuery
                     {
                         PageIndex = foundIndex.Value,
-                        PageSize = foundSize.Value
+                        PageSize = foundSize.Value,
+                        SearchId = searchId
                     };
                 }
             }
@@ -32,7 +40,8 @@ namespace EnTier.Extensions
             return new PaginationQuery
             {
                 PageIndex = 1,
-                PageSize = int.MaxValue
+                PageSize = int.MaxValue,
+                SearchId = null
             };
         }
     }

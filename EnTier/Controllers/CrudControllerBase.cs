@@ -80,6 +80,7 @@ namespace EnTier.Controllers
             var domainChunk = Service.GetAllAsync(
                 pagination.Offset,
                 pagination.Size,
+                pagination.SearchId,
                 filter).Result;
 
             var transferObjects = Mapper.Map<List<TTransfer>>(domainChunk.Items);

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Reflection;
@@ -53,29 +55,37 @@ namespace EnTier.Services
         {
             return GetAllAsync().Result;
         }
-        
+
         public virtual Task<Chunk<TDomain>> GetAllAsync()
         {
-            return GetAllAsync(0,int.MaxValue);
+            return GetAllAsync(0, int.MaxValue);
         }
 
         public virtual Task<Chunk<TDomain>> GetAllAsync(int offset, int size)
         {
-            return GetAllAsync(offset, size, new FilterQuery());
+            return GetAllAsync(offset, size, null, new FilterQuery());
         }
-        
-        public virtual async  Task<Chunk<TDomain>> GetAllAsync(int offset,int size,FilterQuery filterQuery)
+
+        public virtual async Task<Chunk<TDomain>> GetAllAsync(int offset, int size, [AllowNull] string searchId,
+            FilterQuery filterQuery)
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
             await repository.RemoveExpiredFilterResultsAsync();
 
-            await repository.PerformFilterIfNeededAsync(filterQuery);
+            var foundResults = await repository.PerformFilterIfNeededAsync(filterQuery,searchId);
+
+
+            var totalCount = foundResults.Count();
             
-            
+            if (totalCount>0)
+            {
+                searchId = foundResults.First().SearchId;
+            }
+
             UnitOfWork.Complete();
-            
-            var storages = await repository.ReadChunkAsync(offset,size,filterQuery.Hash());
+
+            var storages = await repository.ReadChunkAsync(offset, size, searchId);
 
             var outgoingStorages = RegulateOutgoing(storages);
 
@@ -86,7 +96,8 @@ namespace EnTier.Services
                 Items = domains,
                 Offset = offset,
                 Size = size,
-                TotalCount = domains?.Count() ?? 0
+                TotalCount = totalCount,
+                SearchId = searchId
             };
         }
 

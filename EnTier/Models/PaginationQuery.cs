@@ -5,6 +5,8 @@ namespace EnTier.Models
         public int PageIndex { get; set; }
         
         public int PageSize { get; set; }
+        
+        public string SearchId { get; set; }
 
         public int Offset => (PageIndex -1) * PageSize;
 

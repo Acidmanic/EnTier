@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
 using EnTier.Models;
@@ -10,7 +11,7 @@ namespace EnTier.Services
     {
         Chunk<TEntity> GetAll();
 
-        Task<Chunk<TEntity>> GetAllAsync(int offset, int size, FilterQuery filterQuery);
+        Task<Chunk<TEntity>> GetAllAsync(int offset, int size,[AllowNull] string searchId , FilterQuery filterQuery);
 
         Task<Chunk<TEntity>> GetAllAsync(int offset, int size);
 
