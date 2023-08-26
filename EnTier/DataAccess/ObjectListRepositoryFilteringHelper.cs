@@ -27,7 +27,7 @@ namespace EnTier.DataAccess
             return Task.CompletedTask;
         }
 
-        public static Task PerformFilterIfNeededAsync<TStorage>(
+        public static Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync<TStorage>(
             List<FilterResult> filterResults,
             AccessNode idLeaf,
             IEnumerable<TStorage> data,
@@ -45,7 +45,7 @@ namespace EnTier.DataAccess
                 filterResults.AddRange(filteringResults);
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(filterResults as IEnumerable<FilterResult>);
         }
 
         public static Task<IEnumerable<TStorage>> ReadChunkAsync<TStorage>(

@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.DataTypes;
 using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using EnTier.DataAccess.Meadow.GenericCrudRequests;
+using EnTier.DataAccess.Meadow.GenericFilteringRequests;
 using EnTier.Repositories;
 using Meadow;
 using Meadow.Configuration;
@@ -281,21 +284,43 @@ namespace EnTier.DataAccess.Meadow
 
             return default;
         }
-        
-        
-        public override Task RemoveExpiredFilterResultsAsync()
+
+
+        public override async Task RemoveExpiredFilterResultsAsync()
         {
-            throw new NotImplementedException();
+            var request = new RemoveExpiredFilterResultsRequest(TimeStamp.Now);
+
+            var engine = GetEngine();
+
+            var response = await engine.PerformRequestAsync(request);
+
+            ErrorCheck(response);
         }
 
-        public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        public override async Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
         {
-            throw new NotImplementedException();
+            var request = new PerformFilterIfNeededRequest<TStorage>(filterQuery);
+
+            var engine = GetEngine();
+
+            var response = await engine.PerformRequestAsync(request);
+
+            ErrorCheck(response);
+
+            return request.FromStorage;
         }
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
+        public override async Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash)
         {
-            throw new NotImplementedException();
+            var request = new ReadChunkRequest<TStorage>(hash, offset, size);
+
+            var engine = GetEngine();
+
+            var response = await engine.PerformRequestAsync(request);
+            
+            ErrorCheck(response);
+
+            return response.FromStorage;
         }
     }
 }

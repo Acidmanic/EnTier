@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using Xunit;
@@ -79,7 +80,7 @@ namespace Entier.Test.Unit
                 throw new NotImplementedException();
             }
 
-            public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+            public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
             {
                 throw new NotImplementedException();
             }

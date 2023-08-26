@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EnTier;
 using EnTier.Mapper;
+using EnTier.Models;
 using EnTier.Regulation;
 using EnTier.Services;
 using EnTier.UnitOfWork;
@@ -13,11 +14,19 @@ namespace ServiceManipulationExample.Services
     {
     
 
-        public override IEnumerable<Post> GetAll()
+        public override Chunk<Post> GetAll()
         {
-            var result =  base.GetAll().Select(Manipulate);
+            var originalChunk = base.GetAll();
+            
+            var manipulatedChunk = new Chunk<Post>
+            {
+                Items = originalChunk.Items.Select(Manipulate),
+                Offset = originalChunk.Offset,
+                Size = originalChunk.Size,
+                TotalCount = originalChunk.TotalCount
+            };
 
-            return result;
+            return manipulatedChunk;
         }
 
         public override Post GetById(long id)

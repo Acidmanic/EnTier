@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories
@@ -117,13 +118,13 @@ namespace EnTier.Repositories
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        Task PerformFilterIfNeededAsync(FilterQuery filterQuery);
+        Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery);
         /// <summary>
         /// This method, Checks if given filter is not performed. If so, then
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        void PerformFilterIfNeeded(FilterQuery filterQuery);
+        IEnumerable<FilterResult> PerformFilterIfNeeded(FilterQuery filterQuery);
 
         /// <summary>
         /// This method will read a chunk of storage data by skipping 'offset' items and picking 'size' items.

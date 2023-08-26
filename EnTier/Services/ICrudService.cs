@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
+using EnTier.Models;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services
 {
     public interface ICrudService<TEntity, in TDomainId> where TEntity : class, new()
     {
-        IEnumerable<TEntity> GetAll();
+        Chunk<TEntity> GetAll();
 
-        Task<IEnumerable<TEntity>> GetAllAsync(int offset, int size, FilterQuery filterQuery);
+        Task<Chunk<TEntity>> GetAllAsync(int offset, int size, FilterQuery filterQuery);
 
-        Task<IEnumerable<TEntity>> GetAllAsync(int offset, int size);
+        Task<Chunk<TEntity>> GetAllAsync(int offset, int size);
 
-        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<Chunk<TEntity>> GetAllAsync();
 
         TEntity GetById(TDomainId id);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
@@ -160,7 +161,7 @@ namespace EnTier.DataAccess.InMemory
                 .FilterResults);
         }
 
-        public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(InMemorySharedChannel.FilterResults,

@@ -170,7 +170,7 @@ namespace EnTier.DataAccess.JsonFile
             return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync(_filterResults);
         }
 
-        public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(_filterResults, _idLeaf, _data, filterQuery);

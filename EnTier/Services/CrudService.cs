@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Results;
 using EnTier.Mapper;
+using EnTier.Models;
 using EnTier.Regulation;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
@@ -47,22 +49,22 @@ namespace EnTier.Services
         }
 
 
-        public virtual IEnumerable<TDomain> GetAll()
+        public virtual Chunk<TDomain> GetAll()
         {
             return GetAllAsync().Result;
         }
         
-        public virtual Task<IEnumerable<TDomain>> GetAllAsync()
+        public virtual Task<Chunk<TDomain>> GetAllAsync()
         {
             return GetAllAsync(0,int.MaxValue);
         }
 
-        public virtual Task<IEnumerable<TDomain>> GetAllAsync(int offset, int size)
+        public virtual Task<Chunk<TDomain>> GetAllAsync(int offset, int size)
         {
             return GetAllAsync(offset, size, new FilterQuery());
         }
         
-        public virtual async  Task<IEnumerable<TDomain>> GetAllAsync(int offset,int size,FilterQuery filterQuery)
+        public virtual async  Task<Chunk<TDomain>> GetAllAsync(int offset,int size,FilterQuery filterQuery)
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
@@ -79,7 +81,13 @@ namespace EnTier.Services
 
             var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
 
-            return domains;
+            return new Chunk<TDomain>
+            {
+                Items = domains,
+                Offset = offset,
+                Size = size,
+                TotalCount = domains?.Count() ?? 0
+            };
         }
 
         public virtual TDomain GetById(TDomainId id)

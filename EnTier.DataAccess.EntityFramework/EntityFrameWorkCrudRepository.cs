@@ -112,9 +112,9 @@ namespace EnTier.DataAccess.EntityFramework
             });
         }
 
-        public override Task PerformFilterIfNeededAsync(FilterQuery filterQuery)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery)
         {
-            return Task.Run(() =>
+            return Task.Run<IEnumerable<FilterResult>>(() =>
             {
                 var hash = filterQuery.Hash();
 
@@ -150,7 +150,11 @@ namespace EnTier.DataAccess.EntityFramework
 
                         FilterResults.Add(filterResult);
                     }
+
+                    return FilterResults;
                 }
+
+                return new FilterResult[] { };
             });
         }
 

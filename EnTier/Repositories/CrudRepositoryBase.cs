@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using EnTier.Extensions;
 using EnTier.Repositories.Attributes;
@@ -48,11 +49,11 @@ namespace EnTier.Repositories
             RemoveExpiredFilterResultsAsync().Wait();
         }
 
-        public abstract Task PerformFilterIfNeededAsync(FilterQuery filterQuery);
+        public abstract Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery);
 
-        public void PerformFilterIfNeeded(FilterQuery filterQuery)
+        public IEnumerable<FilterResult> PerformFilterIfNeeded(FilterQuery filterQuery)
         {
-            PerformFilterIfNeededAsync(filterQuery).Wait();
+            return PerformFilterIfNeededAsync(filterQuery).Result;
         }
 
         public abstract Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string hash);
