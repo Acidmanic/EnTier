@@ -5,6 +5,7 @@ using Acidmanic.Utilities.Reflection;
 using EnTier.AutoWrap;
 using EnTier.Extensions;
 using EnTier.Mapper;
+using EnTier.Models;
 using EnTier.Regulation;
 using EnTier.Services;
 using EnTier.UnitOfWork;
@@ -65,27 +66,27 @@ namespace EnTier.Controllers
             {
                 var data = OnGetAll();
 
-                var wrapped = AutoWrapper.WrapIfNeeded(data);
-
-                return Ok(wrapped);
+                return Ok(data);
             });
         }
 
 
-        protected virtual IEnumerable<TTransfer> OnGetAll()
+        protected virtual Chunk<TTransfer> OnGetAll()
         {
             var filter = HttpContext.GetFilter<TStorage>();
 
             var pagination = HttpContext.GetPagination();
 
-            var allDomainObjects = Service.GetAllAsync(
+            var domainChunk = Service.GetAllAsync(
                 pagination.Offset,
                 pagination.Size,
                 filter).Result;
 
-            var allTransferObjects = Mapper.Map<List<TTransfer>>(allDomainObjects);
+            var transferObjects = Mapper.Map<List<TTransfer>>(domainChunk.Items);
 
-            return allTransferObjects;
+            var transferChunk = Chunk<TTransfer>.From(domainChunk, transferObjects);
+
+            return transferChunk;
         }
 
         [HttpGet]

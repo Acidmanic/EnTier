@@ -1,4 +1,5 @@
 using System;
+using Acidmanic.Utilities.Filtering.Attributes;
 using Acidmanic.Utilities.Reflection.Attributes;
 
 namespace ExampleJsonFile.Storage
@@ -7,11 +8,11 @@ namespace ExampleJsonFile.Storage
     {
         [AutoValuedMember]
         [UniqueMember]
-        public string Id { get; set; }
+        public long Id { get; set; }
         
-        public string Title { get; set; }
+        [FilterField] public string Title { get; set; }
         
-        public string Content { get; set; }
+        [FilterField] public string Content { get; set; }
         
     }
 }

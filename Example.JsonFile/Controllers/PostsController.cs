@@ -15,7 +15,7 @@ namespace ExampleJsonFile.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PostsController : CrudControllerBase<PostDto,Post,PostStg,string>
+    public class PostsController : CrudControllerBase<PostDto,Post,PostStg,long>
     {
         public PostsController(EnTierEssence essence) : base(essence)
         {

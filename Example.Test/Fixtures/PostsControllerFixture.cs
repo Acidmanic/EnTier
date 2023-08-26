@@ -13,13 +13,13 @@ namespace Example.UnitTest.Fixtures
             {
                 Content = "This value is seeded Into Database.",
                 Title = "DesiredTitle",
-                Id = "A"
+                Id = 0
             });
             repo.Add(new PostStg()
             {
                 Content = "This value is seeded Into Database.",
                 Title = "NormalTitle",
-                Id = "B"
+                Id = 0
             });
         }
     }

@@ -17,9 +17,5 @@ namespace ExampleEntityFramework.Controllers
         {
         }
 
-        protected override IEnumerable<PostDto> OnGetAll()
-        {
-            return base.OnGetAll();
-        }
     }
 }

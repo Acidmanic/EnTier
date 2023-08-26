@@ -11,4 +11,15 @@ public class Chunk<TEntity>
     public long Offset { get; set; }
     
     public IEnumerable<TEntity> Items { get; set; }
+    
+    public static Chunk<TDst> From<TSrc, TDst>(Chunk<TSrc> chunk,IEnumerable<TDst> items)
+    {
+        return new Chunk<TDst>
+        {
+            Items = items,
+            Offset = chunk.Offset,
+            Size = chunk.Size,
+            TotalCount = chunk.TotalCount
+        };
+    }
 }

@@ -1,4 +1,5 @@
 using System;
+using Acidmanic.Utilities.Filtering.Attributes;
 using Acidmanic.Utilities.Reflection.Attributes;
 
 namespace ExampleJsonFile.Domain
@@ -7,7 +8,7 @@ namespace ExampleJsonFile.Domain
     {
         [AutoValuedMember]
         [UniqueMember]
-        public string Id { get; set; }
+        public long Id { get; set; }
         
         public string Title { get; set; }
         
