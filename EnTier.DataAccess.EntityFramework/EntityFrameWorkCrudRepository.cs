@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Acidmanic.Utilities.DataTypes;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Extensions;
 using Acidmanic.Utilities.Filtering.Models;
@@ -137,8 +138,8 @@ namespace EnTier.DataAccess.EntityFramework
                     var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
 
                     var expirationTime =
-                        DateTime.Now.Ticks +
-                        typeof(TStorage).GetFilterResultExpirationTimeSpan().Ticks;
+                        TimeStamp.Now.TotalMilliSeconds +
+                        typeof(TStorage).GetFilterResultExpirationDurationMilliseconds();
 
                     foreach (var storage in filterResults)
                     {

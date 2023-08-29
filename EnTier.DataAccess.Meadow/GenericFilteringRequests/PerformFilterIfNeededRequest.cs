@@ -21,17 +21,15 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
                 ToStorage = new FilterShell
                 {
                     SearchId = searchId,
-                    FilterExpression = t.TranslateFilterQueryToWhereClause(filterQuery),
-                    ExpirationTimeStamp = TimeStamp.Now.TotalMilliSeconds  + 
-                                          ((TimeStamp)typeof(TStorage).GetFilterResultExpirationTimeSpan())
-                                          .TotalMilliSeconds
+                    FilterExpression = t.TranslateFilterQueryToWhereClause(filterQuery,FullTreeReadWrite()),
+                    ExpirationTimeStamp = typeof(TStorage).GetFilterResultExpirationPointMilliseconds()
                 };
             });
         }
 
         public override string RequestText
         {
-            get => new NameConvention<TStorage>().PerformFilterIfNeededProcedureName;
+            get => Configuration.GetNameConvention<TStorage>().PerformFilterIfNeededProcedureName;
             protected set
             {
                 

@@ -7,31 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EnTier.Http.FuncTest.Controllers
 {
-    
-    
-    
     [ApiController]
     [Route("filter-queries")]
-    public class FilterQueryController:ControllerBase
+    public class FilterQueryController : ControllerBase
     {
-
-
-
-
         private class FilterQueryDto
         {
             public class FilterItemDto
             {
                 public string Name { get; set; }
-                
+
                 public ValueComparison Method { get; set; }
-                
+
                 public string Max { get; set; }
-                
+
                 public string Min { get; set; }
-                
-                public string[] Values { get; set; } = new string[]{};
-                
+
+                public string[] Values { get; set; } = new string[] { };
+
                 public string TypeName { get; set; }
 
                 public FilterItemDto(FilterItem f)
@@ -44,23 +37,24 @@ namespace EnTier.Http.FuncTest.Controllers
                     TypeName = f.ValueType.FullName;
                 }
             }
-            public List<FilterItemDto> Filters { get; set; } 
+
+            public List<FilterItemDto> Filters { get; set; }
 
             public string Hash { get; set; }
-            
+
             public string FilterName { get; set; }
-            
-            
-            public FilterQueryDto( FilterQuery q)
+
+
+            public FilterQueryDto(FilterQuery q)
             {
                 Filters = q.Items().Select(i => new FilterItemDto(i)).ToList();
 
                 Hash = q.Hash();
 
-                FilterName = q.FilterName;
+                FilterName = q.EntityType.FullName;
             }
         }
-        
+
 
         [HttpGet]
         [Route("")]
@@ -69,15 +63,15 @@ namespace EnTier.Http.FuncTest.Controllers
             var query = HttpContext.GetFilter<StorageModel>();
 
             var queryDto = new FilterQueryDto(query);
-            
+
             var fakeQuery = HttpContext.GetFilter<FakeStorageModel>();
-            
+
             var fakeQueryDto = new FilterQueryDto(fakeQuery);
-            
+
             return Ok(new
             {
-                Original=queryDto,
-                Fake=fakeQueryDto
+                Original = queryDto,
+                Fake = fakeQueryDto
             });
         }
     }

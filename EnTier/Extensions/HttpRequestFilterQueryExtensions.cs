@@ -20,15 +20,18 @@ namespace EnTier.Extensions
         {
             var evaluator = new ObjectEvaluator(storageModelType);
 
-            var leaves = evaluator.RootNode.GetDirectLeaves()
-                .Where(l => IsFilterField(l));
+            var leaves = evaluator.RootNode.GetDirectLeaves().Where(IsFilterField);
 
             var query = new FilterQuery();
 
-            query.FilterName = storageModelType.FullName;
+            query.EntityType = storageModelType;
 
             var requestQueries = request.Query;
 
+            //var requestFormFields = request.Form;
+            
+            //var jsonBody = request...readJsonDictionary
+            
             foreach (var leaf in leaves)
             {
                 var foundKey = requestQueries.FindKey(leaf.Name);

@@ -56,7 +56,9 @@ namespace Example.Meadow
             app.ConfigureEnTierResolver();
             
             var engine = new MeadowEngine(new MeadowConfigurationProvider().GetConfigurations());
-
+            
+            MeadowEngine.UseLogger(app.ApplicationServices.GetService(typeof(ILogger)) as ILogger);
+            
             engine.UseSqlServer();
             
             if (engine.DatabaseExists())
@@ -67,6 +69,9 @@ namespace Example.Meadow
             engine.CreateDatabase();
             
             engine.BuildUpDatabase();
+
+
+            app.UseFixture<PostsFixture>();
         }
     }
 }

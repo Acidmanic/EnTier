@@ -1,5 +1,6 @@
 using EnTier.DataAccess.Meadow.GenericFilteringRequests.Models;
 using Meadow.Contracts;
+using Meadow.Extensions;
 using Meadow.Requests;
 
 namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
@@ -18,10 +19,7 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
 
         public override string RequestText
         {
-            get
-            {
-                return new NameConvention<TStorage>().ReadChunkProcedureName;
-            }
+            get => Configuration.GetNameConvention<TStorage>().ReadChunkProcedureName;
             protected set
             {
                 
