@@ -9,3 +9,6 @@ EnTier.sln.DotSettings.user
 **/bin
 **/obj
 **/build
+MeadowExample.db
+MeadowExample.db.json
+procedures.json

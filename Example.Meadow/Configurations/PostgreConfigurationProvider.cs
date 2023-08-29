@@ -6,10 +6,11 @@ using Meadow.Contracts;
 using Meadow.Scaffolding.Macros;
 using Meadow.SqlServer;
 
-namespace Example.Meadow
+namespace Example.Meadow.Configurations
 {
-    public class MeadowConfigurationProvider:IMeadowConfigurationProvider
+    public class PostgreConfigurationProvider:IMeadowConfigurationProvider
     {
+                
         public MeadowConfiguration GetConfigurations()
         {
 
@@ -18,11 +19,8 @@ namespace Example.Meadow
             return new MeadowConfiguration
             {
                 BuildupScriptDirectory = "Scripts",
-                ConnectionString = "Server=localhost;" +
-                                   "User Id=sa; " +
-                                   $"Password={saPassword};" +
-                                   $@"Database=MeadowExample; " +
-                                   "MultipleActiveResultSets=true",
+                ConnectionString = $"User ID=postgres;Password='{saPassword}';Host=localhost;Port=5432;" +
+                                   $"Database=MeadowExample;",
                 MacroPolicy = MacroPolicies.UpdateScripts,
                 MacroContainingAssemblies = new List<Assembly>
                 {

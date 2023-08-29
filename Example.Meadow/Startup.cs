@@ -1,6 +1,10 @@
+using System;
 using EnTier.Extensions;
+using Example.Meadow.Configurations;
 using Meadow;
+using Meadow.Contracts;
 using Meadow.Extensions;
+using Meadow.SQLite.Extensions;
 using Meadow.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +25,11 @@ namespace Example.Meadow
 
         public IConfiguration Configuration { get; }
 
+        private static readonly IMeadowConfigurationProvider MeadowConfigurationProvider = new SqLiteConfigurationProvider();
+
+        private static readonly Action<MeadowEngine> SetMeadowDatabase = e => e.UseSqLite();
+        
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -30,10 +39,12 @@ namespace Example.Meadow
             
             services.AddTransient<ILogger>(sp => new ConsoleLogger().Disable(LogLevel.Debug));
             
-            services.AddMeadowUnitOfWork(new MeadowConfigurationProvider());
+            services.AddMeadowUnitOfWork(MeadowConfigurationProvider);
             
         }
-
+        
+        
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -55,11 +66,11 @@ namespace Example.Meadow
 
             app.ConfigureEnTierResolver();
             
-            var engine = new MeadowEngine(new MeadowConfigurationProvider().GetConfigurations());
+            var engine = new MeadowEngine(MeadowConfigurationProvider.GetConfigurations());
             
             MeadowEngine.UseLogger(app.ApplicationServices.GetService(typeof(ILogger)) as ILogger);
-            
-            engine.UseSqlServer();
+
+            SetMeadowDatabase(engine);
             
             if (engine.DatabaseExists())
             {
