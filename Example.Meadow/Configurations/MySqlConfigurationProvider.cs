@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using Meadow.Configuration;
 using Meadow.Contracts;
+using Meadow.MySql;
 using Meadow.Scaffolding.Macros;
 using Meadow.SqlServer;
 
@@ -25,7 +26,7 @@ namespace Example.Meadow.Configurations
                 {
                     Assembly.GetEntryAssembly(),
                     typeof(IMacro).Assembly,
-                    typeof(SqlServerDataAccessCore).Assembly
+                    typeof(MySqlDataAccessCore).Assembly
                 }
             };
         }
