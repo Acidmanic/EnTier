@@ -13,7 +13,7 @@
         <PackageReference Include="Acidmanic.Utilities" Version="1.0.12" />
         <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b06" />
 
-        <PackageReference Include="Meadow.Framework" Version="1.2.4-b15" />
+        <PackageReference Include="Meadow.Framework" Version="1.2.4-b16" />
     </ItemGroup>
 
     <PropertyGroup>
