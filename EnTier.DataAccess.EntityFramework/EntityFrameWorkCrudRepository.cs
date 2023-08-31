@@ -10,6 +10,7 @@ using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
+using EnTier.Extensions;
 using EnTier.Models;
 using EnTier.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -192,17 +193,7 @@ namespace EnTier.DataAccess.EntityFramework
         {
             return Task.Run<FilterRange>(() =>
             {
-                var ev = new ObjectEvaluator(typeof(TStorage));
-
-                var fullAddress = ev.RootNode.Name + "." + headlessFieldAddress;
-
-                var node = ev.Map.NodeByAddress(fullAddress);
-
-                ParameterExpression parameter = Expression.Parameter(typeof(TStorage), "s");
-                //a=>a.id
-                MemberExpression property = Expression.Property(parameter, node.Name);
-
-                var lambda = Expression.Lambda<Func<TStorage, object>>(property, parameter);
+                var lambda = headlessFieldAddress.CreatePropertyPickerLambdaHeadless<TStorage, object>();
 
                 var range = new FilterRange();
 
@@ -217,18 +208,9 @@ namespace EnTier.DataAccess.EntityFramework
         {
             return Task.Run<List<string>>(() =>
             {
-                var ev = new ObjectEvaluator(typeof(TStorage));
-
-                var fullAddress = ev.RootNode.Name + "." + headlessFieldAddress;
-
-                var node = ev.Map.NodeByAddress(fullAddress);
-
-                ParameterExpression parameter = Expression.Parameter(typeof(TStorage), "s");
-                //a=>a.id
-                MemberExpression property = Expression.Property(parameter, node.Name);
-
-                var lambda = Expression.Lambda<Func<TStorage, object>>(property, parameter);
-
+                
+                var lambda = headlessFieldAddress.CreatePropertyPickerLambdaHeadless<TStorage, object>();
+                
                 var existingValues =
                     DbSet.Select(lambda).Distinct().ToList()
                         .Select(o => o.ToString()).ToList();

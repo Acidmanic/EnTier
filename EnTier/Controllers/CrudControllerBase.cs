@@ -285,7 +285,7 @@ namespace EnTier.Controllers
         public IActionResult GetFilterProfile()
         {
             // Provide a mechanism for user to decide this (filtering fulltree) 
-            var fullTree = false;
+            var fullTree = true;
 
             var filteringProfile = _essence.
                 FilterInformationService.
