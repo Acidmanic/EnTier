@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using EnTier.Repositories;
 using Microsoft.Extensions.Logging;
 
@@ -37,6 +39,28 @@ namespace EnTier.UnitOfWork
         }
 
         public abstract IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId, TStreamId>();
+        
+        public virtual IDataBoundRepository GetDataBoundRepository<TStorage>() where TStorage : class
+        {
+            return NullDataBoundRepository.Instance;
+        }
+
+        public  IDataBoundRepository GetDataBoundRepository(Type storageType)
+        {
+            var type = this.GetType();
+
+            var methodName = nameof(UnitOfWorkBase.GetDataBoundRepository);
+
+            var method = type.GetMethods().FirstOrDefault(m => m.Name == methodName && m.IsGenericMethod);
+
+            if (method != null)
+            {
+                var invokableMethod = method.MakeGenericMethod(storageType);
+                
+                return invokableMethod.Invoke(this,new object[]{}) as IDataBoundRepository;
+            }
+            return NullDataBoundRepository.Instance;
+        }
 
         protected abstract ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
             where TStorage : class, new();

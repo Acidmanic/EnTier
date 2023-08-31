@@ -19,7 +19,7 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
 
         public override string RequestText
         {
-            get => Configuration.GetNameConvention(typeof(TEntity)).ExistingValues;
+            get => Configuration.GetNameConvention(typeof(TEntity)).ExistingValuesProcedureName;
             protected set
             {
                 

@@ -13,7 +13,6 @@ namespace EnTier.DataAccess.Meadow
             ConfigurationProvider = configurationProvider;
         }
 
-
         public MeadowUnitOfWork(EnTierEssence essence, MeadowConfiguration configuration) : this(essence,
             new ByInstanceMeadowConfigurationProvider(configuration))
         {
@@ -40,6 +39,11 @@ namespace EnTier.DataAccess.Meadow
         public override void Dispose()
         {
             //
+        }
+
+        public override IDataBoundRepository GetDataBoundRepository<TStorage>()
+        {
+            return new MeadowDataBoundRepository<TStorage>(ConfigurationProvider.GetConfigurations());
         }
     }
 }

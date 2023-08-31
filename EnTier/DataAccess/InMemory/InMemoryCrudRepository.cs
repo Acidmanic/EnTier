@@ -179,16 +179,6 @@ namespace EnTier.DataAccess.InMemory
                     _idLeaf, _data, offset, size, searchId);
         }
 
-        public override Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress)
-        {
-            return ObjectListRepositoryFilteringHelper
-                .GetFilterRangeAsync(headlessFieldAddress, _data);
-        }
-
-        public override Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress)
-        {
-            return ObjectListRepositoryFilteringHelper
-                .GetExistingValuesAsync(headlessFieldAddress, _data);
-        }
+        
     }
 }

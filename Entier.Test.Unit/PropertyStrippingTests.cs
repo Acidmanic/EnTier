@@ -90,16 +90,7 @@ namespace Entier.Test.Unit
             {
                 throw new NotImplementedException();
             }
-
-            public override Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress)
-            {
-                throw new NotImplementedException();
-            }
+            
         }
 
         [Fact]

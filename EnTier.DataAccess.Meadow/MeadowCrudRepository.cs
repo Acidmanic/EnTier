@@ -325,33 +325,6 @@ namespace EnTier.DataAccess.Meadow
             return response.FromStorage;
         }
 
-        public override async Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress)
-        {
-            var request = new RangeRequest<TStorage>(headlessFieldAddress);
-            
-            var engine = GetEngine();
-
-            var response = await engine.PerformRequestAsync(request);
-            
-            ErrorCheck(response);
-
-            var readRange = response.FromStorage.FirstOrDefault() ?? new FieldRange();
-            
-            return readRange.ToFilterRange();
-            
-        }
-
-        public override async Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress)
-        {
-            var request = new ExistingValuesRequest<TStorage>(headlessFieldAddress);
-            
-            var engine = GetEngine();
-
-            var response = await engine.PerformRequestAsync(request);
-            
-            ErrorCheck(response);
-
-            return response.FromStorage.Select(o => o.ToString()).ToList();
-        }
+        
     }
 }

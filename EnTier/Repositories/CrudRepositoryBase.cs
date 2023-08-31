@@ -63,20 +63,7 @@ namespace EnTier.Repositories
         {
             return ReadChunkAsync(offset, size, searchId).Result;
         }
-
-        public abstract Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress);
-
-        public FilterRange GetFilterRange(string headlessFieldAddress)
-        {
-            return GetFilterRangeAsync(headlessFieldAddress).Result;
-        }
-
-        public abstract Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress);
-
-        public List<string> GetExistingValues(string headlessFieldAddress)
-        {
-            return GetExistingValuesAsync(headlessFieldAddress).Result;
-        }
+        
         protected ILogger Logger { get; private set; } = NullLogger.Instance;
 
         public virtual TStorage Add(TStorage value)

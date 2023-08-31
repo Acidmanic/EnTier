@@ -13,7 +13,7 @@ public static class StringExpressionExtensions
             return CreatePropertyPickerLambda<TOwner,TMember>( typeof(TOwner).Name + "." + headlessAddress);
         }
 
-        public static Expression<Func<TOwner,TMember>> CreatePropertyPickerLambda<TOwner,TMember>( string standardAddress)
+        public static Expression<Func<TOwner,TMember>> CreatePropertyPickerLambda<TOwner,TMember>(this string standardAddress)
         {
             var type = typeof(TOwner);
             

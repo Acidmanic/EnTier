@@ -150,12 +150,6 @@ namespace EnTier.Repositories
         /// <returns>The asked chunk of results, if found any.</returns>
         IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId);
 
-        Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress);
-
-        FilterRange GetFilterRange(string headlessFieldAddress);
-
-        Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress);
-
-        List<string> GetExistingValues(string headlessFieldAddress);
+        
     }
 }

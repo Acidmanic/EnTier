@@ -69,5 +69,12 @@ namespace EnTier.DataAccess.EntityFramework
         {
             _context.Dispose();
         }
+
+        public override IDataBoundRepository GetDataBoundRepository<TStorage>()
+        { 
+            var dbSet = _context.Set<TStorage>();
+            
+            return new EntityFrameworkDataBoundRepository<TStorage>(dbSet);
+        }
     }
 }

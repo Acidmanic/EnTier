@@ -212,5 +212,13 @@ namespace EnTier.DataAccess.JsonFile
         public override void Dispose()
         {
         }
+
+        public override IDataBoundRepository GetDataBoundRepository<TStorage>()
+        {
+            var objectsStream = ObjectStreamUnitOfWorkHelper
+                .PullOutObjectStreamFromCrudRepositoriesObjectList<TStorage>(_data.Values);
+
+            return new ObjectStreamDataBoundRepositoryBase<TStorage>(objectsStream);
+        }
     }
 }

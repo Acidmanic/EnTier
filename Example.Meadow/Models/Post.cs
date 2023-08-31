@@ -14,5 +14,10 @@ namespace Example.Meadow.Models
         [FilterField] public string Content { get; set; }
 
         [TreatAsLeaf] [FilterField] public TimeStamp Date { get; set; }
+        
+        public long MediaId { get; set; }
+        
+        
+        public Media Media { get; set; }
     }
 }

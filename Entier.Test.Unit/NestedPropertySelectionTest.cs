@@ -44,10 +44,8 @@ namespace Entier.Test.Unit
             var collection = new A[] { obj };
             
             var standardAddress = "A.B.C.Title";
-            var headlessAddress = "B.C.Title";
 
-
-            var lambda = headlessAddress.CreatePropertyPickerLambdaHeadless<A, string>();
+            var lambda = standardAddress.CreatePropertyPickerLambda<A, string>();
 
             var func = lambda.Compile();
             

@@ -62,6 +62,15 @@ namespace EnTier.DataAccess.InMemory
             return key;
         }
 
+        public override IDataBoundRepository GetDataBoundRepository<TStorage>()
+        {
+            var objectsStream = ObjectStreamUnitOfWorkHelper
+                .PullOutObjectStreamFromCrudRepositoriesObjectList<TStorage>(Repositories.Values);
+
+            return new ObjectStreamDataBoundRepositoryBase<TStorage>(objectsStream);
+        }
+
+
         //TODO: Fix Circular Dependency
         public InMemoryUnitOfWork(EnTierEssence essence) : base(essence)
         {

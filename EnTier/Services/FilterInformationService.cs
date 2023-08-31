@@ -42,12 +42,10 @@ public class FilterInformationService:IFilterInformationService
                 .FirstOrDefault(a => a is FilterByCollectionValuesAttribute);
 
             var availableValues = new List<string>();
+
+            var repository = _unitOfWork.GetDataBoundRepository(leaf.Parent.Type);
             
-            var repository = _unitOfWork.GetCrudRepository<TStorage, TId>();
-
-            var leafAddress = getAddress(leaf);
-
-            var range = await repository.GetFilterRangeAsync(leafAddress);
+            var range = await repository.GetDataRangeAsync(leaf.Name);
             
             if (byCollectionAttribute is FilterByDefinedValuesAttribute defined)
             {
@@ -56,7 +54,7 @@ public class FilterInformationService:IFilterInformationService
 
             if (byCollectionAttribute is FilterByExistingValuesAttribute)
             {
-                availableValues = await repository.GetExistingValuesAsync(leafAddress);
+                availableValues = await repository.GetExistingValuesAsync(leaf.Name);
             }
 
             var profile = new FilterProfile
