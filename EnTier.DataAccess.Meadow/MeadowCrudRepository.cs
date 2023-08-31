@@ -9,6 +9,8 @@ using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using EnTier.DataAccess.Meadow.GenericCrudRequests;
 using EnTier.DataAccess.Meadow.GenericFilteringRequests;
+using EnTier.DataAccess.Meadow.GenericFilteringRequests.Models;
+using EnTier.Models;
 using EnTier.Repositories;
 using Meadow;
 using Meadow.Configuration;
@@ -321,6 +323,35 @@ namespace EnTier.DataAccess.Meadow
             ErrorCheck(response);
 
             return response.FromStorage;
+        }
+
+        public override async Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress)
+        {
+            var request = new RangeRequest<TStorage>(headlessFieldAddress);
+            
+            var engine = GetEngine();
+
+            var response = await engine.PerformRequestAsync(request);
+            
+            ErrorCheck(response);
+
+            var readRange = response.FromStorage.FirstOrDefault() ?? new FieldRange();
+            
+            return readRange.ToFilterRange();
+            
+        }
+
+        public override async Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress)
+        {
+            var request = new ExistingValuesRequest<TStorage>(headlessFieldAddress);
+            
+            var engine = GetEngine();
+
+            var response = await engine.PerformRequestAsync(request);
+            
+            ErrorCheck(response);
+
+            return response.FromStorage.Select(o => o.ToString()).ToList();
         }
     }
 }

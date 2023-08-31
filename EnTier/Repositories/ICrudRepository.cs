@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Models;
+using EnTier.Models;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories
@@ -148,5 +149,13 @@ namespace EnTier.Repositories
         /// <param name="searchId">The hash of filter-query which whom it's results are being read.</param>
         /// <returns>The asked chunk of results, if found any.</returns>
         IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId);
+
+        Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress);
+
+        FilterRange GetFilterRange(string headlessFieldAddress);
+
+        Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress);
+
+        List<string> GetExistingValues(string headlessFieldAddress);
     }
 }

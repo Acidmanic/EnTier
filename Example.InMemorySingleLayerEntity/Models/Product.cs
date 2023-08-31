@@ -1,5 +1,6 @@
 using Acidmanic.Utilities.Filtering.Attributes;
 using Acidmanic.Utilities.Reflection.Attributes;
+using EnTier.Attributes;
 
 namespace ExampleInMemorySingleLayerEntity.Models
 {
@@ -7,6 +8,7 @@ namespace ExampleInMemorySingleLayerEntity.Models
     {
         [AutoValuedMember] [UniqueMember] public long Id { get; set; }
 
+        [FilterByExistingValues]
         [FilterField] public string Name { get; set; }
 
         [FilterField] public string Description { get; set; }

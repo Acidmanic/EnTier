@@ -7,14 +7,12 @@ namespace Example.Meadow.Models
 {
     public class Post
     {
-        [UniqueMember] [AutoValuedMember] 
-        [FilterField] public long Id { get; set; }
+        [UniqueMember] [AutoValuedMember] public long Id { get; set; }
 
         [FilterField] public string Title { get; set; }
 
         [FilterField] public string Content { get; set; }
-        
-        [TreatAsLeaf]
-        [FilterField] public TimeStamp Date { get; set; }
+
+        [TreatAsLeaf] [FilterField] public TimeStamp Date { get; set; }
     }
 }

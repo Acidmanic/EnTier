@@ -21,7 +21,7 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
                 ToStorage = new FilterShell
                 {
                     SearchId = searchId,
-                    FilterExpression = t.TranslateFilterQueryToWhereClause(filterQuery,FullTreeReadWrite()),
+                    FilterExpression = t.TranslateFilterQueryToDbExpression(filterQuery,FullTreeReadWrite()),
                     ExpirationTimeStamp = typeof(TStorage).GetFilterResultExpirationPointMilliseconds()
                 };
             });

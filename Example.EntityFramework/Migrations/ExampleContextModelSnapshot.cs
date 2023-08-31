@@ -15,7 +15,7 @@ namespace ExampleEntityFramework.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("EnTier.Repositories.Models.FilterResult", b =>
+            modelBuilder.Entity("Acidmanic.Utilities.Filtering.Models.FilterResult", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -24,11 +24,11 @@ namespace ExampleEntityFramework.Migrations
                     b.Property<long>("ExpirationTimeStamp")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("FilterHash")
-                        .HasColumnType("TEXT");
-
                     b.Property<long>("ResultId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("SearchId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

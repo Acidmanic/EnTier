@@ -9,7 +9,10 @@ using Acidmanic.Utilities.Filtering.Extensions;
 using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
+using Acidmanic.Utilities.Reflection.ObjectTree;
+using EnTier.Models;
 using EnTier.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EnTier.DataAccess.EntityFramework
@@ -182,6 +185,55 @@ namespace EnTier.DataAccess.EntityFramework
                     .Select(s => s.storage);
 
                 return readResult;
+            });
+        }
+
+        public override Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress)
+        {
+            return Task.Run<FilterRange>(() =>
+            {
+                var ev = new ObjectEvaluator(typeof(TStorage));
+
+                var fullAddress = ev.RootNode.Name + "." + headlessFieldAddress;
+
+                var node = ev.Map.NodeByAddress(fullAddress);
+
+                ParameterExpression parameter = Expression.Parameter(typeof(TStorage), "s");
+                //a=>a.id
+                MemberExpression property = Expression.Property(parameter, node.Name);
+
+                var lambda = Expression.Lambda<Func<TStorage, object>>(property, parameter);
+
+                var range = new FilterRange();
+
+                range.Maximum = (DbSet.Select(lambda).Max()).ToString();
+                range.Minimum = (DbSet.Select(lambda).Min()).ToString();
+
+                return range;
+            });
+        }
+
+        public override Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress)
+        {
+            return Task.Run<List<string>>(() =>
+            {
+                var ev = new ObjectEvaluator(typeof(TStorage));
+
+                var fullAddress = ev.RootNode.Name + "." + headlessFieldAddress;
+
+                var node = ev.Map.NodeByAddress(fullAddress);
+
+                ParameterExpression parameter = Expression.Parameter(typeof(TStorage), "s");
+                //a=>a.id
+                MemberExpression property = Expression.Property(parameter, node.Name);
+
+                var lambda = Expression.Lambda<Func<TStorage, object>>(property, parameter);
+
+                var existingValues =
+                    DbSet.Select(lambda).Distinct().ToList()
+                        .Select(o => o.ToString()).ToList();
+
+                return existingValues;
             });
         }
     }

@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Models;
+using EnTier.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using Xunit;
@@ -86,6 +87,16 @@ namespace Entier.Test.Unit
             }
 
             public override Task<IEnumerable<Model>> ReadChunkAsync(int offset, int size, string searchId)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress)
             {
                 throw new NotImplementedException();
             }

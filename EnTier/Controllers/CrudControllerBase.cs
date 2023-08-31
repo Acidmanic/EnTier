@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using Acidmanic.Utilities.Filtering.Extensions;
 using Acidmanic.Utilities.Reflection;
+using Acidmanic.Utilities.Reflection.ObjectTree;
+using EnTier.Attributes;
 using EnTier.AutoWrap;
 using EnTier.Extensions;
 using EnTier.Mapper;
@@ -273,6 +277,21 @@ namespace EnTier.Controllers
             var wrappedObject = wrapper.Wrap(data);
 
             return StatusCode((int)status, wrappedObject);
+        }
+
+
+        [HttpGet]
+        [Route("filter-profile")]
+        public IActionResult GetFilterProfile()
+        {
+            // Provide a mechanism for user to decide this (filtering fulltree) 
+            var fullTree = false;
+
+            var filteringProfile = _essence.
+                FilterInformationService.
+                GetFilterProfile<TStorage, TStorageId>(fullTree);
+
+            return Ok(filteringProfile);
         }
     }
 }

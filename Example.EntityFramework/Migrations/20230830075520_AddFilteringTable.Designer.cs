@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExampleEntityFramework.Migrations
 {
     [DbContext(typeof(ExampleContext))]
-    [Migration("20230820120659_AddFilteringTable")]
+    [Migration("20230830075520_AddFilteringTable")]
     partial class AddFilteringTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,7 +17,7 @@ namespace ExampleEntityFramework.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("EnTier.Repositories.Models.FilterResult", b =>
+            modelBuilder.Entity("Acidmanic.Utilities.Filtering.Models.FilterResult", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -26,11 +26,11 @@ namespace ExampleEntityFramework.Migrations
                     b.Property<long>("ExpirationTimeStamp")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("FilterHash")
-                        .HasColumnType("TEXT");
-
                     b.Property<long>("ResultId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("SearchId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

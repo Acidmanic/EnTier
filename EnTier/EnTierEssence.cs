@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using EnTier.Contracts;
 using EnTier.DataAccess.InMemory;
 using EnTier.DependencyInjection;
 using EnTier.EventSourcing;
 using EnTier.Mapper;
 using EnTier.Regulation;
+using EnTier.Services;
 using EnTier.UnitOfWork;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.LightWeight;
@@ -110,5 +112,7 @@ namespace EnTier
 
         internal IStreamEventPublisherAdapter StreamEventPublisherAdapter => ResolveOrDefault
             <IStreamEventPublisherAdapter>(() => new NullPublisherAdapter(), false);
+
+        internal IFilterInformationService FilterInformationService => new FilterInformationService(UnitOfWork);
     }
 }

@@ -4,10 +4,12 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Models;
+using Acidmanic.Utilities.Filtering.Utilities;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Reflection.TypeCenter;
+using EnTier.Models;
 using EnTier.Repositories;
 using EnTier.Repositories.Attributes;
 using EnTier.Utility;
@@ -175,6 +177,18 @@ namespace EnTier.DataAccess.InMemory
             return ObjectListRepositoryFilteringHelper
                 .ReadChunkAsync(InMemorySharedChannel.FilterResults,
                     _idLeaf, _data, offset, size, searchId);
+        }
+
+        public override Task<FilterRange> GetFilterRangeAsync(string headlessFieldAddress)
+        {
+            return ObjectListRepositoryFilteringHelper
+                .GetFilterRangeAsync(headlessFieldAddress, _data);
+        }
+
+        public override Task<List<string>> GetExistingValuesAsync(string headlessFieldAddress)
+        {
+            return ObjectListRepositoryFilteringHelper
+                .GetExistingValuesAsync(headlessFieldAddress, _data);
         }
     }
 }

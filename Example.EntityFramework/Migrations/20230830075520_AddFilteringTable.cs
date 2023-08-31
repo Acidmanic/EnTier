@@ -12,7 +12,7 @@ namespace ExampleEntityFramework.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FilterHash = table.Column<string>(type: "TEXT", nullable: true),
+                    SearchId = table.Column<string>(type: "TEXT", nullable: true),
                     ResultId = table.Column<long>(type: "INTEGER", nullable: false),
                     ExpirationTimeStamp = table.Column<long>(type: "INTEGER", nullable: false)
                 },
