@@ -5,6 +5,7 @@ using Meadow.Contracts;
 using Meadow.MySql;
 using Meadow.Postgre;
 using Meadow.SQLite.Extensions;
+using Meadow.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,9 +25,9 @@ namespace Example.Meadow
 
         public IConfiguration Configuration { get; }
 
-        private static readonly IMeadowConfigurationProvider MeadowConfigurationProvider = new SqLiteConfigurationProvider();
+        private static readonly IMeadowConfigurationProvider MeadowConfigurationProvider = new SqlServerConfigurationProvider();
 
-        private static readonly Action<MeadowEngine> SetMeadowDatabase = e => e.UseSqLite();
+        private static readonly Action<MeadowEngine> SetMeadowDatabase = e => e.UseSqlServer();
         
         
         // This method gets called by the runtime. Use this method to add services to the container.
