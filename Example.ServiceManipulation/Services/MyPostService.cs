@@ -14,9 +14,9 @@ namespace ServiceManipulationExample.Services
     {
     
 
-        public override Chunk<Post> GetAll()
+        public override Chunk<Post> GetAll(bool readFullTree = false)
         {
-            var originalChunk = base.GetAll();
+            var originalChunk = base.GetAll(readFullTree);
             
             var manipulatedChunk = new Chunk<Post>
             {
@@ -29,9 +29,9 @@ namespace ServiceManipulationExample.Services
             return manipulatedChunk;
         }
 
-        public override Post GetById(long id)
+        public override Post GetById(long id,bool readFullTree = false)
         {
-            return Manipulate(base.GetById(id));
+            return Manipulate(base.GetById(id,readFullTree));
         }
 
         private Post Manipulate(Post p)

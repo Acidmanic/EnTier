@@ -9,15 +9,15 @@ namespace EnTier.Services
 {
     public interface ICrudService<TEntity, in TDomainId> where TEntity : class, new()
     {
-        Chunk<TEntity> GetAll();
+        Chunk<TEntity> GetAll(bool readFullTree = false);
 
-        Task<Chunk<TEntity>> GetAllAsync(int offset, int size,[AllowNull] string searchId , FilterQuery filterQuery);
+        Task<Chunk<TEntity>> GetAllAsync(int offset, int size,[AllowNull] string searchId , FilterQuery filterQuery,bool readFullTree = false);
 
-        Task<Chunk<TEntity>> GetAllAsync(int offset, int size);
+        Task<Chunk<TEntity>> GetAllAsync(int offset, int size,bool readFullTree = false);
 
-        Task<Chunk<TEntity>> GetAllAsync();
+        Task<Chunk<TEntity>> GetAllAsync(bool readFullTree = false);
 
-        TEntity GetById(TDomainId id);
+        TEntity GetById(TDomainId id,bool readFullTree = false);
 
         TEntity Add(TEntity value);
 

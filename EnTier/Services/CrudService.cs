@@ -51,29 +51,31 @@ namespace EnTier.Services
         }
 
 
-        public virtual Chunk<TDomain> GetAll()
+        public virtual Chunk<TDomain> GetAll(bool readFullTree = false)
         {
-            return GetAllAsync().Result;
+            return GetAllAsync(readFullTree).Result;
         }
 
-        public virtual Task<Chunk<TDomain>> GetAllAsync()
+        public virtual Task<Chunk<TDomain>> GetAllAsync(bool readFullTree = false)
         {
-            return GetAllAsync(0, int.MaxValue);
+            return GetAllAsync(0, int.MaxValue,readFullTree);
         }
 
-        public virtual Task<Chunk<TDomain>> GetAllAsync(int offset, int size)
+        public virtual Task<Chunk<TDomain>> GetAllAsync(int offset, int size,bool readFullTree = false)
         {
-            return GetAllAsync(offset, size, null, new FilterQuery());
+            return GetAllAsync(offset, size, null, new FilterQuery(),readFullTree);
         }
 
-        public virtual async Task<Chunk<TDomain>> GetAllAsync(int offset, int size, [AllowNull] string searchId,
-            FilterQuery filterQuery)
+        public virtual async Task<Chunk<TDomain>> GetAllAsync(
+            int offset, int size, [AllowNull] string searchId,
+            FilterQuery filterQuery,bool readFullTree = false)
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
             await repository.RemoveExpiredFilterResultsAsync();
 
-            var foundResults = await repository.PerformFilterIfNeededAsync(filterQuery,searchId);
+            var foundResults = await repository
+                .PerformFilterIfNeededAsync(filterQuery,searchId,readFullTree);
 
             UnitOfWork.Complete();
 
@@ -86,7 +88,7 @@ namespace EnTier.Services
 
             
 
-            var storages = await repository.ReadChunkAsync(offset, size, searchId);
+            var storages = await repository.ReadChunkAsync(offset, size, searchId,readFullTree);
 
             var outgoingStorages = RegulateOutgoing(storages);
 
@@ -102,11 +104,11 @@ namespace EnTier.Services
             };
         }
 
-        public virtual TDomain GetById(TDomainId id)
+        public virtual TDomain GetById(TDomainId id,bool readFullTree = false)
         {
             var storageId = Mapper.MapId<TStorageId>(id);
 
-            var storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().GetById(storageId);
+            var storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().GetById(storageId,readFullTree);
 
             var regulatedStorage = RegulateOutgoing(storage);
 
