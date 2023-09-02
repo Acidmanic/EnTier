@@ -23,7 +23,7 @@ namespace EnTier.DataAccess.InMemory
         private readonly IdGenerator<TId> _idGenerator = new IdGenerator<TId>();
         private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
 
-        public override IEnumerable<TStorage> All()
+        public override IEnumerable<TStorage> All(bool readFullTree = false)
         {
             return _data;
         }
@@ -95,7 +95,7 @@ namespace EnTier.DataAccess.InMemory
             return default;
         }
 
-        public override TStorage GetById(TId id)
+        public override TStorage GetById(TId id, bool readFullTree = false)
         {
             if (_idLeaf != null)
             {
@@ -163,8 +163,10 @@ namespace EnTier.DataAccess.InMemory
                 .FilterResults);
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,
-            string searchId = null)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+            FilterQuery filterQuery,
+            string searchId = null,
+            bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(InMemorySharedChannel.FilterResults,
@@ -172,13 +174,12 @@ namespace EnTier.DataAccess.InMemory
         }
 
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId)
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,
+            bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
                 .ReadChunkAsync(InMemorySharedChannel.FilterResults,
                     _idLeaf, _data, offset, size, searchId);
         }
-
-        
     }
 }

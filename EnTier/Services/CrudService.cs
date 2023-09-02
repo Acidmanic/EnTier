@@ -75,6 +75,7 @@ namespace EnTier.Services
 
             var foundResults = await repository.PerformFilterIfNeededAsync(filterQuery,searchId);
 
+            UnitOfWork.Complete();
 
             var totalCount = foundResults.Count();
             
@@ -83,7 +84,7 @@ namespace EnTier.Services
                 searchId = foundResults.First().SearchId;
             }
 
-            UnitOfWork.Complete();
+            
 
             var storages = await repository.ReadChunkAsync(offset, size, searchId);
 

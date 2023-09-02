@@ -34,7 +34,7 @@ namespace Entier.Test.Unit
 
         private class DummyRepo : CrudRepositoryForwardAsyncBase<Model, long>
         {
-            public override IEnumerable<Model> All()
+            public override IEnumerable<Model> All(bool readFullTree = false)
             {
                 throw new NotImplementedException();
             }
@@ -55,7 +55,7 @@ namespace Entier.Test.Unit
             }
 
 
-            public override Model GetById(long id)
+            public override Model GetById(long id,bool readFullTree = false)
             {
                 throw new NotImplementedException();
             }
@@ -81,12 +81,13 @@ namespace Entier.Test.Unit
                 throw new NotImplementedException();
             }
 
-            public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,string searchId = null)
+            public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+                FilterQuery filterQuery,string searchId = null,bool readFullTree = false)
             {
                 throw new NotImplementedException();
             }
 
-            public override Task<IEnumerable<Model>> ReadChunkAsync(int offset, int size, string searchId)
+            public override Task<IEnumerable<Model>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false)
             {
                 throw new NotImplementedException();
             }

@@ -10,11 +10,14 @@ using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
+using EnTier.DataAccess.EntityFramework.FullTreeHandling;
 using EnTier.Extensions;
 using EnTier.Models;
 using EnTier.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Logging;
 
 namespace EnTier.DataAccess.EntityFramework
 {
@@ -23,16 +26,39 @@ namespace EnTier.DataAccess.EntityFramework
     {
         protected DbSet<TStorage> DbSet { get; }
         protected DbSet<FilterResult> FilterResults { get; }
+        
+        protected IFullTreeMarker<TStorage> FullTreeMarker { get; }
 
-        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet, DbSet<FilterResult> filterResults)
+        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet, DbSet<FilterResult> filterResults, IFullTreeMarker<TStorage> fullTreeMarker)
         {
             DbSet = dbSet;
             FilterResults = filterResults;
+            FullTreeMarker = fullTreeMarker;
         }
 
-        public override IEnumerable<TStorage> All()
+
+        protected virtual IQueryable<TStorage> FullTree(DbSet<TStorage> dbSet)
         {
-            return DbSet.ToList();
+            if (FullTreeMarker is NullFullTreeMarker)
+            {
+                Logger.LogWarning("Reaching for full tree {TypeName} object can not be achieved. " +
+                                  "You need to register an implementation of IFullTreeMarker<{TypeName}> " +
+                                  "on your Di system in order for this to work.",
+                    typeof(TStorage).FullName,typeof(TStorage).FullName);
+            }
+
+            return FullTreeMarker.IncludeAsNeeded(dbSet);
+        }
+
+
+        protected IQueryable<TStorage> DbSetFullTreeAble(bool readFullTree)
+        {
+            return readFullTree? FullTree(DbSet): DbSet;
+        }
+
+        public override IEnumerable<TStorage> All(bool readFullTree = false)
+        {
+            return DbSetFullTreeAble(readFullTree).ToList();
         }
 
         protected override TStorage Insert(TStorage value)
@@ -74,9 +100,11 @@ namespace EnTier.DataAccess.EntityFramework
             return Insert(value);
         }
 
-        public override TStorage GetById(TId id)
+        public override TStorage GetById(TId id,bool readFullTree = false)
         {
-            var found = DbSet.Find(id);
+            var idSelector = IdSelectExpression(id);
+            
+            var found = DbSetFullTreeAble(readFullTree).Where(idSelector).ToList().FirstOrDefault();
 
             return found;
         }
@@ -117,8 +145,9 @@ namespace EnTier.DataAccess.EntityFramework
             });
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,
-            string searchId = null)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+            FilterQuery filterQuery,
+            string searchId = null,bool readFullTree = false)
         {
             searchId ??= Guid.NewGuid().ToString("N");
 
@@ -130,7 +159,7 @@ namespace EnTier.DataAccess.EntityFramework
                 {
                     var expressions = filterQuery.ToExpression<TStorage>();
 
-                    var queryable = DbSet.AsQueryable();
+                    var queryable = DbSetFullTreeAble(readFullTree).AsQueryable();
 
                     foreach (var expression in expressions)
                     {
@@ -157,14 +186,33 @@ namespace EnTier.DataAccess.EntityFramework
                         FilterResults.Add(filterResult);
                     }
 
-                    return FilterResults;
+                    return FilterResults.Where(fr => fr.SearchId==searchId);
                 }
 
                 return new FilterResult[] { };
             });
         }
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId)
+        private Expression<Func<TStorage, bool>> IdSelectExpression(TId id)
+        {
+            var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
+            // a=>
+            ParameterExpression storageParameter = Expression.Parameter(typeof(TStorage), "a");
+            //a=>a.id
+            MemberExpression storagesId = Expression.Property(storageParameter, idLeaf.Name);
+
+            Expression idValue = Expression.Constant(id);
+            
+
+            BinaryExpression selectExpression = Expression.Equal(storagesId, idValue);
+            
+            var lambda = Expression.Lambda<Func<TStorage, Boolean>>(selectExpression,storageParameter);
+
+            return lambda;
+        }
+
+
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false)
         {
             return Task.Run<IEnumerable<TStorage>>(() =>
             {
@@ -176,7 +224,7 @@ namespace EnTier.DataAccess.EntityFramework
 
                 var lambda = Expression.Lambda<Func<TStorage, long>>(property, parameter);
 
-                var readResult = DbSet.Join(
+                var readResult = DbSetFullTreeAble(readFullTree).Join(
                         FilterResults,
                         lambda,
                         f => f.ResultId,

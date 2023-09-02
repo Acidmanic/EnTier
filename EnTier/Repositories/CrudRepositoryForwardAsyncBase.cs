@@ -14,9 +14,9 @@ namespace EnTier.Repositories
         where TStorage : class, new()
     {
 
-        public override Task<IEnumerable<TStorage>> AllAsync()
+        public override Task<IEnumerable<TStorage>> AllAsync(bool readFullTree = false)
         {
-            return Task.Run(All);
+            return Task.Run(() => All(readFullTree));
         }
 
         public override Task<TStorage> UpdateAsync(TStorage value)
@@ -34,9 +34,9 @@ namespace EnTier.Repositories
             return Task.Run(() => Set(value));
         }
 
-        public override Task<TStorage> GetByIdAsync(TId id)
+        public override Task<TStorage> GetByIdAsync(TId id,bool readFullTree = false)
         {
-            return Task.Run(() => GetById(id));
+            return Task.Run(() => GetById(id,readFullTree));
         }
 
         public override Task<IEnumerable<TStorage>> FindAsync(Expression<Func<TStorage, bool>> predicate)

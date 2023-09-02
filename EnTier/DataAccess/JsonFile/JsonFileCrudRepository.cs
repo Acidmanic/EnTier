@@ -35,7 +35,7 @@ namespace EnTier.DataAccess.JsonFile
             _filterResults = filterResults;
         }
 
-        public override IEnumerable<TStorage> All()
+        public override IEnumerable<TStorage> All(bool readFullTree = false)
         {
             return _data;
         }
@@ -114,7 +114,7 @@ namespace EnTier.DataAccess.JsonFile
             return this.Add(value);
         }
 
-        public override TStorage GetById(TId id)
+        public override TStorage GetById(TId id,bool readFullTree = false)
         {
             if (_index.ContainsKey(id))
             {
@@ -171,14 +171,15 @@ namespace EnTier.DataAccess.JsonFile
             return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync(_filterResults);
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,
-            string searchId = null)
+        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+            FilterQuery filterQuery,
+            string searchId = null,bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(_filterResults, _idLeaf, _data, filterQuery, searchId);
         }
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId)
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
                 .ReadChunkAsync(_filterResults, _idLeaf, _data, offset, size, searchId);

@@ -71,6 +71,8 @@ namespace EnTier.DataAccess.InMemory
         }
 
 
+        
+        
         //TODO: Fix Circular Dependency
         public InMemoryUnitOfWork(EnTierEssence essence) : base(essence)
         {

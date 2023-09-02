@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using Acidmanic.Utilities.Filtering.Models;
 using EnTier.DataAccess.EntityFramework.EventStreamRepositories;
+using EnTier.DataAccess.EntityFramework.FullTreeHandling;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +14,11 @@ namespace EnTier.DataAccess.EntityFramework
     {
         private readonly DbContext _context;
         private readonly Func<Type, object> _getDbSetByType;
+        private readonly EnTierEssence _essence;
 
         public EntityFrameworkUnitOfWork(EnTierEssence essence, DbContext context) : base(essence)
         {
+            _essence = essence;
             _context = context;
 
             var contextType = typeof(DbContext);
@@ -56,7 +60,10 @@ namespace EnTier.DataAccess.EntityFramework
             var dbSet = _context.Set<TStorage>();
             var filterResultSet = _context.Set<FilterResult>();
 
-            return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet,filterResultSet);
+            var marker = _essence.ResolveOrDefault<IFullTreeMarker<TStorage>>
+                (new NullFullTreeMarker<TStorage>());
+
+            return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet, filterResultSet, marker);
         }
 
 
@@ -71,9 +78,9 @@ namespace EnTier.DataAccess.EntityFramework
         }
 
         public override IDataBoundRepository GetDataBoundRepository<TStorage>()
-        { 
+        {
             var dbSet = _context.Set<TStorage>();
-            
+
             return new EntityFrameworkDataBoundRepository<TStorage>(dbSet);
         }
     }

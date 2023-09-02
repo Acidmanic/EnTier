@@ -38,13 +38,13 @@ namespace EnTier.DataAccess.Meadow
         }
 
 
-        public override IEnumerable<TStorage> All()
+        public override IEnumerable<TStorage> All(bool readFullTree = false)
         {
             var request = new ReadAllStorageRequest<TStorage>();
 
             var engine = GetEngine();
 
-            var response = engine.PerformRequest(request);
+            var response = engine.PerformRequest(request,readFullTree);
 
             ErrorCheck(response);
 
@@ -99,7 +99,7 @@ namespace EnTier.DataAccess.Meadow
             return result;
         }
 
-        public override TStorage GetById(TId id)
+        public override TStorage GetById(TId id,bool readFullTree = false)
         {
             var request = new ReadByIdStorageRequest<TStorage, TId>()
             {
@@ -108,7 +108,7 @@ namespace EnTier.DataAccess.Meadow
 
             var engine = GetEngine();
 
-            var response = engine.PerformRequest(request);
+            var response = engine.PerformRequest(request,readFullTree);
 
             ErrorCheck(response);
 
@@ -147,13 +147,13 @@ namespace EnTier.DataAccess.Meadow
             return result != null && result.Success;
         }
 
-        public override async Task<IEnumerable<TStorage>> AllAsync()
+        public override async Task<IEnumerable<TStorage>> AllAsync(bool readFullTree = false)
         {
             var request = new ReadAllStorageRequest<TStorage>();
 
             var engine = GetEngine();
 
-            var response = await engine.PerformRequestAsync(request);
+            var response = await engine.PerformRequestAsync(request,readFullTree);
 
             ErrorCheck(response);
 
@@ -190,7 +190,7 @@ namespace EnTier.DataAccess.Meadow
             return result;
         }
 
-        public override async Task<TStorage> GetByIdAsync(TId id)
+        public override async Task<TStorage> GetByIdAsync(TId id,bool readFullTree = false)
         {
             var request = new ReadByIdStorageRequest<TStorage, TId>()
             {
@@ -199,7 +199,7 @@ namespace EnTier.DataAccess.Meadow
 
             var engine = GetEngine();
 
-            var response = await engine.PerformRequestAsync(request);
+            var response = await engine.PerformRequestAsync(request,readFullTree);
 
             ErrorCheck(response);
 
@@ -299,26 +299,27 @@ namespace EnTier.DataAccess.Meadow
             ErrorCheck(response);
         }
 
-        public override async Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery,string searchId = null)
+        public override async Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+            FilterQuery filterQuery,string searchId = null,bool readFullTree = false)
         {
             var request = new PerformFilterIfNeededRequest<TStorage>(filterQuery,searchId);
 
             var engine = GetEngine();
 
-            var response = await engine.PerformRequestAsync(request);
+            var response = await engine.PerformRequestAsync(request,readFullTree);
 
             ErrorCheck(response);
 
             return request.FromStorage;
         }
 
-        public override async Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId)
+        public override async Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false)
         {
             var request = new ReadChunkRequest<TStorage>(searchId, offset, size);
 
             var engine = GetEngine();
 
-            var response = await engine.PerformRequestAsync(request);
+            var response = await engine.PerformRequestAsync(request,readFullTree);
             
             ErrorCheck(response);
 
