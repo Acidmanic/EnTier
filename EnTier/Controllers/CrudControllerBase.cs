@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using Acidmanic.Utilities.Reflection;
 using EnTier.AutoWrap;
@@ -9,6 +10,7 @@ using EnTier.Models;
 using EnTier.Regulation;
 using EnTier.Services;
 using EnTier.UnitOfWork;
+using EnTier.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -32,6 +34,8 @@ namespace EnTier.Controllers
 
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; private set; }
 
+        protected IReadFullTreeAcquirer FullTreeAcquirer { get; }
+        
         public CrudControllerBase(EnTierEssence essence)
         {
             _essence = essence;
@@ -43,6 +47,7 @@ namespace EnTier.Controllers
             Logger = essence.Logger;
             Regulator = essence.Regulator<TDomain, TStorage>();
             AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
+            FullTreeAcquirer = new ReadFullTreeAcquirer(this);
         }
 
 
@@ -64,16 +69,16 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var data = OnGetAll();
+                var data = OnGetAll(FullTreeAcquirer.IsReadAllFullTree);
 
                 return Ok(data);
             });
         }
 
 
-        protected virtual Chunk<TTransfer> OnGetAll()
+        protected virtual Chunk<TTransfer> OnGetAll(bool readFullTree = false)
         {
-            var filter = HttpContext.GetFilter<TStorage>();
+            var filter = HttpContext.GetFilter<TStorage>(readFullTree);
 
             var pagination = HttpContext.GetPagination();
 
@@ -81,7 +86,8 @@ namespace EnTier.Controllers
                 pagination.Offset,
                 pagination.Size,
                 pagination.SearchId,
-                filter).Result;
+                filter,
+                readFullTree).Result;
 
             var transferObjects = Mapper.Map<List<TTransfer>>(domainChunk.Items);
 
@@ -96,7 +102,7 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var transfer = OnGetById(id);
+                var transfer = OnGetById(id,FullTreeAcquirer.IsReadByIdFullTree);
 
                 if (transfer == null)
                 {
@@ -107,11 +113,11 @@ namespace EnTier.Controllers
             });
         }
 
-        protected virtual TTransfer OnGetById(TTransferId id)
+        protected virtual TTransfer OnGetById(TTransferId id,bool readFullTree = false )
         {
             var domainId = Mapper.MapId<TDomainId>(id);
 
-            var domain = Service.GetById(domainId);
+            var domain = Service.GetById(domainId,readFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
@@ -280,12 +286,9 @@ namespace EnTier.Controllers
         [Route("filter-profile")]
         public IActionResult GetFilterProfile()
         {
-            // Provide a mechanism for user to decide this (filtering fulltree) 
-            var fullTree = true;
-
             var filteringProfile = _essence.
                 FilterInformationService.
-                GetFilterProfile<TStorage, TStorageId>(fullTree);
+                GetFilterProfile<TStorage, TStorageId>(FullTreeAcquirer.IsReadAllFullTree);
 
             return Ok(filteringProfile);
         }

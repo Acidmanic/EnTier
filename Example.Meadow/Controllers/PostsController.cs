@@ -1,4 +1,5 @@
 using EnTier;
+using EnTier.Attributes;
 using EnTier.AutoWrap;
 using EnTier.Controllers;
 using EnTier.Mapper;
@@ -10,6 +11,7 @@ namespace Example.Meadow.Controllers
 {
     [ApiController]
     [Route("posts")]
+    [FullTreeRead]
     public class PostsController : CrudControllerBase<Post, long>
     {
         public PostsController(EnTierEssence essence) : base(essence)

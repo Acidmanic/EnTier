@@ -60,11 +60,11 @@ namespace EnTier.Http.FuncTest.Controllers
         [Route("")]
         public IActionResult ReturnQuery()
         {
-            var query = HttpContext.GetFilter<StorageModel>();
+            var query = HttpContext.GetFilter<StorageModel>(false);
 
             var queryDto = new FilterQueryDto(query);
 
-            var fakeQuery = HttpContext.GetFilter<FakeStorageModel>();
+            var fakeQuery = HttpContext.GetFilter<FakeStorageModel>(false);
 
             var fakeQueryDto = new FilterQueryDto(fakeQuery);
 

@@ -18,10 +18,12 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
             
             RegisterTranslationTask(t =>
             {
+                var filterExpression = t.TranslateFilterQueryToDbExpression(filterQuery, FullTreeReadWrite()); 
+                
                 ToStorage = new FilterShell
                 {
                     SearchId = searchId,
-                    FilterExpression = t.TranslateFilterQueryToDbExpression(filterQuery,FullTreeReadWrite()),
+                    FilterExpression = filterExpression,
                     ExpirationTimeStamp = typeof(TStorage).GetFilterResultExpirationPointMilliseconds()
                 };
             });
@@ -29,7 +31,9 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
 
         public override string RequestText
         {
-            get => Configuration.GetNameConvention<TStorage>().PerformFilterIfNeededProcedureName;
+            get => FullTreeReadWrite()?
+                Configuration.GetNameConvention<TStorage>().PerformFilterIfNeededProcedureNameFullTree:
+                Configuration.GetNameConvention<TStorage>().PerformFilterIfNeededProcedureName;
             protected set
             {
                 

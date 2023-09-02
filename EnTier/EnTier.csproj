@@ -13,7 +13,7 @@
 
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 
-        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b07" />
+        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b08" />
     </ItemGroup>
 
     <PropertyGroup>

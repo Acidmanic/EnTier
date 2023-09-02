@@ -9,6 +9,8 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
     {
         public ReadChunkRequest(string searchId, long offset, long size) : base(true)
         {
+            searchId = searchId ?? "";
+            
             ToStorage = new ChunkShell
             {
                 SearchId = searchId,
@@ -19,7 +21,9 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
 
         public override string RequestText
         {
-            get => Configuration.GetNameConvention<TStorage>().ReadChunkProcedureName;
+            get => FullTreeReadWrite()?
+                Configuration.GetNameConvention<TStorage>().ReadChunkProcedureNameFullTree:
+                Configuration.GetNameConvention<TStorage>().ReadChunkProcedureName;
             protected set
             {
                 

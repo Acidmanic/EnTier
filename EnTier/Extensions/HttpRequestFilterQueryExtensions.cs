@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Attributes;
+using Acidmanic.Utilities.Filtering.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Microsoft.AspNetCore.Http;
 
@@ -9,18 +10,21 @@ namespace EnTier.Extensions
 {
     public static class HttpRequestFilterQueryExtensions
     {
-        public static FilterQuery GetFilter<TStorageModel>(this HttpRequest request)
+        public static FilterQuery GetFilter<TStorageModel>(this HttpRequest request, bool fullTree)
         {
             var storageType = typeof(TStorageModel);
 
-            return GetFilter(request, storageType);
+            return GetFilter(request, storageType,fullTree);
         }
 
-        public static FilterQuery GetFilter(this HttpRequest request, Type storageModelType)
+        public static FilterQuery GetFilter(this HttpRequest request, Type storageModelType, bool fullTree)
         {
             var evaluator = new ObjectEvaluator(storageModelType);
 
-            var leaves = evaluator.RootNode.GetDirectLeaves().Where(IsFilterField);
+            var leaves = evaluator.Map.Nodes
+                .Where(n => n.IsLeaf)
+                .Where(n => n.Depth==1 || fullTree)
+                .Where(IsFilterField);
 
             var query = new FilterQuery();
 
@@ -34,7 +38,9 @@ namespace EnTier.Extensions
             
             foreach (var leaf in leaves)
             {
-                var foundKey = requestQueries.FindKey(leaf.Name);
+                var key = evaluator.Map.FieldKeyByNode(leaf).Headless().ToString();
+                
+                var foundKey = requestQueries.FindKey(key);
 
                 if (foundKey)
                 {
@@ -47,7 +53,7 @@ namespace EnTier.Extensions
                         ApplyQueryItemOnFilterItem(item, value);
                     }
 
-                    item.Key = leaf.Name;
+                    item.Key = key;
                     item.ValueType = leaf.Type;
 
                     query.Add(item);
