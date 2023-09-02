@@ -54,9 +54,5 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
             protected set { }
         }
 
-        protected override bool FullTreeReadWrite()
-        {
-            return false;
-        }
     }
 }

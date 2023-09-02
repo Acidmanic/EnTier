@@ -8,7 +8,9 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
     {
         protected override string PickProcedureName(NameConvention nameConvention)
         {
-            return nameConvention.SelectAllProcedureName;
+            return FullTreeReadWrite()? 
+                nameConvention.SelectAllProcedureNameFullTree:
+                nameConvention.SelectAllProcedureName;
         }
 
 

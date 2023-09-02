@@ -1,9 +1,7 @@
 using EnTier;
 using EnTier.Attributes;
-using EnTier.AutoWrap;
 using EnTier.Controllers;
-using EnTier.Mapper;
-using EnTier.UnitOfWork;
+using EnTier.DataAccess.Meadow.GenericCrudRequests;
 using Example.Meadow.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +14,10 @@ namespace Example.Meadow.Controllers
     {
         public PostsController(EnTierEssence essence) : base(essence)
         {
+
+            var d = new ReadByIdStorageRequest<Post, long>();
+            
+            
         }
     }
 }
