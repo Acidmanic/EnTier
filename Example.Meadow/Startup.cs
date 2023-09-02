@@ -2,7 +2,6 @@ using System;
 using Example.Meadow.Configurations;
 using Meadow;
 using Meadow.Contracts;
-using Meadow.MySql;
 using Meadow.Postgre;
 using Meadow.SQLite.Extensions;
 using Meadow.SqlServer;
@@ -25,9 +24,9 @@ namespace Example.Meadow
 
         public IConfiguration Configuration { get; }
 
-        private static readonly IMeadowConfigurationProvider MeadowConfigurationProvider = new MySqlConfigurationProvider();
+        private static readonly IMeadowConfigurationProvider MeadowConfigurationProvider = new SqlServerConfigurationProvider();
 
-        private static readonly Action<MeadowEngine> SetMeadowDatabase = e => e.UseMySql();
+        private static readonly Action<MeadowEngine> SetMeadowDatabase = e => e.UseSqlServer();
         
         
         // This method gets called by the runtime. Use this method to add services to the container.
