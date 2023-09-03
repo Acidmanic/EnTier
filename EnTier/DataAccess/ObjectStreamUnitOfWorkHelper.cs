@@ -27,7 +27,7 @@ internal static class ObjectStreamUnitOfWorkHelper
 
                 if (method != null)
                 {
-                    var list = method.Invoke(r,new object[] { });
+                    var list = method.Invoke(r,new object[] {true });
 
                     if (list is List<TStorage> storageList)
                     {

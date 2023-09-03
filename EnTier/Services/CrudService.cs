@@ -66,7 +66,46 @@ namespace EnTier.Services
             return GetAllAsync(offset, size, null, new FilterQuery(),readFullTree);
         }
 
-        public virtual async Task<Chunk<TDomain>> GetAllAsync(
+        public virtual  Task<Chunk<TDomain>> GetAllAsync(
+            int offset, int size, [AllowNull] string searchId,
+            FilterQuery filterQuery, bool readFullTree = false)
+        {
+            if (!_entityHasId || !TypeCheck.IsNumerical<TStorageId>())
+            {
+                return GetAllNoFilterAsync(offset, size, searchId, filterQuery, readFullTree);   
+            }
+
+            return GetAllFilteredAsync(offset, size, searchId, filterQuery, readFullTree);
+        }
+        
+        protected virtual async Task<Chunk<TDomain>> GetAllNoFilterAsync(
+            int offset, int size, [AllowNull] string searchId,
+            FilterQuery filterQuery,bool readFullTree = false)
+        {
+            var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
+
+
+            var storages = await repository.AllAsync(readFullTree);
+
+            UnitOfWork.Complete();
+
+            var totalCount = storages.Count();
+            
+            var outgoingStorages = RegulateOutgoing(storages);
+
+            var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
+
+            return new Chunk<TDomain>
+            {
+                Items = domains,
+                Offset = offset,
+                Size = size,
+                TotalCount = totalCount,
+                SearchId = searchId
+            };
+        }
+
+        protected virtual async Task<Chunk<TDomain>> GetAllFilteredAsync(
             int offset, int size, [AllowNull] string searchId,
             FilterQuery filterQuery,bool readFullTree = false)
         {
@@ -85,9 +124,7 @@ namespace EnTier.Services
             {
                 searchId = foundResults.First().SearchId;
             }
-
             
-
             var storages = await repository.ReadChunkAsync(offset, size, searchId,readFullTree);
 
             var outgoingStorages = RegulateOutgoing(storages);
