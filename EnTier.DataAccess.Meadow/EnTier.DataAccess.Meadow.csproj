@@ -13,14 +13,14 @@
         <PackageReference Include="Acidmanic.Utilities" Version="1.0.13" />
         <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b08" />
 
-        <PackageReference Include="Meadow.Framework" Version="1.2.4-b21" />
+        <PackageReference Include="Meadow.Framework" Version="1.2.4-b22" />
     </ItemGroup>
 
     <PropertyGroup>
         <!-- NuGet -->
         <Id>EnTier.DataAccess.Meadow</Id>
         <PackageId>EnTier.DataAccess.Meadow</PackageId>
-        <Version>1.1.0-b08</Version>
+        <Version>1.1.0-b09</Version>
         <Authors>Mani Moayedi</Authors>
         <Company>Acidmanic</Company>
         <PackageIcon>graphics/EnTier.png</PackageIcon>
