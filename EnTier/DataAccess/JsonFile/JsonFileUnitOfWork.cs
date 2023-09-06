@@ -199,9 +199,11 @@ namespace EnTier.DataAccess.JsonFile
         {
             var table = Table<TStorage>();
 
-            var filterResults = Table<FilterResult<TId>>();
+            var filterResults = Table<MarkedFilterResult<TStorage,TId>>();
+            
+            var searchIndex = Table<MarkedSearchIndex<TStorage,TId>>();
 
-            return new JsonFileRepository<TStorage, TId>(table,filterResults);
+            return new JsonFileRepository<TStorage, TId>(table,filterResults,searchIndex);
         }
 
         public override void Complete()

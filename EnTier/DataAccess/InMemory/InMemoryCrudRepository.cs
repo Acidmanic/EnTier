@@ -170,8 +170,10 @@ namespace EnTier.DataAccess.InMemory
             bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
-                .PerformFilterIfNeededAsync<TStorage, TId>(InMemorySharedChannel.FilterResults<TStorage,TId>(),
-                    _idLeaf, _data, filterQuery, searchId);
+                .PerformFilterIfNeededAsync<TStorage, TId>(
+                    InMemorySharedChannel.FilterResults<TStorage,TId>(),
+                    InMemorySharedChannel.SearchIndex<TStorage,TId>(),
+                    _idLeaf, _data, filterQuery,searchTerms, searchId);
         }
 
 

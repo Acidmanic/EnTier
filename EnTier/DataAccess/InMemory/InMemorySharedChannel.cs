@@ -8,6 +8,9 @@ namespace EnTier.DataAccess.InMemory
 
         private static readonly Dictionary<string, object>
             FilterResultsByTypeKey = new Dictionary<string, object>();
+        
+        private static readonly Dictionary<string, object>
+            SearchIndexesByTypeKey = new Dictionary<string, object>();
 
         public static List<FilterResult<TId>> FilterResults<TStorage,TId>()
         {
@@ -20,6 +23,20 @@ namespace EnTier.DataAccess.InMemory
             }
 
             return FilterResultsByTypeKey[key] as List<FilterResult<TId>>;
+
+        }
+        
+        public static List<SearchIndex<TId>> SearchIndex<TStorage,TId>()
+        {
+
+            var key = typeof(TStorage).FullName!.ToLower();
+
+            if (!SearchIndexesByTypeKey.ContainsKey(key))
+            {
+                SearchIndexesByTypeKey.Add(key, new List<SearchIndex<TId>>());
+            }
+
+            return SearchIndexesByTypeKey[key] as List<SearchIndex<TId>>;
 
         }
     }
