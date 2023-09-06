@@ -29,9 +29,9 @@ namespace ServiceManipulationExample.Services
             return manipulatedChunk;
         }
 
-        public override Post GetById(long id,bool readFullTree = false)
+        public override Post ReadById(long id,bool readFullTree = false)
         {
-            return Manipulate(base.GetById(id,readFullTree));
+            return Manipulate(base.ReadById(id,readFullTree));
         }
 
         private Post Manipulate(Post p)

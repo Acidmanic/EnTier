@@ -15,6 +15,7 @@ using EnTier.Regulation;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
 using EnTier.Utility;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.Services
@@ -29,8 +30,8 @@ namespace EnTier.Services
         protected ILogger Logger { get; private set; }
 
         protected ITransliterationService TransliterationService { get; }
-        
-        
+
+
         protected AccessNode StorageIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TStorage, TStorageId>();
         protected AccessNode DomainIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TDomain, TDomainId>();
 
@@ -56,85 +57,57 @@ namespace EnTier.Services
         }
 
 
-        public virtual Chunk<TDomain> GetAll(bool readFullTree = false)
+        public IEnumerable<TDomain> ReadAll()
         {
-            return GetAllAsync(readFullTree).Result;
-        }
-
-        public virtual Task<Chunk<TDomain>> GetAllAsync(bool readFullTree = false)
-        {
-            return GetAllAsync(0, int.MaxValue,readFullTree);
-        }
-
-        public virtual Task<Chunk<TDomain>> GetAllAsync(int offset, int size,bool readFullTree = false)
-        {
-            return GetAllAsync(offset, size, null, new FilterQuery(),null,readFullTree);
-        }
-
-        public virtual  Task<Chunk<TDomain>> GetAllAsync(
-            int offset, int size, [AllowNull] string searchId,
-            FilterQuery filterQuery,[AllowNull] string searchTerm, bool readFullTree = false)
-        {
-            
-            
-            // if (!_entityHasId || !TypeCheck.IsNumerical<TStorageId>())
-            // {
-            //    return GetAllNoFilterAsync(offset, size, searchId, readFullTree);   
-            // }
-
-            return GetAllFilteredAsync(offset, size, searchId, filterQuery, searchTerm, readFullTree);
+            return ReadAllAsync().Result;
         }
         
-        protected virtual async Task<Chunk<TDomain>> GetAllNoFilterAsync(
-            int offset, int size, [AllowNull] string searchId,bool readFullTree = false)
+        public async Task<IEnumerable<TDomain>> ReadAllAsync()
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
-
-            var storages = await repository.AllAsync(readFullTree);
-
+            var storages = await repository.AllAsync();
+            
             UnitOfWork.Complete();
-
-            var totalCount = storages.Count();
             
             var outgoingStorages = RegulateOutgoing(storages);
-
+            
             var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
 
-            return new Chunk<TDomain>
-            {
-                Items = domains,
-                Offset = offset,
-                Size = size,
-                TotalCount = totalCount,
-                SearchId = searchId
-            };
+            return domains;
         }
 
-        protected virtual async Task<Chunk<TDomain>> GetAllFilteredAsync(
+        public virtual Chunk<TDomain> ReadSequence(
+            int offset, int size, [AllowNull] string searchId,
+            FilterQuery filterQuery, [AllowNull] string searchTerm, bool readFullTree = false)
+        {
+            return ReadSequenceAsync(offset, size, searchId, filterQuery, searchTerm, readFullTree).Result;
+        }
+
+        public virtual async Task<Chunk<TDomain>> ReadSequenceAsync(
             int offset, int size, [AllowNull] string searchId,
             FilterQuery filterQuery, [AllowNull] string searchTerm, bool readFullTree = false)
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
             await repository.RemoveExpiredFilterResultsAsync();
-            
-            var searchTerms = TransliterationService.Transliterate(searchTerm??"")
+
+            var searchTerms = TransliterationService.Transliterate(searchTerm ?? "")
                 .Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             var foundResults = await repository
-                .PerformFilterIfNeededAsync(filterQuery,searchId,searchTerms,readFullTree);
+                .PerformFilterIfNeededAsync(filterQuery, searchId, searchTerms, readFullTree);
 
             UnitOfWork.Complete();
 
             var totalCount = foundResults.Count();
-            
-            if (totalCount>0)
+
+            if (totalCount > 0)
             {
                 searchId = foundResults.First().SearchId;
             }
-            
-            var storages = await repository.ReadChunkAsync(offset, size, searchId,readFullTree);
+
+            var storages = await repository.ReadChunkAsync(offset, size, searchId, readFullTree);
 
             var outgoingStorages = RegulateOutgoing(storages);
 
@@ -150,11 +123,11 @@ namespace EnTier.Services
             };
         }
 
-        public virtual TDomain GetById(TDomainId id,bool readFullTree = false)
+        public virtual TDomain ReadById(TDomainId id, bool readFullTree = false)
         {
             var storageId = Mapper.MapId<TStorageId>(id);
 
-            var storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().GetById(storageId,readFullTree);
+            var storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().GetById(storageId, readFullTree);
 
             var regulatedStorage = RegulateOutgoing(storage);
 

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.Net;
+using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Reflection;
 using EnTier.AutoWrap;
 using EnTier.Contracts;
@@ -39,6 +38,9 @@ namespace EnTier.Controllers
         protected IReadFullTreeAcquirer FullTreeAcquirer { get; }
         
         protected ITransliterationService TransliterationService { get; }
+
+        protected bool DisableSearchAndFiltering { get; set; } = false;
+        
         
         public CrudControllerBase(EnTierEssence essence)
         {
@@ -74,28 +76,40 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var data = OnGetAll(FullTreeAcquirer.IsReadAllFullTree);
+                var readFullTree = FullTreeAcquirer.IsReadAllFullTree;
 
-                return Ok(data);
+                if (DisableSearchAndFiltering)
+                {
+                    var list = OnReadAll(readFullTree);
+
+                    var wrapped = WrapCollection(list);
+
+                    return Ok(wrapped);
+                }
+                else
+                {
+                    var filter = HttpContext.GetFilter<TStorage>(readFullTree);
+
+                    var pagination = HttpContext.GetPagination();
+
+                    var searchQ = HttpContext.GetSearchTerms();
+                    
+                    var chunk = OnReadSequence(filter,pagination,searchQ,readFullTree);
+                    
+                    return Ok(chunk);   
+                }
             });
         }
 
-
-        protected virtual Chunk<TTransfer> OnGetAll(bool readFullTree = false)
+        protected virtual Chunk<TTransfer> OnReadSequence(FilterQuery filter, PaginationQuery pagination, string searchQ,bool readFullTree)
         {
-            var filter = HttpContext.GetFilter<TStorage>(readFullTree);
-
-            var pagination = HttpContext.GetPagination();
-
-            var searchQ = HttpContext.GetSearchTerms();
-
-            var domainChunk = Service.GetAllAsync(
+            var domainChunk = Service.ReadSequence(
                 pagination.Offset,
                 pagination.Size,
                 pagination.SearchId,
                 filter,
                 searchQ,
-                readFullTree).Result;
+                readFullTree);
 
             var transferObjects = Mapper.Map<List<TTransfer>>(domainChunk.Items);
 
@@ -103,6 +117,17 @@ namespace EnTier.Controllers
 
             return transferChunk;
         }
+
+
+        protected virtual IEnumerable<TTransfer> OnReadAll(bool readFullTree = false)
+        {
+            var domains = Service.ReadAll();
+
+            var transfers = Mapper.Map<IEnumerable<TTransfer>>(domains);
+
+            return transfers;
+        }
+
 
         [HttpGet]
         [Route("{id}")]
@@ -125,7 +150,7 @@ namespace EnTier.Controllers
         {
             var domainId = Mapper.MapId<TDomainId>(id);
 
-            var domain = Service.GetById(domainId,readFullTree);
+            var domain = Service.ReadById(domainId,readFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
