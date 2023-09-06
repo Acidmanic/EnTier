@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -7,6 +8,7 @@ using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Results;
+using EnTier.Contracts;
 using EnTier.Mapper;
 using EnTier.Models;
 using EnTier.Regulation;
@@ -26,7 +28,9 @@ namespace EnTier.Services
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; private set; }
         protected ILogger Logger { get; private set; }
 
-
+        protected ITransliterationService TransliterationService { get; }
+        
+        
         protected AccessNode StorageIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TStorage, TStorageId>();
         protected AccessNode DomainIdLeaf { get; } = TypeIdentity.FindIdentityLeaf<TDomain, TDomainId>();
 
@@ -48,6 +52,7 @@ namespace EnTier.Services
             Regulator = Regulator ?? new NullDataAccessRegulator<TDomain, TStorage>();
             Logger = essence.Logger;
             _hasRegulator = !(Regulator is NullDataAccessRegulator);
+            TransliterationService = essence.TransliterationService;
         }
 
 
@@ -63,24 +68,25 @@ namespace EnTier.Services
 
         public virtual Task<Chunk<TDomain>> GetAllAsync(int offset, int size,bool readFullTree = false)
         {
-            return GetAllAsync(offset, size, null, new FilterQuery(),readFullTree);
+            return GetAllAsync(offset, size, null, new FilterQuery(),null,readFullTree);
         }
 
         public virtual  Task<Chunk<TDomain>> GetAllAsync(
             int offset, int size, [AllowNull] string searchId,
-            FilterQuery filterQuery, bool readFullTree = false)
+            FilterQuery filterQuery,[AllowNull] string searchTerm, bool readFullTree = false)
         {
-            if (!_entityHasId || !TypeCheck.IsNumerical<TStorageId>())
-            {
-                return GetAllNoFilterAsync(offset, size, searchId, filterQuery, readFullTree);   
-            }
+            
+            
+            // if (!_entityHasId || !TypeCheck.IsNumerical<TStorageId>())
+            // {
+            //    return GetAllNoFilterAsync(offset, size, searchId, readFullTree);   
+            // }
 
-            return GetAllFilteredAsync(offset, size, searchId, filterQuery, readFullTree);
+            return GetAllFilteredAsync(offset, size, searchId, filterQuery, searchTerm, readFullTree);
         }
         
         protected virtual async Task<Chunk<TDomain>> GetAllNoFilterAsync(
-            int offset, int size, [AllowNull] string searchId,
-            FilterQuery filterQuery,bool readFullTree = false)
+            int offset, int size, [AllowNull] string searchId,bool readFullTree = false)
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
@@ -107,14 +113,17 @@ namespace EnTier.Services
 
         protected virtual async Task<Chunk<TDomain>> GetAllFilteredAsync(
             int offset, int size, [AllowNull] string searchId,
-            FilterQuery filterQuery,bool readFullTree = false)
+            FilterQuery filterQuery, [AllowNull] string searchTerm, bool readFullTree = false)
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
             await repository.RemoveExpiredFilterResultsAsync();
+            
+            var searchTerms = TransliterationService.Transliterate(searchTerm??"")
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             var foundResults = await repository
-                .PerformFilterIfNeededAsync(filterQuery,searchId,null,readFullTree);
+                .PerformFilterIfNeededAsync(filterQuery,searchId,searchTerms,readFullTree);
 
             UnitOfWork.Complete();
 

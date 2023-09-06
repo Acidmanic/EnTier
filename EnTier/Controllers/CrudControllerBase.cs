@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Net;
 using Acidmanic.Utilities.Reflection;
 using EnTier.AutoWrap;
+using EnTier.Contracts;
 using EnTier.Extensions;
 using EnTier.Mapper;
 using EnTier.Models;
@@ -27,7 +29,7 @@ namespace EnTier.Controllers
         protected IMapper Mapper { get; private set; }
         protected IUnitOfWork UnitOfWork { get; private set; }
         protected ICrudService<TDomain, TDomainId> Service { get; private set; }
-
+        
         protected ILogger Logger { get; private set; }
 
         protected readonly EnTierAutoWrapper<TTransfer> AutoWrapper;
@@ -35,6 +37,8 @@ namespace EnTier.Controllers
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; private set; }
 
         protected IReadFullTreeAcquirer FullTreeAcquirer { get; }
+        
+        protected ITransliterationService TransliterationService { get; }
         
         public CrudControllerBase(EnTierEssence essence)
         {
@@ -48,6 +52,7 @@ namespace EnTier.Controllers
             Regulator = essence.Regulator<TDomain, TStorage>();
             AutoWrapper = new EnTierAutoWrapper<TTransfer>(this);
             FullTreeAcquirer = new ReadFullTreeAcquirer(this);
+            TransliterationService = essence.TransliterationService;
         }
 
 
@@ -82,11 +87,14 @@ namespace EnTier.Controllers
 
             var pagination = HttpContext.GetPagination();
 
+            var searchQ = HttpContext.GetSearchTerms();
+
             var domainChunk = Service.GetAllAsync(
                 pagination.Offset,
                 pagination.Size,
                 pagination.SearchId,
                 filter,
+                searchQ,
                 readFullTree).Result;
 
             var transferObjects = Mapper.Map<List<TTransfer>>(domainChunk.Items);

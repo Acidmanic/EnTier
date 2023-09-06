@@ -15,5 +15,10 @@ namespace EnTier.Extensions
         {
             return context.Request.GetFilter(storageModelType, fullTree);
         }
+        
+        public static string GetSearchTerms(this HttpContext context)
+        {
+            return context.Request.GetSearchTerms();
+        }
     }
 }

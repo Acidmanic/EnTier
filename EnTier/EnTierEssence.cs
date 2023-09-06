@@ -8,6 +8,7 @@ using EnTier.EventSourcing;
 using EnTier.Mapper;
 using EnTier.Regulation;
 using EnTier.Services;
+using EnTier.Services.Transliteration;
 using EnTier.UnitOfWork;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.LightWeight;
@@ -114,5 +115,8 @@ namespace EnTier
             <IStreamEventPublisherAdapter>(() => new NullPublisherAdapter(), false);
 
         internal IFilterInformationService FilterInformationService => new FilterInformationService(UnitOfWork);
+
+        internal ITransliterationService TransliterationService => 
+            ResolveOrDefault<ITransliterationService>(new EnTierBuiltinTransliterationsService());
     }
 }

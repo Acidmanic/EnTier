@@ -14,7 +14,7 @@ namespace EnTier.Extensions
         {
             var storageType = typeof(TStorageModel);
 
-            return GetFilter(request, storageType,fullTree);
+            return GetFilter(request, storageType, fullTree);
         }
 
         public static FilterQuery GetFilter(this HttpRequest request, Type storageModelType, bool fullTree)
@@ -23,7 +23,7 @@ namespace EnTier.Extensions
 
             var leaves = evaluator.Map.Nodes
                 .Where(n => n.IsLeaf)
-                .Where(n => n.Depth==1 || fullTree)
+                .Where(n => n.Depth == 1 || fullTree)
                 .Where(IsFilterField);
 
             var query = new FilterQuery();
@@ -33,13 +33,13 @@ namespace EnTier.Extensions
             var requestQueries = request.Query;
 
             //var requestFormFields = request.Form;
-            
+
             //var jsonBody = request...readJsonDictionary
-            
+
             foreach (var leaf in leaves)
             {
                 var key = evaluator.Map.FieldKeyByNode(leaf).Headless().ToString();
-                
+
                 var foundKey = requestQueries.FindKey(key);
 
                 if (foundKey)
@@ -62,6 +62,23 @@ namespace EnTier.Extensions
 
             return query;
         }
+
+        public static string GetSearchTerms(this HttpRequest request)
+        {
+            
+
+            var requestQueries = request.Query;
+            
+            var foundKey = requestQueries.FindKey("q");
+
+            if (foundKey)
+            {
+                return foundKey.Value;
+            }
+
+            return null;
+        }
+
 
         private static bool IsFilterField(AccessNode leaf)
         {

@@ -11,7 +11,7 @@ namespace EnTier.Services
     {
         Chunk<TEntity> GetAll(bool readFullTree = false);
 
-        Task<Chunk<TEntity>> GetAllAsync(int offset, int size,[AllowNull] string searchId , FilterQuery filterQuery,bool readFullTree = false);
+        Task<Chunk<TEntity>> GetAllAsync(int offset, int size,[AllowNull] string searchId , FilterQuery filterQuery,[AllowNull] string searchTerm, bool readFullTree = false);
 
         Task<Chunk<TEntity>> GetAllAsync(int offset, int size,bool readFullTree = false);
 
