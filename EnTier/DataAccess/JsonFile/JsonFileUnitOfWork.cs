@@ -199,7 +199,7 @@ namespace EnTier.DataAccess.JsonFile
         {
             var table = Table<TStorage>();
 
-            var filterResults = Table<FilterResult>();
+            var filterResults = Table<FilterResult<TId>>();
 
             return new JsonFileRepository<TStorage, TId>(table,filterResults);
         }

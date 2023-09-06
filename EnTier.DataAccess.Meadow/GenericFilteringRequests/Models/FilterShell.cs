@@ -7,6 +7,8 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests.Models
         public long ExpirationTimeStamp { get; set; }
         
         public string FilterExpression { get; set; }
+        
+        public string SearchExpression { get; set; }
     }
 }
 

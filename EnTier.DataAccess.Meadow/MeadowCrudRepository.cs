@@ -299,10 +299,13 @@ namespace EnTier.DataAccess.Meadow
             ErrorCheck(response);
         }
 
-        public override async Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
-            FilterQuery filterQuery,string searchId = null,bool readFullTree = false)
+        public override async Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
+            FilterQuery filterQuery,
+            string searchId = null,
+            string[] searchTerms = null,
+            bool readFullTree = false)
         {
-            var request = new PerformFilterIfNeededRequest<TStorage>(filterQuery,searchId);
+            var request = new PerformFilterIfNeededRequest<TStorage,TId>(filterQuery,searchId,searchTerms);
 
             var engine = GetEngine();
 

@@ -22,9 +22,9 @@ namespace EnTier.DataAccess.JsonFile
         private readonly List<TStorage> _data;
         private readonly IdGenerator<TId> _idGenerator = new IdGenerator<TId>();
         private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
-        private readonly List<FilterResult> _filterResults;
+        private readonly List<FilterResult<TId>> _filterResults;
 
-        public JsonFileRepository(List<TStorage> data, List<FilterResult> filterResults)
+        public JsonFileRepository(List<TStorage> data, List<FilterResult<TId>> filterResults)
         {
             foreach (var storage in data)
             {
@@ -171,9 +171,11 @@ namespace EnTier.DataAccess.JsonFile
             return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync(_filterResults);
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+        public override Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
-            string searchId = null,bool readFullTree = false)
+            string searchId = null,
+            string[] searchTerms = null,
+            bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(_filterResults, _idLeaf, _data, filterQuery, searchId);

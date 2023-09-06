@@ -23,7 +23,7 @@ namespace EnTier.Repositories
 
         protected abstract TStorage Insert(TStorage value);
         public abstract TStorage Set(TStorage value);
-        public abstract TStorage GetById(TId id,bool readFullTree = false);
+        public abstract TStorage GetById(TId id, bool readFullTree = false);
         public abstract IEnumerable<TStorage> Find(Expression<Func<TStorage, bool>> predicate);
         public abstract bool Remove(TStorage value);
         public abstract bool Remove(TId id);
@@ -33,7 +33,7 @@ namespace EnTier.Repositories
 
         protected abstract Task<TStorage> InsertAsync(TStorage value);
         public abstract Task<TStorage> SetAsync(TStorage value);
-        public abstract Task<TStorage> GetByIdAsync(TId id,bool readFullTree = false);
+        public abstract Task<TStorage> GetByIdAsync(TId id, bool readFullTree = false);
         public abstract Task<IEnumerable<TStorage>> FindAsync(Expression<Func<TStorage, bool>> predicate);
         public abstract Task<bool> RemoveAsync(TStorage value);
         public abstract Task<bool> RemoveAsync(TId id);
@@ -50,24 +50,29 @@ namespace EnTier.Repositories
             RemoveExpiredFilterResultsAsync().Wait();
         }
 
-        public abstract Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+        public abstract Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
-            string searchId =null,
+            string searchId = null,
+            string[] searchTerms = null,
             bool readFullTree = false);
 
-        public IEnumerable<FilterResult> PerformFilterIfNeeded(FilterQuery filterQuery,
-            string searchId =null,bool readFullTree = false)
+        public IEnumerable<FilterResult<TId>> PerformFilterIfNeeded(
+            FilterQuery filterQuery,
+            string searchId = null,
+            string[] searchTerms = null,
+            bool readFullTree = false)
         {
-            return PerformFilterIfNeededAsync(filterQuery,null,readFullTree).Result;
+            return PerformFilterIfNeededAsync(filterQuery, null, searchTerms, readFullTree).Result;
         }
 
-        public abstract Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false);
+        public abstract Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,
+            bool readFullTree = false);
 
-        public IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId,bool readFullTree = false)
+        public IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId, bool readFullTree = false)
         {
-            return ReadChunkAsync(offset, size, searchId,readFullTree).Result;
+            return ReadChunkAsync(offset, size, searchId, readFullTree).Result;
         }
-        
+
         protected ILogger Logger { get; private set; } = NullLogger.Instance;
 
         public virtual TStorage Add(TStorage value)

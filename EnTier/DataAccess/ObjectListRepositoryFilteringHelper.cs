@@ -13,7 +13,7 @@ namespace EnTier.DataAccess
 {
     internal static class ObjectListRepositoryFilteringHelper
     {
-        public static Task RemoveExpiredFilterResultsAsync(List<FilterResult> filterResults)
+        public static Task RemoveExpiredFilterResultsAsync<TId>(List<FilterResult<TId>> filterResults)
         {
             var now = DateTime.Now.Ticks;
 
@@ -28,8 +28,8 @@ namespace EnTier.DataAccess
             return Task.CompletedTask;
         }
 
-        public static Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync<TStorage>(
-            List<FilterResult> filterResults,
+        public static Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync<TStorage,TId>(
+            List<FilterResult<TId>> filterResults,
             AccessNode idLeaf,
             IEnumerable<TStorage> data,
             FilterQuery filterQuery,
@@ -41,17 +41,17 @@ namespace EnTier.DataAccess
 
             if (!anyResult && idLeaf != null && TypeCheck.IsNumerical(idLeaf.Type))
             {
-                var filteringResults = new ObjectStreamFilterer<TStorage>()
+                var filteringResults = new ObjectStreamFilterer<TStorage,TId>()
                     .PerformFilter(data, filterQuery,searchId);
 
                 filterResults.AddRange(filteringResults);
             }
 
-            return Task.FromResult(filterResults as IEnumerable<FilterResult>);
+            return Task.FromResult(filterResults as IEnumerable<FilterResult<TId>>);
         }
 
-        public static Task<IEnumerable<TStorage>> ReadChunkAsync<TStorage>(
-            List<FilterResult> filterResults,
+        public static Task<IEnumerable<TStorage>> ReadChunkAsync<TStorage,TId>(
+            List<FilterResult<TId>> filterResults,
             AccessNode idLeaf,
             IEnumerable<TStorage> data,
             int offset, int size, string searchId)

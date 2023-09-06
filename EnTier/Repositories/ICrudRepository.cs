@@ -119,14 +119,20 @@ namespace EnTier.Repositories
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(FilterQuery filterQuery, string searchId = null,bool readFullTree = false);
+        Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(FilterQuery filterQuery, 
+            string searchId = null,
+            string[] searchTerms = null,
+            bool readFullTree = false);
 
         /// <summary>
         /// This method, Checks if given filter is not performed. If so, then
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        IEnumerable<FilterResult> PerformFilterIfNeeded(FilterQuery filterQuery, string searchId = null,bool readFullTree = false);
+        IEnumerable<FilterResult<TId>> PerformFilterIfNeeded(FilterQuery filterQuery,
+            string searchId = null,
+            string[] searchTerms = null,
+            bool readFullTree = false);
 
         /// <summary>
         /// This method will read a chunk of storage data by skipping 'offset' items and picking 'size' items.

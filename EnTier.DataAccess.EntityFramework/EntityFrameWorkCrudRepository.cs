@@ -11,6 +11,7 @@ using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.DataAccess.EntityFramework.FullTreeHandling;
+using EnTier.DataAccess.EntityFramework.Models;
 using EnTier.Extensions;
 using EnTier.Models;
 using EnTier.Repositories;
@@ -25,11 +26,11 @@ namespace EnTier.DataAccess.EntityFramework
         where TStorage : class, new()
     {
         protected DbSet<TStorage> DbSet { get; }
-        protected DbSet<FilterResult> FilterResults { get; }
+        protected DbSet<MarkedFilterResult<TStorage,TId>> FilterResults { get; }
         
         protected IFullTreeMarker<TStorage> FullTreeMarker { get; }
 
-        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet, DbSet<FilterResult> filterResults, IFullTreeMarker<TStorage> fullTreeMarker)
+        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet, DbSet<MarkedFilterResult<TStorage,TId>> filterResults, IFullTreeMarker<TStorage> fullTreeMarker)
         {
             DbSet = dbSet;
             FilterResults = filterResults;
@@ -145,13 +146,15 @@ namespace EnTier.DataAccess.EntityFramework
             });
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+        public override Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
-            string searchId = null,bool readFullTree = false)
+            string searchId = null,
+            string[] searchTerms = null,
+            bool readFullTree = false)
         {
             searchId ??= Guid.NewGuid().ToString("N");
 
-            return Task.Run<IEnumerable<FilterResult>>(() =>
+            return Task.Run<IEnumerable<FilterResult<TId>>>(() =>
             {
                 var anyResults = FilterResults.Count(r => r.SearchId == searchId);
 
@@ -176,20 +179,20 @@ namespace EnTier.DataAccess.EntityFramework
 
                     foreach (var storage in filterResults)
                     {
-                        var filterResult = new FilterResult
+                        var filterResult = new FilterResult<TId>
                         {
                             SearchId = searchId,
-                            ResultId = (long)idLeaf.Evaluator.Read(storage),
+                            ResultId = (TId)idLeaf.Evaluator.Read(storage),
                             ExpirationTimeStamp = expirationTime
                         };
 
-                        FilterResults.Add(filterResult);
+                        FilterResults.Add(filterResult.AsMarked<TStorage,TId>());
                     }
 
                     return FilterResults.Where(fr => fr.SearchId==searchId);
                 }
 
-                return new FilterResult[] { };
+                return new FilterResult<TId>[] { };
             });
         }
 
@@ -222,7 +225,7 @@ namespace EnTier.DataAccess.EntityFramework
                 //a=>a.id
                 MemberExpression property = Expression.Property(parameter, idLeaf.Name);
 
-                var lambda = Expression.Lambda<Func<TStorage, long>>(property, parameter);
+                var lambda = Expression.Lambda<Func<TStorage, TId>>(property, parameter);
 
                 var readResult = DbSetFullTreeAble(readFullTree).Join(
                         FilterResults,

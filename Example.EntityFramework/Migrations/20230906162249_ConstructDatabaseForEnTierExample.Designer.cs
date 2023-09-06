@@ -8,14 +8,34 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExampleEntityFramework.Migrations
 {
     [DbContext(typeof(ExampleContext))]
-    [Migration("20210524072429_InitialiseWithPostModel")]
-    partial class InitialiseWithPostModel
+    [Migration("20230906162249_ConstructDatabaseForEnTierExample")]
+    partial class ConstructDatabaseForEnTierExample
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
+
+            modelBuilder.Entity("EnTier.DataAccess.EntityFramework.Models.MarkedFilterResult<ExampleEntityFramework.StoragesModels.PostStg, long>", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("ExpirationTimeStamp")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("ResultId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SearchId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PostsFilterResults");
+                });
 
             modelBuilder.Entity("ExampleEntityFramework.StoragesModels.PostStg", b =>
                 {

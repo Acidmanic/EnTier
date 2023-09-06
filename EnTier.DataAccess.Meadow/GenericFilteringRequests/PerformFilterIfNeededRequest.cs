@@ -10,20 +10,25 @@ using Meadow.Requests;
 
 namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
 {
-    public sealed class PerformFilterIfNeededRequest<TStorage> : MeadowRequest<FilterShell, FilterResult>
+    public sealed class PerformFilterIfNeededRequest<TStorage,TId> : MeadowRequest<FilterShell, FilterResult<TId>>
     {
-        public PerformFilterIfNeededRequest(FilterQuery filterQuery,string searchId = null) : base(true)
+        public PerformFilterIfNeededRequest(FilterQuery filterQuery,string searchId = null,string[] searchTerms = null) : base(true)
         {
             searchId ??= Guid.NewGuid().SearchId();
+
+            searchTerms ??= new string[] { };
             
             RegisterTranslationTask(t =>
             {
-                var filterExpression = t.TranslateFilterQueryToDbExpression(filterQuery, FullTreeReadWrite()); 
+                var filterExpression = t.TranslateFilterQueryToDbExpression(filterQuery, FullTreeReadWrite());
+
+                var searchExpression = t.TranslateSearchTerm(typeof(TStorage), searchTerms);
                 
                 ToStorage = new FilterShell
                 {
                     SearchId = searchId,
                     FilterExpression = filterExpression,
+                    SearchExpression = searchExpression,
                     ExpirationTimeStamp = typeof(TStorage).GetFilterResultExpirationPointMilliseconds()
                 };
             });

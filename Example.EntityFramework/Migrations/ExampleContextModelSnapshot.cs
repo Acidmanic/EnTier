@@ -15,7 +15,7 @@ namespace ExampleEntityFramework.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("Acidmanic.Utilities.Filtering.Models.FilterResult", b =>
+            modelBuilder.Entity("EnTier.DataAccess.EntityFramework.Models.MarkedFilterResult<ExampleEntityFramework.StoragesModels.PostStg, long>", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,7 +32,7 @@ namespace ExampleEntityFramework.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FilterResults");
+                    b.ToTable("PostsFilterResults");
                 });
 
             modelBuilder.Entity("ExampleEntityFramework.StoragesModels.PostStg", b =>

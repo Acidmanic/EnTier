@@ -2,7 +2,7 @@
 
 namespace ExampleEntityFramework.Migrations
 {
-    public partial class InitialiseWithPostModel : Migration
+    public partial class ConstructDatabaseForEnTierExample : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,12 +20,30 @@ namespace ExampleEntityFramework.Migrations
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "PostsFilterResults",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SearchId = table.Column<string>(type: "TEXT", nullable: true),
+                    ResultId = table.Column<long>(type: "INTEGER", nullable: false),
+                    ExpirationTimeStamp = table.Column<long>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostsFilterResults", x => x.Id);
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "PostsFilterResults");
         }
     }
 }

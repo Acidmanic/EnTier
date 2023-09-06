@@ -159,17 +159,18 @@ namespace EnTier.DataAccess.InMemory
 
         public override Task RemoveExpiredFilterResultsAsync()
         {
-            return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync(InMemorySharedChannel
-                .FilterResults);
+            return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync
+                (InMemorySharedChannel.FilterResults<TStorage, TId>());
         }
 
-        public override Task<IEnumerable<FilterResult>> PerformFilterIfNeededAsync(
+        public override Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
             string searchId = null,
+            string[] searchTerms = null,
             bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
-                .PerformFilterIfNeededAsync(InMemorySharedChannel.FilterResults,
+                .PerformFilterIfNeededAsync<TStorage, TId>(InMemorySharedChannel.FilterResults<TStorage,TId>(),
                     _idLeaf, _data, filterQuery, searchId);
         }
 
@@ -178,7 +179,7 @@ namespace EnTier.DataAccess.InMemory
             bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
-                .ReadChunkAsync(InMemorySharedChannel.FilterResults,
+                .ReadChunkAsync(InMemorySharedChannel.FilterResults<TStorage,TId>(),
                     _idLeaf, _data, offset, size, searchId);
         }
     }

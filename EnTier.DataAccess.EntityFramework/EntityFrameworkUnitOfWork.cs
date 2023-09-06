@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Acidmanic.Utilities.Filtering.Models;
 using EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 using EnTier.DataAccess.EntityFramework.FullTreeHandling;
+using EnTier.DataAccess.EntityFramework.Models;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +59,8 @@ namespace EnTier.DataAccess.EntityFramework
         protected override ICrudRepository<TStorage, TId> CreateDefaultCrudRepository<TStorage, TId>()
         {
             var dbSet = _context.Set<TStorage>();
-            var filterResultSet = _context.Set<FilterResult>();
+            
+            var filterResultSet = _context.Set<MarkedFilterResult<TStorage,TId>>();
 
             var marker = _essence.ResolveOrDefault<IFullTreeMarker<TStorage>>
                 (new NullFullTreeMarker<TStorage>());

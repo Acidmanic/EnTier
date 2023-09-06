@@ -1,4 +1,5 @@
 using Acidmanic.Utilities.Filtering.Models;
+using EnTier.DataAccess.EntityFramework.Models;
 using EnTier.Repositories;
 using ExampleEntityFramework.StoragesModels;
 
@@ -7,7 +8,7 @@ namespace ExampleEntityFramework;
 public class PostsSeedFixture
 {
 
-    public void Setup(ICrudRepository<FilterResult, long> repository)
+    public void Setup(ICrudRepository<MarkedFilterResult<PostStg, long>,long> repository)
     {
         var existing = repository.All();
 

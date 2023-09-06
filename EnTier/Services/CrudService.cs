@@ -114,7 +114,7 @@ namespace EnTier.Services
             await repository.RemoveExpiredFilterResultsAsync();
 
             var foundResults = await repository
-                .PerformFilterIfNeededAsync(filterQuery,searchId,readFullTree);
+                .PerformFilterIfNeededAsync(filterQuery,searchId,null,readFullTree);
 
             UnitOfWork.Complete();
 
