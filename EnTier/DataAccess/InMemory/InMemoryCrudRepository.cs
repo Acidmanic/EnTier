@@ -172,9 +172,9 @@ namespace EnTier.DataAccess.InMemory
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync<TStorage, TId>(
-                    InMemorySharedChannel.FilterResults<TStorage,TId>(),
-                    InMemorySharedChannel.SearchIndex<TStorage,TId>(),
-                    _idLeaf, _data, filterQuery,searchTerms, searchId);
+                    InMemorySharedChannel.FilterResults<TStorage, TId>(),
+                    InMemorySharedChannel.SearchIndex<TStorage, TId>(),
+                    _idLeaf, _data, filterQuery, searchTerms, searchId);
         }
 
 
@@ -182,16 +182,15 @@ namespace EnTier.DataAccess.InMemory
             bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
-                .ReadChunkAsync(InMemorySharedChannel.FilterResults<TStorage,TId>(),
+                .ReadChunkAsync(InMemorySharedChannel.FilterResults<TStorage, TId>(),
                     _idLeaf, _data, offset, size, searchId);
         }
 
         public override Task<SearchIndex<TId>> IndexAsync(TId id, string indexCorpus)
         {
-            
             var indexes = InMemorySharedChannel.SearchIndex<TStorage, TId>();
 
-            long indexId = indexes.Select(i => i.Id).Max() + 1;
+            long indexId = indexes.Count > 0 ? indexes.Select(i => i.Id).Max() + 1 : 1;
 
             var existing = indexes.FirstOrDefault(i => i.ResultId.Equals(id));
 
@@ -205,8 +204,8 @@ namespace EnTier.DataAccess.InMemory
                 IndexCorpus = indexCorpus,
                 ResultId = id,
                 Id = indexId
-            }; 
-            
+            };
+
             indexes.Add(indexRecord);
 
             return Task.FromResult(indexRecord);
