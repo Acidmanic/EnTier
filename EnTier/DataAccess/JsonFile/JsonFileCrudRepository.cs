@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
@@ -24,9 +25,9 @@ namespace EnTier.DataAccess.JsonFile
         private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
         
         private readonly List<MarkedFilterResult<TStorage,TId>> _filterResults;
-        private readonly List<MarkedSearchIndex<TStorage,TId>> _searchResults;
+        private readonly List<MarkedSearchIndex<TStorage,TId>> _searchIndex;
 
-        public JsonFileRepository(List<TStorage> data, List<MarkedFilterResult<TStorage, TId>> filterResults, List<MarkedSearchIndex<TStorage, TId>> searchResults)
+        public JsonFileRepository(List<TStorage> data, List<MarkedFilterResult<TStorage, TId>> filterResults, List<MarkedSearchIndex<TStorage, TId>> searchIndex)
         {
             foreach (var storage in data)
             {
@@ -35,7 +36,7 @@ namespace EnTier.DataAccess.JsonFile
 
             _data = data;
             _filterResults = filterResults;
-            _searchResults = searchResults;
+            _searchIndex = searchIndex;
         }
 
         public override IEnumerable<TStorage> All(bool readFullTree = false)
@@ -183,7 +184,7 @@ namespace EnTier.DataAccess.JsonFile
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(
                     _filterResults,
-                    _searchResults,
+                    _searchIndex,
                     _idLeaf, _data, filterQuery, searchTerms, searchId);
         }
 
@@ -191,6 +192,30 @@ namespace EnTier.DataAccess.JsonFile
         {
             return ObjectListRepositoryFilteringHelper
                 .ReadChunkAsync(_filterResults, _idLeaf, _data, offset, size, searchId);
+        }
+        
+        public override Task<SearchIndex<TId>> IndexAsync(TId id, string indexCorpus)
+        {
+            long indexId = _searchIndex.Count>0? 
+                _searchIndex.Select(i => i.Id).Max() + 1: 1;
+
+            var existing = _searchIndex.FirstOrDefault(i => i.ResultId.Equals(id));
+
+            if (existing != null)
+            {
+                _searchIndex.Remove(existing);
+            }
+
+            var indexRecord = new SearchIndex<TId>
+            {
+                IndexCorpus = indexCorpus,
+                ResultId = id,
+                Id = indexId
+            }; 
+            
+            _searchIndex.Add(indexRecord.AsMarked<TStorage,TId>());
+
+            return Task.FromResult(indexRecord);
         }
         
     }

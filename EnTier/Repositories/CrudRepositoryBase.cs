@@ -73,6 +73,13 @@ namespace EnTier.Repositories
             return ReadChunkAsync(offset, size, searchId, readFullTree).Result;
         }
 
+        public SearchIndex<TId> Index(TId id,string indexCorpus)
+        {
+            return IndexAsync(id,indexCorpus).Result;
+        }
+
+        public abstract Task<SearchIndex<TId>> IndexAsync(TId id,string indexCorpus);
+
         protected ILogger Logger { get; private set; } = NullLogger.Instance;
 
         public virtual TStorage Add(TStorage value)

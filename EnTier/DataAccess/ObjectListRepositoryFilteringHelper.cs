@@ -53,7 +53,7 @@ namespace EnTier.DataAccess
                 return true;
             }
             
-            var matchingIndex = searchIndex.FirstOrDefault(s => s.Id.Equals(id));
+            var matchingIndex = searchIndex.FirstOrDefault(s => s.ResultId.Equals(id));
 
             if (matchingIndex != null)
             {
@@ -69,7 +69,7 @@ namespace EnTier.DataAccess
             {
                 return true;
             }
-            var matchingIndex = searchIndex.FirstOrDefault(s => s.Id.Equals(id));
+            var matchingIndex = searchIndex.FirstOrDefault(s => s.ResultId.Equals(id));
 
             if (matchingIndex != null)
             {

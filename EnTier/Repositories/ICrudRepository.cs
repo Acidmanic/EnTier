@@ -158,6 +158,8 @@ namespace EnTier.Repositories
         /// <returns>The asked chunk of results, if found any.</returns>
         IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId,bool readFullTree = false);
 
+        SearchIndex<TId> Index(TId id,string indexCorpus);
         
+        Task<SearchIndex<TId>> IndexAsync(TId id,string indexCorpus);
     }
 }

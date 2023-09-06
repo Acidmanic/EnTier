@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
@@ -57,21 +58,55 @@ namespace EnTier.Services
         }
 
 
+        protected string IndexCorpusOf(object value, bool fullTree)
+        {
+            if (value == null)
+            {
+                return "";
+            }
+
+            var evaluator = new ObjectEvaluator(value);
+
+            var stringType = typeof(string);
+
+            IEnumerable<AccessNode> textNodes =
+                fullTree ? evaluator.Map.Nodes.Where(n => n.IsLeaf) : evaluator.RootNode.GetDirectLeaves();
+
+            textNodes = textNodes.Where(n => n.Type == stringType);
+
+            var sb = new StringBuilder();
+
+            foreach (var textNode in textNodes)
+            {
+                var key = evaluator.Map.FieldKeyByNode(textNode);
+
+                var text = evaluator.Read(key, true) as string ?? "";
+
+                sb.Append(text).Append(" ");
+            }
+
+            var rawCorpus = sb.ToString();
+
+            var indexCorpus = TransliterationService.Transliterate(rawCorpus);
+
+            return indexCorpus;
+        }
+
         public IEnumerable<TDomain> ReadAll()
         {
             return ReadAllAsync().Result;
         }
-        
+
         public async Task<IEnumerable<TDomain>> ReadAllAsync()
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
             var storages = await repository.AllAsync();
-            
+
             UnitOfWork.Complete();
-            
+
             var outgoingStorages = RegulateOutgoing(storages);
-            
+
             var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
 
             return domains;
@@ -141,7 +176,12 @@ namespace EnTier.Services
             return domain;
         }
 
-        public virtual TDomain Add(TDomain value)
+        public virtual TDomain Add(TDomain value, bool alsoIndex, bool fullTreeIndexing)
+        {
+            return AddAsync(value, alsoIndex, fullTreeIndexing).Result;
+        }
+
+        public virtual async Task<TDomain> AddAsync(TDomain value, bool alsoIndex, bool fullTreeIndexing)
         {
             var regulated = RegulateIncoming(value);
 
@@ -149,9 +189,16 @@ namespace EnTier.Services
             {
                 var storage = Mapper.Map<TStorage>(regulated.Value);
 
-                storage = UnitOfWork.GetCrudRepository<TStorage, TStorageId>().Add(storage);
+                var repository = UnitOfWork.GetCrudRepository<TStorage, TStorageId>();
+
+                storage = await repository.AddAsync(storage);
 
                 UnitOfWork.Complete();
+
+                if (alsoIndex)
+                {
+                    await TryIndex(storage, fullTreeIndexing);
+                }
 
                 var domain = Mapper.Map<TDomain>(storage);
 
@@ -159,6 +206,39 @@ namespace EnTier.Services
             }
 
             return default;
+        }
+
+        private async Task TryIndex(TStorage storage, bool fullTreeIndexing)
+        {
+            if (_entityHasId)
+            {
+                var id = (TStorageId)StorageIdLeaf.Evaluator.Read(storage);
+
+                var repository = UnitOfWork.GetCrudRepository<TStorage, TStorageId>();
+
+                if (fullTreeIndexing)
+                {
+                    var fullFreeObject = await repository.GetByIdAsync(id, true);
+
+                    storage = fullFreeObject ?? storage;
+                }
+
+                var corpus = IndexCorpusOf(storage, fullTreeIndexing);
+
+                var index = await repository.IndexAsync(id, corpus);
+
+                Logger.LogDebug("Indexed an instance of {ObjectType}, Object Id: {ObjectId}, Index Id: {IndexId}"
+                    , typeof(TStorage).FullName, id, index.Id);
+
+                UnitOfWork.Complete();
+            }
+            else
+            {
+                Logger.LogWarning("An Attempt to index an object of type {ObjectType} " +
+                                  "been rejected. This entity type does not have an identifier field therefore" +
+                                  "it's not possible to use searching and filtering features for it."
+                    , typeof(TStorage).FullName);
+            }
         }
 
         public virtual TDomain Update(TDomain value)

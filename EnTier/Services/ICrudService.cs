@@ -19,7 +19,9 @@ namespace EnTier.Services
 
         TEntity ReadById(TDomainId id,bool readFullTree = false);
 
-        TEntity Add(TEntity value);
+        Task<TEntity> AddAsync(TEntity value,bool alsoIndex,bool fullTreeIndexing);
+        
+        TEntity Add(TEntity value,bool alsoIndex,bool fullTreeIndexing);
 
         TEntity Update(TEntity value);
         

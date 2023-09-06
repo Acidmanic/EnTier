@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
@@ -183,6 +184,32 @@ namespace EnTier.DataAccess.InMemory
             return ObjectListRepositoryFilteringHelper
                 .ReadChunkAsync(InMemorySharedChannel.FilterResults<TStorage,TId>(),
                     _idLeaf, _data, offset, size, searchId);
+        }
+
+        public override Task<SearchIndex<TId>> IndexAsync(TId id, string indexCorpus)
+        {
+            
+            var indexes = InMemorySharedChannel.SearchIndex<TStorage, TId>();
+
+            long indexId = indexes.Select(i => i.Id).Max() + 1;
+
+            var existing = indexes.FirstOrDefault(i => i.ResultId.Equals(id));
+
+            if (existing != null)
+            {
+                indexes.Remove(existing);
+            }
+
+            var indexRecord = new SearchIndex<TId>
+            {
+                IndexCorpus = indexCorpus,
+                ResultId = id,
+                Id = indexId
+            }; 
+            
+            indexes.Add(indexRecord);
+
+            return Task.FromResult(indexRecord);
         }
     }
 }

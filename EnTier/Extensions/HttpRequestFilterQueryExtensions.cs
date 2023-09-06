@@ -73,7 +73,7 @@ namespace EnTier.Extensions
 
             if (foundKey)
             {
-                return foundKey.Value;
+                return string.Join('+',requestQueries[foundKey.Value].ToArray());
             }
 
             return null;

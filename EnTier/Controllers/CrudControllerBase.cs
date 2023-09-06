@@ -173,7 +173,7 @@ namespace EnTier.Controllers
         {
             var domain = Mapper.Map<TDomain>(value);
 
-            domain = Service.Add(domain);
+            domain = Service.Add(domain,!DisableSearchAndFiltering,FullTreeAcquirer.IsReadByIdFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
