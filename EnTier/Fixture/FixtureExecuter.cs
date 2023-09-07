@@ -151,6 +151,11 @@ namespace EnTier.Fixture
                 {
                     return _unitOfWork;
                 }
+
+                if (parameterType == typeof(ILogger))
+                {
+                    return _essence.Logger;
+                }
             }
 
             return null;
@@ -241,7 +246,7 @@ namespace EnTier.Fixture
             }
             else
             {
-                return type == typeof(IUnitOfWork);
+                return type == typeof(IUnitOfWork) || type==typeof(ILogger);
             }
 
             return false;
