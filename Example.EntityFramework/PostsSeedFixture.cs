@@ -1,4 +1,5 @@
 using EnTier.DataAccess.JsonFile;
+using EnTier.Extensions;
 using EnTier.Repositories;
 using ExampleEntityFramework.StoragesModels;
 
@@ -52,5 +53,6 @@ public class PostsSeedFixture
             Content = "Fifth Content",
             Title = "Fifth"
         });
+        
     }
 }

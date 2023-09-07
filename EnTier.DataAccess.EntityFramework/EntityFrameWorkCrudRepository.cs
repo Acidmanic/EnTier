@@ -178,9 +178,9 @@ namespace EnTier.DataAccess.EntityFramework
                             SearchIndex, idSelector, si => si.ResultId,
                             (st, si) => new {st,si });
 
-                        var patters = searchTerms.Select(t => $"%{t}%");
+                        var patterns = searchTerms.Select(t => $"%{t}%");
                         
-                        foreach (var pattern in patters)
+                        foreach (var pattern in patterns)
                         {
                             indexedStorages = indexedStorages.Where(combo =>
                                 EF.Functions.Like(combo.si.IndexCorpus, pattern));

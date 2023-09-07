@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExampleEntityFramework.Migrations
 {
     [DbContext(typeof(ExampleContext))]
-    [Migration("20230907101147_ConstructDatabaseForEnTierExample")]
+    [Migration("20230907104116_ConstructDatabaseForEnTierExample")]
     partial class ConstructDatabaseForEnTierExample
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

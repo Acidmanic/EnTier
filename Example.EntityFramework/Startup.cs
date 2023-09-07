@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EnTier.DataAccess.EntityFramework;
-using EnTier.UnitOfWork;
+using EnTier.Repositories;
+using ExampleEntityFramework.StoragesModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using EnTier.Extensions;
+using EnTier.UnitOfWork;
 
 namespace ExampleEntityFramework
 {
@@ -31,7 +26,7 @@ namespace ExampleEntityFramework
             services.AddControllers();
 
             services.AddEnTier();
-            
+
             services.AddEntityFrameworkUnitOfWork<ExampleContext>();
         }
 
@@ -48,16 +43,19 @@ namespace ExampleEntityFramework
             app.UseRouting();
 
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.ConfigureEnTierResolver();
 
             var context = app.GetService<DbContext>();
 
+            context.Database.EnsureDeleted();
+            
             context.Database.EnsureCreated();
 
             app.UseFixture<PostsSeedFixture>();
+            
         }
     }
 }
