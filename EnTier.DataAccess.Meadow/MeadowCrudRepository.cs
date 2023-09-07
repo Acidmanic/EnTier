@@ -9,8 +9,6 @@ using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using EnTier.DataAccess.Meadow.GenericCrudRequests;
 using EnTier.DataAccess.Meadow.GenericFilteringRequests;
-using EnTier.DataAccess.Meadow.GenericFilteringRequests.Models;
-using EnTier.Models;
 using EnTier.Repositories;
 using Meadow;
 using Meadow.Configuration;
@@ -290,7 +288,7 @@ namespace EnTier.DataAccess.Meadow
 
         public override async Task RemoveExpiredFilterResultsAsync()
         {
-            var request = new RemoveExpiredFilterResultsRequest(TimeStamp.Now);
+            var request = new RemoveExpiredFilterResultsRequest<TStorage>(TimeStamp.Now);
 
             var engine = GetEngine();
 

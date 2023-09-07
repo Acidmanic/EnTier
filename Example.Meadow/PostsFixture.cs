@@ -1,5 +1,7 @@
 using Acidmanic.Utilities.DataTypes;
+using EnTier.Extensions;
 using EnTier.Repositories;
+using EnTier.UnitOfWork;
 using Example.Meadow.Models;
 using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
@@ -9,7 +11,11 @@ namespace Example.Meadow;
 
 public class PostsFixture
 {
-    public void Setup(ICrudRepository<Post, long> repository,ICrudRepository<Media, long> mediaRepository)
+    public void Setup(
+        ICrudRepository<Post, long> repository,
+        ICrudRepository<Media, long> mediaRepository,
+        ILogger logger,
+        IUnitOfWork unitOfWork)
     {
 
         var media = new Media
@@ -43,7 +49,7 @@ public class PostsFixture
         });
         
         
-        new ConsoleLogger().LogInformation("Middle value for Date is: {MiddleDate}",middleGuy.Date.TotalMilliSeconds);
+        logger.LogInformation("Middle value for Date is: {MiddleDate}",middleGuy.Date.TotalMilliSeconds);
         
         repository.Add(new Post
         {
@@ -59,5 +65,7 @@ public class PostsFixture
             Date = TimeStamp.Now + 4000,
             MediaId = 1
         });
+        
+        unitOfWork.UpdateIndexes<Post,long>(true);
     }
 }
