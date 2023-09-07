@@ -29,6 +29,8 @@ public class EnTierBuiltinTransliterationsService : ITransliterationService
             transliterated = transliterated.Replace(replace.Key, replace.Value);
         }
 
+        transliterated = RemoveRepetitions(transliterated);
+        
         transliterated = CompressLossy(transliterated);
 
         return transliterated;
@@ -73,6 +75,27 @@ public class EnTierBuiltinTransliterationsService : ITransliterationService
             {
                 sb.Append(' ');
             }
+        }
+
+        return sb.ToString();
+    }
+
+    private string RemoveRepetitions(string value)
+    {
+        var chars = value.ToCharArray();
+
+        char lastChar = default;
+
+        var sb = new StringBuilder();
+        
+        foreach (var c in chars)
+        {
+            if (c != lastChar)
+            {
+                sb.Append(c);
+            }
+
+            lastChar = c;
         }
 
         return sb.ToString();
