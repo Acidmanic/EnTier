@@ -1,6 +1,7 @@
 using EnTier.DataAccess.JsonFile;
 using EnTier.Extensions;
 using EnTier.Repositories;
+using EnTier.UnitOfWork;
 using ExampleEntityFramework.StoragesModels;
 
 namespace ExampleEntityFramework;
@@ -18,7 +19,7 @@ public class PostsSeedFixture
         }
     }
     
-    public void Setup(ICrudRepository<PostStg, long> repository)
+    public void Setup(ICrudRepository<PostStg, long> repository,IUnitOfWork unitOfWork)
     {
 
         var existing = repository.All();
@@ -27,6 +28,8 @@ public class PostsSeedFixture
         {
             repository.Remove(postStg.Id);
         }
+        
+        unitOfWork.Complete();
         
         repository.Add(new PostStg
         {
@@ -53,6 +56,10 @@ public class PostsSeedFixture
             Content = "Fifth Content",
             Title = "Fifth"
         });
+        
+        unitOfWork.Complete();
+        
+        unitOfWork.UpdateIndexes<PostStg,long>(false);
         
     }
 }
