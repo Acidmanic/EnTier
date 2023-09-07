@@ -329,6 +329,18 @@ namespace EnTier.DataAccess.Meadow
             return response.FromStorage;
         }
 
-        
+        public override async Task<SearchIndex<TId>> IndexAsync(TId id, string indexCorpus)
+        {
+            var request = new IndexEntityRequest<TStorage, TId>(indexCorpus, id);
+            
+            var engine = GetEngine();
+
+            var response = await engine.PerformRequestAsync(request);
+            
+            ErrorCheck(response);
+
+            return response.FromStorage.FirstOrDefault();
+            
+        }
     }
 }
