@@ -81,17 +81,22 @@ namespace Entier.Test.Unit
                 throw new NotImplementedException();
             }
 
-            public override Task<IEnumerable<FilterResult<long>>> PerformFilterIfNeededAsync(
-                FilterQuery filterQuery,string searchId = null,bool readFullTree = false)
+            public override Task<IEnumerable<FilterResult<long>>> PerformFilterIfNeededAsync(FilterQuery filterQuery, string searchId = null, string[] searchTerms = null,
+                bool readFullTree = false)
             {
                 throw new NotImplementedException();
             }
+
 
             public override Task<IEnumerable<Model>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false)
             {
                 throw new NotImplementedException();
             }
-            
+
+            public override Task<SearchIndex<long>> IndexAsync(long id, string indexCorpus)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [Fact]

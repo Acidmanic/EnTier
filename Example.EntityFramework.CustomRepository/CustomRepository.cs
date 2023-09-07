@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Acidmanic.Utilities.Filtering.Models;
 using EnTier.DataAccess.EntityFramework;
 using EnTier.DataAccess.EntityFramework.FullTreeHandling;
-using EnTier.DataAccess.EntityFramework.Models;
+using EnTier.DataAccess.JsonFile;
 using ExampleEntityFramework.StoragesModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,11 +9,10 @@ namespace ExampleEntityFramework
 {
     public class DummyRepository : EntityFrameWorkCrudRepository<PostStg, long>
     {
-        public DummyRepository(DbSet<PostStg> dbSet, DbSet<MarkedFilterResult<PostStg,long>> filterResults, IFullTreeMarker<PostStg> marker)
-            : base(dbSet, filterResults, marker)
+        
+        public DummyRepository(DbSet<PostStg> dbSet, DbSet<MarkedFilterResult<PostStg, long>> filterResults, DbSet<MarkedSearchIndex<PostStg, long>> searchIndex, IFullTreeMarker<PostStg> fullTreeMarker) : base(dbSet, filterResults, searchIndex, fullTreeMarker)
         {
         }
-
         public List<PostStg> GetNoneExistingPosts()
         {
             return new List<PostStg>()
@@ -40,5 +38,6 @@ namespace ExampleEntityFramework
                 }
             };
         }
+        
     }
 }

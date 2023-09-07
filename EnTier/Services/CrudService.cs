@@ -72,7 +72,7 @@ namespace EnTier.Services
             return ReadAllAsync().Result;
         }
 
-        public async Task<IEnumerable<TDomain>> ReadAllAsync()
+        public virtual async Task<IEnumerable<TDomain>> ReadAllAsync()
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 

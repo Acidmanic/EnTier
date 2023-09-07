@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Acidmanic.Utilities.Filtering;
 using EnTier;
 using EnTier.Mapper;
 using EnTier.Models;
@@ -10,14 +11,14 @@ using ServiceManipulationExample.Models;
 
 namespace ServiceManipulationExample.Services
 {
-    public class MyPostService:CrudService<Post,Post,long,long>
+    public class MyPostService : CrudService<Post, Post, long, long>
     {
-    
-
-        public override Chunk<Post> GetAll(bool readFullTree = false)
+        public override Chunk<Post> ReadSequence(int offset, int size, string searchId, FilterQuery filterQuery,
+            string searchTerm,
+            bool readFullTree = false)
         {
-            var originalChunk = base.GetAll(readFullTree);
-            
+            var originalChunk = base.ReadSequence(offset, size, searchId, filterQuery, searchTerm, readFullTree);
+
             var manipulatedChunk = new Chunk<Post>
             {
                 Items = originalChunk.Items.Select(Manipulate),
@@ -29,9 +30,9 @@ namespace ServiceManipulationExample.Services
             return manipulatedChunk;
         }
 
-        public override Post ReadById(long id,bool readFullTree = false)
+        public override Post ReadById(long id, bool readFullTree = false)
         {
-            return Manipulate(base.ReadById(id,readFullTree));
+            return Manipulate(base.ReadById(id, readFullTree));
         }
 
         private Post Manipulate(Post p)
@@ -44,8 +45,9 @@ namespace ServiceManipulationExample.Services
                     Content = "This post does not exist! It was a null object i took its place!"
                 };
             }
+
             p.Content = "[Manipulated in MYYY Service!!!] " + p.Content;
-            
+
             return p;
         }
 
