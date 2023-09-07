@@ -216,7 +216,7 @@ namespace EnTier.Services
             }
         }
 
-        public virtual TDomain Update(TDomain value)
+        public virtual TDomain Update(TDomain value, bool alsoIndex, bool fullTreeIndexing)
         {
             var regulated = RegulateIncoming(value);
 
@@ -229,6 +229,11 @@ namespace EnTier.Services
                 var updated = repo.Update(regulatedStorage);
 
                 UnitOfWork.Complete();
+
+                if (alsoIndex)
+                {
+                    TryIndex(updated, fullTreeIndexing).Wait();
+                }
 
                 if (updated != null)
                 {
@@ -246,14 +251,14 @@ namespace EnTier.Services
             return null;
         }
 
-        public virtual TDomain UpdateById(TDomainId id, TDomain value)
+        public virtual TDomain UpdateById(TDomainId id, TDomain value, bool alsoIndex, bool fullTreeIndexing)
         {
             if (_entityHasId)
             {
                 DomainIdLeaf.Evaluator.Write(value, id);
             }
 
-            return Update(value);
+            return Update(value, alsoIndex, fullTreeIndexing);
         }
 
 

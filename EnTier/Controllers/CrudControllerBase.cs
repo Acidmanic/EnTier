@@ -202,7 +202,7 @@ namespace EnTier.Controllers
             var domain = Mapper.Map<TDomain>(value);
             var domainId = Mapper.Map<TDomainId>(id);
 
-            domain = Service.UpdateById(domainId, domain);
+            domain = Service.UpdateById(domainId, domain,!DisableSearchAndFiltering,FullTreeAcquirer.IsReadByIdFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
@@ -230,7 +230,7 @@ namespace EnTier.Controllers
         {
             var domain = Mapper.Map<TDomain>(value);
 
-            domain = Service.Update(domain);
+            domain = Service.Update(domain,!DisableSearchAndFiltering,FullTreeAcquirer.IsReadByIdFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 

@@ -23,9 +23,9 @@ namespace EnTier.Services
         
         TEntity Add(TEntity value,bool alsoIndex,bool fullTreeIndexing);
 
-        TEntity Update(TEntity value);
+        TEntity Update(TEntity value,bool alsoIndex,bool fullTreeIndexing);
         
-        TEntity UpdateById(TDomainId id,TEntity value);
+        TEntity UpdateById(TDomainId id,TEntity value,bool alsoIndex,bool fullTreeIndexing);
 
         bool Remove(TEntity value);
 
