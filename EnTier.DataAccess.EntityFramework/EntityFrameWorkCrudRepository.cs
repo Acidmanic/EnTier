@@ -9,15 +9,10 @@ using Acidmanic.Utilities.Filtering.Extensions;
 using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
-using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.DataAccess.EntityFramework.FullTreeHandling;
-using EnTier.DataAccess.EntityFramework.Models;
-using EnTier.Extensions;
-using EnTier.Models;
+using EnTier.DataAccess.JsonFile;
 using EnTier.Repositories;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.DataAccess.EntityFramework
@@ -27,14 +22,19 @@ namespace EnTier.DataAccess.EntityFramework
     {
         protected DbSet<TStorage> DbSet { get; }
         protected DbSet<MarkedFilterResult<TStorage,TId>> FilterResults { get; }
+        protected DbSet<MarkedSearchIndex<TStorage,TId>> SearchIndex { get; }
         
         protected IFullTreeMarker<TStorage> FullTreeMarker { get; }
 
-        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet, DbSet<MarkedFilterResult<TStorage,TId>> filterResults, IFullTreeMarker<TStorage> fullTreeMarker)
+        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet, 
+            DbSet<MarkedFilterResult<TStorage,TId>> filterResults,
+            DbSet<MarkedSearchIndex<TStorage, TId>> searchIndex,
+            IFullTreeMarker<TStorage> fullTreeMarker)
         {
             DbSet = dbSet;
             FilterResults = filterResults;
             FullTreeMarker = fullTreeMarker;
+            SearchIndex = searchIndex;
         }
 
 
@@ -103,7 +103,7 @@ namespace EnTier.DataAccess.EntityFramework
 
         public override TStorage GetById(TId id,bool readFullTree = false)
         {
-            var idSelector = IdSelectExpression(id);
+            var idSelector = IdEqualsToExpression(id);
             
             var found = DbSetFullTreeAble(readFullTree).Where(idSelector).ToList().FirstOrDefault();
 
@@ -160,14 +160,35 @@ namespace EnTier.DataAccess.EntityFramework
 
                 if (anyResults < 1)
                 {
-                    var expressions = filterQuery.ToExpression<TStorage>();
+                    var filterExpressions = filterQuery.ToExpression<TStorage>();
 
                     var queryable = DbSetFullTreeAble(readFullTree).AsQueryable();
 
-                    foreach (var expression in expressions)
+                    foreach (var expression in filterExpressions)
                     {
                         queryable = queryable.Where(expression);
                     }
+
+
+                    if (searchTerms != null && searchTerms.Length > 0)
+                    {
+                        var idSelector = PickIdExpression();
+                        
+                        var indexedStorages =  queryable.Join(
+                            SearchIndex, idSelector, si => si.ResultId,
+                            (st, si) => new {st,si });
+
+                        var patters = searchTerms.Select(t => $"%{t}%");
+                        
+                        foreach (var pattern in patters)
+                        {
+                            indexedStorages = indexedStorages.Where(combo =>
+                                EF.Functions.Like(combo.si.IndexCorpus, pattern));
+                        }
+
+                        queryable = indexedStorages.Select(combo => combo.st);
+                    }
+
 
                     var filterResults = queryable.ToList();
 
@@ -186,7 +207,7 @@ namespace EnTier.DataAccess.EntityFramework
                             ExpirationTimeStamp = expirationTime
                         };
 
-                        FilterResults.Add(filterResult.AsMarked<TStorage,TId>());
+                        FilterResults.Add(FilterResultsEfMarkingExtensions.AsMarked<TStorage,TId>(filterResult));
                     }
 
                     return FilterResults.Where(fr => fr.SearchId==searchId);
@@ -195,8 +216,21 @@ namespace EnTier.DataAccess.EntityFramework
                 return new FilterResult<TId>[] { };
             });
         }
+        
+        private Expression<Func<TStorage, TId>> PickIdExpression()
+        {
+            var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
+            // a
+            ParameterExpression storageParameter = Expression.Parameter(typeof(TStorage), "a");
+            //a.id
+            MemberExpression storagesId = Expression.Property(storageParameter, idLeaf.Name);
+            // a => a.id
+            var lambda = Expression.Lambda<Func<TStorage, TId>>(storagesId,storageParameter);
 
-        private Expression<Func<TStorage, bool>> IdSelectExpression(TId id)
+            return lambda;
+        }
+
+        private Expression<Func<TStorage, bool>> IdEqualsToExpression(TId id)
         {
             var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
             // a=>
@@ -239,6 +273,23 @@ namespace EnTier.DataAccess.EntityFramework
                 return readResult;
             });
         }
-        
+
+        public override async Task<SearchIndex<TId>> IndexAsync(TId id, string indexCorpus)
+        {
+            var anyResults = await SearchIndex.AnyAsync(r => r.ResultId.Equals(id));
+
+            if (!anyResults)
+            {
+                var index = new SearchIndex<TId>
+                {
+                    IndexCorpus = indexCorpus,
+                    ResultId = id
+                };
+
+                await SearchIndex.AddAsync(index.AsMarked<TStorage, TId>());
+            }
+
+            return SearchIndex.FirstOrDefault(si => si.ResultId.Equals(id));
+        }
     }
 }

@@ -1,9 +1,7 @@
 using System;
-using System.Diagnostics;
-using Acidmanic.Utilities.Filtering.Models;
 using EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 using EnTier.DataAccess.EntityFramework.FullTreeHandling;
-using EnTier.DataAccess.EntityFramework.Models;
+using EnTier.DataAccess.JsonFile;
 using EnTier.Repositories;
 using EnTier.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
@@ -61,11 +59,13 @@ namespace EnTier.DataAccess.EntityFramework
             var dbSet = _context.Set<TStorage>();
             
             var filterResultSet = _context.Set<MarkedFilterResult<TStorage,TId>>();
+            
+            var searchIndex = _context.Set<MarkedSearchIndex<TStorage,TId>>();
 
             var marker = _essence.ResolveOrDefault<IFullTreeMarker<TStorage>>
                 (new NullFullTreeMarker<TStorage>());
 
-            return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet, filterResultSet, marker);
+            return new EntityFrameWorkCrudRepository<TStorage, TId>(dbSet, filterResultSet,searchIndex, marker);
         }
 
 
