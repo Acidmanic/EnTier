@@ -35,6 +35,20 @@ namespace ExampleEntityFramework.Migrations
                 {
                     table.PrimaryKey("PK_PostsFilterResults", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "PostsSearchIndex",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ResultId = table.Column<long>(type: "INTEGER", nullable: false),
+                    IndexCorpus = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostsSearchIndex", x => x.Id);
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -44,6 +58,9 @@ namespace ExampleEntityFramework.Migrations
 
             migrationBuilder.DropTable(
                 name: "PostsFilterResults");
+
+            migrationBuilder.DropTable(
+                name: "PostsSearchIndex");
         }
     }
 }

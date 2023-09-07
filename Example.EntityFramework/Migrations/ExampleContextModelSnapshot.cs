@@ -15,7 +15,7 @@ namespace ExampleEntityFramework.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("EnTier.DataAccess.EntityFramework.Models.MarkedFilterResult<ExampleEntityFramework.StoragesModels.PostStg, long>", b =>
+            modelBuilder.Entity("EnTier.DataAccess.JsonFile.MarkedFilterResult<ExampleEntityFramework.StoragesModels.PostStg, long>", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,6 +33,23 @@ namespace ExampleEntityFramework.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PostsFilterResults");
+                });
+
+            modelBuilder.Entity("EnTier.DataAccess.JsonFile.MarkedSearchIndex<ExampleEntityFramework.StoragesModels.PostStg, long>", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IndexCorpus")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("ResultId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PostsSearchIndex");
                 });
 
             modelBuilder.Entity("ExampleEntityFramework.StoragesModels.PostStg", b =>

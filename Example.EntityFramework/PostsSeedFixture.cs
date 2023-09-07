@@ -1,5 +1,4 @@
-using Acidmanic.Utilities.Filtering.Models;
-using EnTier.DataAccess.EntityFramework.Models;
+using EnTier.DataAccess.JsonFile;
 using EnTier.Repositories;
 using ExampleEntityFramework.StoragesModels;
 
