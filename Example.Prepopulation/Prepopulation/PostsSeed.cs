@@ -1,4 +1,5 @@
 using Acidmanic.Utilities.Results;
+using EnTier.Contracts;
 using EnTier.Prepopulation;
 using EnTier.Prepopulation.Attributes;
 using EnTier.UnitOfWork;
@@ -9,6 +10,11 @@ namespace Example.Prepopulation.Prepopulation
     [DependsOnSeed(typeof(UsersSeed))]
     public class PostsSeed:PrepopulationSeedBase<Post,long>
     {
+
+
+        public PostsSeed(IUnitOfWork unitOfWork) : base(unitOfWork,null, false)
+        {
+        }
 
         public static Post FirstPost = new Post
         {
@@ -24,11 +30,6 @@ namespace Example.Prepopulation.Prepopulation
             UserId = UsersSeed.Administrator.Id
         };
         
-        
-        
-        public PostsSeed(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
 
         public override Result Seed()
         {

@@ -1,21 +1,53 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Acidmanic.Utilities.Results;
+using EnTier.Contracts;
+using EnTier.Services.Transliteration;
 using EnTier.UnitOfWork;
+using EnTier.Utility;
 
 namespace EnTier.Prepopulation
 {
     public abstract class PrepopulationSeedBase<TModel, TId> : PrepopulationSeedBase where TModel : class, new()
     {
-        protected readonly IUnitOfWork UnitOfWork;
+        //protected readonly IUnitOfWork UnitOfWork;
 
         protected readonly SeedingContext<TModel, TId> SeedingContext;
 
-        public PrepopulationSeedBase(IUnitOfWork unitOfWork)
+        /// <summary>
+        /// This constructor, constructs a prepopulation seed that tries to index entries after insertion.
+        /// You need to provide 'alsoIndex' and 'fullTreeIndexing' parameters with your choices,
+        /// in your implementations. Leave no un-injectable parameters in constructor
+        /// </summary>
+        /// <param name="unitOfWork">Just pass-forward to base constructor, if your EnTier is correctly
+        /// configured, it would be provided.
+        /// </param>
+        /// <param name="transliterationService">You can pass a null and use builtin transliteration service
+        /// , or you can register your implementation in your DI.
+        /// </param>
+        /// <param name="fullTreeIndexing">
+        /// pass true if your repository can do FullTree reads. and false otherwise
+        /// </param>
+        public PrepopulationSeedBase(IUnitOfWork unitOfWork, [AllowNull] ITransliterationService transliterationService,
+            bool fullTreeIndexing)
         {
-            UnitOfWork = unitOfWork;
+            transliterationService ??= new EnTierBuiltinTransliterationsService();
 
-            SeedingContext = new SeedingContext<TModel, TId>(unitOfWork);
+            SeedingContext =
+                new SeedingContext<TModel, TId>(unitOfWork,
+                    transliterationService, true, fullTreeIndexing);
+        }
+
+        /// <summary>
+        /// This constructor constructs a prepopulation seed that would NOT try to index entries. 
+        /// </summary>
+        /// <param name="unitOfWork">
+        /// Just pass-forward to base constructor, if your EnTier is correctly
+        /// configured, it would be provided.
+        /// </param>
+        public PrepopulationSeedBase(IUnitOfWork unitOfWork) : this(unitOfWork, new NullTransliterationService(), false)
+        {
         }
 
         protected Result SeedAll(IEnumerable<TModel> seeds)
@@ -28,9 +60,20 @@ namespace EnTier.Prepopulation
             return SeedAll<TModel, TId>(seeds, onInsertion, SeedingContext);
         }
 
-        protected Result SeedAll<TM, TI>(IEnumerable<TM> seeds, Action<TM> onInsertion) where TM : class, new()
+
+        private SeedingContext<TM, TI> CreateSeedingContext<TM, TI>(bool alsoIndex, bool fullTreeIndexing)
+            where TM : class, new()
         {
-            var context = new SeedingContext<TM, TI>(UnitOfWork);
+            return new SeedingContext<TM, TI>(
+                SeedingContext.UnitOfWork,
+                SeedingContext.TransliterationService,
+                alsoIndex, fullTreeIndexing);
+        }
+
+        protected Result SeedAll<TM, TI>(IEnumerable<TM> seeds, Action<TM> onInsertion, bool alsoIndex = false,
+            bool fullTreeIndexing = false) where TM : class, new()
+        {
+            var context = CreateSeedingContext<TM, TI>(alsoIndex, fullTreeIndexing);
 
             return SeedAll(seeds, onInsertion, context);
         }
@@ -46,7 +89,7 @@ namespace EnTier.Prepopulation
                 }
             }
 
-            UnitOfWork.Complete();
+            context.UnitOfWork.Complete();
 
             return new Result().Succeed();
         }
@@ -60,23 +103,45 @@ namespace EnTier.Prepopulation
                 return new Result().Fail();
             }
 
-            if (SeedingContext.HasId)
+            if (context.HasId)
             {
                 var id = context.IdLeaf.Evaluator.Read(updatedEntity);
 
                 context.IdLeaf.Evaluator.Write(model, id);
+
+                if (context.AlsoIndex)
+                {
+                    var indexingObject = updatedEntity;
+                    
+                    if (context.FullTreeIndexing)
+                    {
+                        indexingObject = context.Repository.GetById((TI)id, true);
+                    }
+                    
+                    var rawCorpus = ObjectUtilities.ExtractAllTexts(indexingObject, context.FullTreeIndexing);
+
+                    var indexCorpus = context.TransliterationService.Transliterate(rawCorpus);
+
+                    var indexed = context.Repository.Index((TI)id, indexCorpus);
+
+                    if (indexed == null)
+                    {
+                        return new Result().Fail();
+                    }
+                }
             }
 
             return new Result().Succeed();
         }
 
-        protected Result SeedOne<TM, TI>(TM model) where TM : class, new()
+        protected Result SeedOne<TM, TI>(TM model, bool alsoIndex = false, bool fullTreeIndexing = false)
+            where TM : class, new()
         {
-            var context = new SeedingContext<TM, TI>(UnitOfWork);
+            var context = CreateSeedingContext<TM, TI>(alsoIndex, fullTreeIndexing);
 
             var result = SeedOne(model, context);
-            
-            UnitOfWork.Complete();
+
+            context.UnitOfWork.Complete();
 
             return result;
         }
