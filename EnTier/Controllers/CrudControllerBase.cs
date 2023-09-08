@@ -319,6 +319,13 @@ namespace EnTier.Controllers
         [Route("filter-profile")]
         public IActionResult GetFilterProfile()
         {
+            if (DisableSearchAndFiltering)
+            {
+                return NotFound(new
+                {
+                    Message="Filtering and search is not supported for this api sub-set."
+                });
+            }
             var filteringProfile = _essence.
                 FilterInformationService.
                 GetFilterProfile<TStorage, TStorageId>(FullTreeAcquirer.IsReadAllFullTree);
