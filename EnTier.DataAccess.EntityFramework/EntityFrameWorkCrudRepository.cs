@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -21,19 +22,19 @@ namespace EnTier.DataAccess.EntityFramework
         where TStorage : class, new()
     {
         protected DbSet<TStorage> DbSet { get; }
-        protected DbSet<MarkedFilterResult<TStorage,TId>> FilterResults { get; }
-        protected DbSet<MarkedSearchIndex<TStorage,TId>> SearchIndex { get; }
-        
+        protected DbSet<MarkedFilterResult<TStorage, TId>> FilterResults { get; }
+        protected DbSet<MarkedSearchIndex<TStorage, TId>> SearchIndex { get; }
+
         protected IFullTreeMarker<TStorage> FullTreeMarker { get; }
 
-        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet, 
-            DbSet<MarkedFilterResult<TStorage,TId>> filterResults,
+        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet,
+            DbSet<MarkedFilterResult<TStorage, TId>> filterResults,
             DbSet<MarkedSearchIndex<TStorage, TId>> searchIndex,
-            IFullTreeMarker<TStorage> fullTreeMarker)
+            [AllowNull] IFullTreeMarker<TStorage> fullTreeMarker)
         {
             DbSet = dbSet;
             FilterResults = filterResults;
-            FullTreeMarker = fullTreeMarker;
+            FullTreeMarker = fullTreeMarker ?? new NullFullTreeMarker<TStorage>();
             SearchIndex = searchIndex;
         }
 
@@ -45,7 +46,7 @@ namespace EnTier.DataAccess.EntityFramework
                 Logger.LogWarning("Reaching for full tree {TypeName} object can not be achieved. " +
                                   "You need to register an implementation of IFullTreeMarker<{TypeName}> " +
                                   "on your Di system in order for this to work.",
-                    typeof(TStorage).FullName,typeof(TStorage).FullName);
+                    typeof(TStorage).FullName, typeof(TStorage).FullName);
             }
 
             return FullTreeMarker.IncludeAsNeeded(dbSet);
@@ -54,7 +55,7 @@ namespace EnTier.DataAccess.EntityFramework
 
         protected IQueryable<TStorage> DbSetFullTreeAble(bool readFullTree)
         {
-            return readFullTree? FullTree(DbSet): DbSet;
+            return readFullTree ? FullTree(DbSet) : DbSet;
         }
 
         public override IEnumerable<TStorage> All(bool readFullTree = false)
@@ -101,10 +102,10 @@ namespace EnTier.DataAccess.EntityFramework
             return Insert(value);
         }
 
-        public override TStorage GetById(TId id,bool readFullTree = false)
+        public override TStorage GetById(TId id, bool readFullTree = false)
         {
             var idSelector = IdEqualsToExpression(id);
-            
+
             var found = DbSetFullTreeAble(readFullTree).Where(idSelector).ToList().FirstOrDefault();
 
             return found;
@@ -173,13 +174,13 @@ namespace EnTier.DataAccess.EntityFramework
                     if (searchTerms != null && searchTerms.Length > 0)
                     {
                         var idSelector = PickIdExpression();
-                        
-                        var indexedStorages =  queryable.Join(
+
+                        var indexedStorages = queryable.Join(
                             SearchIndex, idSelector, si => si.ResultId,
-                            (st, si) => new {st,si });
+                            (st, si) => new { st, si });
 
                         var patterns = searchTerms.Select(t => $"%{t}%");
-                        
+
                         foreach (var pattern in patterns)
                         {
                             indexedStorages = indexedStorages.Where(combo =>
@@ -207,16 +208,16 @@ namespace EnTier.DataAccess.EntityFramework
                             ExpirationTimeStamp = expirationTime
                         };
 
-                        FilterResults.Add(FilterResultsEfMarkingExtensions.AsMarked<TStorage,TId>(filterResult));
+                        FilterResults.Add(FilterResultsEfMarkingExtensions.AsMarked<TStorage, TId>(filterResult));
                     }
 
-                    return FilterResults.Where(fr => fr.SearchId==searchId);
+                    return FilterResults.Where(fr => fr.SearchId == searchId);
                 }
 
                 return new FilterResult<TId>[] { };
             });
         }
-        
+
         private Expression<Func<TStorage, TId>> PickIdExpression()
         {
             var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
@@ -225,7 +226,7 @@ namespace EnTier.DataAccess.EntityFramework
             //a.id
             MemberExpression storagesId = Expression.Property(storageParameter, idLeaf.Name);
             // a => a.id
-            var lambda = Expression.Lambda<Func<TStorage, TId>>(storagesId,storageParameter);
+            var lambda = Expression.Lambda<Func<TStorage, TId>>(storagesId, storageParameter);
 
             return lambda;
         }
@@ -239,17 +240,18 @@ namespace EnTier.DataAccess.EntityFramework
             MemberExpression storagesId = Expression.Property(storageParameter, idLeaf.Name);
 
             Expression idValue = Expression.Constant(id);
-            
+
 
             BinaryExpression selectExpression = Expression.Equal(storagesId, idValue);
-            
-            var lambda = Expression.Lambda<Func<TStorage, Boolean>>(selectExpression,storageParameter);
+
+            var lambda = Expression.Lambda<Func<TStorage, Boolean>>(selectExpression, storageParameter);
 
             return lambda;
         }
 
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false)
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,
+            bool readFullTree = false)
         {
             return Task.Run<IEnumerable<TStorage>>(() =>
             {
@@ -276,20 +278,29 @@ namespace EnTier.DataAccess.EntityFramework
 
         public override async Task<SearchIndex<TId>> IndexAsync(TId id, string indexCorpus)
         {
-            var anyResults = await SearchIndex.AnyAsync(r => r.ResultId.Equals(id));
+            var foundResult = await SearchIndex.FirstOrDefaultAsync(r => r.ResultId.Equals(id));
 
-            if (!anyResults)
+            if (foundResult != null)
             {
-                var index = new SearchIndex<TId>
-                {
-                    IndexCorpus = indexCorpus,
-                    ResultId = id
-                };
+                foundResult.IndexCorpus = indexCorpus;
 
-                await SearchIndex.AddAsync(index.AsMarked<TStorage, TId>());
+                return foundResult;
             }
 
-            return SearchIndex.FirstOrDefault(si => si.ResultId.Equals(id));
+            var index = new SearchIndex<TId>
+            {
+                IndexCorpus = indexCorpus,
+                ResultId = id
+            };
+
+            var inserted = await SearchIndex.AddAsync(index.AsMarked<TStorage, TId>());
+
+            if (inserted.State == EntityState.Added)
+            {
+                return inserted.Entity;
+            }
+
+            return null;
         }
     }
 }

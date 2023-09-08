@@ -33,8 +33,10 @@ namespace ExampleEntityFramework
             services.AddControllers();
 
             services.AddEnTier();
-            
+
             services.AddEntityFrameworkUnitOfWork<ExampleContext>();
+
+            services.AddTransient<ExampleContext>();
 
             services.AddTransient<ICrudRepository<PostStg, long>, DummyRepository>();
         }
@@ -57,7 +59,11 @@ namespace ExampleEntityFramework
 
             app.ConfigureEnTierResolver();
 
-            app.GetService<DbContext>().Database.EnsureCreated();
+            var context = app.GetService<DbContext>();
+
+            context.Database.EnsureDeleted();
+            
+            context.Database.EnsureCreated();
         }
     }
 }

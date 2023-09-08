@@ -1,16 +1,14 @@
 using System.Collections.Generic;
 using EnTier.DataAccess.EntityFramework;
-using EnTier.DataAccess.EntityFramework.FullTreeHandling;
-using EnTier.DataAccess.JsonFile;
 using ExampleEntityFramework.StoragesModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace ExampleEntityFramework
 {
     public class DummyRepository : EntityFrameWorkCrudRepository<PostStg, long>
     {
         
-        public DummyRepository(DbSet<PostStg> dbSet, DbSet<MarkedFilterResult<PostStg, long>> filterResults, DbSet<MarkedSearchIndex<PostStg, long>> searchIndex, IFullTreeMarker<PostStg> fullTreeMarker) : base(dbSet, filterResults, searchIndex, fullTreeMarker)
+        public DummyRepository(ExampleContext dbContext) : base(dbContext.Posts,
+            dbContext.PostsFilterResults, dbContext.PostsSearchIndex, null)
         {
         }
         public List<PostStg> GetNoneExistingPosts()

@@ -202,10 +202,17 @@ namespace EnTier.Services
 
                 var index = await repository.IndexAsync(id, corpus);
 
-                Logger.LogDebug("Indexed an instance of {ObjectType}, Object Id: {ObjectId}, Index Id: {IndexId}"
-                    , typeof(TStorage).FullName, id, index.Id);
-
                 UnitOfWork.Complete();
+                
+                if (index == null)
+                {
+                    Logger.LogError("Unable to index an instance of {Object Type}.",typeof(TStorage).FullName);
+                }else
+                {
+                    Logger.LogDebug("Indexed an instance of {ObjectType}, Object Id: {ObjectId}, Index Id: {IndexId}"
+                        , typeof(TStorage).FullName, id, index.Id);    
+                }
+                
             }
             else
             {

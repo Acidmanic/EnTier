@@ -2,14 +2,16 @@
 using ExampleEntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExampleEntityFramework.Migrations
 {
     [DbContext(typeof(ExampleContext))]
-    partial class ExampleContextModelSnapshot : ModelSnapshot
+    [Migration("20230908075012_ConstructDatabaseForEnTierExample")]
+    partial class ConstructDatabaseForEnTierExample
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

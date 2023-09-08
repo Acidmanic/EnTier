@@ -1,0 +1,6 @@
+
+
+rm -rf Example.db
+rm -rf Migrations
+dotnet ef migrations add ConstructDatabaseForEnTierExample
+dotnet ef database update
