@@ -52,7 +52,7 @@ namespace EnTier.DataAccess
             {
                 return true;
             }
-            
+
             var matchingIndex = searchIndex.FirstOrDefault(s => s.ResultId.Equals(id));
 
             if (matchingIndex != null)
@@ -62,13 +62,15 @@ namespace EnTier.DataAccess
 
             return false;
         }
-        
-        private static bool IndexHits<TStorage,TId>(List<MarkedSearchIndex<TStorage,TId>> searchIndex, string[] terms, TId id)
+
+        private static bool IndexHits<TStorage, TId>(List<MarkedSearchIndex<TStorage, TId>> searchIndex, string[] terms,
+            TId id)
         {
             if (terms == null || terms.Length == 0)
             {
                 return true;
             }
+
             var matchingIndex = searchIndex.FirstOrDefault(s => s.ResultId.Equals(id));
 
             if (matchingIndex != null)
@@ -103,12 +105,12 @@ namespace EnTier.DataAccess
                 filterResults.AddRange(filteringResults);
             }
 
-            return Task.FromResult(filterResults.Where(fr => fr.SearchId==searchId));
+            return Task.FromResult(filterResults.Where(fr => fr.SearchId == searchId));
         }
-        
+
         public static Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync<TStorage, TId>(
-            List<MarkedFilterResult<TStorage,TId>> filterResults,
-            List<MarkedSearchIndex<TStorage,TId>> searchIndex,
+            List<MarkedFilterResult<TStorage, TId>> filterResults,
+            List<MarkedSearchIndex<TStorage, TId>> searchIndex,
             AccessNode idLeaf,
             IEnumerable<TStorage> data,
             FilterQuery filterQuery,
@@ -119,18 +121,18 @@ namespace EnTier.DataAccess
 
             var anyResult = filterResults.Any(f => f.SearchId == searchId);
 
-            if (!anyResult && idLeaf != null && TypeCheck.IsNumerical(idLeaf.Type))
+            if (!anyResult && idLeaf != null)
             {
                 var filteringResults = new ObjectStreamFilterer<TStorage, TId>()
                     .PerformFilter(data, filterQuery,
                         (_, id) => IndexHits(searchIndex, searchTerms, id),
                         searchId);
 
-                filterResults.AddRange(filteringResults.Select(f => f.AsMarked<TStorage,TId>()));
+                filterResults.AddRange(filteringResults.Select(f => f.AsMarked<TStorage, TId>()));
             }
 
             return Task.FromResult(
-                filterResults.Where(fr => fr.SearchId==searchId)
+                filterResults.Where(fr => fr.SearchId == searchId)
                     .Select(fr => (FilterResult<TId>)fr));
         }
 
@@ -168,9 +170,9 @@ namespace EnTier.DataAccess
 
             return Task.FromResult((IEnumerable<TStorage>)values);
         }
-        
+
         public static Task<IEnumerable<TStorage>> ReadChunkAsync<TStorage, TId>(
-            List<MarkedFilterResult<TStorage,TId>> filterResults,
+            List<MarkedFilterResult<TStorage, TId>> filterResults,
             AccessNode idLeaf,
             IEnumerable<TStorage> data,
             int offset, int size, string searchId)
