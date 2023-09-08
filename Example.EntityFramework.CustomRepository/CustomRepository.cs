@@ -1,16 +1,18 @@
 using System.Collections.Generic;
 using EnTier.DataAccess.EntityFramework;
+using EnTier.DataAccess.EntityFramework.FullTreeHandling;
 using ExampleEntityFramework.StoragesModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExampleEntityFramework
 {
-    public class DummyRepository : EntityFrameWorkCrudRepository<PostStg, long>
+    public class DummyRepository : EntityFrameWorkCrudRepositoryBase<PostStg, long>
     {
         
-        public DummyRepository(ExampleContext dbContext) : base(dbContext.Posts,
-            dbContext.PostsFilterResults, dbContext.PostsSearchIndex, null)
+        public DummyRepository(DbContext dbContext) : base(dbContext)
         {
         }
+     
         public List<PostStg> GetNoneExistingPosts()
         {
             return new List<PostStg>()
@@ -36,6 +38,7 @@ namespace ExampleEntityFramework
                 }
             };
         }
+
         
     }
 }

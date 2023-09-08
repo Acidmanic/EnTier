@@ -27,7 +27,7 @@ namespace EnTier.DataAccess.EntityFramework
 
         protected IFullTreeMarker<TStorage> FullTreeMarker { get; }
 
-        public EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet,
+        internal EntityFrameWorkCrudRepository(DbSet<TStorage> dbSet,
             DbSet<MarkedFilterResult<TStorage, TId>> filterResults,
             DbSet<MarkedSearchIndex<TStorage, TId>> searchIndex,
             [AllowNull] IFullTreeMarker<TStorage> fullTreeMarker)

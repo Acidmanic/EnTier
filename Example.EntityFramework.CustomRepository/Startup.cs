@@ -36,8 +36,6 @@ namespace ExampleEntityFramework
 
             services.AddEntityFrameworkUnitOfWork<ExampleContext>();
 
-            services.AddTransient<ExampleContext>();
-
             services.AddTransient<ICrudRepository<PostStg, long>, DummyRepository>();
         }
 

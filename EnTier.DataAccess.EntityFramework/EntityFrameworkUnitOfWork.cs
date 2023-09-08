@@ -1,4 +1,3 @@
-using System;
 using EnTier.DataAccess.EntityFramework.EventStreamRepositories;
 using EnTier.DataAccess.EntityFramework.FullTreeHandling;
 using EnTier.DataAccess.JsonFile;
@@ -12,7 +11,7 @@ namespace EnTier.DataAccess.EntityFramework
     public class EntityFrameworkUnitOfWork : UnitOfWorkBase
     {
         private readonly DbContext _context;
-        private readonly Func<Type, object> _getDbSetByType;
+        // private readonly Func<Type, object> _getDbSetByType;
         private readonly EnTierEssence _essence;
 
         public EntityFrameworkUnitOfWork(EnTierEssence essence, DbContext context) : base(essence)
@@ -20,16 +19,16 @@ namespace EnTier.DataAccess.EntityFramework
             _essence = essence;
             _context = context;
 
-            var contextType = typeof(DbContext);
+            // var contextType = typeof(DbContext);
 
-            var getDbSetMethod = contextType.GetMethod(nameof(DbContext.Set), new Type[] { });
+            // var getDbSetMethod = contextType.GetMethod(nameof(DbContext.Set), new Type[] { });
 
-            _getDbSetByType = entityType =>
-            {
-                var method = getDbSetMethod?.MakeGenericMethod(new Type[] { entityType });
-
-                return method?.Invoke(_context, new object[] { });
-            };
+            // _getDbSetByType = entityType =>
+            // {
+            //     var method = getDbSetMethod?.MakeGenericMethod(new Type[] { entityType });
+            //
+            //     return method?.Invoke(_context, new object[] { });
+            // };
         }
 
         public override IEventStreamRepository<TEvent, TEventId, TStreamId> GetStreamRepository<TEvent, TEventId,
