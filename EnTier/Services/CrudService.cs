@@ -67,16 +67,16 @@ namespace EnTier.Services
             return indexCorpus;
         }
 
-        public IEnumerable<TDomain> ReadAll()
+        public IEnumerable<TDomain> ReadAll(bool readFullTree = false)
         {
-            return ReadAllAsync().Result;
+            return ReadAllAsync(readFullTree).Result;
         }
 
-        public virtual async Task<IEnumerable<TDomain>> ReadAllAsync()
+        public virtual async Task<IEnumerable<TDomain>> ReadAllAsync(bool readFullTree = false)
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
-            var storages = await repository.AllAsync();
+            var storages = await repository.AllAsync(readFullTree);
 
             UnitOfWork.Complete();
 

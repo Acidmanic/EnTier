@@ -121,7 +121,7 @@ namespace EnTier.Controllers
 
         protected virtual IEnumerable<TTransfer> OnReadAll(bool readFullTree = false)
         {
-            var domains = Service.ReadAll();
+            var domains = Service.ReadAll(readFullTree);
 
             var transfers = Mapper.Map<IEnumerable<TTransfer>>(domains);
 

@@ -13,9 +13,9 @@ namespace EnTier.Services
         
         Chunk<TEntity> ReadSequence(int offset, int size,[AllowNull] string searchId , FilterQuery filterQuery,[AllowNull] string searchTerm, bool readFullTree = false);
 
-        Task<IEnumerable<TEntity>> ReadAllAsync();
+        Task<IEnumerable<TEntity>> ReadAllAsync(bool readFullTree = false);
         
-        IEnumerable<TEntity> ReadAll();
+        IEnumerable<TEntity> ReadAll(bool readFullTree = false);
 
         TEntity ReadById(TDomainId id,bool readFullTree = false);
 
