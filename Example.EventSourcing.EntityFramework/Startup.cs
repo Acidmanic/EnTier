@@ -46,6 +46,8 @@ namespace Example.EventSourcing.EntityFramework
 
             var context = app.GetService<DbContext>();
 
+            context.Database.EnsureDeleted();
+            
             context.Database.EnsureCreated();
         }
     }
