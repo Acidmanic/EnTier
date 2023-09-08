@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using Meadow.Configuration;
 using Meadow.Contracts;
+using Meadow.SqlServer;
 
 namespace Example.EventSourcing.Meadow;
 
@@ -22,11 +23,12 @@ public class MeadowConfigurationProvider : IMeadowConfigurationProvider
                                $"Password={saPassword};" +
                                $@"Database=MeadowExample; " +
                                "MultipleActiveResultSets=true",
-            MacroPolicy = MacroPolicies.Ignore,
+            MacroPolicy = MacroPolicies.UpdateScripts,
             BuildupScriptDirectory = "Scripts",
             MacroContainingAssemblies = new List<Assembly>
             {
-                typeof(MeadowConfigurationProvider).Assembly
+                typeof(MeadowConfigurationProvider).Assembly,
+                typeof(SqlServerExpressionTranslator).Assembly
             },
             DatabaseFieldNameDelimiter = '_'
         };

@@ -62,10 +62,10 @@ namespace Example.EventSourcing.Meadow
 
             engine.UseSqlServer();
 
-            // if (engine.DatabaseExists())
-            // {
-            //     engine.DropDatabase();
-            // }
+            if (engine.DatabaseExists())
+            {
+                engine.DropDatabase();
+            }
 
             engine.CreateIfNotExist();
 
