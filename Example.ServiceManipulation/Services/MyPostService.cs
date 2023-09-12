@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using EnTier;
 using EnTier.Mapper;
 using EnTier.Models;
@@ -15,9 +16,11 @@ namespace ServiceManipulationExample.Services
     {
         public override Chunk<Post> ReadSequence(int offset, int size, string searchId, FilterQuery filterQuery,
             string searchTerm,
+            OrderTerm[] orderTerms,
             bool readFullTree = false)
         {
-            var originalChunk = base.ReadSequence(offset, size, searchId, filterQuery, searchTerm, readFullTree);
+            var originalChunk =
+                base.ReadSequence(offset, size, searchId, filterQuery, searchTerm, orderTerms, readFullTree);
 
             var manipulatedChunk = new Chunk<Post>
             {

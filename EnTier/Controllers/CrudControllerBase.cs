@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using EnTier.AutoWrap;
 using EnTier.Contracts;
@@ -28,7 +29,7 @@ namespace EnTier.Controllers
         protected IMapper Mapper { get; private set; }
         protected IUnitOfWork UnitOfWork { get; private set; }
         protected ICrudService<TDomain, TDomainId> Service { get; private set; }
-        
+
         protected ILogger Logger { get; private set; }
 
         protected readonly EnTierAutoWrapper<TTransfer> AutoWrapper;
@@ -36,12 +37,12 @@ namespace EnTier.Controllers
         protected IDataAccessRegulator<TDomain, TStorage> Regulator { get; private set; }
 
         protected IReadFullTreeAcquirer FullTreeAcquirer { get; }
-        
+
         protected ITransliterationService TransliterationService { get; }
 
         protected bool DisableSearchAndFiltering { get; set; } = false;
-        
-        
+
+
         public CrudControllerBase(EnTierEssence essence)
         {
             _essence = essence;
@@ -93,15 +94,21 @@ namespace EnTier.Controllers
                     var pagination = HttpContext.GetPagination();
 
                     var searchQ = HttpContext.GetSearchTerms();
-                    
-                    var chunk = OnReadSequence(filter,pagination,searchQ,readFullTree);
-                    
-                    return Ok(chunk);   
+
+                    var orderTerms = HttpContext.GetOrdering<TStorage>(readFullTree);
+
+                    var chunk = OnReadSequence(filter, pagination, searchQ, orderTerms, readFullTree);
+
+                    return Ok(chunk);
                 }
             });
         }
 
-        protected virtual Chunk<TTransfer> OnReadSequence(FilterQuery filter, PaginationQuery pagination, string searchQ,bool readFullTree)
+        protected virtual Chunk<TTransfer> OnReadSequence(FilterQuery filter,
+            PaginationQuery pagination,
+            string searchQ,
+            OrderTerm[] orderTerms,
+            bool readFullTree)
         {
             var domainChunk = Service.ReadSequence(
                 pagination.Offset,
@@ -109,6 +116,7 @@ namespace EnTier.Controllers
                 pagination.SearchId,
                 filter,
                 searchQ,
+                orderTerms,
                 readFullTree);
 
             var transferObjects = Mapper.Map<List<TTransfer>>(domainChunk.Items);
@@ -135,7 +143,7 @@ namespace EnTier.Controllers
         {
             return ErrorCheck(() =>
             {
-                var transfer = OnGetById(id,FullTreeAcquirer.IsReadByIdFullTree);
+                var transfer = OnGetById(id, FullTreeAcquirer.IsReadByIdFullTree);
 
                 if (transfer == null)
                 {
@@ -146,11 +154,11 @@ namespace EnTier.Controllers
             });
         }
 
-        protected virtual TTransfer OnGetById(TTransferId id,bool readFullTree = false )
+        protected virtual TTransfer OnGetById(TTransferId id, bool readFullTree = false)
         {
             var domainId = Mapper.MapId<TDomainId>(id);
 
-            var domain = Service.ReadById(domainId,readFullTree);
+            var domain = Service.ReadById(domainId, readFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
@@ -173,7 +181,7 @@ namespace EnTier.Controllers
         {
             var domain = Mapper.Map<TDomain>(value);
 
-            domain = Service.Add(domain,!DisableSearchAndFiltering,FullTreeAcquirer.IsReadByIdFullTree);
+            domain = Service.Add(domain, !DisableSearchAndFiltering, FullTreeAcquirer.IsReadByIdFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
@@ -202,7 +210,8 @@ namespace EnTier.Controllers
             var domain = Mapper.Map<TDomain>(value);
             var domainId = Mapper.Map<TDomainId>(id);
 
-            domain = Service.UpdateById(domainId, domain,!DisableSearchAndFiltering,FullTreeAcquirer.IsReadByIdFullTree);
+            domain = Service.UpdateById(domainId, domain, !DisableSearchAndFiltering,
+                FullTreeAcquirer.IsReadByIdFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
@@ -230,7 +239,7 @@ namespace EnTier.Controllers
         {
             var domain = Mapper.Map<TDomain>(value);
 
-            domain = Service.Update(domain,!DisableSearchAndFiltering,FullTreeAcquirer.IsReadByIdFullTree);
+            domain = Service.Update(domain, !DisableSearchAndFiltering, FullTreeAcquirer.IsReadByIdFullTree);
 
             var transfer = domain == null ? null : Mapper.Map<TTransfer>(domain);
 
@@ -323,12 +332,13 @@ namespace EnTier.Controllers
             {
                 return NotFound(new
                 {
-                    Message="Filtering and search is not supported for this api sub-set."
+                    Message = "Filtering and search is not supported for this api sub-set."
                 });
             }
-            var filteringProfile = _essence.
-                FilterInformationService.
-                GetFilterProfile<TStorage, TStorageId>(FullTreeAcquirer.IsReadAllFullTree);
+
+            var filteringProfile =
+                _essence.FilterInformationService.GetFilterProfile<TStorage, TStorageId>(FullTreeAcquirer
+                    .IsReadAllFullTree);
 
             return Ok(filteringProfile);
         }

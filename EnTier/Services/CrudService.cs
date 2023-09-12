@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
+using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Acidmanic.Utilities.Results;
@@ -88,15 +89,23 @@ namespace EnTier.Services
         }
 
         public virtual Chunk<TDomain> ReadSequence(
-            int offset, int size, [AllowNull] string searchId,
-            FilterQuery filterQuery, [AllowNull] string searchTerm, bool readFullTree = false)
+            int offset, int size,
+            [AllowNull] string searchId,
+            FilterQuery filterQuery,
+            [AllowNull] string searchTerm,
+            [AllowNull] OrderTerm[] orderTerms,
+            bool readFullTree = false)
         {
-            return ReadSequenceAsync(offset, size, searchId, filterQuery, searchTerm, readFullTree).Result;
+            return ReadSequenceAsync(offset, size, searchId, filterQuery, searchTerm, orderTerms, readFullTree).Result;
         }
 
         public virtual async Task<Chunk<TDomain>> ReadSequenceAsync(
-            int offset, int size, [AllowNull] string searchId,
-            FilterQuery filterQuery, [AllowNull] string searchTerm, bool readFullTree = false)
+            int offset, int size,
+            [AllowNull] string searchId,
+            FilterQuery filterQuery,
+            [AllowNull] string searchTerm,
+            [AllowNull] OrderTerm[] orderTerms,
+            bool readFullTree = false)
         {
             var repository = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
 
@@ -104,6 +113,8 @@ namespace EnTier.Services
 
             var searchTerms = TransliterationService.Transliterate(searchTerm ?? "")
                 .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            orderTerms ??= new OrderTerm[] { };
 
             var foundResults = await repository
                 .PerformFilterIfNeededAsync(filterQuery, searchId, searchTerms, readFullTree);
@@ -203,16 +214,16 @@ namespace EnTier.Services
                 var index = await repository.IndexAsync(id, corpus);
 
                 UnitOfWork.Complete();
-                
+
                 if (index == null)
                 {
-                    Logger.LogError("Unable to index an instance of {Object Type}.",typeof(TStorage).FullName);
-                }else
+                    Logger.LogError("Unable to index an instance of {Object Type}.", typeof(TStorage).FullName);
+                }
+                else
                 {
                     Logger.LogDebug("Indexed an instance of {ObjectType}, Object Id: {ObjectId}, Index Id: {IndexId}"
-                        , typeof(TStorage).FullName, id, index.Id);    
+                        , typeof(TStorage).FullName, id, index.Id);
                 }
-                
             }
             else
             {
