@@ -1,3 +1,5 @@
+using EnTier.DataAccess.JsonFile;
+using EnTier.UnitOfWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +47,15 @@ namespace ExampleJsonFile
             });
 
             app.ConfigureEnTierResolver();
+
+            var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+
+            if (unitOfWork is JsonFileUnitOfWork jorw)
+            {
+                jorw.ClearAllData();
+            }
+
+            app.UseFixture<PostsFixture>();
         }
     }
 }
