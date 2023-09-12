@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Attributes;
 using Acidmanic.Utilities.Filtering.Extensions;
+using Acidmanic.Utilities.Filtering.Models;
+using Acidmanic.Utilities.Filtering.Utilities;
 using Acidmanic.Utilities.Reflection.ObjectTree;
 using Microsoft.AspNetCore.Http;
 
@@ -63,17 +66,77 @@ namespace EnTier.Extensions
             return query;
         }
 
-        public static string GetSearchTerms(this HttpRequest request)
+
+        public static OrderTerm[] GetOrdering<TStorageModel>(this HttpRequest request, bool fullTree)
         {
-            
+            var storageType = typeof(TStorageModel);
+
+            return GetOrdering(request, storageType, fullTree);
+        }
+
+        public static OrderTerm[] GetOrdering(this HttpRequest request, Type storageModelType, bool fullTree)
+        {
+            var evaluator = new ObjectEvaluator(storageModelType);
+
+            var leaves = evaluator.Map.Nodes
+                .Where(n => n.IsLeaf)
+                .Where(n => n.Depth == 1 || fullTree);
+            //.Where(IsFilterField);
+
+            var validAddresses = new HashSet<string>();
+
+            foreach (var leaf in leaves)
+            {
+                validAddresses.Add(evaluator.Map.FieldKeyByNode(leaf).Headless().ToString());
+            }
 
             var requestQueries = request.Query;
-            
+
+            //o=+Surname>-Age>+Job.IncomeInRials
+
+            var orders = new List<OrderTerm>();
+
+            if (requestQueries.ContainsKey("o"))
+            {
+                var ordersExpressions = requestQueries["o"];
+
+                foreach (var value in ordersExpressions)
+                {
+                    var stringTerms = value.Split('>', StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var stringTerm in stringTerms)
+                    {
+                        var asc = stringTerm.StartsWith('+');
+                        var des = stringTerm.StartsWith('-');
+                        if (asc || des)
+                        {
+                            var key = stringTerm.Substring(1, stringTerm.Length - 1);
+
+                            if (validAddresses.Contains(key.ToLower()))
+                            {
+                                orders.Add(new OrderTerm
+                                {
+                                    Key = key,
+                                    Sort = asc ? OrderSort.Ascending : OrderSort.Descending
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            return orders.ToArray();
+        }
+
+        public static string GetSearchTerms(this HttpRequest request)
+        {
+            var requestQueries = request.Query;
+
             var foundKey = requestQueries.FindKey("q");
 
             if (foundKey)
             {
-                return string.Join('+',requestQueries[foundKey.Value].ToArray());
+                return string.Join('+', requestQueries[foundKey.Value].ToArray());
             }
 
             return null;
