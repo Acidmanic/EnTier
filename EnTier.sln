@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		.publishes = .publishes
 		.gitignore = .gitignore
 		global.json = global.json
+		bump = bump
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entier.Test.Unit", "Entier.Test.Unit\Entier.Test.Unit.csproj", "{C28F5C58-D87E-43B9-9B89-B293B55E673A}"

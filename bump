@@ -1,0 +1,18 @@
+
+
+
+function bump_inc(){
+    
+    release auto inc betainc SourceRoot ../ VersionStandard  beta-semantic
+    nugcast
+}
+
+PROJECTS=$(cat .publishes) 
+
+
+
+for PROJECT in $PROJECTS
+do
+    (cd $PROJECT && bump_inc)
+done
+
