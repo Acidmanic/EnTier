@@ -12,23 +12,34 @@ namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
 {
     public sealed class PerformFilterIfNeededRequest<TStorage,TId> : MeadowRequest<FilterShell, FilterResult<TId>>
     {
-        public PerformFilterIfNeededRequest(FilterQuery filterQuery,string searchId = null,string[] searchTerms = null) : base(true)
+        public PerformFilterIfNeededRequest(
+            FilterQuery filterQuery,
+            string searchId = null,
+            string[] searchTerms = null,
+            OrderTerm[] orderTerms=null) : base(true)
         {
             searchId ??= Guid.NewGuid().SearchId();
 
             searchTerms ??= new string[] { };
             
+            orderTerms ??= new OrderTerm[] { };
+            
             RegisterTranslationTask(t =>
             {
+                var entityType = typeof(TStorage);
+                
                 var filterExpression = t.TranslateFilterQueryToDbExpression(filterQuery, FullTreeReadWrite());
 
-                var searchExpression = t.TranslateSearchTerm(typeof(TStorage), searchTerms);
+                var searchExpression = t.TranslateSearchTerm(entityType, searchTerms);
+
+                var orderExpression = t.TranslateOrders(entityType, orderTerms,FullTreeReadWrite());
                 
                 ToStorage = new FilterShell
                 {
                     SearchId = searchId,
                     FilterExpression = filterExpression,
                     SearchExpression = searchExpression,
+                    OrderExpression = orderExpression,
                     ExpirationTimeStamp = typeof(TStorage).GetFilterResultExpirationPointMilliseconds()
                 };
             });

@@ -301,9 +301,10 @@ namespace EnTier.DataAccess.Meadow
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms=null,
             bool readFullTree = false)
         {
-            var request = new PerformFilterIfNeededRequest<TStorage,TId>(filterQuery,searchId,searchTerms);
+            var request = new PerformFilterIfNeededRequest<TStorage,TId>(filterQuery,searchId,searchTerms,orderTerms);
 
             var engine = GetEngine();
 

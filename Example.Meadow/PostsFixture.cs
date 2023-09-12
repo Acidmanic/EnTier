@@ -18,13 +18,22 @@ public class PostsFixture
         IUnitOfWork unitOfWork)
     {
 
-        var media = new Media
+
+        mediaRepository.Add(new Media
         {
             Name = "Fascinating",
             Url = "http://acidmanic.com/live"
-        };
-
-        var m = mediaRepository.Add(media);
+        });
+        mediaRepository.Add(new Media
+        {
+            Name = "Beautiful",
+            Url = "http://acidmanic.com/live"
+        });
+        mediaRepository.Add(new Media
+        {
+            Name = "Great",
+            Url = "http://acidmanic.com/live"
+        });
         
         repository.Add(new Post
         {
@@ -45,7 +54,7 @@ public class PostsFixture
             Title = "Third",
             Content = "sed do eiusmod tempor incididunt",
             Date = TimeStamp.Now + 2000,
-            MediaId = 1
+            MediaId = 2
         });
         
         
@@ -56,14 +65,14 @@ public class PostsFixture
             Title = "Fourth",
             Content = "ut labore et dolore magna aliqua",
             Date = TimeStamp.Now + 3000,
-            MediaId = 1
+            MediaId = 2
         });
         repository.Add(new Post
         {
             Title = "Fifth",
             Content = "Ut enim ad minim veniam",
             Date = TimeStamp.Now + 4000,
-            MediaId = 1
+            MediaId = 3
         });
         
         unitOfWork.UpdateIndexes<Post,long>(true);

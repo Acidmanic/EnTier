@@ -82,7 +82,7 @@ namespace Entier.Test.Unit
             }
 
             public override Task<IEnumerable<FilterResult<long>>> PerformFilterIfNeededAsync(FilterQuery filterQuery, string searchId = null, string[] searchTerms = null,
-                bool readFullTree = false)
+                OrderTerm[] orderTerms = null, bool readFullTree = false)
             {
                 throw new NotImplementedException();
             }
