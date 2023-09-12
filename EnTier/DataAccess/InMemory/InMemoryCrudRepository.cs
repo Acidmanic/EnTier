@@ -168,13 +168,14 @@ namespace EnTier.DataAccess.InMemory
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync<TStorage, TId>(
                     InMemorySharedChannel.FilterResults<TStorage, TId>(),
                     InMemorySharedChannel.SearchIndex<TStorage, TId>(),
-                    _idLeaf, _data, filterQuery, searchTerms, searchId);
+                    _idLeaf, _data, filterQuery, searchTerms,orderTerms, searchId);
         }
 
 

@@ -23,11 +23,12 @@ namespace EnTier.DataAccess.JsonFile
         private readonly List<TStorage> _data;
         private readonly IdGenerator<TId> _idGenerator = new IdGenerator<TId>();
         private readonly AccessNode _idLeaf = TypeIdentity.FindIdentityLeaf<TStorage, TId>();
-        
-        private readonly List<MarkedFilterResult<TStorage,TId>> _filterResults;
-        private readonly List<MarkedSearchIndex<TStorage,TId>> _searchIndex;
 
-        public JsonFileRepository(List<TStorage> data, List<MarkedFilterResult<TStorage, TId>> filterResults, List<MarkedSearchIndex<TStorage, TId>> searchIndex)
+        private readonly List<MarkedFilterResult<TStorage, TId>> _filterResults;
+        private readonly List<MarkedSearchIndex<TStorage, TId>> _searchIndex;
+
+        public JsonFileRepository(List<TStorage> data, List<MarkedFilterResult<TStorage, TId>> filterResults,
+            List<MarkedSearchIndex<TStorage, TId>> searchIndex)
         {
             foreach (var storage in data)
             {
@@ -118,7 +119,7 @@ namespace EnTier.DataAccess.JsonFile
             return this.Add(value);
         }
 
-        public override TStorage GetById(TId id,bool readFullTree = false)
+        public override TStorage GetById(TId id, bool readFullTree = false)
         {
             if (_index.ContainsKey(id))
             {
@@ -179,25 +180,26 @@ namespace EnTier.DataAccess.JsonFile
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
                 .PerformFilterIfNeededAsync(
                     _filterResults,
                     _searchIndex,
-                    _idLeaf, _data, filterQuery, searchTerms, searchId);
+                    _idLeaf, _data, filterQuery, searchTerms, orderTerms, searchId);
         }
 
-        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false)
+        public override Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,
+            bool readFullTree = false)
         {
             return ObjectListRepositoryFilteringHelper
                 .ReadChunkAsync(_filterResults, _idLeaf, _data, offset, size, searchId);
         }
-        
+
         public override Task<SearchIndex<TId>> IndexAsync(TId id, string indexCorpus)
         {
-            long indexId = _searchIndex.Count>0? 
-                _searchIndex.Select(i => i.Id).Max() + 1: 1;
+            long indexId = _searchIndex.Count > 0 ? _searchIndex.Select(i => i.Id).Max() + 1 : 1;
 
             var existing = _searchIndex.FirstOrDefault(i => i.ResultId.Equals(id));
 
@@ -211,12 +213,11 @@ namespace EnTier.DataAccess.JsonFile
                 IndexCorpus = indexCorpus,
                 ResultId = id,
                 Id = indexId
-            }; 
-            
-            _searchIndex.Add(indexRecord.AsMarked<TStorage,TId>());
+            };
+
+            _searchIndex.Add(indexRecord.AsMarked<TStorage, TId>());
 
             return Task.FromResult(indexRecord);
         }
-        
     }
 }

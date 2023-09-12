@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Filtering;
@@ -20,7 +21,7 @@ namespace EnTier.Repositories
         /// <summary>
         /// Finds an existing entity by its Id
         /// </summary>
-        TStorage GetById(TId id,bool readFullTree = false);
+        TStorage GetById(TId id, bool readFullTree = false);
 
         /// <summary>
         /// Adds new instance of Entity
@@ -79,7 +80,7 @@ namespace EnTier.Repositories
         /// <summary>
         /// Finds an existing entity by its Id
         /// </summary>
-        Task<TStorage> GetByIdAsync(TId id,bool readFullTree = false);
+        Task<TStorage> GetByIdAsync(TId id, bool readFullTree = false);
 
         /// <summary>
         /// Performs a search inside the existing entities.
@@ -119,9 +120,10 @@ namespace EnTier.Repositories
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(FilterQuery filterQuery, 
+        Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             bool readFullTree = false);
 
         /// <summary>
@@ -132,6 +134,7 @@ namespace EnTier.Repositories
         IEnumerable<FilterResult<TId>> PerformFilterIfNeeded(FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             bool readFullTree = false);
 
         /// <summary>
@@ -144,7 +147,7 @@ namespace EnTier.Repositories
         /// <param name="searchId">The hash of filter-query which whom it's results are being read.</param>
         /// <param name="readFullTree">If True, the method will try to read and assemble all sub-entities for each item.</param>
         /// <returns>The asked chunk of results, if found any.</returns>
-        Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false);
+        Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId, bool readFullTree = false);
 
         /// <summary>
         /// This method will read a chunk of storage data by skipping 'offset' items and picking 'size' items.
@@ -156,10 +159,10 @@ namespace EnTier.Repositories
         /// <param name="readFullTree">If True, the method will try to read and assemble all sub-entities for each item.</param>
         /// <param name="searchId">The hash of filter-query which whom it's results are being read.</param>
         /// <returns>The asked chunk of results, if found any.</returns>
-        IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId,bool readFullTree = false);
+        IEnumerable<TStorage> ReadChunk(int offset, int size, string searchId, bool readFullTree = false);
 
-        SearchIndex<TId> Index(TId id,string indexCorpus);
-        
-        Task<SearchIndex<TId>> IndexAsync(TId id,string indexCorpus);
+        SearchIndex<TId> Index(TId id, string indexCorpus);
+
+        Task<SearchIndex<TId>> IndexAsync(TId id, string indexCorpus);
     }
 }

@@ -83,11 +83,14 @@ namespace EnTier.Extensions
                 .Where(n => n.Depth == 1 || fullTree);
             //.Where(IsFilterField);
 
-            var validAddresses = new HashSet<string>();
+            var orderingTermKeysByFieldKey = new Dictionary<string,string>();
 
             foreach (var leaf in leaves)
             {
-                validAddresses.Add(evaluator.Map.FieldKeyByNode(leaf).Headless().ToString());
+                var key = evaluator.Map.FieldKeyByNode(leaf).Headless().ToString().ToLower();
+                var orderTermKey = fullTree ? evaluator.Map.FieldKeyByNode(leaf).Headless().ToString() : leaf.Name;
+                
+                orderingTermKeysByFieldKey.Add(key,orderTermKey);
             }
 
             var requestQueries = request.Query;
@@ -110,13 +113,13 @@ namespace EnTier.Extensions
                         var des = stringTerm.StartsWith('-');
                         if (asc || des)
                         {
-                            var key = stringTerm.Substring(1, stringTerm.Length - 1);
+                            var key = stringTerm.Substring(1, stringTerm.Length - 1).ToLower();
 
-                            if (validAddresses.Contains(key.ToLower()))
+                            if (orderingTermKeysByFieldKey.ContainsKey(key))
                             {
                                 orders.Add(new OrderTerm
                                 {
-                                    Key = key,
+                                    Key = orderingTermKeysByFieldKey[key],
                                     Sort = asc ? OrderSort.Ascending : OrderSort.Descending
                                 });
                             }

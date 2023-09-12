@@ -89,9 +89,12 @@ namespace EnTier.DataAccess
             IEnumerable<TStorage> data,
             FilterQuery filterQuery,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             string searchId = null)
         {
             searchId ??= Guid.NewGuid().ToString("N");
+            
+            orderTerms ??= new OrderTerm[] { };
 
             var anyResult = filterResults.Any(f => f.SearchId == searchId);
 
@@ -99,8 +102,7 @@ namespace EnTier.DataAccess
             {
                 var filteringResults = new ObjectStreamFilterer<TStorage, TId>()
                     .PerformFilter(data, filterQuery,
-                        (_, id) => IndexHits(searchIndex, searchTerms, id),
-                        searchId);
+                        (_, id) => IndexHits(searchIndex, searchTerms, id), orderTerms,searchId);
 
                 filterResults.AddRange(filteringResults);
             }
@@ -115,9 +117,12 @@ namespace EnTier.DataAccess
             IEnumerable<TStorage> data,
             FilterQuery filterQuery,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             string searchId = null)
         {
             searchId ??= Guid.NewGuid().ToString("N");
+
+            orderTerms ??= new OrderTerm[] { };
 
             var anyResult = filterResults.Any(f => f.SearchId == searchId);
 
@@ -126,7 +131,7 @@ namespace EnTier.DataAccess
                 var filteringResults = new ObjectStreamFilterer<TStorage, TId>()
                     .PerformFilter(data, filterQuery,
                         (_, id) => IndexHits(searchIndex, searchTerms, id),
-                        searchId);
+                        orderTerms,searchId);
 
                 filterResults.AddRange(filteringResults.Select(f => f.AsMarked<TStorage, TId>()));
             }

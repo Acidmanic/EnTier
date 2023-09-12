@@ -51,6 +51,7 @@ namespace ExampleInMemorySingleLayerEntity
 
             app.ConfigureEnTierResolver();
 
+            app.UseFixture<PostsFixture>();
             app.UseFixture<ProductsSeedFixture>();
         }
     }

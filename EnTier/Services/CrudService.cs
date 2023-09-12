@@ -117,7 +117,7 @@ namespace EnTier.Services
             orderTerms ??= new OrderTerm[] { };
 
             var foundResults = await repository
-                .PerformFilterIfNeededAsync(filterQuery, searchId, searchTerms, readFullTree);
+                .PerformFilterIfNeededAsync(filterQuery, searchId, searchTerms,orderTerms, readFullTree);
 
             UnitOfWork.Complete();
 

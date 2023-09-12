@@ -54,15 +54,17 @@ namespace EnTier.Repositories
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             bool readFullTree = false);
 
         public IEnumerable<FilterResult<TId>> PerformFilterIfNeeded(
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             bool readFullTree = false)
         {
-            return PerformFilterIfNeededAsync(filterQuery, null, searchTerms, readFullTree).Result;
+            return PerformFilterIfNeededAsync(filterQuery, null, searchTerms,orderTerms, readFullTree).Result;
         }
 
         public abstract Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,
