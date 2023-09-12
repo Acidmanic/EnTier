@@ -10,6 +10,7 @@ using Acidmanic.Utilities.Filtering.Extensions;
 using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
+using EnTier.DataAccess.EntityFramework.Extensions;
 using EnTier.DataAccess.EntityFramework.FullTreeHandling;
 using EnTier.DataAccess.JsonFile;
 using EnTier.Repositories;
@@ -151,9 +152,12 @@ namespace EnTier.DataAccess.EntityFramework
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
+            OrderTerm[] orderTerms = null,
             bool readFullTree = false)
         {
             searchId ??= Guid.NewGuid().ToString("N");
+
+            orderTerms ??= new OrderTerm[] { };
 
             return Task.Run<IEnumerable<FilterResult<TId>>>(() =>
             {
@@ -165,11 +169,26 @@ namespace EnTier.DataAccess.EntityFramework
 
                     var queryable = DbSetFullTreeAble(readFullTree).AsQueryable();
 
+
+                    foreach (var orderTerm in orderTerms)
+                    {
+                        var lambda = orderTerm.GetSelector<TStorage>();
+                        
+                        if (orderTerm.Sort == OrderSort.Ascending)
+                        {
+                            queryable = queryable.OrderBy(lambda);
+                        }
+                        else if(orderTerm.Sort == OrderSort.Descending)
+                        {
+                            queryable = queryable.OrderByDescending(lambda);    
+                        }
+                    }
+                    
+
                     foreach (var expression in filterExpressions)
                     {
                         queryable = queryable.Where(expression);
                     }
-
 
                     if (searchTerms != null && searchTerms.Length > 0)
                     {
@@ -191,6 +210,8 @@ namespace EnTier.DataAccess.EntityFramework
                     }
 
 
+                    
+                    
                     var filterResults = queryable.ToList();
 
                     var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
