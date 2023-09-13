@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Acidmanic.Utilities.Reflection;
-using Acidmanic.Utilities.Results;
 using EnTier.Prepopulation.Attributes;
 using EnTier.Prepopulation.Contracts;
 
 namespace EnTier.Prepopulation.Extensions
 {
-    public static class PrepopulationSeedExtensions
+    internal static class PrepopulationSeedExtensions
     {
         public static List<Type> GetMarkedDependencies<TStorage>(this ISeed<TStorage> seed)
         {

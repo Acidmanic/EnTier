@@ -1,6 +1,6 @@
 namespace EnTier.Prepopulation.Contracts;
 
-public interface ISeedingPerformer
+internal interface ISeedingPerformer
 {
 
     void Seed();

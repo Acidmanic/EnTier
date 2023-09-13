@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EnTier.Prepopulation;
 
-public class SeedPerformer<TStorage, TId> : ISeedingPerformer where TStorage : class, new()
+internal class SeedPerformer<TStorage, TId> : ISeedingPerformer where TStorage : class, new()
 {
     
     private SeedingToolBox ToolBox { get; }

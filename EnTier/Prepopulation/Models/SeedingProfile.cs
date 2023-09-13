@@ -6,12 +6,12 @@ using EnTier.Prepopulation.Contracts;
 
 namespace EnTier.Prepopulation.Models;
 
-public interface ISeedingProfile
+internal interface ISeedingProfile
 {
     internal void LoadSeed(object seedObject);
 }
 
-public class SeedingProfile<TStorage>:ISeedingProfile
+internal class SeedingProfile<TStorage>:ISeedingProfile
 {
     public IEnumerable<TStorage> SeedData { get; set; }
 

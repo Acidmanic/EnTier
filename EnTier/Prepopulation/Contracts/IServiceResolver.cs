@@ -1,6 +1,6 @@
 using System;
 
-namespace EnTier.Prepopulation
+namespace EnTier.Prepopulation.Contracts
 {
     public interface IServiceResolver
     {

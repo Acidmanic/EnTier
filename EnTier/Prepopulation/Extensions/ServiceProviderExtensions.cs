@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace EnTier.Prepopulation
+namespace EnTier.Prepopulation.Extensions
 {
     public static class ServiceProviderExtensions
     {
@@ -12,7 +12,7 @@ namespace EnTier.Prepopulation
         {
             var resolver = new DotnetResolver(provider);
 
-            PrepopulationManager2.GetInstance().PerformPrepopulation(resolver,assembly);
+            PrepopulationManager.GetInstance().PerformPrepopulation(resolver,assembly);
 
             return provider;
         }
