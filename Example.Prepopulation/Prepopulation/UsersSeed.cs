@@ -1,17 +1,12 @@
+using System.Collections.Generic;
 using Acidmanic.Utilities.Results;
-using EnTier.Prepopulation;
-using EnTier.UnitOfWork;
+using EnTier.Prepopulation.Contracts;
 using Example.Prepopulation.Models;
 
 namespace Example.Prepopulation.Prepopulation
 {
-    public class UsersSeed:IPrepopulationSeed
+    public class UsersSeed : ISeed<User>
     {
-
-
-        private readonly IUnitOfWork _unitOfWork;
-        
-        
         public static readonly User Administrator = new User
         {
             Email = "administrator@entier.net",
@@ -20,30 +15,12 @@ namespace Example.Prepopulation.Prepopulation
             FullName = "Acidmanic Moayedi"
         };
 
-        public UsersSeed(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
 
-        public Result Seed()
-        {
-            var repository = _unitOfWork.GetCrudRepository<User, long>();
+        public string SeedName => "Users";
 
-            var inserted = repository.Add(Administrator);
+        public IEnumerable<User> SeedingObjects => new[] { Administrator };
 
-            if (inserted == null)
-            {
-                return false;
-            }
-
-            Administrator.Id = inserted.Id;
-
-            return true;
-        }
-
-        public void Clear()
-        {
-            
-        }
+        public Result<ISeedingHook<User>> HooksIntoSeedingBehavior =>
+            new Result<ISeedingHook<User>>().FailAndDefaultValue();
     }
 }

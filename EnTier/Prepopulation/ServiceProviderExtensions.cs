@@ -12,7 +12,7 @@ namespace EnTier.Prepopulation
         {
             var resolver = new DotnetResolver(provider);
 
-            PrepopulationManager.GetInstance().PerformPrepopulation(resolver,assembly);
+            PrepopulationManager2.GetInstance().PerformPrepopulation(resolver,assembly);
 
             return provider;
         }

@@ -11,7 +11,7 @@ namespace Microsoft.AspNetCore.Builder
         {
             var resolver = new DotnetResolver(app);
 
-            PrepopulationManager.GetInstance().PerformPrepopulation(resolver,assembly);
+            PrepopulationManager2.GetInstance().PerformPrepopulation(resolver,assembly);
         }
         
         

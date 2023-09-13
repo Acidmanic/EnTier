@@ -23,18 +23,12 @@ namespace EnTier.Prepopulation
         
         public Type IdType { get; }
         
-        public bool AlsoIndex { get;  }
-        
-        public bool FullTreeIndexing { get;  }
-        
         public Action Commit { get; }
 
-        public SeedingContext(IUnitOfWork unitOfWork, ITransliterationService transliterationService, bool alsoIndex = false, bool fullTreeIndexing = false)
+        public SeedingContext(IUnitOfWork unitOfWork, ITransliterationService transliterationService)
         {
             UnitOfWork = unitOfWork;
             TransliterationService = transliterationService;
-            AlsoIndex = alsoIndex;
-            FullTreeIndexing = fullTreeIndexing;
             IdLeaf = TypeIdentity.FindIdentityLeaf<TModel, TId>();
 
             HasId = IdLeaf != null;
