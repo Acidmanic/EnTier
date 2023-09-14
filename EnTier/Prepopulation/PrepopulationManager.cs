@@ -79,9 +79,9 @@ namespace EnTier.Prepopulation
         }
 
 
-        private object CreateProfile(Type seedType)
+        private object CreateProfile(Type seedType,IServiceResolver resolver)
         {
-            var seedObject = seedType.New();
+            var seedObject = seedType.NewOrResolve(resolver);
             
             var genericArguments = seedType.GetSeedGenericArguments();
 
@@ -133,7 +133,7 @@ namespace EnTier.Prepopulation
 
             var seedPerformers = orderedSeedTypes.Select(seedType =>
             {
-                var profile = CreateProfile(seedType);
+                var profile = CreateProfile(seedType,resolver);
 
                 var performer = CreateSeedPerformer(seedType, profile, toolBox.Value);
 

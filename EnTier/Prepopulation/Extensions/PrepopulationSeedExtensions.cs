@@ -70,6 +70,17 @@ namespace EnTier.Prepopulation.Extensions
             return type.GetConstructor(new Type[] { })?.Invoke(new object[] { });
         }
 
+        internal static object NewOrResolve(this Type type, IServiceResolver resolver)
+        {
+            var instantiated = type.GetConstructor(new Type[] { })?.Invoke(new object[] { });
+
+            if (instantiated != null)
+            {
+                return instantiated;
+            }
+            return resolver.Resolve(type);
+        }
+
         public static bool IsASeedType(this Type type)
         {
             if (!type.IsAbstract && !type.IsInterface)
