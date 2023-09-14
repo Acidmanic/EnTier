@@ -30,6 +30,8 @@ internal class SeedPerformer<TStorage, TId> : ISeedingPerformer where TStorage :
     {
         
         Logger.LogInformation("Performing Seeding for {Name}",Profile.Name);
+
+        Profile.Initialize();
         
         if (IdLeaf == null)
         {

@@ -16,6 +16,8 @@ public interface ISeed<TStorage>
     IEnumerable<TStorage> SeedingObjects { get; }
 
     
-    Result<ISeedingHook<TStorage>> HooksIntoSeedingBehavior { get; } 
+    Result<ISeedingHook<TStorage>> HooksIntoSeedingBehavior { get; }
+
+    void Initialize();
 
 }

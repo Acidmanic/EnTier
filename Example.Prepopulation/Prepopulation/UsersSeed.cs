@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using Acidmanic.Utilities.Results;
-using EnTier.Prepopulation.Contracts;
+using EnTier.Prepopulation;
 using Example.Prepopulation.Models;
 
 namespace Example.Prepopulation.Prepopulation
 {
-    public class UsersSeed : ISeed<User>
+    public class UsersSeed : SeedBase<User>
     {
         public static readonly User Administrator = new User
         {
@@ -16,11 +15,6 @@ namespace Example.Prepopulation.Prepopulation
         };
 
 
-        public string SeedName => "Users";
-
-        public IEnumerable<User> SeedingObjects => new[] { Administrator };
-
-        public Result<ISeedingHook<User>> HooksIntoSeedingBehavior =>
-            new Result<ISeedingHook<User>>().FailAndDefaultValue();
+        public override IEnumerable<User> SeedingObjects => new[] { Administrator };
     }
 }

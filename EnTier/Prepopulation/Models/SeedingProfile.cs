@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Acidmanic.Utilities.Reflection.ObjectTree;
 using EnTier.Prepopulation.Attributes;
 using EnTier.Prepopulation.Contracts;
 
@@ -23,6 +25,8 @@ internal class SeedingProfile<TStorage>:ISeedingProfile
     
     public ISeedingHook<TStorage> Hook { get; set; }
 
+    public Action Initialize { get; set; }
+    
 
      void ISeedingProfile.LoadSeed(object seedObject)
     {
@@ -45,6 +49,8 @@ internal class SeedingProfile<TStorage>:ISeedingProfile
                 AlsoIndex = false;
                 FullTreeIndexing = false;
             }
+
+            Initialize = () => seed.Initialize();
         }
     }
 }

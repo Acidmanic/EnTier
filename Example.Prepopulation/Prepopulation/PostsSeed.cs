@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Acidmanic.Utilities.Results;
 using EnTier.Prepopulation.Attributes;
@@ -31,5 +32,10 @@ namespace Example.Prepopulation.Prepopulation
 
         public Result<ISeedingHook<Post>> HooksIntoSeedingBehavior =>
             new Result<ISeedingHook<Post>>().FailAndDefaultValue();
+
+        public void Initialize()
+        {
+            Console.WriteLine("Initialized posts seeding");
+        }
     }
 }
