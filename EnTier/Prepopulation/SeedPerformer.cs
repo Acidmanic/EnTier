@@ -46,7 +46,7 @@ internal class SeedPerformer<TStorage, TId> : ISeedingPerformer where TStorage :
 
         foreach (var storage in Profile.SeedData)
         {
-            Profile.Hook.PreIndexing(storage,ToolBox);
+            Profile.Hook.PreInsertion(storage,ToolBox);
             
             var updated = repository.Set(storage);
 
@@ -63,7 +63,7 @@ internal class SeedPerformer<TStorage, TId> : ISeedingPerformer where TStorage :
                 IdLeaf.Evaluator.Write(storage, (TId)id);
             }
             
-            Profile.Hook.PostIndexing(storage,ToolBox);
+            Profile.Hook.PostInsertion(storage,ToolBox);
         }
 
         if (anyMissing)
