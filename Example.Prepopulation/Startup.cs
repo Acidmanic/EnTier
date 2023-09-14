@@ -33,6 +33,8 @@ namespace Example.Prepopulation
             var logger = new ConsoleLogger();
 
             services.AddTransient<ILogger>(sp => logger);
+
+            services.AddTransient<IUserNameProvider, AdminUserNameProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

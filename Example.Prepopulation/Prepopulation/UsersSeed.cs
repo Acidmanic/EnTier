@@ -1,49 +1,33 @@
-using Acidmanic.Utilities.Results;
+using System.Collections.Generic;
 using EnTier.Prepopulation;
-using EnTier.UnitOfWork;
 using Example.Prepopulation.Models;
 
 namespace Example.Prepopulation.Prepopulation
 {
-    public class UsersSeed:IPrepopulationSeed
+    public class UsersSeed : SeedBase<User>
     {
+        private readonly IUserNameProvider _userNameProvider;
 
-
-        private readonly IUnitOfWork _unitOfWork;
-        
-        
         public static readonly User Administrator = new User
         {
             Email = "administrator@entier.net",
             Id = 0,
-            Username = "administrator",
-            FullName = "Acidmanic Moayedi"
+            // Username = "administrator",
+            // FullName = "Acidmanic Moayedi"
         };
 
-        public UsersSeed(IUnitOfWork unitOfWork)
+        public UsersSeed(IUserNameProvider userNameProvider)
         {
-            _unitOfWork = unitOfWork;
+            _userNameProvider = userNameProvider;
         }
 
-        public Result Seed()
+
+        public override IEnumerable<User> SeedingObjects => new[] { Administrator };
+
+        public override void Initialize()
         {
-            var repository = _unitOfWork.GetCrudRepository<User, long>();
-
-            var inserted = repository.Add(Administrator);
-
-            if (inserted == null)
-            {
-                return false;
-            }
-
-            Administrator.Id = inserted.Id;
-
-            return true;
-        }
-
-        public void Clear()
-        {
-            
+            Administrator.FullName = _userNameProvider.FullName();
+            Administrator.Username = _userNameProvider.Username();
         }
     }
 }

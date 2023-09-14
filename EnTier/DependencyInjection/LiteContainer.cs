@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Acidmanic.Utilities.Results;
 using EnTier.Prepopulation;
+using EnTier.Prepopulation.Contracts;
 
 namespace EnTier.DependencyInjection
 {

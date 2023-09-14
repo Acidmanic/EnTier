@@ -1,9 +1,10 @@
 using System;
+using EnTier.Prepopulation.Contracts;
 using Microsoft.AspNetCore.Builder;
 
 namespace EnTier.Prepopulation
 {
-    public class DotnetResolver:IServiceResolver
+    internal class DotnetResolver:IServiceResolver
     {
 
         //private readonly IApplicationBuilder _applicationBuilder;

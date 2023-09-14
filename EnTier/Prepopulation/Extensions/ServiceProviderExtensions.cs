@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace EnTier.Prepopulation
+namespace EnTier.Prepopulation.Extensions
 {
     public static class ServiceProviderExtensions
     {
