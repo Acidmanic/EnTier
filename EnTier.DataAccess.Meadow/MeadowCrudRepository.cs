@@ -7,12 +7,12 @@ using Acidmanic.Utilities.DataTypes;
 using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Models;
 using Acidmanic.Utilities.Reflection;
+using EnTier.DataAccess.Meadow.Extensions;
 using EnTier.DataAccess.Meadow.GenericCrudRequests;
 using EnTier.DataAccess.Meadow.GenericFilteringRequests;
 using EnTier.Repositories;
 using Meadow;
 using Meadow.Configuration;
-using Meadow.Requests;
 using Microsoft.Extensions.Logging;
 
 namespace EnTier.DataAccess.Meadow
@@ -27,15 +27,6 @@ namespace EnTier.DataAccess.Meadow
 
         private MeadowConfiguration Configuration { get; }
 
-        private void ErrorCheck(MeadowRequest response)
-        {
-            if (response.Failed)
-            {
-                Logger.LogError(response.FailureException, "Meadow Request Failed.");
-            }
-        }
-
-
         public override IEnumerable<TStorage> All(bool readFullTree = false)
         {
             var request = new ReadAllStorageRequest<TStorage>();
@@ -44,7 +35,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = engine.PerformRequest(request,readFullTree);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             return response.FromStorage;
         }
@@ -60,7 +51,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = engine.PerformRequest(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             var result = response.FromStorage.FirstOrDefault();
 
@@ -75,7 +66,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = engine.PerformRequest(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             var result = response.FromStorage.FirstOrDefault();
 
@@ -90,7 +81,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = engine.PerformRequest(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             var result = response.FromStorage.FirstOrDefault();
 
@@ -108,7 +99,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = engine.PerformRequest(request,readFullTree);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             return response.FromStorage.FirstOrDefault();
         }
@@ -138,7 +129,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = engine.PerformRequest(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             var result = response.FromStorage.FirstOrDefault();
 
@@ -153,7 +144,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request,readFullTree);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             return response.FromStorage;
         }
@@ -166,7 +157,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             var result = response.FromStorage.FirstOrDefault();
 
@@ -181,7 +172,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             var result = response.FromStorage.FirstOrDefault();
 
@@ -199,7 +190,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request,readFullTree);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             return response.FromStorage.FirstOrDefault();
         }
@@ -231,7 +222,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             var result = response.FromStorage.FirstOrDefault();
 
@@ -248,7 +239,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             var result = response.FromStorage.FirstOrDefault();
 
@@ -294,7 +285,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
         }
 
         public override async Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
@@ -310,7 +301,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request,readFullTree);
 
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             return request.FromStorage;
         }
@@ -323,7 +314,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request,readFullTree);
             
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             return response.FromStorage;
         }
@@ -336,7 +327,7 @@ namespace EnTier.DataAccess.Meadow
 
             var response = await engine.PerformRequestAsync(request);
             
-            ErrorCheck(response);
+            response.LogIfFailed(Logger);
 
             return response.FromStorage.FirstOrDefault();
             

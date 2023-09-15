@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EnTier.DataAccess.Meadow.Extensions;
 using EnTier.DataAccess.Meadow.GenericFilteringRequests;
 using EnTier.DataAccess.Meadow.GenericFilteringRequests.Models;
 using EnTier.Models;
@@ -30,15 +31,7 @@ public class MeadowDataBoundRepository<TStorage>:DataBoundRepositoryBase
 
         return engine;
     }
-    private void ErrorCheck(MeadowRequest response)
-    {
-        if (response.Failed)
-        {
-            Logger.LogError(response.FailureException, "Meadow Request Failed.");
-        }
-    }
-    
-    
+
     public override async Task<FilterRange> GetDataRangeAsync(string headlessFieldAddress)
     {
         var request = new RangeRequest<TStorage>(headlessFieldAddress);
@@ -47,7 +40,7 @@ public class MeadowDataBoundRepository<TStorage>:DataBoundRepositoryBase
 
         var response = await engine.PerformRequestAsync(request);
             
-        ErrorCheck(response);
+        response.LogIfFailed(Logger);
 
         var readRange = response.FromStorage.FirstOrDefault() ?? new FieldRange();
             
@@ -63,7 +56,7 @@ public class MeadowDataBoundRepository<TStorage>:DataBoundRepositoryBase
 
         var response = await engine.PerformRequestAsync(request);
             
-        ErrorCheck(response);
+        response.LogIfFailed(Logger);
 
         return response.FromStorage.Select(o => o.ToString()).ToList();
     }
