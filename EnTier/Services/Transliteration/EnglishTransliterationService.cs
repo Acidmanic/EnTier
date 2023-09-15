@@ -12,6 +12,7 @@ public class EnTierBuiltinTransliterationsService : ITransliterationService
         { "ou", "u" },
         { "oo", "o" },
         { "ee", "i" },
+        { "ea", "i" },
         { "y", "i" },
         { "sch", "$" },
         { "sh", "$" },
