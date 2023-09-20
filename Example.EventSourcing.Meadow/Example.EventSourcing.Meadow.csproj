@@ -7,8 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="EnTier.EventStore.WebView" Version="1.0.0-b15" />
-    <PackageReference Include="Meadow.Framework" Version="1.2.4-b32" />
-    <PackageReference Include="Meadow.SqlServer" Version="1.3.0-b26" />
+    <PackageReference Include="Meadow.Framework" Version="1.2.4-b33" />
+    <PackageReference Include="Meadow.SqlServer" Version="1.3.0-b27" />
   </ItemGroup>
 
   <ItemGroup>
