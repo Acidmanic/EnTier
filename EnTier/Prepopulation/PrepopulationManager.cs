@@ -6,8 +6,10 @@ using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.Extensions;
 using Acidmanic.Utilities.Results;
 using EnTier.Contracts;
+using EnTier.Prepopulation.Attributes;
 using EnTier.Prepopulation.Contracts;
 using EnTier.Prepopulation.Extensions;
+using EnTier.Prepopulation.Interfaces;
 using EnTier.Prepopulation.Models;
 using EnTier.Services.Transliteration;
 using EnTier.UnitOfWork;
@@ -59,30 +61,24 @@ namespace EnTier.Prepopulation
 
         private Result<SeedingToolBox> CreateToolBox(IServiceResolver resolver)
         {
-            var logger = resolver.Resolve(typeof(ILogger)) as ILogger ?? new ConsoleLogger();
+            var essence = resolver.Resolve(typeof(EnTierEssence)) as EnTierEssence;
 
-            var unitOfWork = resolver.Resolve(typeof(IUnitOfWork)) as IUnitOfWork;
-
-            if (unitOfWork == null)
+            if (essence == null)
             {
-                logger.LogError("Unable to get UnitOfWork. You might have forgotten to select your unit of work." +
-                                "Prepopulation would be aborted.");
+                new ConsoleLogger().LogError("You forgot to introduce your di to EnTier");
 
                 return new Result<SeedingToolBox>().FailAndDefaultValue();
             }
 
-            var transliterationService = resolver.Resolve(typeof(ITransliterationService)) as ITransliterationService
-                                         ?? new EnTierBuiltinTransliterationsService();
-
             return new Result<SeedingToolBox>(true,
-                new SeedingToolBox(unitOfWork, logger, transliterationService));
+                new SeedingToolBox(essence));
         }
 
 
-        private object CreateProfile(Type seedType,IServiceResolver resolver)
+        private object CreateProfile(Type seedType, IServiceResolver resolver)
         {
             var seedObject = seedType.NewOrResolve(resolver);
-            
+
             var genericArguments = seedType.GetSeedGenericArguments();
 
             var storageType = genericArguments[0];
@@ -93,19 +89,65 @@ namespace EnTier.Prepopulation
             var profile = new ObjectInstantiator().BlindInstantiate(specificProfileType) as ISeedingProfile;
 
             profile!.LoadSeed(seedObject);
-            
+
             return profile;
         }
 
+        private IPrepopulationLevel GetLevel(Type type)
+        {
+            var att = 
+                type.GetCustomAttribute<PrepopulationLevelAttribute>() ?? new PrepopulationLevelAttribute();
+
+            return att;
+        }
+
         private ISeedingPerformer CreateSeedPerformer(Type seedType, object profile, SeedingToolBox toolBox)
+        {
+
+            var level = GetLevel(seedType);
+
+            if (level.Level == PrepopulationLevels.Service)
+            {
+
+                return ServiceSeedPerformer(seedType, profile, toolBox,level.DomainType,level.DomainIdType);
+            }
+
+            return RepositorySeedPerformer(seedType, profile, toolBox);
+        }
+
+        private ISeedingPerformer RepositorySeedPerformer(Type seedType, object profile, SeedingToolBox toolBox)
         {
             var genericArguments = seedType.GetSeedGenericArguments();
 
             var storageType = genericArguments[0];
             var idType = storageType.GetIdType();
 
-            var seedPerformerGenericType = typeof(SeedPerformer<,>);
+            var seedPerformerGenericType = typeof(RepositoryLevelSeedPerformer<,>);
             var seedPerformerSpecificType = seedPerformerGenericType.MakeGenericType(storageType, idType);
+            var profileType = profile.GetType();
+
+            var constructor =
+                seedPerformerSpecificType.GetConstructor(new Type[] { profileType, typeof(SeedingToolBox) });
+
+            var performerIndex = constructor!.Invoke(new object[] { profile, toolBox });
+
+            return performerIndex as ISeedingPerformer;
+        }
+        
+        private ISeedingPerformer ServiceSeedPerformer(Type seedType, 
+            object profile, 
+            SeedingToolBox toolBox,
+            Type domainType,
+            Type domainIdType)
+        {
+            var genericArguments = seedType.GetSeedGenericArguments();
+
+            var storageType = genericArguments[0];
+            var storageIdType = storageType.GetIdType();
+
+            var seedPerformerGenericType = typeof(ServiceLevelSeedPerformer<,,,>);
+            var seedPerformerSpecificType = seedPerformerGenericType
+                .MakeGenericType(domainType,storageType,domainIdType, storageIdType);
             var profileType = profile.GetType();
 
             var constructor =
@@ -133,7 +175,7 @@ namespace EnTier.Prepopulation
 
             var seedPerformers = orderedSeedTypes.Select(seedType =>
             {
-                var profile = CreateProfile(seedType,resolver);
+                var profile = CreateProfile(seedType, resolver);
 
                 var performer = CreateSeedPerformer(seedType, profile, toolBox.Value);
 

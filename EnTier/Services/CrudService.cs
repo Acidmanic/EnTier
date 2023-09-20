@@ -194,8 +194,10 @@ namespace EnTier.Services
             return default;
         }
 
-        private async Task TryIndex(TStorage storage, bool fullTreeIndexing)
+        private async Task<bool> TryIndex(TStorage storage, bool fullTreeIndexing)
         {
+            var allGood = true;
+            
             if (_entityHasId)
             {
                 var id = (TStorageId)StorageIdLeaf.Evaluator.Read(storage);
@@ -218,6 +220,8 @@ namespace EnTier.Services
                 if (index == null)
                 {
                     Logger.LogError("Unable to index an instance of {Object Type}.", typeof(TStorage).FullName);
+                    
+                    allGood = false;
                 }
                 else
                 {
@@ -231,7 +235,11 @@ namespace EnTier.Services
                                   "been rejected. This entity type does not have an identifier field therefore" +
                                   "it's not possible to use searching and filtering features for it."
                     , typeof(TStorage).FullName);
+                
+                allGood = false;
             }
+
+            return allGood;
         }
 
         public virtual TDomain Update(TDomain value, bool alsoIndex, bool fullTreeIndexing)
@@ -325,6 +333,53 @@ namespace EnTier.Services
         public void SetLogger(ILogger logger)
         {
             Logger = logger;
+        }
+
+        public TDomain UpdateOrInsert(TDomain value, bool alsoIndex, bool fullTreeIndexing)
+        {
+            return UpdateOrInsertAsync(value, alsoIndex, fullTreeIndexing).Result;
+        }
+
+        public async Task<TDomain> UpdateOrInsertAsync(TDomain value, bool alsoIndex, bool fullTreeIndexing)
+        {
+            var regulated = RegulateIncoming(value);
+
+            if (regulated)
+            {
+                var repo = UnitOfWork.GetCrudRepository<TStorage, TDomainId>();
+
+                var regulatedStorage = Mapper.Map<TStorage>(regulated.Value);
+
+                var saved = await repo.SetAsync(regulatedStorage);
+
+                UnitOfWork.Complete();
+
+                if (alsoIndex)
+                {
+                    await TryIndex(saved, fullTreeIndexing);
+                }
+
+                if (saved != null)
+                {
+                    var outgoing = RegulateOutgoing(saved);
+
+                    if (outgoing != null)
+                    {
+                        var domain = Mapper.Map<TDomain>(outgoing);
+
+                        return domain;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public Task<bool> TryIndex(TDomain value, bool fullTreeIndexing = false)
+        {
+            var storage = Mapper.Map<TStorage>(value);
+
+            return TryIndex(storage, fullTreeIndexing);
         }
 
         private TStorage RegulateOutgoing(TStorage model)

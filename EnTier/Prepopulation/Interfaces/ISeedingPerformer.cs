@@ -1,4 +1,4 @@
-namespace EnTier.Prepopulation.Contracts;
+namespace EnTier.Prepopulation.Interfaces;
 
 internal interface ISeedingPerformer
 {

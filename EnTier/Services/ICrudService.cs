@@ -43,5 +43,11 @@ namespace EnTier.Services
         bool RemoveById(TDomainId id);
 
         void SetLogger(ILogger logger);
+        
+        TEntity UpdateOrInsert(TEntity value, bool alsoIndex, bool fullTreeIndexing);
+        
+        Task<TEntity> UpdateOrInsertAsync(TEntity value, bool alsoIndex, bool fullTreeIndexing);
+
+        Task<bool> TryIndex(TEntity value,bool fullTreeIndexing = false);
     }
 }
