@@ -117,7 +117,7 @@ namespace EnTier.Services
             orderTerms ??= new OrderTerm[] { };
 
             var foundResults = await repository
-                .PerformFilterIfNeededAsync(filterQuery, searchId, searchTerms,orderTerms, readFullTree);
+                .PerformFilterIfNeededAsync(filterQuery, searchId, searchTerms, orderTerms, readFullTree);
 
             UnitOfWork.Complete();
 
@@ -197,7 +197,7 @@ namespace EnTier.Services
         private async Task<bool> TryIndex(TStorage storage, bool fullTreeIndexing)
         {
             var allGood = true;
-            
+
             if (_entityHasId)
             {
                 var id = (TStorageId)StorageIdLeaf.Evaluator.Read(storage);
@@ -220,7 +220,7 @@ namespace EnTier.Services
                 if (index == null)
                 {
                     Logger.LogError("Unable to index an instance of {Object Type}.", typeof(TStorage).FullName);
-                    
+
                     allGood = false;
                 }
                 else
@@ -235,7 +235,7 @@ namespace EnTier.Services
                                   "been rejected. This entity type does not have an identifier field therefore" +
                                   "it's not possible to use searching and filtering features for it."
                     , typeof(TStorage).FullName);
-                
+
                 allGood = false;
             }
 
@@ -335,12 +335,12 @@ namespace EnTier.Services
             Logger = logger;
         }
 
-        public TDomain UpdateOrInsert(TDomain value, bool alsoIndex, bool fullTreeIndexing)
+        public virtual TDomain UpdateOrInsert(TDomain value, bool alsoIndex, bool fullTreeIndexing)
         {
             return UpdateOrInsertAsync(value, alsoIndex, fullTreeIndexing).Result;
         }
 
-        public async Task<TDomain> UpdateOrInsertAsync(TDomain value, bool alsoIndex, bool fullTreeIndexing)
+        public virtual async Task<TDomain> UpdateOrInsertAsync(TDomain value, bool alsoIndex, bool fullTreeIndexing)
         {
             var regulated = RegulateIncoming(value);
 
@@ -375,7 +375,7 @@ namespace EnTier.Services
             return null;
         }
 
-        public Task<bool> TryIndex(TDomain value, bool fullTreeIndexing = false)
+        public virtual Task<bool> TryIndex(TDomain value, bool fullTreeIndexing = false)
         {
             var storage = Mapper.Map<TStorage>(value);
 

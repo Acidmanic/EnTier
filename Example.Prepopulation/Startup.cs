@@ -1,4 +1,8 @@
+using EnTier.Repositories;
+using EnTier.Services;
+using Example.Prepopulation.Models;
 using Example.Prepopulation.Prepopulation;
+using Example.Prepopulation.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +39,8 @@ namespace Example.Prepopulation
             services.AddTransient<ILogger>(sp => logger);
 
             services.AddTransient<IUserNameProvider, AdminUserNameProvider>();
+            services.AddTransient<ICrudService<Chocolate, long>, ChocolateManipulatedService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

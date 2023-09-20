@@ -4,7 +4,7 @@ using Acidmanic.Utilities.Results;
 namespace EnTier.Prepopulation.Contracts;
 
 
-public interface ISeed<TStorage>
+public interface ISeed<TSeedModel>
 {
     
     
@@ -13,10 +13,10 @@ public interface ISeed<TStorage>
     /// </summary>
     string SeedName { get; }
     
-    IEnumerable<TStorage> SeedingObjects { get; }
+    IEnumerable<TSeedModel> SeedingObjects { get; }
 
     
-    Result<ISeedingHook<TStorage>> HooksIntoSeedingBehavior { get; }
+    Result<ISeedingHook<TSeedModel>> HooksIntoSeedingBehavior { get; }
 
     void Initialize();
 
