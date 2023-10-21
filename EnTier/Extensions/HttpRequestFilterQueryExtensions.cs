@@ -187,6 +187,14 @@ namespace EnTier.Extensions
                     return;
                 }
             }
+            
+            if (queryValue.StartsWith("!", StringComparison.Ordinal))
+            {
+                var equalityValue = queryValue.Substring(1, queryValue.Length - 1);
+                item.EqualityValues.Add(equalityValue);
+                item.ValueComparison = ValueComparison.NotEqual;
+                return;
+            }
 
             item.EqualityValues.Add(queryValue);
             item.ValueComparison = ValueComparison.Equal;
