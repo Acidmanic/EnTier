@@ -18,11 +18,11 @@
 
     <ItemGroup>
       <PackageReference Include="Acidmanic.MSLogging.LightWeight" Version="1.0.1" />
-      <PackageReference Include="Meadow.Framework" Version="1.2.4-b35" />
-      <PackageReference Include="Meadow.MySql" Version="1.2.1-b33" />
-      <PackageReference Include="Meadow.Postgre" Version="1.2.0-b28" />
-      <PackageReference Include="Meadow.SQLite" Version="1.3.0-b32" />
-      <PackageReference Include="Meadow.SqlServer" Version="1.3.0-b29" />
+      <PackageReference Include="Meadow.Framework" Version="1.2.4-b36" />
+      <PackageReference Include="Meadow.MySql" Version="1.2.1-b34" />
+      <PackageReference Include="Meadow.Postgre" Version="1.2.0-b29" />
+      <PackageReference Include="Meadow.SQLite" Version="1.3.0-b33" />
+      <PackageReference Include="Meadow.SqlServer" Version="1.3.0-b30" />
     </ItemGroup>
 
 </Project>

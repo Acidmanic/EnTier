@@ -120,7 +120,7 @@ namespace EnTier.Repositories
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(FilterQuery filterQuery,
+        Task<FilterResponse> PerformFilterIfNeededAsync(FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
             OrderTerm[] orderTerms = null,
@@ -131,7 +131,7 @@ namespace EnTier.Repositories
         /// it will perform the given filter and store the result into FilterResult data source
         /// </summary>
         /// <returns></returns>
-        IEnumerable<FilterResult<TId>> PerformFilterIfNeeded(FilterQuery filterQuery,
+        FilterResponse PerformFilterIfNeeded(FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
             OrderTerm[] orderTerms = null,
