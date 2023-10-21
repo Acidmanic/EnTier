@@ -90,6 +90,18 @@ public static class FilterQueryExpressionExtensions
                 }
 
                 return exp;
+            case ValueComparison.NotEqual:
+                // True Binary Expression
+                BinaryExpression neExp = Expression.Equal(Expression.Constant(true),Expression.Constant(true));
+
+                var neValues = filterItem.ReadEqualValues();
+
+                foreach (var value in neValues)
+                {
+                    neExp = Expression.And(neExp, Expression.NotEqual(leftOperand, Expression.Constant(value)));
+                }
+
+                return neExp;
         }
         return Expression.Equal(Expression.Constant(false),Expression.Constant(true));
     }
