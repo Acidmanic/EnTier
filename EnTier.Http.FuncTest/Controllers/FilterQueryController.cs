@@ -33,7 +33,7 @@ namespace EnTier.Http.FuncTest.Controllers
                     Max = f.Maximum;
                     Min = f.Minimum;
                     Method = f.ValueComparison;
-                    Values = f.EqualValues?.ToArray() ?? new string[] { };
+                    Values = f.EqualityValues?.ToArray() ?? new string[] { };
                     TypeName = f.ValueType.FullName;
                 }
             }

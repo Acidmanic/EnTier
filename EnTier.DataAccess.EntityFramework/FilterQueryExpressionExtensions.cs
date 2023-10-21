@@ -105,7 +105,7 @@ public static class FilterQueryExpressionExtensions
     {
         var objectsRead = new List<object>();
 
-        foreach (var stringValue in filter.EqualValues)
+        foreach (var stringValue in filter.EqualityValues)
         {
             var value = ReadAsValue(stringValue, filter.ValueType);
             
