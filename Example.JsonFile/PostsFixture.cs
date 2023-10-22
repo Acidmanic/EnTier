@@ -35,7 +35,7 @@ namespace ExampleJsonFile
                 Title = "Fifth title"
             });
             
-            unitOfWork.UpdateIndexes<PostStg,string>(false);
+            unitOfWork.UpdateIndexes<PostStg,long>(false);
 
         }
     }

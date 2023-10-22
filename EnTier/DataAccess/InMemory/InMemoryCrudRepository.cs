@@ -164,7 +164,7 @@ namespace EnTier.DataAccess.InMemory
                 (InMemorySharedChannel.FilterResults<TStorage, TId>());
         }
 
-        public override Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
+        public override Task<FilterResponse> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,

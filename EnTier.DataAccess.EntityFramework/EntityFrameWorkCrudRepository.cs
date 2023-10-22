@@ -13,6 +13,7 @@ using Acidmanic.Utilities.Reflection.Extensions;
 using EnTier.DataAccess.EntityFramework.Extensions;
 using EnTier.DataAccess.EntityFramework.FullTreeHandling;
 using EnTier.DataAccess.JsonFile;
+using EnTier.Models;
 using EnTier.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -148,7 +149,7 @@ namespace EnTier.DataAccess.EntityFramework
             });
         }
 
-        public override Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
+        public override Task<FilterResponse> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
@@ -159,7 +160,7 @@ namespace EnTier.DataAccess.EntityFramework
 
             orderTerms ??= new OrderTerm[] { };
 
-            return Task.Run<IEnumerable<FilterResult<TId>>>(() =>
+            return Task.Run<FilterResponse>(() =>
             {
                 var anyResults = FilterResults.Count(r => r.SearchId == searchId);
 
@@ -173,17 +174,17 @@ namespace EnTier.DataAccess.EntityFramework
                     foreach (var orderTerm in orderTerms)
                     {
                         var lambda = orderTerm.GetSelector<TStorage>();
-                        
+
                         if (orderTerm.Sort == OrderSort.Ascending)
                         {
                             queryable = queryable.OrderBy(lambda);
                         }
-                        else if(orderTerm.Sort == OrderSort.Descending)
+                        else if (orderTerm.Sort == OrderSort.Descending)
                         {
-                            queryable = queryable.OrderByDescending(lambda);    
+                            queryable = queryable.OrderByDescending(lambda);
                         }
                     }
-                    
+
 
                     foreach (var expression in filterExpressions)
                     {
@@ -209,18 +210,16 @@ namespace EnTier.DataAccess.EntityFramework
                         queryable = indexedStorages.Select(combo => combo.st);
                     }
 
-
-                    
-                    
-                    var filterResults = queryable.ToList();
-
                     var idLeaf = TypeIdentity.FindIdentityLeaf<TStorage>();
 
                     var expirationTime =
                         TimeStamp.Now.TotalMilliSeconds +
                         typeof(TStorage).GetFilterResultExpirationDurationMilliseconds();
 
-                    foreach (var storage in filterResults)
+
+                    var count = 0;
+                    
+                    foreach (var storage in queryable)
                     {
                         var filterResult = new FilterResult<TId>
                         {
@@ -230,12 +229,24 @@ namespace EnTier.DataAccess.EntityFramework
                         };
 
                         FilterResults.Add(FilterResultsEfMarkingExtensions.AsMarked<TStorage, TId>(filterResult));
-                    }
 
-                    return FilterResults.Where(fr => fr.SearchId == searchId);
+                        count++;
+                    }
+                  
+                    var filterResponse = new FilterResponse
+                    {
+                        Count = count,
+                        SearchId = searchId
+                    };
+
+                    return filterResponse;
                 }
 
-                return new FilterResult<TId>[] { };
+                return new FilterResponse
+                {
+                    Count = 0,
+                    SearchId = searchId
+                };
             });
         }
 

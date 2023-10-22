@@ -82,7 +82,7 @@ namespace EnTier.DataAccess
         }
 
 
-        public static Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync<TStorage, TId>(
+        public static Task<FilterResponse> PerformFilterIfNeededAsync<TStorage, TId>(
             List<FilterResult<TId>> filterResults,
             List<SearchIndex<TId>> searchIndex,
             AccessNode idLeaf,
@@ -107,10 +107,16 @@ namespace EnTier.DataAccess
                 filterResults.AddRange(filteringResults);
             }
 
-            return Task.FromResult(filterResults.Where(fr => fr.SearchId == searchId));
+            var filterResponse = new FilterResponse
+            {
+                Count = filterResults.Count(fr => fr.SearchId == searchId),
+                SearchId = searchId
+            };
+
+            return Task.FromResult(filterResponse);
         }
 
-        public static Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync<TStorage, TId>(
+        public static Task<FilterResponse> PerformFilterIfNeededAsync<TStorage, TId>(
             List<MarkedFilterResult<TStorage, TId>> filterResults,
             List<MarkedSearchIndex<TStorage, TId>> searchIndex,
             AccessNode idLeaf,
@@ -136,9 +142,13 @@ namespace EnTier.DataAccess
                 filterResults.AddRange(filteringResults.Select(f => f.AsMarked<TStorage, TId>()));
             }
 
-            return Task.FromResult(
-                filterResults.Where(fr => fr.SearchId == searchId)
-                    .Select(fr => (FilterResult<TId>)fr));
+            var filterResponse = new FilterResponse
+            {
+                Count = filterResults.Count(fr => fr.SearchId == searchId),
+                SearchId = searchId
+            };
+
+            return Task.FromResult(filterResponse);
         }
 
         public static Task<IEnumerable<TStorage>> ReadChunkAsync<TStorage, TId>(

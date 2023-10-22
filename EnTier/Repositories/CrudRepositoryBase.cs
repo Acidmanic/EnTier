@@ -50,14 +50,14 @@ namespace EnTier.Repositories
             RemoveExpiredFilterResultsAsync().Wait();
         }
 
-        public abstract Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
+        public abstract Task<FilterResponse> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
             OrderTerm[] orderTerms = null,
             bool readFullTree = false);
 
-        public IEnumerable<FilterResult<TId>> PerformFilterIfNeeded(
+        public FilterResponse PerformFilterIfNeeded(
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,

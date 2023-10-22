@@ -121,25 +121,30 @@ namespace EnTier.Services
 
             UnitOfWork.Complete();
 
-            var totalCount = foundResults.Count();
-
-            if (totalCount > 0)
+            if (foundResults.Count > 0)
             {
-                searchId = foundResults.First().SearchId;
+                var storages = await repository.ReadChunkAsync(offset, size, foundResults.SearchId, readFullTree);
+
+                var outgoingStorages = RegulateOutgoing(storages);
+
+                var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
+
+                return new Chunk<TDomain>
+                {
+                    Items = domains,
+                    Offset = offset,
+                    Size = size,
+                    TotalCount = foundResults.Count,
+                    SearchId = foundResults.SearchId
+                };
             }
 
-            var storages = await repository.ReadChunkAsync(offset, size, searchId, readFullTree);
-
-            var outgoingStorages = RegulateOutgoing(storages);
-
-            var domains = Mapper.Map<IEnumerable<TDomain>>(outgoingStorages);
-
-            return new Chunk<TDomain>
+            return new Chunk<TDomain>()
             {
-                Items = domains,
+                Items = new TDomain[] { },
                 Offset = offset,
                 Size = size,
-                TotalCount = totalCount,
+                TotalCount = 0,
                 SearchId = searchId
             };
         }

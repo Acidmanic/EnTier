@@ -10,6 +10,7 @@ using Acidmanic.Utilities.Reflection;
 using EnTier.DataAccess.Meadow.Extensions;
 using EnTier.DataAccess.Meadow.GenericCrudRequests;
 using EnTier.DataAccess.Meadow.GenericFilteringRequests;
+using EnTier.Models;
 using EnTier.Repositories;
 using Meadow;
 using Meadow.Configuration;
@@ -288,7 +289,7 @@ namespace EnTier.DataAccess.Meadow
             response.LogIfFailed(Logger);
         }
 
-        public override async Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
+        public override async Task<FilterResponse> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
@@ -303,7 +304,13 @@ namespace EnTier.DataAccess.Meadow
 
             response.LogIfFailed(Logger);
 
-            return request.FromStorage;
+            var filterResponse = request.FromStorage.FirstOrDefault() ?? new FilterResponse
+            {
+                Count = 0,
+                SearchId = searchId
+            };
+
+            return filterResponse;
         }
 
         public override async Task<IEnumerable<TStorage>> ReadChunkAsync(int offset, int size, string searchId,bool readFullTree = false)

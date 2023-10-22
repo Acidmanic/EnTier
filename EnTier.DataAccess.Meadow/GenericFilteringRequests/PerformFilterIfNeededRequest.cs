@@ -4,13 +4,14 @@ using Acidmanic.Utilities.Filtering;
 using Acidmanic.Utilities.Filtering.Extensions;
 using Acidmanic.Utilities.Filtering.Models;
 using EnTier.DataAccess.Meadow.GenericFilteringRequests.Models;
+using EnTier.Models;
 using Meadow.Contracts;
 using Meadow.Extensions;
 using Meadow.Requests;
 
 namespace EnTier.DataAccess.Meadow.GenericFilteringRequests
 {
-    public sealed class PerformFilterIfNeededRequest<TStorage,TId> : MeadowRequest<FilterShell, FilterResult<TId>>
+    public sealed class PerformFilterIfNeededRequest<TStorage,TId> : MeadowRequest<FilterShell, FilterResponse>
     {
         public PerformFilterIfNeededRequest(
             FilterQuery filterQuery,

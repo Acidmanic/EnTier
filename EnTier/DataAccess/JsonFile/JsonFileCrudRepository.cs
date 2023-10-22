@@ -176,7 +176,7 @@ namespace EnTier.DataAccess.JsonFile
             return ObjectListRepositoryFilteringHelper.RemoveExpiredFilterResultsAsync(_filterResults);
         }
 
-        public override Task<IEnumerable<FilterResult<TId>>> PerformFilterIfNeededAsync(
+        public override Task<FilterResponse> PerformFilterIfNeededAsync(
             FilterQuery filterQuery,
             string searchId = null,
             string[] searchTerms = null,
