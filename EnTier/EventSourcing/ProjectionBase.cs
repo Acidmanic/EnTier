@@ -60,9 +60,7 @@ namespace EnTier.EventSourcing
 
                     return instance;
                 }
-                catch (Exception _)
-                {
-                }
+                catch (Exception _){/**/}
             }
 
             return default;

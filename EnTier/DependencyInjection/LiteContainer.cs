@@ -97,9 +97,7 @@ namespace EnTier.DependencyInjection
                     return resolvedService;
                 }
             }
-            catch (Exception e)
-            {
-            }
+            catch (Exception _){/**/}
 
             return null;
         }

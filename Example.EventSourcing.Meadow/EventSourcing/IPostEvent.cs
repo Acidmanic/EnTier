@@ -1,4 +1,4 @@
-using Acidmanic.Utilities;
+using Acidmanic.Utilities.Extensions;
 using EnTier.Repositories.Attributes;
 using Meadow.Scaffolding.Attributes;
 

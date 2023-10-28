@@ -1,3 +1,9 @@
 EnTier
 EnTier.DataAccess.EntityFramework
 EnTier.DataAccess.Meadow
+EnTier.AutoMapper
+EnTier.DataAccess.EntityFramework
+EnTier.DataAccess.Meadow
+EnTier.DependencyInjection.CastleWindsor
+EnTier.DependencyInjection.Unity
+EnTier.EventStore.WebView

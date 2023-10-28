@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Acidmanic.Utilities;
+using Acidmanic.Utilities.Extensions;
 using Acidmanic.Utilities.Results;
 using EnTier.Repositories.Attributes;
 using EnTier.Repositories.Models;
@@ -68,9 +68,7 @@ namespace EnTier.Repositories
                     }
                 }
             }
-            catch (Exception _)
-            {
-            }
+            catch (Exception _){/**/}
 
             return default;
         }
@@ -179,9 +177,7 @@ namespace EnTier.Repositories
             {
                 _eventPublisher(@event, eventId, streamId);
             }
-            catch (Exception e)
-            {
-            }
+            catch (Exception _) {/**/}
         }
 
 

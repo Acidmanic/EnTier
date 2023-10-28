@@ -128,9 +128,7 @@ namespace EnTier.Extensions
                     return JsonConvert.DeserializeObject(json, type);
                 }
             }
-            catch (Exception _)
-            {
-            }
+            catch (Exception _){/**/}
 
             return null;
         }

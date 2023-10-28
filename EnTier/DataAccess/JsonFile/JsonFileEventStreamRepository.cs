@@ -151,9 +151,7 @@ namespace EnTier.DataAccess.JsonFile
 
                     list = JsonConvert.DeserializeObject<List<ObjectEntry<TEventId, TStreamId>>>(json);
                 }
-                catch (Exception e)
-                {
-                }
+                catch (Exception _){/**/}
             }
 
             if (list == null)

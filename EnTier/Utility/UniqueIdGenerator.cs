@@ -85,9 +85,7 @@ namespace EnTier.Utility
 
                     return ids;
                 }
-                catch (Exception e)
-                {
-                }
+                catch (Exception _){/**/}
             }
 
             return new List<TId>();

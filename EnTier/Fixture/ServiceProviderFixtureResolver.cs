@@ -18,7 +18,7 @@ namespace EnTier.Fixture
             {
                 return _serviceCollection.GetService<T>();
             }
-            catch (Exception e)
+            catch (Exception _)
             {
                 return default;
             }
@@ -30,7 +30,7 @@ namespace EnTier.Fixture
             {
                 return _serviceCollection.GetService(type);
             }
-            catch (Exception e)
+            catch (Exception _)
             {
                 return null;
             }

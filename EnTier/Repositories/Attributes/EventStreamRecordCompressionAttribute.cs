@@ -1,6 +1,6 @@
 using System;
 using System.IO.Compression;
-using Acidmanic.Utilities;
+using Acidmanic.Utilities.Extensions;
 
 namespace EnTier.Repositories.Attributes
 {
