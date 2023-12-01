@@ -10,9 +10,7 @@
         <PackageReference Include="Acidmanic.MSLogging.LightWeight" Version="1.0.1" />
         <PackageReference Include="Acidmanic.Utilities" Version="1.0.22-b02" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
-
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-
         <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b08" />
     </ItemGroup>
 
@@ -20,7 +18,7 @@
         <!-- NuGet -->
         <Id>EnTier</Id>
         <PackageId>EnTier</PackageId>
-        <Version>2.7.0-b43</Version>
+        <Version>2.7.0-b44</Version>
         <Authors>Mani Moayedi</Authors>
         <Company>Acidmanic</Company>
         <PackageIcon>graphics/EnTier.png</PackageIcon>

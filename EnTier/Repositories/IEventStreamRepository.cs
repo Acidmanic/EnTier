@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acidmanic.Utilities.Results;
 using EnTier.Repositories.Models;
-using Microsoft.Extensions.Logging;
 
 namespace EnTier.Repositories
 {
