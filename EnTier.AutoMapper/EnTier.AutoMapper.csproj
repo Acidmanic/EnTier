@@ -18,7 +18,7 @@
         <!-- NuGet -->
         <Id>EnTier.AutoMapper</Id>
         <PackageId>EnTier.AutoMapper</PackageId>
-        <Version>1.1.0</Version>
+        <Version>1.1.0-b03</Version>
         <Authors>Mani Moayedi</Authors>
         <Company>Acidmanic</Company>
         <PackageIcon>graphics/EnTier.png</PackageIcon>
