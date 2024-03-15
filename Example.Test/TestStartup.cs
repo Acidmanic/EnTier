@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using Example.UnitTest.Fixtures;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

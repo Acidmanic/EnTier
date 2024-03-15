@@ -8,16 +8,19 @@
   <ItemGroup>
     <PackageReference Include="Acidmanic.Utilities" Version="1.0.22-b02" />
     
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
-    
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 
     <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b08" />
 
     <PackageReference Include="SourceResource" Version="1.0.1-b02" />
+    
   </ItemGroup>
 
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
   
+
   <ItemGroup>
     <ProjectReference Include="..\EnTier\EnTier.csproj" />
   </ItemGroup>

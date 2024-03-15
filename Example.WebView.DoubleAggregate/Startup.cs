@@ -1,20 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Acidmanic.Utilities.Reflection.Extensions;
 using EnTier;
 using EnTier.DataAccess.JsonFile;
 using EnTier.EventStore.WebView;
 using Example.WebView.DoubleAggregate.SeedGrowing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Example.WebView.DoubleAggregate
 {
