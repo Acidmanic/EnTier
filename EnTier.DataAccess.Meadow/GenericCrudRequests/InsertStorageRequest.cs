@@ -6,7 +6,7 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
     public class InsertStorageRequest<TStorage> : StorageRequest<TStorage, TStorage>
         where TStorage : class, new()
     {
-        protected override void OnFieldManipulation(IFieldInclusionMarker<TStorage> toStorage, IFieldInclusionMarker<TStorage> fromStorage)
+        protected override void OnFieldManipulation(IFieldInclusionMarker toStorage, IFieldInclusionMarker fromStorage)
         {
             base.OnFieldManipulation(toStorage, fromStorage);
 

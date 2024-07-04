@@ -1,6 +1,4 @@
 using Acidmanic.Utilities.Filtering.Models;
-using Acidmanic.Utilities.Reflection;
-using Acidmanic.Utilities.Reflection.FieldInclusion;
 using Meadow.Extensions;
 using Meadow.Requests;
 
@@ -17,15 +15,15 @@ namespace EnTier.DataAccess.Meadow.GenericCrudRequests
             };
         }
 
-        protected override void OnFieldManipulation(IFieldInclusionMarker<SearchIndex<TId>> toStorage, IFieldInclusionMarker<SearchIndex<TId>> fromStorage)
-        {
-            base.OnFieldManipulation(toStorage, fromStorage);
-            
-            var idLeaf = TypeIdentity.FindIdentityLeaf<SearchIndex<TId>>();
-                
-            toStorage.Exclude(idLeaf.GetFullName());
-            
-        }
+        // protected override void OnFieldManipulation(IFieldInclusionMarker toStorage, IFieldInclusionMarker fromStorage)
+        // {
+        //     base.OnFieldManipulation(toStorage, fromStorage);
+        //     
+        //     var idLeaf = TypeIdentity.FindIdentityLeaf<SearchIndex<TId>>();
+        //         
+        //     toStorage.Exclude(idLeaf.GetFullName());
+        //     
+        // }
 
         public override string RequestText
         {

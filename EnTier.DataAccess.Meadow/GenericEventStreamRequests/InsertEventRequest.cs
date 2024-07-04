@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Acidmanic.Utilities.Reflection;
 using Acidmanic.Utilities.Reflection.FieldInclusion;
@@ -18,8 +17,8 @@ public sealed class
         ToStorage = entry;
     }
 
-    protected override void OnFieldManipulation(IFieldInclusionMarker<ObjectEntry<TEventId, TStreamId>> toStorage,
-        IFieldInclusionMarker<ObjectEntry<TEventId, TStreamId>> fromStorage)
+    protected override void OnFieldManipulation(IFieldInclusionMarker toStorage,
+        IFieldInclusionMarker fromStorage)
     {
         base.OnFieldManipulation(toStorage, fromStorage);
 

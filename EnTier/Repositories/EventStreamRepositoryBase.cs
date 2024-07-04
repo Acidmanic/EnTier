@@ -119,10 +119,10 @@ namespace EnTier.Repositories
             {
                 if (packer)
                 {
-                    return s => s.CompressAsync(compression, level).Result;
+                    return s => s.CompressB64Async(compression, level).Result;
                 }
 
-                return s => s.DecompressAsync(compression).Result;
+                return s => s.DecompressB64Async(compression).Result;
             }
 
             return Base64Conversion(packer);
