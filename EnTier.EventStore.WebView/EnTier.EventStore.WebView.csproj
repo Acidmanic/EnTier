@@ -6,7 +6,7 @@
 
   
   <ItemGroup>
-    <PackageReference Include="Acidmanic.Utilities" Version="1.0.22-b03" />
+    <PackageReference Include="Acidmanic.Utilities" Version="1.0.22-b04" />
     
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 
