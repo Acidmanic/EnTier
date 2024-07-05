@@ -17,7 +17,7 @@
     <!-- NuGet -->
     <Id>EnTier.DependencyInjection.CastleWindsor</Id>
     <PackageId>EnTier.DependencyInjection.CastleWindsor</PackageId>
-    <Version>1.1.3-b05</Version>
+    <Version>1.1.3-b06</Version>
     <Authors>Mani Moayedi</Authors>
     <Company>Acidmanic</Company>
     <PackageIcon>graphics/EnTier.png</PackageIcon>
