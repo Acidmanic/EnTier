@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Litbid.DataAccess.Meadow.EnTier.DataAccess.Meadow
+namespace EnTier.DataAccess.Meadow
 {
 
 
