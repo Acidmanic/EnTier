@@ -10,10 +10,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Acidmanic.Utilities" Version="1.0.22-b04" />
-        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b14" />
+        <PackageReference Include="Acidmanic.Utilities" Version="1.0.22-b05" />
+        <PackageReference Include="Acidmanic.Utilities.Reflections" Version="1.0.6-b15" />
 
-        <PackageReference Include="Meadow.Framework" Version="1.2.4-b46" />
+        <PackageReference Include="Meadow.Framework" Version="1.2.4-b47" />
     </ItemGroup>
 
     <PropertyGroup>
